@@ -60,27 +60,6 @@ class Selection {
     this.update(Emitter.sources.SILENT);
   }
 
-  fixInlineEmbed(native) {
-    if (native == null) return;
-    const [start, end] = [native.start, native.end].map(function(pos) {
-      const blot = Parchment.find(pos.node, true);
-      if (blot instanceof Embed) {
-        let node, offset;
-        if (pos.node === blot.leftGuard && pos.offset === 1) {
-          [node, offset] = blot.position(blot.length());
-          return { node, offset };
-        } else if (pos.node === blot.rightGuard && pos.offset === 0) {
-          [node, offset] = blot.position(0);
-          return { node, offset };
-        }
-      }
-      return pos;
-    });
-    if (native.start !== start || native.end !== end) {
-      this.setNativeRange(start.node, start.offset, end.node, end.offset);
-    }
-  }
-
   handleComposition() {
     this.root.addEventListener('compositionstart', () => {
       this.composing = true;
@@ -358,7 +337,6 @@ class Selection {
   update(source = Emitter.sources.USER) {
     let oldRange = this.lastRange;
     let [lastRange, nativeRange] = this.getRange();
-    this.fixInlineEmbed(nativeRange);
     this.lastRange = lastRange;
     if (this.lastRange != null) {
       this.savedRange = this.lastRange;
