@@ -286,8 +286,12 @@ Keyboard.DEFAULTS = {
       prefix: /\n\n$/,
       suffix: /^\s+$/,
       handler: function(range) {
-        this.quill.format('code-block', false, Quill.sources.USER);
-        this.quill.deleteText(range.index - 2, 1, Quill.sources.USER);
+        const [line, offset] = this.quill.getLine(range.index);
+        const delta = new Delta()
+          .retain(range.index + line.length() - offset - 2)
+          .retain(1, { 'code-block': null })
+          .delete(1);
+        this.quill.updateContents(delta, Quill.sources.USER);
       }
     },
     'embed left': makeEmbedArrowHandler(Keyboard.keys.LEFT, false),
