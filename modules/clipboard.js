@@ -7,6 +7,7 @@ import Module from '../core/module';
 
 import { AlignAttribute, AlignStyle } from '../formats/align';
 import { BackgroundStyle } from '../formats/background';
+import CodeBlock from '../formats/code';
 import { ColorStyle } from '../formats/color';
 import { DirectionAttribute, DirectionStyle } from '../formats/direction';
 import { FontStyle } from '../formats/font';
@@ -75,6 +76,12 @@ class Clipboard extends Module {
     if (typeof html === 'string') {
       this.container.innerHTML = html.replace(/\>\r?\n +\</g, '><'); // Remove spaces between tags
       return this.convert();
+    }
+    const formats = this.quill.getFormat(this.quill.selection.savedRange.index);
+    if (formats[CodeBlock.blotName]) {
+      const text = this.container.innerText;
+      this.container.innerHTML = '';
+      return new Delta().insert(text, { [CodeBlock.blotName]: formats[CodeBlock.blotName] });
     }
     let [elementMatchers, textMatchers] = this.prepareMatching();
     let delta = traverse(this.container, elementMatchers, textMatchers);
