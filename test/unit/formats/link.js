@@ -25,6 +25,17 @@ describe('Link', function() {
     );
   });
 
+  it('add non-whitelisted protocol', function() {
+    let editor = this.initialize(Editor, '<p>0123</p>');
+    editor.formatText(1, 2, { link: 'gopher://quilljs.com' });
+    expect(editor.getDelta()).toEqual(new Delta()
+      .insert('0')
+      .insert('12', { link: Link.SANITIZED_URL })
+      .insert('3\n')
+    );
+    expect(editor.scroll.domNode).toEqualHTML('<p>0<a href="about:blank" target="_blank">12</a>3</p>');
+  });
+
   it('change', function() {
     let editor = this.initialize(Editor, '<p>0<a href="https://github.com" target="_blank">12</a>3</p>');
     editor.formatText(1, 2, { link:  'https://quilljs.com' });
