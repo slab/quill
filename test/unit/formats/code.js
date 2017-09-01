@@ -117,6 +117,13 @@ describe('Code', function() {
     expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
   });
 
+  it('delete last', function() {
+    let editor = this.initialize(Editor, { html: '<p>0123</p><pre>\n</pre><p>5678</p>' });
+    editor.deleteText(4, 1);
+    expect(editor.getDelta()).toEqual(new Delta().insert('0123').insert('\n', { 'code-block': true }).insert('5678\n'));
+    expect(editor.scroll.domNode).toEqualHTML('<pre>0123</pre><p>5678</p>');
+  });
+
   it('delete merge before', function() {
     let editor = this.initialize(Editor, { html: '<h1>0123</h1><pre>4567\n</pre>' });
     editor.deleteText(4, 1);
@@ -129,6 +136,37 @@ describe('Code', function() {
     editor.deleteText(4, 1);
     expect(editor.getDelta()).toEqual(new Delta().insert('01234567').insert('\n', { header: 1 }));
     expect(editor.scroll.domNode).toEqualHTML('<h1>01234567</h1>');
+  });
+
+  it('delete across before partial merge', function() {
+    let editor = this.initialize(Editor, { html: '<pre>01\n34\n67\n</pre><h1>90</h1>' });
+    editor.deleteText(7, 3);
+    expect(editor.getDelta()).toEqual(new Delta()
+      .insert('01').insert('\n', { 'code-block': true })
+      .insert('34').insert('\n', { 'code-block': true })
+      .insert('60').insert('\n', { header: 1 })
+    );
+    expect(editor.scroll.domNode.innerHTML).toEqualHTML('<pre>01\n34\n</pre><h1>60</h1>');
+  });
+
+  it('delete across before no merge', function() {
+    let editor = this.initialize(Editor, { html: '<pre>01\n34\n</pre><h1>6789</h1>' });
+    editor.deleteText(3, 5);
+    expect(editor.getDelta()).toEqual(new Delta()
+      .insert('01').insert('\n', { 'code-block': true })
+      .insert('89').insert('\n', { header: 1 })
+    );
+    expect(editor.scroll.domNode.innerHTML).toEqualHTML('<pre>01\n</pre><h1>89</h1>');
+  });
+
+  it('delete across after', function() {
+    let editor = this.initialize(Editor, { html: '<h1>0123</h1><pre>56\n89\n</pre>' });
+    editor.deleteText(2, 4);
+    expect(editor.getDelta()).toEqual(new Delta()
+      .insert('016').insert('\n', { 'code-block': true })
+      .insert('89').insert('\n', { 'code-block': true })
+    );
+    expect(editor.scroll.domNode.innerHTML).toEqualHTML('<pre>016\n89\n</pre>');
   });
 
   it('replace', function() {
@@ -197,5 +235,16 @@ describe('Code', function() {
     editor.formatText(1, 1, { bold: true });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123').insert('\n', { 'code-block': true }));
     expect(editor.scroll.domNode).toEqualHTML('<pre>0123</pre>');
+  });
+
+  it('partial block modification applyDelta', function() {
+    let editor = this.initialize(Editor, { html: '<pre>a\nb\n\n</pre>' });
+    let delta = new Delta()
+      .retain(3)
+      .insert('\n', { 'code-block': true })
+      .delete(1)
+      .retain(1, { 'code-block': null });
+    editor.applyDelta(delta);
+    expect(editor.scroll.domNode.innerHTML).toEqual('<pre>a\nb\n</pre><p><br></p>');
   });
 });
