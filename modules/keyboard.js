@@ -279,6 +279,7 @@ Keyboard.DEFAULTS = {
           .retain(1, { 'code-block': null })
           .delete(1);
         this.quill.updateContents(delta, Quill.sources.USER);
+        this.quill.setSelection(range.index - 1, Quill.sources.SILENT);
       }
     },
     'embed left': makeEmbedArrowHandler('ArrowLeft', false),
