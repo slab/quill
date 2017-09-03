@@ -1,10 +1,14 @@
-import Parchment from 'parchment';
+import Inline from '../blots/inline';
 import Quill from '../core/quill';
 import Module from '../core/module';
 import CodeBlock from '../formats/code';
 
 
 class SyntaxCodeBlock extends CodeBlock {
+  static formats(node) {
+    return node.getAttribute('data-language') || true;
+  }
+
   replaceWith(block) {
     this.domNode.textContent = this.domNode.textContent;
     this.attach();
@@ -15,8 +19,13 @@ class SyntaxCodeBlock extends CodeBlock {
     let text = this.domNode.textContent;
     if (this.cachedText !== text) {
       if (text.trim().length > 0 || this.cachedText == null) {
-        this.domNode.innerHTML = highlight(text);
+        const language = this.statics.formats(this.domNode);
+        const subset = typeof language === 'string' ? [language] : undefined;
+        this.domNode.innerHTML = highlight(text, subset);
         this.domNode.normalize();
+        [].slice.call(this.domNode.querySelectorAll('span')).forEach((token) => {
+          token.classList.add(CodeToken.className);
+        });
         this.attach();
       }
       this.cachedText = text;
@@ -26,9 +35,20 @@ class SyntaxCodeBlock extends CodeBlock {
 SyntaxCodeBlock.className = 'ql-syntax';
 
 
-let CodeToken = new Parchment.Attributor.Class('token', 'hljs', {
-  scope: Parchment.Scope.INLINE
-});
+class CodeToken extends Inline {
+  static formats(node) {
+    while (node != null) {
+      const parent = Quill.find(node);
+      if (parent instanceof SyntaxCodeBlock) {
+        return true;
+      }
+      node = node.parentNode;
+    }
+    return null;
+  }
+}
+CodeToken.blotName = 'code-token';
+CodeToken.className = 'ql-token';
 
 
 class Syntax extends Module {
@@ -69,8 +89,8 @@ class Syntax extends Module {
 Syntax.DEFAULTS = {
   highlight: (function() {
     if (window.hljs == null) return null;
-    return function(text) {
-      let result = window.hljs.highlightAuto(text);
+    return function(text, subset) {
+      let result = window.hljs.highlightAuto(text, subset);
       return result.value;
     };
   })(),
