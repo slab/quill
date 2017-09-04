@@ -5,7 +5,7 @@ markdown: kramdown
 highlighter: rouge
 kramdown:
   input: GFM
-gems:
+plugins:
   - jekyll-sitemap
   - jekyll-redirect-from
   - jekyll-feed
