@@ -1,5 +1,4 @@
 import Parchment from 'parchment';
-import Embed from '../blots/embed';
 import clone from 'clone';
 import equal from 'deep-equal';
 import Emitter from './emitter';
