@@ -88,7 +88,7 @@ class Selection {
   handleEmbedSelection() {
     const selectEmbed = (node) => {
       const blot = Parchment.find(node, true);
-      if (blot instanceof Parchment.Embed) {
+      if (blot instanceof Parchment.Embed && !blot.domNode.classList.contains('ql-embed-selected')) {
         const range = new Range(blot.offset(scroll), blot.length());
         this.setRange(range, Emitter.sources.USER);
         blot.domNode.classList.add('ql-embed-selected');
