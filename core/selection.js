@@ -102,7 +102,7 @@ class Selection {
                  contains(this.root, document.activeElement)) {
         selectEmbed(document.activeElement);
       }
-    }, 1000);
+    }, 100);
     this.emitter.on(Emitter.events.SELECTION_CHANGE, () => {
       const selectedNode = document.querySelector('.ql-embed-selected');
       if (selectedNode) {
