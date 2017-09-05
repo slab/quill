@@ -86,6 +86,23 @@ class Selection {
   }
 
   handleEmbedSelection() {
+    const selectEmbed = (node) => {
+      const blot = Parchment.find(node, true);
+      if (blot instanceof Parchment.Embed) {
+        const range = new Range(blot.offset(scroll), blot.length());
+        this.setRange(range, Emitter.sources.USER);
+        blot.domNode.classList.add('ql-embed-selected');
+      }
+    };
+    const interval = setInterval(() => {
+      if (this.root.parentNode == null) {
+        clearInterval(interval);
+      } else if (!this.mouseDown &&
+                 document.activeElement.tagName === 'IFRAME' &&
+                 contains(this.root, document.activeElement)) {
+        selectEmbed(document.activeElement);
+      }
+    }, 1000);
     this.emitter.on(Emitter.events.SELECTION_CHANGE, () => {
       const selectedNode = document.querySelector('.ql-embed-selected');
       if (selectedNode) {
@@ -93,12 +110,7 @@ class Selection {
       }
     });
     this.root.addEventListener('click', (e) => {
-      const blot = Parchment.find(e.target, true);
-      if (blot instanceof Parchment.Embed) {
-        const range = new Range(blot.offset(scroll), blot.length());
-        this.setRange(range, Emitter.sources.USER);
-        blot.domNode.classList.add('ql-embed-selected');
-      }
+      selectEmbed(e.target);
     });
   }
 
