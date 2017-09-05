@@ -1,3 +1,14 @@
+# 1.3.2
+
+- Pasting into code block should always paste as code [#1624](https://github.com/quilljs/quill/issues/1624)
+- Fix removing embed selection when arrow keys change selection [#1633](https://github.com/quilljs/quill/issues/1633)
+- Fix selection restoration after image insertion [#1649](https://github.com/quilljs/quill/issues/1649)
+- Fix selection-change firing after dragging off screen [#1654](https://github.com/quilljs/quill/issues/1654)
+- Fix placeholder text spacing [#1677](https://github.com/quilljs/quill/issues/1677)
+
+Thanks to [@abramz](https://github.com/abramz), [@amitm02](https://github.com/amitm02), [@eamodio](https://github.com/eamodio), [@HWliao](https://github.com/HWliao), [@mmitis](https://github.com/mmitis), [@nelsonpecora](https://github.com/nelsonpecora), [@nipunjain87](https://github.com/nipunjain87), and [@ValueBerry](https://github.com/ValueBerry) for contributions to this release!
+
+
 # 1.3.1
 
 - Fix placeholder when emptying text [#1594](https://github.com/quilljs/quill/issues/1594)
