@@ -56,7 +56,7 @@ const STYLE_ATTRIBUTORS = [
 class Clipboard extends Module {
   constructor(quill, options) {
     super(quill, options);
-    this.quill.root.addEventListener('paste', this.onPaste.bind(this));
+    this.quill.root.addEventListener('paste', this.onCapturePaste.bind(this));
     this.container = this.quill.addContainer('ql-clipboard');
     this.container.setAttribute('contenteditable', true);
     this.container.setAttribute('tabindex', -1);
@@ -101,21 +101,25 @@ class Clipboard extends Module {
     }
   }
 
-  onPaste(e) {
+  onCapturePaste(e) {
     if (e.defaultPrevented || !this.quill.isEnabled()) return;
-    let range = this.quill.getSelection();
-    let delta = new Delta().retain(range.index);
     let scrollTop = this.quill.scrollingContainer.scrollTop;
+    let range = this.quill.getSelection();
     this.container.focus();
     this.quill.selection.update(Quill.sources.SILENT);
     setTimeout(() => {
-      delta = delta.concat(this.convert()).delete(range.length);
-      this.quill.updateContents(delta, Quill.sources.USER);
-      // range.length contributes to delta.length()
-      this.quill.setSelection(delta.length() - range.length, Quill.sources.SILENT);
       this.quill.scrollingContainer.scrollTop = scrollTop;
+      this.onPaste(e, range);
       this.quill.focus();
     }, 1);
+  }
+
+  onPaste(e, range) {
+    let delta = new Delta().retain(range.index);
+    delta = delta.concat(this.convert()).delete(range.length);
+    this.quill.updateContents(delta, Quill.sources.USER);
+    // range.length contributes to delta.length()
+    this.quill.setSelection(delta.length() - range.length, Quill.sources.SILENT);
   }
 
   prepareMatching() {

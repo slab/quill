@@ -12,7 +12,7 @@ describe('Clipboard', function() {
 
     it('paste', function(done) {
       this.quill.clipboard.container.innerHTML = '<strong>|</strong>';
-      this.quill.clipboard.onPaste({});
+      this.quill.clipboard.onCapturePaste({});
       setTimeout(() => {
         expect(this.quill.root).toEqualHTML('<p>01<strong>|</strong><em>7</em>8</p>');
         expect(this.quill.getSelection()).toEqual(new Range(3));
@@ -27,7 +27,7 @@ describe('Clipboard', function() {
       spyOn(handler, 'change');
       this.quill.on('selection-change', handler.change);
       this.quill.clipboard.container.innerHTML = '0';
-      this.quill.clipboard.onPaste({});
+      this.quill.clipboard.onCapturePaste({});
       setTimeout(function() {
         expect(handler.change).not.toHaveBeenCalled();
         done();
