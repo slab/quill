@@ -27,7 +27,6 @@ class Selection {
     this.lastRange = this.savedRange = new Range(0, 0);
     this.handleComposition();
     this.handleDragging();
-    this.handleEmbedSelection();
     this.emitter.listenDOM('selectionchange', document, () => {
       if (!this.mouseDown) {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
@@ -82,35 +81,6 @@ class Selection {
     this.emitter.listenDOM('mouseup', document.body, () => {
       this.mouseDown = false;
       this.update(Emitter.sources.USER);
-    });
-  }
-
-  handleEmbedSelection() {
-    const selectEmbed = (node) => {
-      const blot = Parchment.find(node, true);
-      if (blot instanceof Parchment.Embed && !blot.domNode.classList.contains('ql-embed-selected')) {
-        const range = new Range(blot.offset(scroll), blot.length());
-        this.setRange(range, Emitter.sources.USER);
-        blot.domNode.classList.add('ql-embed-selected');
-      }
-    };
-    const interval = setInterval(() => {
-      if (this.root.parentNode == null) {
-        clearInterval(interval);
-      } else if (!this.mouseDown &&
-                 document.activeElement.tagName === 'IFRAME' &&
-                 contains(this.root, document.activeElement)) {
-        selectEmbed(document.activeElement);
-      }
-    }, 100);
-    this.emitter.on(Emitter.events.SELECTION_CHANGE, () => {
-      const selectedNode = document.querySelector('.ql-embed-selected');
-      if (selectedNode) {
-        selectedNode.classList.remove('ql-embed-selected');
-      }
-    });
-    this.root.addEventListener('click', (e) => {
-      selectEmbed(e.target);
     });
   }
 
