@@ -45,7 +45,9 @@ var quill = new Quill('#editor', {
 
 ## Container
 
-At the simplest level, toolbar controls can be specified by a simple array of format names.
+Toolbar controls can either be specified by a simple array of format names or a custom HTML container.
+
+To begin with the simpler array option:
 
 ```javascript
 var toolbarOptions = ['bold', 'italic', 'underline', 'strike'];

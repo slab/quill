@@ -63,7 +63,7 @@ class List extends Container {
 
   constructor(domNode) {
     super(domNode);
-    domNode.addEventListener('click', (e) => {
+    const listEventHandler = (e) => {
       if (e.target.parentNode !== domNode) return;
       let format = this.statics.formats(domNode);
       let blot = Parchment.find(e.target);
@@ -72,7 +72,9 @@ class List extends Container {
       } else if(format === 'unchecked') {
         blot.format('list', 'checked');
       }
-    });
+    }
+    domNode.addEventListener('click', listEventHandler);
+    domNode.addEventListener('touchstart', listEventHandler);
   }
 
   format(name, value) {
