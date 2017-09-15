@@ -64,7 +64,7 @@ class Selection {
     });
     this.root.addEventListener('compositionend', () => {
       this.composing = false;
-      if (this.cursor.parent) {
+      if (this.cursor.parent && this.cursor.length()) {
         const range = this.cursor.restore();
         if (!range) return;
         setTimeout(() => {
