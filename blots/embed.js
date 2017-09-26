@@ -7,15 +7,15 @@ const GUARD_TEXT = "\uFEFF";
 class Embed extends Parchment.Embed {
   constructor(node) {
     super(node);
-    const wrapper = document.createElement('span');
-    wrapper.setAttribute('contenteditable', false);
+    this.contentNode = document.createElement('span');
+    this.contentNode.setAttribute('contenteditable', false);
     [].slice.call(this.domNode.childNodes).forEach(function(childNode) {
-      wrapper.appendChild(childNode);
+      this.contentNode.appendChild(childNode);
     });
     this.leftGuard = document.createTextNode(GUARD_TEXT);
     this.rightGuard = document.createTextNode(GUARD_TEXT);
     this.domNode.appendChild(this.leftGuard);
-    this.domNode.appendChild(wrapper);
+    this.domNode.appendChild(this.contentNode);
     this.domNode.appendChild(this.rightGuard);
   }
 
