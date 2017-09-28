@@ -107,8 +107,8 @@ class Clipboard extends Module {
     this.container.focus();
     this.quill.selection.update(Quill.sources.SILENT);
     setTimeout(() => {
-      this.quill.scrollingContainer.scrollTop = scrollTop;
       this.onPaste(e, range);
+      this.quill.scrollingContainer.scrollTop = scrollTop;
       this.quill.focus();
       this.container.innerHTML = '';
     }, 1);
