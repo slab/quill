@@ -73,8 +73,9 @@ class List extends Container {
         blot.format('list', 'checked');
       }
     }
-    domNode.addEventListener('click', listEventHandler);
+
     domNode.addEventListener('touchstart', listEventHandler);
+    domNode.addEventListener('mousedown', listEventHandler);
   }
 
   format(name, value) {
