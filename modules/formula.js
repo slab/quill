@@ -7,7 +7,10 @@ class FormulaBlot extends Embed {
   static create(value) {
     let node = super.create(value);
     if (typeof value === 'string') {
-      window.katex.render(value, node);
+      window.katex.render(value, node, {
+        throwOnError: false,
+        errorColor: '#f00'
+      });
       node.setAttribute('data-value', value);
     }
     return node;
