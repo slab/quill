@@ -67,9 +67,12 @@ class Keyboard extends Module {
     if (typeof handler === 'function') {
       handler = { handler: handler };
     }
-    binding = extend(binding, context, handler);
-    this.bindings[binding.key] = this.bindings[binding.key] || [];
-    this.bindings[binding.key].push(binding);
+    const keys = Array.isArray(binding.key) ? binding.key : [binding.key];
+    keys.forEach((key) => {
+      const singleBinding = extend({}, binding, { key }, context, handler);
+      this.bindings[singleBinding.key] = this.bindings[singleBinding.key] || [];
+      this.bindings[singleBinding.key].push(singleBinding);
+    });
   }
 
   listen() {
