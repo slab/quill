@@ -10,6 +10,11 @@ const NEWLINE_LENGTH = 1;
 
 
 class BlockEmbed extends Parchment.Embed {
+  constructor(node) {
+    super(node);
+    node.setAttribute('data-blockEmbed', true);
+  }
+
   attach() {
     super.attach();
     this.attributes = new Parchment.Attributor.Store(this.domNode);
