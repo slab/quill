@@ -318,7 +318,7 @@ describe('List', function() {
     editor.insertEmbed(2, 'video', 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0');
     expect(this.container).toEqualHTML(`
       <ol><li>Te</li></ol>
-      <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0"></iframe>
+      <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0" data-blockEmbed="true"></iframe>
       <ol><li>st</li></ol>
     `);
   });
@@ -327,7 +327,7 @@ describe('List', function() {
     let editor = this.initialize(Editor, '<ol><li>Test</li></ol>');
     editor.insertEmbed(0, 'video', 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0');
     expect(this.container).toEqualHTML(`
-      <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0"></iframe>
+      <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0" data-blockEmbed="true"></iframe>
       <ol><li>Test</li></ol>
     `);
   });
@@ -337,7 +337,7 @@ describe('List', function() {
     editor.insertEmbed(4, 'video', 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0');
     expect(this.container).toEqualHTML(`
       <ol><li>Test</li></ol>
-      <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0"></iframe>
+      <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0" data-blockEmbed="true"></iframe>
       <ol><li><br></li></ol>
     `);
   });

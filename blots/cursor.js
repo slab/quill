@@ -99,7 +99,7 @@ class Cursor extends Parchment.Embed {
       return mutation.type === 'characterData' && mutation.target === this.textNode;
     })) {
       let range = this.restore();
-      if (range) context.range = range;
+      if (range && context) context.range = range;
     }
   }
 
