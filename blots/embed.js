@@ -9,7 +9,7 @@ class Embed extends Parchment.Embed {
     super(node);
     this.contentNode = document.createElement('span');
     this.contentNode.setAttribute('contenteditable', false);
-    [].slice.call(this.domNode.childNodes).forEach(function(childNode) {
+    [].slice.call(this.domNode.childNodes).forEach((childNode) => {
       this.contentNode.appendChild(childNode);
     });
     this.leftGuard = document.createTextNode(GUARD_TEXT);
