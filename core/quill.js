@@ -203,7 +203,7 @@ class Quill {
     return this.editor.getContents(index, length);
   }
 
-  getFormat(index = this.getSelection(), length = 0) {
+  getFormat(index = this.getSelection(true), length = 0) {
     if (typeof index === 'number') {
       return this.editor.getFormat(index, length);
     } else {
