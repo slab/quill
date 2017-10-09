@@ -95,7 +95,8 @@ class Keyboard extends Module {
         format: this.quill.getFormat(range),
         offset: offset,
         prefix: prefixText,
-        suffix: suffixText
+        suffix: suffixText,
+        event: evt,
       };
       let prevented = bindings.some((binding) => {
         if (binding.collapsed != null && binding.collapsed !== curContext.collapsed) return false;
