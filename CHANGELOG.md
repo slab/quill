@@ -34,7 +34,7 @@ Thank you [@Natim](https://github.com/Natim) and [@stephenLYao](https://github.c
 Add `matchVisual` [configuration](https://quilljs.com/docs/modules/clipboard/#configuration) to Clipboard.
 
 - Use DOM API to determine selected `<select>` option [#1576](https://github.com/quilljs/quill/pull/1576)
-- Add `:focus` styles to toolbbar [#1540](https://github.com/quilljs/quill/issues/1540)
+- Add `:focus` styles to toolbar [#1540](https://github.com/quilljs/quill/issues/1540)
 - Allow users to undo automatic keyboard completions [#1538](https://github.com/quilljs/quill/issues/1538)
 - Use github-pages gem to make development environment consistent [#1536](https://github.com/quilljs/quill/issues/1536) [#1544](https://github.com/quilljs/quill/pull/1544)
 - Fix composing Chinese with preformatting [#1514](https://github.com/quilljs/quill/issues/1514)
