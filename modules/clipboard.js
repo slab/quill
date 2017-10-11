@@ -111,6 +111,8 @@ class Clipboard extends Module {
     this.container.focus();
     this.quill.selection.update(Quill.sources.SILENT);
     setTimeout(() => {
+      // NOTE: This is common when copy/paste from MS Word; Removes extra space before text
+      this.container.innerHTML = this.container.innerHTML.replace(/<br\/?>\r?\n/g, '<br>');
       delta = delta.concat(this.convert()).delete(range.length);
       this.quill.updateContents(delta, Quill.sources.USER);
       // range.length contributes to delta.length()
