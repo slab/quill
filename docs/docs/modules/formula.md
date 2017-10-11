@@ -26,3 +26,7 @@ var quill = new Quill('#editor', {
 });
 </script>
 ```
+
+### Troubleshooting
+
+If you have added a `formats` section to your configuration, you must make sure that `formula` is among the allowed formats or the module will insert a whitespace instead of a formula.
