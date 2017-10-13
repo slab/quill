@@ -4,6 +4,7 @@ import Emitter from '../core/emitter';
 import Keyboard from '../modules/keyboard';
 import Theme from '../core/theme';
 import ColorPicker from '../ui/color-picker';
+import SimpleCustomPicker from '../ui/simple-custom-picker';
 import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
 import Tooltip from '../ui/tooltip';
@@ -84,6 +85,8 @@ class BaseTheme extends Theme {
           fillSelect(select, ALIGNS);
         }
         return new IconPicker(select, icons.align);
+      } else if (select.classList.contains('ql-custom-picker')) {
+        return new SimpleCustomPicker(select);
       } else if (select.classList.contains('ql-background') || select.classList.contains('ql-color')) {
         let format = select.classList.contains('ql-background') ? 'background' : 'color';
         if (select.querySelector('option') == null) {
