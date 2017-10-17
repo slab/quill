@@ -32,12 +32,12 @@
     }
   },
   "dependencies": {
-    "clone": "~2.1.1",
-    "deep-equal": "~1.0.1",
-    "eventemitter3": "~2.0.3",
-    "extend": "~3.0.1",
-    "parchment": "1.1.0",
-    "quill-delta": "3.6.2"
+    "clone": "^2.1.1",
+    "deep-equal": "^1.0.1",
+    "eventemitter3": "^2.0.3",
+    "extend": "^3.0.1",
+    "parchment": "^1.1.0",
+    "quill-delta": "^3.6.2"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
