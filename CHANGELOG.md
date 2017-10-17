@@ -1,3 +1,15 @@
+# 1.3.3
+
+- Fix `getFormat` with no parameters while editor is not focused [#1548](https://github.com/quilljs/quill/issues/1548)
+- Remove automatic highlighting across embeds [#1691](https://github.com/quilljs/quill/issues/1691)
+- Support checking checklist on mobile [#1693](https://github.com/quilljs/quill/pull/1711)
+- Fix list creation keyboard shortcuts [#1723](https://github.com/quilljs/quill/issues/1723)
+- Show KaTex rendering errors [#1738](https://github.com/quilljs/quill/pull/1738)
+
+
+Thank you [@altschuler](https://github.com/altschuler), [@arrocke](https://github.com/arrocke), [@guillaumepotier](https://github.com/guillaumepotier), [@sferoze](https://github.com/sferoze) and [@volser](https://github.com/volser) for your contributions to this release.
+
+
 # 1.3.2
 
 - Pasting into code block should always paste as code [#1624](https://github.com/quilljs/quill/issues/1624)
@@ -22,7 +34,7 @@ Thank you [@Natim](https://github.com/Natim) and [@stephenLYao](https://github.c
 Add `matchVisual` [configuration](https://quilljs.com/docs/modules/clipboard/#configuration) to Clipboard.
 
 - Use DOM API to determine selected `<select>` option [#1576](https://github.com/quilljs/quill/pull/1576)
-- Add `:focus` styles to toolbbar [#1540](https://github.com/quilljs/quill/issues/1540)
+- Add `:focus` styles to toolbar [#1540](https://github.com/quilljs/quill/issues/1540)
 - Allow users to undo automatic keyboard completions [#1538](https://github.com/quilljs/quill/issues/1538)
 - Use github-pages gem to make development environment consistent [#1536](https://github.com/quilljs/quill/issues/1536) [#1544](https://github.com/quilljs/quill/pull/1544)
 - Fix composing Chinese with preformatting [#1514](https://github.com/quilljs/quill/issues/1514)
