@@ -77,7 +77,7 @@ class Clipboard extends Module {
     }
     const formats = this.quill.getFormat(this.quill.selection.savedRange.index);
     if (formats[CodeBlock.blotName]) {
-      const text = this.container.textContent;
+      const text = this.container.innerText;
       return new Delta().insert(text, { [CodeBlock.blotName]: formats[CodeBlock.blotName] });
     }
     let [elementMatchers, textMatchers] = this.prepareMatching();
