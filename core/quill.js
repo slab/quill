@@ -315,12 +315,12 @@ class Quill {
     }, source);
   }
 
-  setSelection(index, length, source) {
+  setSelection(index, length, reversed = false, source) {
     if (index == null) {
       this.selection.setRange(null, length || Quill.sources.API);
     } else {
       [index, length, , source] = overload(index, length, source);
-      this.selection.setRange(new Range(index, length), source);
+      this.selection.setRange(new Range(index, length, reversed), source);
       if (source !== Emitter.sources.SILENT) {
         this.selection.scrollIntoView(this.scrollingContainer);
       }

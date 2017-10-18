@@ -8,9 +8,10 @@ let debug = logger('quill:selection');
 
 
 class Range {
-  constructor(index, length = 0) {
+  constructor(index, length = 0, reversed = false) {
     this.index = index;
     this.length = length;
+    this.reversed = reversed;
   }
 }
 
@@ -156,6 +157,21 @@ class Selection {
     }
   }
 
+  isReversed() {
+    var backwards = false;
+    if (window.getSelection) {
+        var sel = window.getSelection();
+        if (!sel.isCollapsed) {
+            var range = document.createRange();
+            range.setStart(sel.anchorNode, sel.anchorOffset);
+            range.setEnd(sel.focusNode, sel.focusOffset);
+            backwards = range.collapsed;
+            range.detach();
+        }
+    }
+    return backwards;
+  }
+
   getNativeRange() {
     let selection = document.getSelection();
     if (selection == null || selection.rangeCount <= 0) return null;
@@ -170,6 +186,7 @@ class Selection {
     let normalized = this.getNativeRange();
     if (normalized == null) return [null, null];
     let range = this.normalizedToRange(normalized);
+    range.reversed = this.isReversed();
     return [range, normalized];
   }
 
@@ -263,7 +280,7 @@ class Selection {
     }
   }
 
-  setNativeRange(startNode, startOffset, endNode = startNode, endOffset = startOffset, force = false) {
+  setNativeRange(startNode, startOffset, endNode = startNode, endOffset = startOffset, force = false, reversed = false) {
     debug.info('setNativeRange', startNode, startOffset, endNode, endOffset);
     if (startNode != null && (this.root.parentNode == null || startNode.parentNode == null || endNode.parentNode == null)) {
       return;
@@ -288,10 +305,20 @@ class Selection {
           endNode = endNode.parentNode;
         }
         let range = document.createRange();
-        range.setStart(startNode, startOffset);
-        range.setEnd(endNode, endOffset);
-        selection.removeAllRanges();
-        selection.addRange(range);
+        if (reversed) {
+          range = document.createRange();
+          range.setStart(endNode, endOffset);
+          range.setEnd(endNode, endOffset);
+          selection.removeAllRanges();
+          selection.addRange(range);
+          let sel = window.getSelection();
+          sel.extend(startNode, startOffset);
+        } else {
+          range.setStart(startNode, startOffset);
+          range.setEnd(endNode, endOffset);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
       }
     } else {
       selection.removeAllRanges();
@@ -308,7 +335,7 @@ class Selection {
     debug.info('setRange', range);
     if (range != null) {
       let args = this.rangeToNative(range);
-      this.setNativeRange(...args, force);
+      this.setNativeRange(...args, force, range.reversed);
     } else {
       this.setNativeRange(null);
     }
