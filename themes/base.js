@@ -45,7 +45,7 @@ class BaseTheme extends Theme {
         });
       }
     };
-    document.body.addEventListener('click', listener);
+    quill.emitter.listenDOM('click', document.body, listener);
   }
 
   addModule(name) {
