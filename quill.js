@@ -20,12 +20,12 @@ import Script from './formats/script';
 import Strike from './formats/strike';
 import Underline from './formats/underline';
 
+import Formula from './formats/formula';
 import Image from './formats/image';
 import Video from './formats/video';
 
 import CodeBlock, { Code as InlineCode } from './formats/code';
 
-import Formula from './modules/formula';
 import Syntax from './modules/syntax';
 import Toolbar from './modules/toolbar';
 
@@ -81,12 +81,12 @@ Quill.register({
   'formats/strike': Strike,
   'formats/underline': Underline,
 
+  'formats/formula': Formula,
   'formats/image': Image,
   'formats/video': Video,
 
   'formats/list/item': ListItem,
 
-  'modules/formula': Formula,
   'modules/syntax': Syntax,
   'modules/toolbar': Toolbar,
 

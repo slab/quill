@@ -24,7 +24,7 @@ var quill = new Quill('#editor', {
     toolbar: {
       container: '#toolbar',  // Selector for toolbar container
       handlers: {
-        'formula': customFormulaHandler
+        'bold': customBoldHandler
       }
     }
   }
