@@ -1,4 +1,3 @@
-import './polyfill';
 import Delta from 'quill-delta';
 import Editor from './editor';
 import Emitter from './emitter';
