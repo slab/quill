@@ -55,11 +55,6 @@ module.exports = function(env) {
     },
     module: {
       rules: [{
-        test: /\.js$/,
-        use: ['eslint-loader'],
-        include: source,
-        enforce: 'pre'
-      }, {
         test: /\.ts$/,
         use: [{
           loader: 'ts-loader',
@@ -139,13 +134,6 @@ module.exports = function(env) {
     }
   };
 
-  if (env && env.dev) {
-    config.module.rules = config.module.rules.slice(1);   // Remove linter
-    config.module.rules[3].use[0].options = {
-      plugins: ['transform-es2015-modules-commonjs']
-    };
-  }
-
   if (env && env.minimize) {
     config.entry = {
       'quill.min.js': './quill.js'
@@ -159,9 +147,7 @@ module.exports = function(env) {
   }
 
   if (env && env.coverage) {
-    config.module.rules[4].use[0].options = {
-      plugins: ['istanbul', 'transform-es2015-modules-commonjs']
-    };
+    config.module.rules[3].use[0].options.plugins = ['istanbul'];
   }
 
   return config;
