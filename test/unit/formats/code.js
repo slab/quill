@@ -1,14 +1,8 @@
-import Parchment from 'parchment';
 import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
-import CodeBlock from '../../../formats/code';
 
 
 describe('Code', function() {
-  beforeEach(function() {
-    Parchment.register(CodeBlock);
-  });
-
   it('newline', function() {
     let editor = this.initialize(Editor, `
       <pre></pre>
