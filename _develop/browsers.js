@@ -9,7 +9,6 @@ var desktop = {
   'windows-chrome-latest'   : ['Windows 10', 'chrome', '60.0'],
   'windows-firefox-latest'  : ['Windows 10', 'firefox', '54.0'],
   'windows-edge-latest'     : ['Windows 10', 'microsoftedge', '15.15063'],
-  'windows-ie-latest'       : ['Windows 8.1', 'internet explorer', '11.0'],
   'windows-chrome-previous' : ['Windows 8.1', 'chrome', '59.0'],
   'windows-firefox-previous': ['Windows 8.1', 'firefox', '53.0'],
   'windows-edge-previous'   : ['Windows 10', 'microsoftedge', '14.14393'],
