@@ -21,7 +21,5 @@ env:
     - BROWSER=windows-chrome-latest
     - BROWSER=windows-firefox-latest
     - BROWSER=windows-edge-latest
-    - BROWSER=linux-chrome-latest
-    - BROWSER=linux-firefox-latest
     - BROWSER=ios-latest
     - BROWSER=android-latest

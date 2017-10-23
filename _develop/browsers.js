@@ -12,11 +12,6 @@ var desktop = {
   'windows-chrome-previous' : ['Windows 8.1', 'chrome', '59.0'],
   'windows-firefox-previous': ['Windows 8.1', 'firefox', '53.0'],
   'windows-edge-previous'   : ['Windows 10', 'microsoftedge', '14.14393'],
-
-  'linux-chrome-latest'     : ['Linux', 'chrome', '48.0'],
-  'linux-firefox-latest'    : ['Linux', 'firefox', '45.0'],
-  'linux-chrome-previous'   : ['Linux', 'chrome', '47.0'],
-  'linux-firefox-previous'  : ['Linux', 'firefox', '44.0']
 };
 
 var mobile = {
