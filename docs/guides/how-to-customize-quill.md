@@ -150,7 +150,7 @@ var quill = new Quill('#editor', {
 #### `div` as the default block level element instead of `p`
 
 `p` is the default block level element in Quill. Here's how you can set it to `div`. 
-This is especially useful in cases where you are not in control of the styling the output HTML. For example, when the content is imported in Gmail.
+This is especially useful in cases where you can't control styling of the output HTML. For example, when the content is imported in Gmail.
 
 ```js
 Block.tagName = 'div';
