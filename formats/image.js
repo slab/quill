@@ -30,6 +30,15 @@ class Image extends Parchment.Embed {
     return /\.(jpe?g|gif|png)$/.test(url) || /^data:image\/.+;base64/.test(url);
   }
 
+  static register() {
+    if (/Firefox/i.test(navigator.userAgent)) {
+      setTimeout(function() {
+        // Disable image resizing in Firefox
+        document.execCommand("enableObjectResizing", false, false);
+      }, 1);
+    }
+  }
+
   static sanitize(url) {
     return sanitize(url, ['http', 'https', 'data']) ? url : '//:0';
   }
