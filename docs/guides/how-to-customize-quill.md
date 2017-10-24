@@ -147,6 +147,52 @@ var quill = new Quill('#editor', {
 });
 ```
 
+#### `div` as the default block level element instead of `p`
+
+`p` is the default block level element in Quill. Here's how you can set it to `div`. 
+This is especially useful in cases where you can't control styling of the output HTML. For example, when the content is imported in Gmail.
+
+```js
+Block.tagName = 'div';
+Quill.register(Block, true);
+
+// Initialize as you would normally
+var quill = new Quill('#editor', {
+  modules: {
+    toolbar: true
+  },
+  theme: 'snow'
+});
+```
+
+#### `<font>` support
+
+There's a high probability that your old editor used `font` tags for setting the typography of the content and you have legacy content which consists of `font` tags. Here is how you can extend Quill by creating a custom `font` blot to retain the legacy data when it's imported in Quill.
+
+```js
+var Inline = Quill.import('blots/inline');
+class FontBlot extends Inline {
+    static create(value) {
+        var node = super.create();
+        node.setAttribute('face', value.face);
+        node.setAttribute('size', value.size);
+        return node;
+    }
+
+    static formats(node) {
+        return {
+            size: node.getAttribute('size'),
+            face: node.getAttribute('face')
+        };
+    }
+}
+FontBlot.blotName = 'font';
+FontBlot.tagName = 'FONT';
+Quill.register(FontBlot);
+```
+
+
+
 You can view a list of Blots and Attributors available by calling `console.log(Quill.imports);`. Direct modification of this object is not supported. Use [`Quill.register`](/docs/api/#register) instead.
 
 A complete reference on Parchment, Blots and Attributors can be found on Parchment's own [README](https://github.com/quilljs/parchment/). For an in-depth walkthrough, take a look at [Cloning Medium with Parchment](/guides/cloning-medium-with-parchment/), which starts with Quill understanding just plain text, to adding all of the formats [Medium](https://medium.com/) supports. Most of the time, you will not have to build formats from scratch since most are already implemented in Quill, but it is still useful to understanding how Quill works at this deeper level.
