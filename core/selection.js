@@ -157,26 +157,16 @@ class Selection {
     }
   }
 
-  isReversed() {
-    var backwards = false;
-    if (window.getSelection) {
-        var sel = window.getSelection();
-        if (!sel.isCollapsed) {
-            var range = document.createRange();
-            range.setStart(sel.anchorNode, sel.anchorOffset);
-            range.setEnd(sel.focusNode, sel.focusOffset);
-            backwards = range.collapsed;
-            range.detach();
-        }
-    }
-    return backwards;
-  }
-
   getNativeRange() {
     let selection = document.getSelection();
     if (selection == null || selection.rangeCount <= 0) return null;
     let nativeRange = selection.getRangeAt(0);
     if (nativeRange == null) return null;
+    if (nativeRange.startContainer.isEqualNode(nativeRange.endContainer)) {
+      nativeRange.reversed =  selection.anchorOffset === nativeRange.endOffset;
+    } else {
+      nativeRange.reversed = selection.anchorNode.isEqualNode(nativeRange.endContainer);
+    }
     let range = this.normalizeNative(nativeRange);
     debug.info('getNativeRange', range);
     return range;
@@ -186,7 +176,6 @@ class Selection {
     let normalized = this.getNativeRange();
     if (normalized == null) return [null, null];
     let range = this.normalizedToRange(normalized);
-    range.reversed = this.isReversed();
     return [range, normalized];
   }
 
@@ -213,7 +202,8 @@ class Selection {
     });
     let end = Math.min(Math.max(...indexes), this.scroll.length() - 1);
     let start = Math.min(end, ...indexes);
-    return new Range(start, end-start);
+    let reversed = range.native.reversed;
+    return new Range(start, end-start, reversed);
   }
 
   normalizeNative(nativeRange) {
@@ -245,7 +235,12 @@ class Selection {
   }
 
   rangeToNative(range) {
-    let indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
+    let indexes = [];
+    if (range.reversed) {
+      indexes = range.collapsed ? [range.index] : [range.index - range.length, range.index - (2 * range.length)];
+    } else {
+      indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
+    }
     let args = [];
     let scrollLength = this.scroll.length();
     indexes.forEach((index, i) => {
@@ -280,7 +275,7 @@ class Selection {
     }
   }
 
-  setNativeRange(startNode, startOffset, endNode = startNode, endOffset = startOffset, force = false, reversed = false) {
+  setNativeRange(startNode, startOffset, endNode = startNode, endOffset = startOffset, force = false) {
     debug.info('setNativeRange', startNode, startOffset, endNode, endOffset);
     if (startNode != null && (this.root.parentNode == null || startNode.parentNode == null || endNode.parentNode == null)) {
       return;
@@ -304,15 +299,23 @@ class Selection {
           endOffset = [].indexOf.call(endNode.parentNode.childNodes, endNode);
           endNode = endNode.parentNode;
         }
+
+        let reversed = false;
+
+        if (startNode.isEqualNode(endNode) && startOffset > endOffset) {
+          reversed = true;
+        } else {
+          reversed = startNode.compareDocumentPosition(endNode) & Node.DOCUMENT_POSITION_FOLLOWING;
+        }
         let range = document.createRange();
         if (reversed) {
           range = document.createRange();
-          range.setStart(endNode, endOffset);
-          range.setEnd(endNode, endOffset);
+          range.setStart(startNode, startOffset);
+          range.setEnd(startNode, startOffset);
           selection.removeAllRanges();
           selection.addRange(range);
           let sel = window.getSelection();
-          sel.extend(startNode, startOffset);
+          sel.extend(endNode, endOffset);
         } else {
           range.setStart(startNode, startOffset);
           range.setEnd(endNode, endOffset);
@@ -335,7 +338,7 @@ class Selection {
     debug.info('setRange', range);
     if (range != null) {
       let args = this.rangeToNative(range);
-      this.setNativeRange(...args, force, range.reversed);
+      this.setNativeRange(...args, force);
     } else {
       this.setNativeRange(null);
     }
