@@ -33,4 +33,4 @@ Quill.register({
 Parchment.register(Block, Break, Cursor, Inline, Scroll, TextBlot);
 
 
-module.exports = Quill;
+export default Quill;

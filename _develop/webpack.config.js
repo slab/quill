@@ -44,6 +44,7 @@ module.exports = function(env) {
     output: {
       filename: '[name]',
       library: 'Quill',
+      libraryExport: 'default',
       libraryTarget: 'umd',
       path: path.resolve(__dirname, '../dist/')
     },
