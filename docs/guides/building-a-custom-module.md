@@ -27,7 +27,7 @@ Quill.register('modules/counter', function(quill, options) {
     var text = quill.getText();
     // There are a couple issues with counting words
     // this way but we'll fix these later
-    container.innerHTML = text.split(/\s+/).length;
+    container.innerText = text.split(/\s+/).length;
   });
 });
 
@@ -51,9 +51,9 @@ Quill.register('modules/counter', function(quill, options) {
   quill.on('text-change', function() {
     var text = quill.getText();
     if (options.unit === 'word') {
-      container.innerHTML = text.split(/\s+/).length + ' words';
+      container.innerText = text.split(/\s+/).length + ' words';
     } else {
-      container.innerHTML = text.length + ' characters';
+      container.innerText = text.length + ' characters';
     }
   });
 });
@@ -80,7 +80,7 @@ var Counter = function(quill, options) {
   var _this = this;
   quill.on('text-change', function() {
     var length = _this.calculate();
-    container.innerHTML = length + ' ' + options.unit + 's';
+    container.innerText = length + ' ' + options.unit + 's';
   });
 };
 
@@ -141,7 +141,7 @@ class Counter {
     if (length !== 1) {
       label += 's';
     }
-    this.container.innerHTML = length + ' ' + label;
+    this.container.innerText = length + ' ' + label;
   }
 }
 

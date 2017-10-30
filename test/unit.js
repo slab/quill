@@ -1,4 +1,7 @@
 import Quill from '../quill.js';
+import CodeBlock from '../formats/code';
+
+Quill.register(CodeBlock, true); // Syntax version will otherwise be registered
 
 import './helpers/unit.js';
 
