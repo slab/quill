@@ -2,6 +2,7 @@
 layout: docs
 title: Formats
 permalink: /docs/formats/
+redirect_from: /docs/modules/formula
 ---
 
 Quill supports a number of formats, both in UI controls and API calls.
