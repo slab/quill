@@ -20,13 +20,16 @@ class Selection {
     this.composing = false;
     this.mouseDown = false;
     this.root = this.scroll.domNode;
+    this.rootDocument = this.root.getRootNode
+      ? this.root.getRootNode()
+      : document;
     this.cursor = this.scroll.create('cursor', this);
     // savedRange is last non-null range
     this.savedRange = new Range(0, 0);
     this.lastRange = this.savedRange;
     this.handleComposition();
     this.handleDragging();
-    this.emitter.listenDOM('selectionchange', document, () => {
+    this.emitter.listenDOM('selectionchange', this.rootDocument, () => {
       if (!this.mouseDown && !this.composing) {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
       }
@@ -175,7 +178,7 @@ class Selection {
   }
 
   getNativeRange() {
-    const selection = document.getSelection();
+    const selection = this.rootDocument.getSelection();
     if (selection == null || selection.rangeCount <= 0) return null;
     const nativeRange = selection.getRangeAt(0);
     if (nativeRange == null) return null;
@@ -193,8 +196,8 @@ class Selection {
 
   hasFocus() {
     return (
-      document.activeElement === this.root ||
-      contains(this.root, document.activeElement)
+      this.rootDocument.activeElement === this.root ||
+      contains(this.root, this.rootDocument.activeElement)
     );
   }
 
@@ -316,7 +319,7 @@ class Selection {
     ) {
       return;
     }
-    const selection = document.getSelection();
+    const selection = this.rootDocument.getSelection();
     if (selection == null) return;
     if (startNode != null) {
       if (!this.hasFocus()) this.root.focus();
