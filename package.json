@@ -46,6 +46,12 @@
     "babel-preset-env": "^1.6.1",
     "css-loader": "~0.28.7",
     "eslint": "^4.9.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-prettier": "^2.6.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-prettier": "^2.3.1",
+    "eslint-plugin-react": "^7.4.0",
     "extract-text-webpack-plugin": "^3.0.1",
     "highlight.js": "^9.12.0",
     "html-loader": "~0.5.1",
@@ -57,6 +63,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-sauce-launcher": "^1.2.0",
     "lodash": "^4.17.4",
+    "prettier": "^1.7.4",
     "style-loader": "~0.19.0",
     "stylus": "~0.54.5",
     "stylus-loader": "^3.0.1",
@@ -80,7 +87,8 @@
   "scripts": {
     "build": "npm run lint && webpack --config _develop/webpack.config.js; rm dist/quill.core dist/quill.bubble dist/quill.snow;",
     "build:release": "./_develop/scripts/release.sh",
-    "lint": "eslint blots core formats modules themes ui",
+    "lint": "eslint blots",
+    "lint:old": "eslint blots core formats modules themes ui",
     "start": "npm run build; bundle exec foreman start -f _develop/procfile",
     "test": "npm run test:unit",
     "test:all": "npm run test:unit; npm run test:functional",
@@ -90,6 +98,49 @@
     "travis": "karma start _develop/karma.config.js --reporters dots,saucelabs",
     "webdriver:start": "webdriver-manager start",
     "webdriver:update": "webdriver-manager update"
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb",
+      "prettier"
+    ],
+    "env": {
+      "browser": true,
+      "commonjs": true,
+      "es6": true,
+      "jasmine": true
+    },
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "arrow-body-style": [
+        "off"
+      ],
+      "class-methods-use-this": ["off"],
+      "no-use-before-define": [
+        "error",
+        {
+          "functions": false
+        }
+      ],
+      "import/named": [
+        "error"
+      ],
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": [
+            "**/*.test.js",
+            "**/*.stories.js"
+          ]
+        }
+      ]
+    }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all"
   },
   "keywords": [
     "editor",
