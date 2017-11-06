@@ -1,3 +1,11 @@
+# 1.3.4
+
+- Loosen dependency specification [#1748](https://github.com/quilljs/quill/issues/1748)
+- Loosen list autofill constraint [#1749](https://github.com/quilljs/quill/issues/1749)
+
+Thanks to [@danfuzz](https://github.com/danfuzz) and [@SoftVision-CarmenFat](https://github.com/SoftVision-CarmenFat) for contributions to this release!
+
+
 # 1.3.3
 
 - Fix `getFormat` with no parameters while editor is not focused [#1548](https://github.com/quilljs/quill/issues/1548)
