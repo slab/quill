@@ -1,7 +1,6 @@
 import Selection, { Range } from '../../../core/selection';
 import Cursor from '../../../blots/cursor';
 
-
 describe('Selection', function() {
   beforeEach(function() {
     this.setup = (html, index) => {
@@ -13,7 +12,11 @@ describe('Selection', function() {
   describe('focus()', function() {
     beforeEach(function() {
       this.initialize(HTMLElement, '<textarea>Test</textarea><div></div>');
-      this.selection = this.initialize(Selection, '<p>0123</p>', this.container.lastChild);
+      this.selection = this.initialize(
+        Selection,
+        '<p>0123</p>',
+        this.container.lastChild,
+      );
       this.textarea = this.container.querySelector('textarea');
       this.textarea.focus();
       this.textarea.select();
@@ -26,7 +29,7 @@ describe('Selection', function() {
     });
 
     it('restore last range', function() {
-      let range = new Range(1, 2);
+      const range = new Range(1, 2);
       this.selection.setRange(range);
       this.textarea.focus();
       this.textarea.select();
@@ -39,63 +42,77 @@ describe('Selection', function() {
 
   describe('getRange()', function() {
     it('empty document', function() {
-      let selection = this.initialize(Selection, '');
+      const selection = this.initialize(Selection, '');
       selection.setNativeRange(this.container.querySelector('br'), 0);
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range.index).toEqual(0);
       expect(range.length).toEqual(0);
     });
 
     it('empty line', function() {
-      let selection = this.initialize(Selection, '<p>0</p><p><br></p><p>3</p>');
+      const selection = this.initialize(
+        Selection,
+        '<p>0</p><p><br></p><p>3</p>',
+      );
       selection.setNativeRange(this.container.querySelector('br'), 0);
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range.index).toEqual(2);
       expect(range.length).toEqual(0);
     });
 
     it('end of line', function() {
-      let selection = this.initialize(Selection, '<p>0</p>');
+      const selection = this.initialize(Selection, '<p>0</p>');
       selection.setNativeRange(this.container.firstChild.firstChild, 1);
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range.index).toEqual(1);
       expect(range.length).toEqual(0);
     });
 
     it('text node', function() {
-      let selection = this.initialize(Selection, '<p>0123</p>');
+      const selection = this.initialize(Selection, '<p>0123</p>');
       selection.setNativeRange(this.container.firstChild.firstChild, 1);
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range.index).toEqual(1);
       expect(range.length).toEqual(0);
     });
 
     it('line boundaries', function() {
-      let selection = this.initialize(Selection, '<p><br></p><p>12</p>');
-      selection.setNativeRange(this.container.firstChild, 0, this.container.lastChild.lastChild, 2);
-      let [range, ] = selection.getRange();
+      const selection = this.initialize(Selection, '<p><br></p><p>12</p>');
+      selection.setNativeRange(
+        this.container.firstChild,
+        0,
+        this.container.lastChild.lastChild,
+        2,
+      );
+      const [range] = selection.getRange();
       expect(range.index).toEqual(0);
       expect(range.length).toEqual(3);
     });
 
     it('nested text node', function() {
-      let selection = this.initialize(Selection, `
+      const selection = this.initialize(
+        Selection,
+        `
         <p><strong><em>01</em></strong></p>
         <ul>
           <li><em><u>34</u></em></li>
-        </ul>`
+        </ul>`,
       );
       selection.setNativeRange(
-        this.container.querySelector('em').firstChild, 1,
-        this.container.querySelector('u').firstChild, 1
+        this.container.querySelector('em').firstChild,
+        1,
+        this.container.querySelector('u').firstChild,
+        1,
       );
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range.index).toEqual(1);
       expect(range.length).toEqual(3);
     });
 
     it('between embed', function() {
-      let selection = this.initialize(Selection, `
+      const selection = this.initialize(
+        Selection,
+        `
         <p>
           <img src="/assets/favicon.png">
           <img src="/assets/favicon.png">
@@ -105,109 +122,140 @@ describe('Selection', function() {
             <img src="/assets/favicon.png">
             <img src="/assets/favicon.png">
           </li>
-        </ul>`
+        </ul>`,
       );
-      selection.setNativeRange(this.container.firstChild, 1, this.container.lastChild.lastChild, 1);
-      let [range, ] = selection.getRange();
+      selection.setNativeRange(
+        this.container.firstChild,
+        1,
+        this.container.lastChild.lastChild,
+        1,
+      );
+      const [range] = selection.getRange();
       expect(range.index).toEqual(1);
       expect(range.length).toEqual(3);
     });
 
     it('between inlines', function() {
-      let selection = this.initialize(Selection, '<p><em>01</em><s>23</s><u>45</u></p>');
-      selection.setNativeRange(this.container.firstChild, 1, this.container.firstChild, 2);
-      let [range, ] = selection.getRange();
+      const selection = this.initialize(
+        Selection,
+        '<p><em>01</em><s>23</s><u>45</u></p>',
+      );
+      selection.setNativeRange(
+        this.container.firstChild,
+        1,
+        this.container.firstChild,
+        2,
+      );
+      const [range] = selection.getRange();
       expect(range.index).toEqual(2);
       expect(range.length).toEqual(2);
     });
 
     it('between blocks', function() {
-      let selection = this.initialize(Selection, `
+      const selection = this.initialize(
+        Selection,
+        `
         <p>01</p>
         <p><br></p>
         <ul>
           <li>45</li>
           <li>78</li>
-        </ul>`
+        </ul>`,
       );
       selection.setNativeRange(this.container, 1, this.container.lastChild, 1);
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range.index).toEqual(3);
       expect(range.length).toEqual(4);
     });
 
     it('wrong input', function() {
-      let container = this.initialize(HTMLElement, `
+      const container = this.initialize(
+        HTMLElement,
+        `
         <textarea>Test</textarea>
-        <div></div>`
+        <div></div>`,
       );
-      let selection = this.initialize(Selection, '<p>0123</p>', container.lastChild);
+      const selection = this.initialize(
+        Selection,
+        '<p>0123</p>',
+        container.lastChild,
+      );
       container.firstChild.select();
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range).toEqual(null);
     });
   });
 
   describe('setRange()', function() {
     it('empty document', function() {
-      let selection = this.initialize(Selection, '');
-      let expected = new Range(0);
+      const selection = this.initialize(Selection, '');
+      const expected = new Range(0);
       selection.setRange(expected);
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range).toEqual(expected);
       expect(selection.hasFocus()).toBe(true);
     });
 
     it('empty lines', function() {
-      let selection = this.initialize(Selection, `
+      const selection = this.initialize(
+        Selection,
+        `
         <p><br></p>
         <ul>
           <li><br></li>
-        </ul>`
+        </ul>`,
       );
-      let expected = new Range(0, 1);
+      const expected = new Range(0, 1);
       selection.setRange(expected);
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range).toEqual(range);
       expect(selection.hasFocus()).toBe(true);
     });
 
     it('nested text node', function() {
-      let selection = this.initialize(Selection, `
+      const selection = this.initialize(
+        Selection,
+        `
         <p><strong><em>01</em></strong></p>
         <ul>
           <li><em><u>34</u></em></li>
-        </ul>`
+        </ul>`,
       );
-      let expected = new Range(1, 3);
+      const expected = new Range(1, 3);
       selection.setRange(expected);
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range).toEqual(expected);
       expect(selection.hasFocus()).toBe(true);
     });
 
     it('between inlines', function() {
-      let selection = this.initialize(Selection, '<p><em>01</em><s>23</s><u>45</u></p>');
-      let expected = new Range(2, 2);
+      const selection = this.initialize(
+        Selection,
+        '<p><em>01</em><s>23</s><u>45</u></p>',
+      );
+      const expected = new Range(2, 2);
       selection.setRange(expected);
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range).toEqual(expected);
       expect(selection.hasFocus()).toBe(true);
     });
 
     it('single embed', function() {
-      let selection = this.initialize(Selection,
-        `<p><img src="/assets/favicon.png"></p>`
+      const selection = this.initialize(
+        Selection,
+        `<p><img src="/assets/favicon.png"></p>`,
       );
-      let expected = new Range(1, 0);
+      const expected = new Range(1, 0);
       selection.setRange(expected);
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range).toEqual(expected);
       expect(selection.hasFocus()).toBe(true);
     });
 
     it('between embeds', function() {
-      let selection = this.initialize(Selection, `
+      const selection = this.initialize(
+        Selection,
+        `
         <p>
           <img src="/assets/favicon.png">
           <img src="/assets/favicon.png">
@@ -217,22 +265,22 @@ describe('Selection', function() {
             <img src="/assets/favicon.png">
             <img src="/assets/favicon.png">
           </li>
-        </ul>`
+        </ul>`,
       );
-      let expected = new Range(1, 3);
+      const expected = new Range(1, 3);
       selection.setRange(expected);
-      let [range, ] = selection.getRange();
+      const [range] = selection.getRange();
       expect(range).toEqual(expected);
       expect(selection.hasFocus()).toBe(true);
     });
 
     it('null', function() {
-      let selection = this.initialize(Selection, '<p>0123</p>');
+      const selection = this.initialize(Selection, '<p>0123</p>');
       selection.setRange(new Range(1));
-      let [range, ] = selection.getRange();
+      let [range] = selection.getRange();
       expect(range).not.toEqual(null);
       selection.setRange(null);
-      [range, ] = selection.getRange();
+      [range] = selection.getRange();
       expect(range).toEqual(null);
       expect(selection.hasFocus()).toBe(false);
     });
@@ -283,7 +331,7 @@ describe('Selection', function() {
       this.setup(`<p>0123</p>`, 2);
       this.selection.format('underline', true);
       this.selection.scroll.update();
-      let native = this.selection.getNativeRange();
+      const native = this.selection.getNativeRange();
       expect(native.start.node).toEqual(this.selection.cursor.textNode);
     });
 
@@ -331,7 +379,7 @@ describe('Selection', function() {
     it('text change cleanup', function() {
       this.setup(`<p>0123</p>`, 2);
       this.selection.format('italic', true);
-      this.selection.cursor.textNode.data = Cursor.CONTENTS + '|';
+      this.selection.cursor.textNode.data = `${Cursor.CONTENTS}|`;
       this.selection.setNativeRange(this.selection.cursor.textNode, 2);
       this.selection.scroll.update();
       expect(this.container).toEqualHTML('<p>01<em>|</em>23</p>');
@@ -353,7 +401,9 @@ describe('Selection', function() {
     beforeEach(function() {
       this.container.classList.add('ql-editor');
       this.container.style.fontFamily = 'monospace';
-      this.container.style.lineHeight = /Trident/i.test(navigator.userAgent) ? '18px' : 'initial';
+      this.container.style.lineHeight = /Trident/i.test(navigator.userAgent)
+        ? '18px'
+        : 'initial';
       this.initialize(HTMLElement, '<div></div><div>&nbsp;</div>');
       this.div = this.container.firstChild;
       this.div.style.border = '1px solid #777';
@@ -364,119 +414,162 @@ describe('Selection', function() {
       this.float.style.width = '1px';
       if (this.reference != null) return;
       this.initialize(HTMLElement, '<p><span>0</span></p>', this.div);
-      let span = this.div.firstChild.firstChild;
-      span.style.display = 'inline-block';    // IE11 needs this to respect line height
-      let bounds = span.getBoundingClientRect();
+      const span = this.div.firstChild.firstChild;
+      span.style.display = 'inline-block'; // IE11 needs this to respect line height
+      const bounds = span.getBoundingClientRect();
       this.reference = {
         height: bounds.height,
         left: bounds.left,
         lineHeight: span.parentNode.offsetHeight,
         width: bounds.width,
-        top: bounds.top
+        top: bounds.top,
       };
       this.initialize(HTMLElement, '', this.div);
     });
 
     afterEach(function() {
-      this.float.style.left = this.bounds.left + 'px';
-      this.float.style.top = this.bounds.top + 'px';
-      this.float.style.height = this.bounds.height + 'px';
+      this.float.style.left = `${this.bounds.left}px`;
+      this.float.style.top = `${this.bounds.top}px`;
+      this.float.style.height = `${this.bounds.height}px`;
     });
 
     it('empty document', function() {
-      let selection = this.initialize(Selection, '<p><br></p>', this.div);
+      const selection = this.initialize(Selection, '<p><br></p>', this.div);
       this.bounds = selection.getBounds(0);
-      if (/Android/i.test(navigator.userAgent)) return;   // false positive on emulators atm
+      if (/Android/i.test(navigator.userAgent)) return; // false positive on emulators atm
       expect(this.bounds.left).toBeApproximately(this.reference.left, 1);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
 
     it('empty line', function() {
-      let selection = this.initialize(Selection, `
+      const selection = this.initialize(
+        Selection,
+        `
         <p>0000</p>
         <p><br></p>
-        <p>0000</p>`
-      , this.div);
+        <p>0000</p>`,
+        this.div,
+      );
       this.bounds = selection.getBounds(5);
-      if (/Android/i.test(navigator.userAgent)) return;   // false positive on emulators atm
+      if (/Android/i.test(navigator.userAgent)) return; // false positive on emulators atm
       expect(this.bounds.left).toBeApproximately(this.reference.left, 1);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
-      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 2);
+      expect(this.bounds.top).toBeApproximately(
+        this.reference.top + this.reference.lineHeight,
+        2,
+      );
     });
 
     it('plain text', function() {
-      let selection = this.initialize(Selection, '<p>0123</p>', this.div);
+      const selection = this.initialize(Selection, '<p>0123</p>', this.div);
       this.bounds = selection.getBounds(2);
-      expect(this.bounds.left).toBeApproximately(this.reference.left + this.reference.width * 2, 2);
+      expect(this.bounds.left).toBeApproximately(
+        this.reference.left + this.reference.width * 2,
+        2,
+      );
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
 
     it('multiple characters', function() {
-      let selection = this.initialize(Selection, '<p>0123</p>', this.div);
+      const selection = this.initialize(Selection, '<p>0123</p>', this.div);
       this.bounds = selection.getBounds(1, 2);
-      expect(this.bounds.left).toBeApproximately(this.reference.left + this.reference.width, 2);
+      expect(this.bounds.left).toBeApproximately(
+        this.reference.left + this.reference.width,
+        2,
+      );
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
-      expect(this.bounds.width).toBeApproximately(this.reference.width*2, 2);
+      expect(this.bounds.width).toBeApproximately(this.reference.width * 2, 2);
     });
 
     it('start of line', function() {
-      let selection = this.initialize(Selection, `
+      const selection = this.initialize(
+        Selection,
+        `
         <p>0000</p>
-        <p>0000</p>`
-      , this.div);
+        <p>0000</p>`,
+        this.div,
+      );
       this.bounds = selection.getBounds(5);
       expect(this.bounds.left).toBeApproximately(this.reference.left, 1);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
-      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 1);
+      expect(this.bounds.top).toBeApproximately(
+        this.reference.top + this.reference.lineHeight,
+        1,
+      );
     });
 
     it('end of line', function() {
-      let selection = this.initialize(Selection, `
+      const selection = this.initialize(
+        Selection,
+        `
         <p>0000</p>
         <p>0000</p>
-        <p>0000</p>`
-      , this.div);
+        <p>0000</p>`,
+        this.div,
+      );
       this.bounds = selection.getBounds(9);
-      expect(this.bounds.left).toBeApproximately(this.reference.left + this.reference.width * 4, 4);
+      expect(this.bounds.left).toBeApproximately(
+        this.reference.left + this.reference.width * 4,
+        4,
+      );
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
-      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 1);
+      expect(this.bounds.top).toBeApproximately(
+        this.reference.top + this.reference.lineHeight,
+        1,
+      );
     });
 
     it('multiple lines', function() {
-      let selection = this.initialize(Selection, `
+      const selection = this.initialize(
+        Selection,
+        `
         <p>0000</p>
         <p>0000</p>
-        <p>0000</p>`
-      , this.div);
+        <p>0000</p>`,
+        this.div,
+      );
       this.bounds = selection.getBounds(2, 4);
       expect(this.bounds.left).toBeApproximately(this.reference.left, 1);
-      expect(this.bounds.height).toBeApproximately(this.reference.height*2, 2);
+      expect(this.bounds.height).toBeApproximately(
+        this.reference.height * 2,
+        2,
+      );
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
-      expect(this.bounds.width).toBeGreaterThan(3*this.reference.width);
+      expect(this.bounds.width).toBeGreaterThan(3 * this.reference.width);
     });
 
     it('large text', function() {
-      let selection = this.initialize(Selection, '<p><span class="ql-size-large">0000</span></p>', this.div);
-      let span = this.div.querySelector('span');
+      const selection = this.initialize(
+        Selection,
+        '<p><span class="ql-size-large">0000</span></p>',
+        this.div,
+      );
+      const span = this.div.querySelector('span');
       if (/Trident/i.test(navigator.userAgent)) {
         span.style.lineHeight = '27px';
       }
       this.bounds = selection.getBounds(2);
-      expect(this.bounds.left).toBeApproximately(this.reference.left + span.offsetWidth / 2, 1);
+      expect(this.bounds.left).toBeApproximately(
+        this.reference.left + span.offsetWidth / 2,
+        1,
+      );
       expect(this.bounds.height).toBeApproximately(span.offsetHeight, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
 
     it('image', function() {
-      let selection = this.initialize(Selection, `
+      const selection = this.initialize(
+        Selection,
+        `
         <p>
           <img src="/assets/favicon.png" width="32px" height="32px">
           <img src="/assets/favicon.png" width="32px" height="32px">
-        </p>`
-      , this.div);
+        </p>`,
+        this.div,
+      );
       this.bounds = selection.getBounds(1);
       expect(this.bounds.left).toBeApproximately(this.reference.left + 32, 1);
       expect(this.bounds.height).toBeApproximately(32, 1);
@@ -484,7 +577,7 @@ describe('Selection', function() {
     });
 
     it('beyond document', function() {
-      let selection = this.initialize(Selection, '<p>0123</p>');
+      const selection = this.initialize(Selection, '<p>0123</p>');
       expect(() => {
         this.bounds = selection.getBounds(10, 0);
       }).not.toThrow();

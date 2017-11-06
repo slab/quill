@@ -1,13 +1,12 @@
 import Embed from '../blots/embed';
 
-
 class Formula extends Embed {
   static create(value) {
-    let node = super.create(value);
+    const node = super.create(value);
     if (typeof value === 'string') {
       window.katex.render(value, node, {
         throwOnError: false,
-        errorColor: '#f00'
+        errorColor: '#f00',
       });
       node.setAttribute('data-value', value);
     }
@@ -27,6 +26,5 @@ class Formula extends Embed {
 Formula.blotName = 'formula';
 Formula.className = 'ql-formula';
 Formula.tagName = 'SPAN';
-
 
 export default Formula;

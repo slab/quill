@@ -6,9 +6,8 @@ class Script extends Inline {
       return document.createElement('sup');
     } else if (value === 'sub') {
       return document.createElement('sub');
-    } else {
-      return super.create(value);
     }
+    return super.create(value);
   }
 
   static formats(domNode) {

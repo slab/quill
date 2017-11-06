@@ -1,49 +1,72 @@
+import alignLeftIcon from '../assets/icons/align-left.svg';
+import alignCenterIcon from '../assets/icons/align-center.svg';
+import alignRightIcon from '../assets/icons/align-right.svg';
+import alignJustifyIcon from '../assets/icons/align-justify.svg';
+import backgroundIcon from '../assets/icons/background.svg';
+import blockquoteIcon from '../assets/icons/blockquote.svg';
+import boldIcon from '../assets/icons/bold.svg';
+import cleanIcon from '../assets/icons/clean.svg';
+import codeIcon from '../assets/icons/code.svg';
+import colorIcon from '../assets/icons/color.svg';
+import directionLeftToRightIcon from '../assets/icons/direction-ltr.svg';
+import directionRightToLeftIcon from '../assets/icons/direction-rtl.svg';
+import formulaIcon from '../assets/icons/formula.svg';
+import headerIcon from '../assets/icons/header.svg';
+import header2Icon from '../assets/icons/header-2.svg';
+import italicIcon from '../assets/icons/italic.svg';
+import imageIcon from '../assets/icons/image.svg';
+import indentIcon from '../assets/icons/indent.svg';
+import outdentIcon from '../assets/icons/outdent.svg';
+import linkIcon from '../assets/icons/link.svg';
+import listBulletIcon from '../assets/icons/list-bullet.svg';
+import listCheckIcon from '../assets/icons/list-check.svg';
+import listOrderedIcon from '../assets/icons/list-ordered.svg';
+import subscriptIcon from '../assets/icons/subscript.svg';
+import superscriptIcon from '../assets/icons/superscript.svg';
+import strikeIcon from '../assets/icons/strike.svg';
+import underlineIcon from '../assets/icons/underline.svg';
+import videoIcon from '../assets/icons/video.svg';
+
 module.exports = {
-  'align': {
-    ''        : require('../assets/icons/align-left.svg'),
-    'center'  : require('../assets/icons/align-center.svg'),
-    'right'   : require('../assets/icons/align-right.svg'),
-    'justify' : require('../assets/icons/align-justify.svg')
+  align: {
+    '': alignLeftIcon,
+    center: alignCenterIcon,
+    right: alignRightIcon,
+    justify: alignJustifyIcon,
   },
-  'background': require('../assets/icons/background.svg'),
-  'blockquote': require('../assets/icons/blockquote.svg'),
-  'bold'      : require('../assets/icons/bold.svg'),
-  'clean'     : require('../assets/icons/clean.svg'),
-  'code'      : require('../assets/icons/code.svg'),
-  'code-block': require('../assets/icons/code.svg'),
-  'color'     : require('../assets/icons/color.svg'),
-  'direction' : {
-    ''        : require('../assets/icons/direction-ltr.svg'),
-    'rtl'     : require('../assets/icons/direction-rtl.svg')
+  background: backgroundIcon,
+  blockquote: blockquoteIcon,
+  bold: boldIcon,
+  clean: cleanIcon,
+  code: codeIcon,
+  'code-block': codeIcon,
+  color: colorIcon,
+  direction: {
+    '': directionLeftToRightIcon,
+    rtl: directionRightToLeftIcon,
   },
-  'float': {
-    'center'  : require('../assets/icons/float-center.svg'),
-    'full'    : require('../assets/icons/float-full.svg'),
-    'left'    : require('../assets/icons/float-left.svg'),
-    'right'   : require('../assets/icons/float-right.svg')
+  formula: formulaIcon,
+  header: {
+    '1': headerIcon,
+    '2': header2Icon,
   },
-  'formula'   : require('../assets/icons/formula.svg'),
-  'header': {
-    '1'       : require('../assets/icons/header.svg'),
-    '2'       : require('../assets/icons/header-2.svg')
+  italic: italicIcon,
+  image: imageIcon,
+  indent: {
+    '+1': indentIcon,
+    '-1': outdentIcon,
   },
-  'italic'    : require('../assets/icons/italic.svg'),
-  'image'     : require('../assets/icons/image.svg'),
-  'indent': {
-    '+1'      : require('../assets/icons/indent.svg'),
-    '-1'      : require('../assets/icons/outdent.svg')
+  link: linkIcon,
+  list: {
+    bullet: listBulletIcon,
+    check: listCheckIcon,
+    ordered: listOrderedIcon,
   },
-  'link'      : require('../assets/icons/link.svg'),
-  'list': {
-    'ordered' : require('../assets/icons/list-ordered.svg'),
-    'bullet'  : require('../assets/icons/list-bullet.svg'),
-    'check'   : require('../assets/icons/list-check.svg')
+  script: {
+    sub: subscriptIcon,
+    super: superscriptIcon,
   },
-  'script': {
-    'sub'     : require('../assets/icons/subscript.svg'),
-    'super'   : require('../assets/icons/superscript.svg'),
-  },
-  'strike'    : require('../assets/icons/strike.svg'),
-  'underline' : require('../assets/icons/underline.svg'),
-  'video'     : require('../assets/icons/video.svg')
+  strike: strikeIcon,
+  underline: underlineIcon,
+  video: videoIcon,
 };

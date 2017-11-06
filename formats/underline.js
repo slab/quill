@@ -1,6 +1,6 @@
 import Inline from '../blots/inline';
 
-class Underline extends Inline { }
+class Underline extends Inline {}
 Underline.blotName = 'underline';
 Underline.tagName = 'U';
 

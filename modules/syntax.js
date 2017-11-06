@@ -3,6 +3,7 @@ import Quill from '../core/quill';
 import Module from '../core/module';
 import CodeBlock from '../formats/code';
 
+const CODE_TOKEN_CLASS = 'ql-token';
 
 class SyntaxCodeBlock extends CodeBlock {
   static formats(node) {
@@ -16,15 +17,15 @@ class SyntaxCodeBlock extends CodeBlock {
   }
 
   highlight(highlight) {
-    let text = this.domNode.textContent;
+    const text = this.domNode.textContent;
     if (this.cachedText !== text) {
       if (text.trim().length > 0 || this.cachedText == null) {
         const language = this.statics.formats(this.domNode);
         const subset = typeof language === 'string' ? [language] : undefined;
         this.domNode.innerHTML = highlight(text, subset);
         this.domNode.normalize();
-        [].slice.call(this.domNode.querySelectorAll('span')).forEach((token) => {
-          token.classList.add(CodeToken.className);
+        [].slice.call(this.domNode.querySelectorAll('span')).forEach(token => {
+          token.classList.add(CODE_TOKEN_CLASS);
         });
         this.attach();
       }
@@ -33,7 +34,6 @@ class SyntaxCodeBlock extends CodeBlock {
   }
 }
 SyntaxCodeBlock.className = 'ql-syntax';
-
 
 class CodeToken extends Inline {
   static formats(node) {
@@ -48,8 +48,7 @@ class CodeToken extends Inline {
   }
 }
 CodeToken.blotName = 'code-token';
-CodeToken.className = 'ql-token';
-
+CodeToken.className = CODE_TOKEN_CLASS;
 
 class Syntax extends Module {
   static register() {
@@ -60,7 +59,9 @@ class Syntax extends Module {
   constructor(quill, options) {
     super(quill, options);
     if (typeof this.options.highlight !== 'function') {
-      throw new Error('Syntax module requires highlight.js. Please include the library on the page before Quill.');
+      throw new Error(
+        'Syntax module requires highlight.js. Please include the library on the page before Quill.',
+      );
     }
     let timer = null;
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, () => {
@@ -76,8 +77,8 @@ class Syntax extends Module {
   highlight() {
     if (this.quill.selection.composing) return;
     this.quill.update(Quill.sources.USER);
-    let range = this.quill.getSelection();
-    this.quill.scroll.descendants(SyntaxCodeBlock).forEach((code) => {
+    const range = this.quill.getSelection();
+    this.quill.scroll.descendants(SyntaxCodeBlock).forEach(code => {
       code.highlight(this.options.highlight);
     });
     this.quill.update(Quill.sources.SILENT);
@@ -87,15 +88,14 @@ class Syntax extends Module {
   }
 }
 Syntax.DEFAULTS = {
-  highlight: (function() {
+  highlight: (() => {
     if (window.hljs == null) return null;
-    return function(text, subset) {
-      let result = window.hljs.highlightAuto(text, subset);
+    return (text, subset) => {
+      const result = window.hljs.highlightAuto(text, subset);
       return result.value;
     };
   })(),
-  interval: 1000
+  interval: 1000,
 };
 
-
-export { SyntaxCodeBlock as CodeBlock, CodeToken, Syntax as default};
+export { SyntaxCodeBlock as CodeBlock, CodeToken, Syntax as default };

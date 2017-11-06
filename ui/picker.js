@@ -1,6 +1,5 @@
 import DropdownIcon from '../assets/icons/dropdown.svg';
 
-
 class Picker {
   constructor(select) {
     this.select = select;
@@ -15,7 +14,7 @@ class Picker {
   }
 
   buildItem(option) {
-    let item = document.createElement('span');
+    const item = document.createElement('span');
     item.classList.add('ql-picker-item');
     if (option.hasAttribute('value')) {
       item.setAttribute('data-value', option.getAttribute('value'));
@@ -30,7 +29,7 @@ class Picker {
   }
 
   buildLabel() {
-    let label = document.createElement('span');
+    const label = document.createElement('span');
     label.classList.add('ql-picker-label');
     label.innerHTML = DropdownIcon;
     this.container.appendChild(label);
@@ -38,10 +37,10 @@ class Picker {
   }
 
   buildOptions() {
-    let options = document.createElement('span');
+    const options = document.createElement('span');
     options.classList.add('ql-picker-options');
-    [].slice.call(this.select.options).forEach((option) => {
-      let item = this.buildItem(option);
+    [].slice.call(this.select.options).forEach(option => {
+      const item = this.buildItem(option);
       options.appendChild(item);
       if (option.selected === true) {
         this.selectItem(item);
@@ -51,7 +50,7 @@ class Picker {
   }
 
   buildPicker() {
-    [].slice.call(this.select.attributes).forEach((item) => {
+    [].slice.call(this.select.attributes).forEach(item => {
       this.container.setAttribute(item.name, item.value);
     });
     this.container.classList.add('ql-picker');
@@ -64,7 +63,7 @@ class Picker {
   }
 
   selectItem(item, trigger = false) {
-    let selected = this.container.querySelector('.ql-selected');
+    const selected = this.container.querySelector('.ql-selected');
     if (item === selected) return;
     if (selected != null) {
       selected.classList.remove('ql-selected');
@@ -85,8 +84,9 @@ class Picker {
     if (trigger) {
       if (typeof Event === 'function') {
         this.select.dispatchEvent(new Event('change'));
-      } else if (typeof Event === 'object') {     // IE11
-        let event = document.createEvent('Event');
+      } else if (typeof Event === 'object') {
+        // IE11
+        const event = document.createEvent('Event');
         event.initEvent('change', true, true);
         this.select.dispatchEvent(event);
       }
@@ -97,16 +97,19 @@ class Picker {
   update() {
     let option;
     if (this.select.selectedIndex > -1) {
-      let item = this.container.querySelector('.ql-picker-options').children[this.select.selectedIndex];
+      const item = this.container.querySelector('.ql-picker-options').children[
+        this.select.selectedIndex
+      ];
       option = this.select.options[this.select.selectedIndex];
       this.selectItem(item);
     } else {
       this.selectItem(null);
     }
-    let isActive = option != null && option !== this.select.querySelector('option[selected]');
+    const isActive =
+      option != null &&
+      option !== this.select.querySelector('option[selected]');
     this.label.classList.toggle('ql-active', isActive);
   }
 }
-
 
 export default Picker;

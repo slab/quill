@@ -1,21 +1,21 @@
 exports.config = {
-  specs: [
-    './test/functional/epic.js'
-  ],
+  specs: ['./test/functional/epic.js'],
   exclude: [],
 
   reporters: ['spec'],
 
   maxInstances: 10,
-  capabilities: [{
-    browserName: 'chrome'
-  }],
+  capabilities: [
+    {
+      browserName: 'chrome',
+    },
+  ],
 
   sync: true,
   logLevel: 'error',
   coloredLogs: true,
 
-  baseUrl: 'http://localhost:' + process.env.npm_package_config_ports_proxy,
+  baseUrl: `http://localhost:${process.env.npm_package_config_ports_proxy}`,
 
   waitforTimeout: 10000,
   connectionRetryTimeout: 90000,
@@ -24,9 +24,11 @@ exports.config = {
   framework: 'jasmine',
   jasmineNodeOpts: {
     defaultTimeoutInterval: 10000,
-    expectationResultHandler: function(passed, assertion) {
+    expectationResultHandler: passed => {
       if (passed) return;
-      this.saveScreenshot('./wd-' + this.desiredCapabilities.browserName + '-error.png');
-    }
-  }
-}
+      this.saveScreenshot(
+        `./wd-${this.desiredCapabilities.browserName}-error.png`,
+      );
+    },
+  },
+};

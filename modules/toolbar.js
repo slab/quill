@@ -4,14 +4,13 @@ import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
 
-let debug = logger('quill:toolbar');
-
+const debug = logger('quill:toolbar');
 
 class Toolbar extends Module {
   constructor(quill, options) {
     super(quill, options);
     if (Array.isArray(this.options.container)) {
-      let container = document.createElement('div');
+      const container = document.createElement('div');
       addControls(container, this.options.container);
       quill.container.parentNode.insertBefore(container, quill.container);
       this.container = container;
@@ -26,19 +25,22 @@ class Toolbar extends Module {
     this.container.classList.add('ql-toolbar');
     this.controls = [];
     this.handlers = {};
-    Object.keys(this.options.handlers).forEach((format) => {
+    Object.keys(this.options.handlers).forEach(format => {
       this.addHandler(format, this.options.handlers[format]);
     });
-    [].forEach.call(this.container.querySelectorAll('button, select'), (input) => {
-      this.attach(input);
-    });
+    [].forEach.call(
+      this.container.querySelectorAll('button, select'),
+      input => {
+        this.attach(input);
+      },
+    );
     this.quill.on(Quill.events.EDITOR_CHANGE, (type, range) => {
       if (type === Quill.events.SELECTION_CHANGE) {
         this.update(range);
       }
     });
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, () => {
-      let [range, ] = this.quill.selection.getRange();  // quill.getSelection triggers update
+      const [range] = this.quill.selection.getRange(); // quill.getSelection triggers update
       this.update(range);
     });
   }
@@ -48,7 +50,7 @@ class Toolbar extends Module {
   }
 
   attach(input) {
-    let format = [].find.call(input.classList, (className) => {
+    let format = [].find.call(input.classList, className => {
       return className.indexOf('ql-') === 0;
     });
     if (!format) return;
@@ -57,7 +59,10 @@ class Toolbar extends Module {
       input.setAttribute('type', 'button');
     }
     if (this.handlers[format] == null) {
-      if (this.quill.scroll.whitelist != null && this.quill.scroll.whitelist[format] == null) {
+      if (
+        this.quill.scroll.whitelist != null &&
+        this.quill.scroll.whitelist[format] == null
+      ) {
         debug.warn('ignoring attaching to disabled format', format, input);
         return;
       }
@@ -66,12 +71,12 @@ class Toolbar extends Module {
         return;
       }
     }
-    let eventName = input.tagName === 'SELECT' ? 'change' : 'click';
-    input.addEventListener(eventName, (e) => {
+    const eventName = input.tagName === 'SELECT' ? 'change' : 'click';
+    input.addEventListener(eventName, e => {
       let value;
       if (input.tagName === 'SELECT') {
         if (input.selectedIndex < 0) return;
-        let selected = input.options[input.selectedIndex];
+        const selected = input.options[input.selectedIndex];
         if (selected.hasAttribute('selected')) {
           value = false;
         } else {
@@ -86,17 +91,19 @@ class Toolbar extends Module {
         e.preventDefault();
       }
       this.quill.focus();
-      let [range, ] = this.quill.selection.getRange();
+      const [range] = this.quill.selection.getRange();
       if (this.handlers[format] != null) {
         this.handlers[format].call(this, value);
       } else if (Parchment.query(format).prototype instanceof Parchment.Embed) {
-        value = prompt(`Enter ${format}`);
+        value = prompt(`Enter ${format}`); // eslint-disable-line no-alert
         if (!value) return;
-        this.quill.updateContents(new Delta()
-          .retain(range.index)
-          .delete(range.length)
-          .insert({ [format]: value })
-        , Quill.sources.USER);
+        this.quill.updateContents(
+          new Delta()
+            .retain(range.index)
+            .delete(range.length)
+            .insert({ [format]: value }),
+          Quill.sources.USER,
+        );
       } else {
         this.quill.format(format, value, Quill.sources.USER);
       }
@@ -107,9 +114,9 @@ class Toolbar extends Module {
   }
 
   update(range) {
-    let formats = range == null ? {} : this.quill.getFormat(range);
-    this.controls.forEach(function(pair) {
-      let [format, input] = pair;
+    const formats = range == null ? {} : this.quill.getFormat(range);
+    this.controls.forEach(pair => {
+      const [format, input] = pair;
       if (input.tagName === 'SELECT') {
         let option;
         if (range == null) {
@@ -119,40 +126,39 @@ class Toolbar extends Module {
         } else if (!Array.isArray(formats[format])) {
           let value = formats[format];
           if (typeof value === 'string') {
-            value = value.replace(/\"/g, '\\"');
+            value = value.replace(/"/g, '\\"');
           }
           option = input.querySelector(`option[value="${value}"]`);
         }
         if (option == null) {
-          input.value = '';   // TODO make configurable?
+          input.value = ''; // TODO make configurable?
           input.selectedIndex = -1;
         } else {
           option.selected = true;
         }
+      } else if (range == null) {
+        input.classList.remove('ql-active');
+      } else if (input.hasAttribute('value')) {
+        // both being null should match (default values)
+        // '1' should match with 1 (headers)
+        const isActive =
+          formats[format] === input.getAttribute('value') ||
+          (formats[format] != null &&
+            formats[format].toString() === input.getAttribute('value')) ||
+          (formats[format] == null && !input.getAttribute('value'));
+        input.classList.toggle('ql-active', isActive);
       } else {
-        if (range == null) {
-          input.classList.remove('ql-active');
-        } else if (input.hasAttribute('value')) {
-          // both being null should match (default values)
-          // '1' should match with 1 (headers)
-          let isActive = formats[format] === input.getAttribute('value') ||
-                         (formats[format] != null && formats[format].toString() === input.getAttribute('value')) ||
-                         (formats[format] == null && !input.getAttribute('value'));
-          input.classList.toggle('ql-active', isActive);
-        } else {
-          input.classList.toggle('ql-active', formats[format] != null);
-        }
+        input.classList.toggle('ql-active', formats[format] != null);
       }
     });
   }
 }
 Toolbar.DEFAULTS = {};
 
-
 function addButton(container, format, value) {
-  let input = document.createElement('button');
+  const input = document.createElement('button');
   input.setAttribute('type', 'button');
-  input.classList.add('ql-' + format);
+  input.classList.add(`ql-${format}`);
   if (value != null) {
     input.value = value;
   }
@@ -163,15 +169,15 @@ function addControls(container, groups) {
   if (!Array.isArray(groups[0])) {
     groups = [groups];
   }
-  groups.forEach(function(controls) {
-    let group = document.createElement('span');
+  groups.forEach(controls => {
+    const group = document.createElement('span');
     group.classList.add('ql-formats');
-    controls.forEach(function(control) {
+    controls.forEach(control => {
       if (typeof control === 'string') {
         addButton(group, control);
       } else {
-        let format = Object.keys(control)[0];
-        let value = control[format];
+        const format = Object.keys(control)[0];
+        const value = control[format];
         if (Array.isArray(value)) {
           addSelect(group, format, value);
         } else {
@@ -184,10 +190,10 @@ function addControls(container, groups) {
 }
 
 function addSelect(container, format, values) {
-  let input = document.createElement('select');
-  input.classList.add('ql-' + format);
-  values.forEach(function(value) {
-    let option = document.createElement('option');
+  const input = document.createElement('select');
+  input.classList.add(`ql-${format}`);
+  values.forEach(value => {
+    const option = document.createElement('option');
     if (value !== false) {
       option.setAttribute('value', value);
     } else {
@@ -201,12 +207,12 @@ function addSelect(container, format, values) {
 Toolbar.DEFAULTS = {
   container: null,
   handlers: {
-    clean: function() {
-      let range = this.quill.getSelection();
+    clean: () => {
+      const range = this.quill.getSelection();
       if (range == null) return;
-      if (range.length == 0) {
-        let formats = this.quill.getFormat();
-        Object.keys(formats).forEach((name) => {
+      if (range.length === 0) {
+        const formats = this.quill.getFormat();
+        Object.keys(formats).forEach(name => {
           // Clean functionality in existing apps only clean inline formats
           if (Parchment.query(name, Parchment.Scope.INLINE) != null) {
             this.quill.format(name, false);
@@ -216,8 +222,8 @@ Toolbar.DEFAULTS = {
         this.quill.removeFormat(range, Quill.sources.USER);
       }
     },
-    direction: function(value) {
-      let align = this.quill.getFormat()['align'];
+    direction: value => {
+      const { align } = this.quill.getFormat();
       if (value === 'rtl' && align == null) {
         this.quill.format('align', 'right', Quill.sources.USER);
       } else if (!value && align === 'right') {
@@ -225,27 +231,27 @@ Toolbar.DEFAULTS = {
       }
       this.quill.format('direction', value, Quill.sources.USER);
     },
-    indent: function(value) {
-      let range = this.quill.getSelection();
-      let formats = this.quill.getFormat(range);
-      let indent = parseInt(formats.indent || 0);
+    indent: value => {
+      const range = this.quill.getSelection();
+      const formats = this.quill.getFormat(range);
+      const indent = parseInt(formats.indent || 0, 10);
       if (value === '+1' || value === '-1') {
-        let modifier = (value === '+1') ? 1 : -1;
+        let modifier = value === '+1' ? 1 : -1;
         if (formats.direction === 'rtl') modifier *= -1;
         this.quill.format('indent', indent + modifier, Quill.sources.USER);
       }
     },
-    link: function(value) {
+    link: value => {
       if (value === true) {
-        value = prompt('Enter link URL:');
+        value = prompt('Enter link URL:'); // eslint-disable-line no-alert
       }
       this.quill.format('link', value, Quill.sources.USER);
     },
-    list: function(value) {
-      let range = this.quill.getSelection();
-      let formats = this.quill.getFormat(range);
+    list: value => {
+      const range = this.quill.getSelection();
+      const formats = this.quill.getFormat(range);
       if (value === 'check') {
-        if (formats['list'] === 'checked' || formats['list'] === 'unchecked') {
+        if (formats.list === 'checked' || formats.list === 'unchecked') {
           this.quill.format('list', false, Quill.sources.USER);
         } else {
           this.quill.format('list', 'unchecked', Quill.sources.USER);
@@ -253,9 +259,8 @@ Toolbar.DEFAULTS = {
       } else {
         this.quill.format('list', value, Quill.sources.USER);
       }
-    }
-  }
-}
-
+    },
+  },
+};
 
 export { Toolbar as default, addControls };

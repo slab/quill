@@ -7,37 +7,70 @@ import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
 import Tooltip from '../ui/tooltip';
 
-
-const ALIGNS = [ false, 'center', 'right', 'justify' ];
+const ALIGNS = [false, 'center', 'right', 'justify'];
 
 const COLORS = [
-  "#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff",
-  "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff",
-  "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff",
-  "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2",
-  "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466"
+  '#000000',
+  '#e60000',
+  '#ff9900',
+  '#ffff00',
+  '#008a00',
+  '#0066cc',
+  '#9933ff',
+  '#ffffff',
+  '#facccc',
+  '#ffebcc',
+  '#ffffcc',
+  '#cce8cc',
+  '#cce0f5',
+  '#ebd6ff',
+  '#bbbbbb',
+  '#f06666',
+  '#ffc266',
+  '#ffff66',
+  '#66b966',
+  '#66a3e0',
+  '#c285ff',
+  '#888888',
+  '#a10000',
+  '#b26b00',
+  '#b2b200',
+  '#006100',
+  '#0047b2',
+  '#6b24b2',
+  '#444444',
+  '#5c0000',
+  '#663d00',
+  '#666600',
+  '#003700',
+  '#002966',
+  '#3d1466',
 ];
 
-const FONTS = [ false, 'serif', 'monospace' ];
+const FONTS = [false, 'serif', 'monospace'];
 
-const HEADERS = [ '1', '2', '3', false ];
+const HEADERS = ['1', '2', '3', false];
 
-const SIZES = [ 'small', false, 'large', 'huge' ];
-
+const SIZES = ['small', false, 'large', 'huge'];
 
 class BaseTheme extends Theme {
   constructor(quill, options) {
     super(quill, options);
-    let listener = (e) => {
+    const listener = e => {
       if (!document.body.contains(quill.root)) {
-        return document.body.removeEventListener('click', listener);
+        document.body.removeEventListener('click', listener);
+        return;
       }
-      if (this.tooltip != null && !this.tooltip.root.contains(e.target) &&
-          document.activeElement !== this.tooltip.textbox && !this.quill.hasFocus()) {
+      if (
+        this.tooltip != null &&
+        !this.tooltip.root.contains(e.target) &&
+        document.activeElement !== this.tooltip.textbox &&
+        !this.quill.hasFocus()
+      ) {
         this.tooltip.hide();
       }
       if (this.pickers != null) {
-        this.pickers.forEach(function(picker) {
+        this.pickers.forEach(picker => {
           if (!picker.container.contains(e.target)) {
             picker.close();
           }
@@ -48,7 +81,7 @@ class BaseTheme extends Theme {
   }
 
   addModule(name) {
-    let module = super.addModule(name);
+    const module = super.addModule(name);
     if (name === 'toolbar') {
       this.extendToolbar(module);
     }
@@ -56,18 +89,18 @@ class BaseTheme extends Theme {
   }
 
   buildButtons(buttons, icons) {
-    buttons.forEach((button) => {
-      let className = button.getAttribute('class') || '';
-      className.split(/\s+/).forEach((name) => {
+    buttons.forEach(button => {
+      const className = button.getAttribute('class') || '';
+      className.split(/\s+/).forEach(name => {
         if (!name.startsWith('ql-')) return;
         name = name.slice('ql-'.length);
         if (icons[name] == null) return;
         if (name === 'direction') {
-          button.innerHTML = icons[name][''] + icons[name]['rtl'];
+          button.innerHTML = icons[name][''] + icons[name].rtl;
         } else if (typeof icons[name] === 'string') {
           button.innerHTML = icons[name];
         } else {
-          let value = button.value || '';
+          const value = button.value || '';
           if (value != null && icons[name][value]) {
             button.innerHTML = icons[name][value];
           }
@@ -77,33 +110,41 @@ class BaseTheme extends Theme {
   }
 
   buildPickers(selects, icons) {
-    this.pickers = selects.map((select) => {
+    this.pickers = selects.map(select => {
       if (select.classList.contains('ql-align')) {
         if (select.querySelector('option') == null) {
           fillSelect(select, ALIGNS);
         }
         return new IconPicker(select, icons.align);
-      } else if (select.classList.contains('ql-background') || select.classList.contains('ql-color')) {
-        let format = select.classList.contains('ql-background') ? 'background' : 'color';
+      } else if (
+        select.classList.contains('ql-background') ||
+        select.classList.contains('ql-color')
+      ) {
+        const format = select.classList.contains('ql-background')
+          ? 'background'
+          : 'color';
         if (select.querySelector('option') == null) {
-          fillSelect(select, COLORS, format === 'background' ? '#ffffff' : '#000000');
+          fillSelect(
+            select,
+            COLORS,
+            format === 'background' ? '#ffffff' : '#000000',
+          );
         }
         return new ColorPicker(select, icons[format]);
-      } else {
-        if (select.querySelector('option') == null) {
-          if (select.classList.contains('ql-font')) {
-            fillSelect(select, FONTS);
-          } else if (select.classList.contains('ql-header')) {
-            fillSelect(select, HEADERS);
-          } else if (select.classList.contains('ql-size')) {
-            fillSelect(select, SIZES);
-          }
-        }
-        return new Picker(select);
       }
+      if (select.querySelector('option') == null) {
+        if (select.classList.contains('ql-font')) {
+          fillSelect(select, FONTS);
+        } else if (select.classList.contains('ql-header')) {
+          fillSelect(select, HEADERS);
+        } else if (select.classList.contains('ql-size')) {
+          fillSelect(select, SIZES);
+        }
+      }
+      return new Picker(select);
     });
-    let update = () => {
-      this.pickers.forEach(function(picker) {
+    const update = () => {
+      this.pickers.forEach(picker => {
         picker.update();
       });
     };
@@ -114,29 +155,39 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
   modules: {
     toolbar: {
       handlers: {
-        formula: function() {
+        formula: () => {
           this.quill.theme.tooltip.edit('formula');
         },
-        image: function() {
-          let fileInput = this.container.querySelector('input.ql-image[type=file]');
+        image: () => {
+          let fileInput = this.container.querySelector(
+            'input.ql-image[type=file]',
+          );
           if (fileInput == null) {
             fileInput = document.createElement('input');
             fileInput.setAttribute('type', 'file');
-            fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
+            fileInput.setAttribute(
+              'accept',
+              'image/png, image/gif, image/jpeg, image/bmp, image/x-icon',
+            );
             fileInput.classList.add('ql-image');
             fileInput.addEventListener('change', () => {
               if (fileInput.files != null && fileInput.files[0] != null) {
-                let reader = new FileReader();
-                reader.onload = (e) => {
-                  let range = this.quill.getSelection(true);
-                  this.quill.updateContents(new Delta()
-                    .retain(range.index)
-                    .delete(range.length)
-                    .insert({ image: e.target.result })
-                  , Emitter.sources.USER);
-                  this.quill.setSelection(range.index + 1, Emitter.sources.SILENT);
-                  fileInput.value = "";
-                }
+                const reader = new FileReader();
+                reader.onload = e => {
+                  const range = this.quill.getSelection(true);
+                  this.quill.updateContents(
+                    new Delta()
+                      .retain(range.index)
+                      .delete(range.length)
+                      .insert({ image: e.target.result }),
+                    Emitter.sources.USER,
+                  );
+                  this.quill.setSelection(
+                    range.index + 1,
+                    Emitter.sources.SILENT,
+                  );
+                  fileInput.value = '';
+                };
                 reader.readAsDataURL(fileInput.files[0]);
               }
             });
@@ -144,14 +195,13 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
           }
           fileInput.click();
         },
-        video: function() {
+        video: () => {
           this.quill.theme.tooltip.edit('video');
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 });
-
 
 class BaseTooltip extends Tooltip {
   constructor(quill, boundsContainer) {
@@ -161,7 +211,7 @@ class BaseTooltip extends Tooltip {
   }
 
   listen() {
-    this.textbox.addEventListener('keydown', (event) => {
+    this.textbox.addEventListener('keydown', event => {
       if (event.key === 'Enter') {
         this.save();
         event.preventDefault();
@@ -186,23 +236,31 @@ class BaseTooltip extends Tooltip {
     }
     this.position(this.quill.getBounds(this.quill.selection.savedRange));
     this.textbox.select();
-    this.textbox.setAttribute('placeholder', this.textbox.getAttribute(`data-${mode}`) || '');
+    this.textbox.setAttribute(
+      'placeholder',
+      this.textbox.getAttribute(`data-${mode}`) || '',
+    );
     this.root.setAttribute('data-mode', mode);
   }
 
   restoreFocus() {
-    let scrollTop = this.quill.scrollingContainer.scrollTop;
+    const { scrollTop } = this.quill.scrollingContainer;
     this.quill.focus();
     this.quill.scrollingContainer.scrollTop = scrollTop;
   }
 
   save() {
-    let value = this.textbox.value;
-    switch(this.root.getAttribute('data-mode')) {
+    let { value } = this.textbox;
+    switch (this.root.getAttribute('data-mode')) {
       case 'link': {
-        let scrollTop = this.quill.root.scrollTop;
+        const { scrollTop } = this.quill.root;
         if (this.linkRange) {
-          this.quill.formatText(this.linkRange, 'link', value, Emitter.sources.USER);
+          this.quill.formatText(
+            this.linkRange,
+            'link',
+            value,
+            Emitter.sources.USER,
+          );
           delete this.linkRange;
         } else {
           this.restoreFocus();
@@ -216,10 +274,15 @@ class BaseTooltip extends Tooltip {
       } // eslint-disable-next-line no-fallthrough
       case 'formula': {
         if (!value) break;
-        let range = this.quill.getSelection(true);
+        const range = this.quill.getSelection(true);
         if (range != null) {
-          let index = range.index + range.length;
-          this.quill.insertEmbed(index, this.root.getAttribute('data-mode'), value, Emitter.sources.USER);
+          const index = range.index + range.length;
+          this.quill.insertEmbed(
+            index,
+            this.root.getAttribute('data-mode'),
+            value,
+            Emitter.sources.USER,
+          );
           if (this.root.getAttribute('data-mode') === 'formula') {
             this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
           }
@@ -234,22 +297,26 @@ class BaseTooltip extends Tooltip {
   }
 }
 
-
 function extractVideoUrl(url) {
-  let match = url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/) ||
-              url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
+  let match =
+    url.match(
+      /^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/,
+    ) ||
+    url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
   if (match) {
-    return (match[1] || 'https') + '://www.youtube.com/embed/' + match[2] + '?showinfo=0';
+    return `${match[1] ||
+      'https'}://www.youtube.com/embed/${match[2]}?showinfo=0`;
   }
-  if (match = url.match(/^(?:(https?):\/\/)?(?:www\.)?vimeo\.com\/(\d+)/)) {  // eslint-disable-line no-cond-assign
-    return (match[1] || 'https') + '://player.vimeo.com/video/' + match[2] + '/';
+  // eslint-disable-next-line no-cond-assign
+  if ((match = url.match(/^(?:(https?):\/\/)?(?:www\.)?vimeo\.com\/(\d+)/))) {
+    return `${match[1] || 'https'}://player.vimeo.com/video/${match[2]}/`;
   }
   return url;
 }
 
 function fillSelect(select, values, defaultValue = false) {
-  values.forEach(function(value) {
-    let option = document.createElement('option');
+  values.forEach(value => {
+    const option = document.createElement('option');
     if (value === defaultValue) {
       option.setAttribute('selected', 'selected');
     } else {
@@ -258,6 +325,5 @@ function fillSelect(select, values, defaultValue = false) {
     select.appendChild(option);
   });
 }
-
 
 export { BaseTooltip, BaseTheme as default };

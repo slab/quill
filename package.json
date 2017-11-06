@@ -84,21 +84,6 @@
   "bugs": {
     "url": "https://github.com/quilljs/quill/issues"
   },
-  "scripts": {
-    "build": "npm run lint && webpack --config _develop/webpack.config.js; rm dist/quill.core dist/quill.bubble dist/quill.snow;",
-    "build:release": "./_develop/scripts/release.sh",
-    "lint": "eslint blots",
-    "lint:old": "eslint blots core formats modules themes ui",
-    "start": "npm run build; bundle exec foreman start -f _develop/procfile",
-    "test": "npm run test:unit",
-    "test:all": "npm run test:unit; npm run test:functional",
-    "test:functional": "./_develop/scripts/webdriver.sh",
-    "test:unit": "npm run build; karma start _develop/karma.config.js",
-    "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage",
-    "travis": "karma start _develop/karma.config.js --reporters dots,saucelabs",
-    "webdriver:start": "webdriver-manager start",
-    "webdriver:update": "webdriver-manager update"
-  },
   "eslintConfig": {
     "extends": [
       "airbnb",
@@ -107,8 +92,7 @@
     "env": {
       "browser": true,
       "commonjs": true,
-      "es6": true,
-      "jasmine": true
+      "es6": true
     },
     "plugins": [
       "prettier"
@@ -118,6 +102,16 @@
         "off"
       ],
       "class-methods-use-this": ["off"],
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": [
+            "_develop/*.js",
+            "test/**/*.js"
+          ]
+        }
+      ],
+      "no-param-reassign": ["off"],
       "no-use-before-define": [
         "error",
         {
@@ -126,21 +120,26 @@
       ],
       "import/named": [
         "error"
-      ],
-      "import/no-extraneous-dependencies": [
-        "error",
-        {
-          "devDependencies": [
-            "**/*.test.js",
-            "**/*.stories.js"
-          ]
-        }
       ]
     }
   },
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all"
+  },
+  "scripts": {
+    "build": "npm run lint && webpack --config _develop/webpack.config.js; rm dist/quill.core dist/quill.bubble dist/quill.snow;",
+    "build:release": "./_develop/scripts/release.sh",
+    "lint": "eslint blots core formats modules themes ui test",
+    "start": "npm run build; bundle exec foreman start -f _develop/procfile",
+    "test": "npm run test:unit",
+    "test:all": "npm run test:unit; npm run test:functional",
+    "test:functional": "./_develop/scripts/webdriver.sh",
+    "test:unit": "npm run build; karma start _develop/karma.config.js",
+    "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage",
+    "travis": "karma start _develop/karma.config.js --reporters dots,saucelabs",
+    "webdriver:start": "webdriver-manager start",
+    "webdriver:update": "webdriver-manager update"
   },
   "keywords": [
     "editor",
