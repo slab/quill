@@ -163,7 +163,7 @@ class Selection {
     let nativeRange = selection.getRangeAt(0);
     if (nativeRange == null) return null;
     if (nativeRange.startContainer.isEqualNode(nativeRange.endContainer)) {
-      nativeRange.reversed =  selection.anchorOffset === nativeRange.endOffset;
+      nativeRange.reversed =  selection.anchorOffset > nativeRange.endOffset;
     } else {
       nativeRange.reversed = selection.anchorNode.isEqualNode(nativeRange.endContainer);
     }
@@ -304,7 +304,7 @@ class Selection {
 
         if (startNode.isEqualNode(endNode) && startOffset > endOffset) {
           reversed = true;
-        } else {
+        } else if (startOffset !== endOffset) {
           reversed = startNode.compareDocumentPosition(endNode) & Node.DOCUMENT_POSITION_FOLLOWING;
         }
         let range = document.createRange();
