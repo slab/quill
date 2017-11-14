@@ -333,7 +333,7 @@ Keyboard.DEFAULTS = {
       collapsed: true,
       format: ['code-block'],
       prefix: /\n\n$/,
-      suffix: /^\s+$/,
+      suffix: /^[ \t\v]*\n$/,
       handler(range) {
         const [line, offset] = this.quill.getLine(range.index);
         const delta = new Delta()
