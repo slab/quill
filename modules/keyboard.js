@@ -250,7 +250,7 @@ Keyboard.DEFAULTS = {
       key: ' ',
       collapsed: true,
       format: { list: false },
-      prefix: /^\s*?(\d+\.|-|\[ ?\]|\[x\])$/,
+      prefix: /^\s*?(\d+\.|-|\*|\[ ?\]|\[x\])$/,
       handler: function(range, context) {
         let length = context.prefix.length;
         let [line, offset] = this.quill.getLine(range.index);
@@ -263,7 +263,7 @@ Keyboard.DEFAULTS = {
           case '[x]':
             value = 'checked';
             break;
-          case '-':
+          case '-': case '*':
             value = 'bullet';
             break;
           default:
