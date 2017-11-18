@@ -1,10 +1,10 @@
 var desktop = {
   'mac-chrome-latest'       : ['OS X 10.12', 'chrome', '60.0'],
   'mac-firefox-latest'      : ['OS X 10.12', 'firefox', '54.0'],
-  'mac-safari-latest'       : ['OS X 10.12', 'safari', '10.0'],
+  'mac-safari-latest'       : ['OS X 10.12', 'safari', '11.0'],
   'mac-chrome-previous'     : ['OS X 10.11', 'chrome', '59.0'],
   'mac-firefox-previous'    : ['OS X 10.11', 'firefox', '53.0'],
-  'mac-safari-previous'     : ['OS X 10.11', 'safari', '9.0'],
+  'mac-safari-previous'     : ['OS X 10.11', 'safari', '10.0'],
 
   'windows-chrome-latest'   : ['Windows 10', 'chrome', '60.0'],
   'windows-firefox-latest'  : ['Windows 10', 'firefox', '54.0'],
