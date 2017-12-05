@@ -117,4 +117,4 @@ SnowTooltip.TEMPLATE = [
 ].join('');
 
 
-export default SnowTheme;
+export { SnowTooltip, SnowTheme as default };
