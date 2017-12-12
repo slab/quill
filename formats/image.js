@@ -27,11 +27,11 @@ class Image extends Parchment.Embed {
   }
 
   static match(url) {
-    return /\.(jpe?g|gif|png)$/.test(url) || /^data:image\/.+;base64/.test(url);
+    return /\.(jpe?g|gif|png)$/.test(url) || /^data:image\/.+;base64/.test(url) || /^blob:/.test(url);
   }
 
   static sanitize(url) {
-    return sanitize(url, ['http', 'https', 'data']) ? url : '//:0';
+    return sanitize(url, ['http', 'https', 'data', 'blob']) ? url : '//:0';
   }
 
   static value(domNode) {
