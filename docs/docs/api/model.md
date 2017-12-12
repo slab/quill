@@ -24,7 +24,7 @@ var linkBlot = Quill.find(linkNode);
 
 ### getIndex <span class="experimental">experimental</span> {#getindex-experimental}
 
-Returns the distance between the beginning of document to the occurance of the given [Blot](https://github.com/quilljs/parchment).
+Returns the distance between the beginning of document to the occurrence of the given [Blot](https://github.com/quilljs/parchment).
 
 **Methods**
 
