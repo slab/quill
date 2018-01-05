@@ -11,7 +11,7 @@ Customizability is core to Quill's ethos and the new [v0.19 release](https://git
 
 With iframes gone it is now much easier to customize the styling of the Quill editor and unecessary for Quill to do so on your behalf in most cases. This leads to a few changes:
 
-You can now pass `false` into the [style config](/docs/configuration#styles) to prevent Quill from injecting any `<style>` tags. No change is necessary if the default behavior is preferred, but this added option makes it easier and more efficient for those that prefer to completely control styling with stylesheets. For this latter route, `quill.base.css` is now included in releases and the CDN.
+You can now pass `false` into the [style config](/docs/configuration/#styles) to prevent Quill from injecting any `<style>` tags. No change is necessary if the default behavior is preferred, but this added option makes it easier and more efficient for those that prefer to completely control styling with stylesheets. For this latter route, `quill.base.css` is now included in releases and the CDN.
 
 <!-- more -->
 

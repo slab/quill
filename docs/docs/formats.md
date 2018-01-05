@@ -10,7 +10,7 @@ By default all formats are enabled and allowed to exist within a Quill editor an
 
 {% include standalone/full.html %}
 
-<a class="standalone-link" href="/standalone/full">Standalone</a>
+<a class="standalone-link" href="/standalone/full/">Standalone</a>
 
 #### Inline
 
