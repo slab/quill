@@ -40,7 +40,7 @@ Object.keys(mobile).forEach(key => {
   module.exports[key] = {
     base: 'SauceLabs',
     browserName: mobile[key][3],
-    appiumVersion: '1.6.4',
+    appiumVersion: '1.7.1',
     deviceName: mobile[key][0],
     deviceOrientation: 'portrait',
     platformVersion: mobile[key][2],
