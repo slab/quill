@@ -32,7 +32,7 @@ Next, we'll replace the textarea with Quill core, absent of themes, formats and 
 
 <div data-height="400" data-theme-id="23269" data-slug-hash="QEoZQb" data-default-tab="result" data-embed-version="2" class="codepen"></div>
 
-Like the DOM, a Parchment document is a tree. Its nodes, called Blots, are an abstraction over DOM Nodes. A few blots are already defined for us: Scroll, Block, Inline, Text and Break. As you type, a Text blot is synchronized with the corresponding DOM Text node; enters are handled by creating a new Block blot. In Parchment, Blots that can have children must, so empty Blocks are filled with a Break blot. This makes handling leaves simple and predictable. All this is organized under a root Scroll blot.
+Like the DOM, a Parchment document is a tree. Its nodes, called Blots, are an abstraction over DOM Nodes. A few blots are already defined for us: Scroll, Block, Inline, Text and Break. As you type, a Text blot is synchronized with the corresponding DOM Text node; enters are handled by creating a new Block blot. In Parchment, Blots that can have children must have at least one child, so empty Blocks are filled with a Break blot. This makes handling leaves simple and predictable. All this is organized under a root Scroll blot.
 
 You cannot observe an Inline blot by just typing at this point since it does not contribute meaningful structure or formatting to the document. A valid Quill document must be canonical and compact. There is only one valid DOM tree that can represent a given document, and that DOM tree contains the minimal number of nodes.
 

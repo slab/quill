@@ -36,7 +36,7 @@
     "deep-equal": "^1.0.1",
     "eventemitter3": "^2.0.3",
     "extend": "^3.0.1",
-    "parchment": "^1.1.2",
+    "parchment": "^1.1.3",
     "quill-delta": "^3.6.2"
   },
   "devDependencies": {
@@ -85,30 +85,20 @@
     "url": "https://github.com/quilljs/quill/issues"
   },
   "eslintConfig": {
-    "extends": [
-      "airbnb",
-      "prettier"
-    ],
+    "extends": ["airbnb", "prettier"],
     "env": {
       "browser": true,
       "commonjs": true,
       "es6": true
     },
-    "plugins": [
-      "prettier"
-    ],
+    "plugins": ["prettier"],
     "rules": {
-      "arrow-body-style": [
-        "off"
-      ],
+      "arrow-body-style": ["off"],
       "class-methods-use-this": ["off"],
       "import/no-extraneous-dependencies": [
         "error",
         {
-          "devDependencies": [
-            "_develop/*.js",
-            "test/**/*.js"
-          ]
+          "devDependencies": ["_develop/*.js", "test/**/*.js"]
         }
       ],
       "no-param-reassign": ["off"],
@@ -118,9 +108,7 @@
           "functions": false
         }
       ],
-      "import/named": [
-        "error"
-      ]
+      "import/named": ["error"]
     }
   },
   "prettier": {
@@ -128,7 +116,8 @@
     "trailingComma": "all"
   },
   "scripts": {
-    "build": "npm run lint && webpack --config _develop/webpack.config.js; rm dist/quill.core dist/quill.bubble dist/quill.snow;",
+    "build":
+      "npm run lint && webpack --config _develop/webpack.config.js; rm dist/quill.core dist/quill.bubble dist/quill.snow;",
     "build:release": "./_develop/scripts/release.sh",
     "lint": "eslint blots core formats modules themes ui test",
     "start": "npm run build; bundle exec foreman start -f _develop/procfile",
@@ -136,14 +125,11 @@
     "test:all": "npm run test:unit; npm run test:functional",
     "test:functional": "./_develop/scripts/webdriver.sh",
     "test:unit": "npm run build; karma start _develop/karma.config.js",
-    "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage",
+    "test:coverage":
+      "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage",
     "travis": "karma start _develop/karma.config.js --reporters dots,saucelabs",
     "webdriver:start": "webdriver-manager start",
     "webdriver:update": "webdriver-manager update"
   },
-  "keywords": [
-    "editor",
-    "rich text",
-    "wysiwyg"
-  ]
+  "keywords": ["editor", "rich text", "wysiwyg"]
 }

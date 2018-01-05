@@ -20,8 +20,8 @@ Adds a custom matcher to the Clipboard. Matchers using `nodeType` are called fir
 **Methods**
 
 ```javascript
-addMatcher(String: selector, (Node: node, Delta: delta) => Delta)
-addMatcher(Number: nodeType, (Node: node, Delta: delta) => Delta)
+addMatcher(selector: String, (node: Node, delta: Delta) => Delta)
+addMatcher(nodeType: Number, (node: Node, delta: Delta) => Delta)
 ```
 
 **Examples**

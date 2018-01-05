@@ -295,7 +295,7 @@ Keyboard.DEFAULTS = {
       key: ' ',
       collapsed: true,
       format: { list: false },
-      prefix: /^\s*?(1\.|-|\[ ?\]|\[x\])$/,
+      prefix: /^\s*?(\d+\.|-|\*|\[ ?\]|\[x\])$/,
       handler(range, context) {
         const { length } = context.prefix;
         const [line, offset] = this.quill.getLine(range.index);
@@ -310,6 +310,7 @@ Keyboard.DEFAULTS = {
             value = 'checked';
             break;
           case '-':
+          case '*':
             value = 'bullet';
             break;
           default:

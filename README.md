@@ -1,8 +1,8 @@
 <h1 align="center">
-  <a href="http://quilljs.com/" title="Quill">Quill Rich Text Editor</a>
+  <a href="https://quilljs.com/" title="Quill">Quill Rich Text Editor</a>
 </h1>
 <p align="center">
-  <a href="http://quilljs.com/" title="Quill"><img alt="Quill Logo" src="https://quilljs.com/assets/images/logo.svg" width="180"></a>
+  <a href="https://quilljs.com/" title="Quill"><img alt="Quill Logo" src="https://quilljs.com/assets/images/logo.svg" width="180"></a>
 </p>
 <p align="center">
   <a title="Quickstart" href="#quickstart"><strong>Quickstart</strong></a>
@@ -32,9 +32,9 @@
   </a>
 </p>
 
-Quill is a modern rich text editor built for compatibility and extensibility. It was created by [Jason Chen](https://twitter.com/jhchen) and [Byron Milligan](https://twitter.com/byronmilligan) and open sourced by [Salesforce.com](http://www.salesforce.com).
+[QuillJS](https://quilljs.com/) is a modern rich text editor built for compatibility and extensibility. It was created by [Jason Chen](https://twitter.com/jhchen) and [Byron Milligan](https://twitter.com/byronmilligan) and open sourced by Salesforce.
 
-To get started, check out the [Quill website](http://quilljs.com/) for documentation, guides, and live demos!
+To get started, check out the [Quill](https://quilljs.com/) website for documentation, guides, and live demos!
 
 
 ## Quickstart
@@ -68,7 +68,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 </script>
 ```
 
-Take a look at the [Quill website](https://quilljs.com/) for more documentation, guides and [live playground](https://quilljs.com/playground/)!
+Take a look at the [Quill](https://quilljs.com/) website for more documentation, guides and [live playground](https://quilljs.com/playground/)!
 
 
 ## Download
@@ -100,7 +100,7 @@ Get help or stay up to date.
 
 - [Contribute](https://github.com/quilljs/quill/blob/develop/.github/CONTRIBUTING.md) on [Issues](https://github.com/quilljs/quill/issues)
 - Follow [@jhchen](https://twitter.com/jhchen) and [@quilljs](https://twitter.com/quilljs) on Twitter
-- Ask questions on [Stack Overflow](http://stackoverflow.com/questions/tagged/quill)
+- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/quill)
 - If privacy is required, email support@quilljs.com
 
 
