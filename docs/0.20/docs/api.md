@@ -1,7 +1,7 @@
 ---
 layout: v0.20
 permalink: /0.20/docs/api/
-title: API - Quill
+title: API - Quill v0.20
 ---
 <div class="container">
   <div id="sidebar-dropdown">

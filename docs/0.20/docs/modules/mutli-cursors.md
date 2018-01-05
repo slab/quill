@@ -1,7 +1,7 @@
 ---
 layout: v0.20
 permalink: /0.20/docs/modules/multi-cursors/
-title: Cursors Module - Quill
+title: Cursors Module - Quill v0.20
 ---
 <div class="container">
   <div id="sidebar-dropdown">

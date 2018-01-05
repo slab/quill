@@ -1,7 +1,7 @@
 ---
 layout: v0.20
 permalink: /0.20/
-title: Quill - A Rich Text WYSIWYG Editor with an API
+title: A Rich Text WYSIWYG Editor with an API - Quill v0.20
 ---
 <div id="demo-container">
   <div class="quill-wrapper" data-toggle="tooltip" data-placement="left" title="Try me out!">
