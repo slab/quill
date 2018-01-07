@@ -155,7 +155,7 @@ redirect_from: /latest/
   <div class="container">
     <div class="row">
       <div class="feature columns">
-        <img alt="Built for Developers" src="/assets/images/features/developers.svg">
+        {% include svg/features/developers.svg %}
         <div class="details">
           <h2>Built for Developers</h2>
           <span>Granular access to the editor's content, changes and events through a simple API. Works consistently and deterministically with JSON as both input and output.</span>
@@ -163,7 +163,7 @@ redirect_from: /latest/
         </div>
       </div>
       <div class="feature columns">
-        <img alt="Cross Platform" src="/assets/images/features/cross-platform.svg">
+        {% include svg/features/cross-platform.svg %}
         <div class="details">
           <h2>Cross Platform</h2>
           <span>Supports all modern browsers on desktops, tablets and phones. Experience the same consistent behavior and produced HTML across platforms.</span>
@@ -186,7 +186,9 @@ redirect_from: /latest/
         <span>Used in small projects and giant Fortune 500s alike. Start simple with the Quill core then easily customize or add your own extensions later if your product needs grow.</span>
         <a class="action-link" href="/docs/">Learn More</a>
       </div>
-      <img alt="Fits Like a Glove" class="columns" src="/assets/images/features/scale.svg">
+      <div class="columns">
+        {% include svg/features/scale.svg %}
+      </div>
     </div>
   </div>
 </div>

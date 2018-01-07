@@ -150,6 +150,20 @@ h2 + hr {
 
 /*** Global ***/
 
+svg .logo {
+  fill: #1d1e30;
+}
+
+svg .feat-1 {
+  fill: #f2d123;
+}
+svg .feat-2 {
+  fill: #e3a931;
+}
+svg .feat-3 {
+  fill: #4f5363;
+}
+
 .action {
   background-color: #f2d123;
   border: 2px solid transparent;
