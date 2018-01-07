@@ -582,6 +582,7 @@ body.home .arrow .shaft {
 }
 #users-container a {
   background-image: url('/assets/images/users.png');
+  background-size: 100%;
   display: block;
   height: 100px;
   width: 150px;
@@ -590,52 +591,52 @@ body.home .arrow .shaft {
   background-position: 0 0;
 }
 #users-container .user-asana {
-  background-position: 0 -100px;
+  background-position: 0 -100%;
 }
 #users-container .user-front {
-  background-position: 0 -200px;
+  background-position: 0 -200%;
 }
 #users-container .user-gannett {
-  background-position: 0 -300px;
+  background-position: 0 -300%;
 }
 #users-container .user-gusto {
-  background-position: 0 -400px;
+  background-position: 0 -400%;
 }
 #users-container .user-hubspot {
-  background-position: 0 -500px;
+  background-position: 0 -500%;
 }
 #users-container .user-intuit {
-  background-position: 0 -600px;
+  background-position: 0 -600%;
 }
 #users-container .user-lever {
-  background-position: 0 -700px;
+  background-position: 0 -700%;
 }
 #users-container .user-buffer {
-  background-position: 0 -800px;
+  background-position: 0 -800%;
 }
 #users-container .user-microsoft {
-  background-position: 0 -900px;
+  background-position: 0 -900%;
 }
 #users-container .user-modeanalytics {
-  background-position: 0 -1000px;
+  background-position: 0 -1000%;
 }
 #users-container .user-reedsy {
-  background-position: 0 -1100px;
+  background-position: 0 -1100%;
 }
 #users-container .user-salesforce {
-  background-position: 0 -1200px;
+  background-position: 0 -1200%;
 }
 #users-container .user-slab {
-  background-position: 0 -1300px;
+  background-position: 0 -1300%;
 }
 #users-container .user-slack {
-  background-position: 0 -1400px;
+  background-position: 0 -1400%;
 }
 #users-container .user-usatoday {
-  background-position: 0 -1500px;
+  background-position: 0 -1500%;
 }
 #users-container .user-voxmedia {
-  background-position: 0 -1600px;
+  background-position: 0 -1600%;
 }
 
 #laptop-container {
@@ -1452,8 +1453,9 @@ body:not(.home) .navbar-link:before {
   #users-container ul li:first-child {
     display: block;
   }
-  #users-container img {
-    height: 55px;
+  #users-container a {
+    height: 50px;
+    width: 75px;
   }
   #demo-container {
     padding-left: 0;
