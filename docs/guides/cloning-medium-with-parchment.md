@@ -312,5 +312,5 @@ Let's add some final polish to finish off our demo. It won't compare to Medium's
 
 
 <!-- script -->
-<script src="//codepen.io/assets/embed/ei.js" type="text/javascript"></script>
+<script src="//codepen.io/assets/embed/ei.js"></script>
 <!-- script -->

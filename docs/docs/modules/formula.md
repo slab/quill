@@ -2,6 +2,8 @@
 layout: docs
 title: Formula Module
 permalink: /docs/modules/formula/
+redirect_from:
+  - /docs/modules/formulas/
 ---
 
 The Formula Module adds beautifully rendered formulas into Quill documents, powered by [KaTeX](https://khan.github.io/KaTeX/).

@@ -158,5 +158,5 @@ var quill = new Quill('#editor', {
 </code></pre></div>
 
 <!-- script -->
-<script src="//codepen.io/assets/embed/ei.js" type="text/javascript"></script>
+<script src="//codepen.io/assets/embed/ei.js"></script>
 <!-- script -->
