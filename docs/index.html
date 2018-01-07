@@ -34,17 +34,17 @@ redirect_from: /latest/
         <li>Trusted by:</li>
         <li>
           <a href="https://www.linkedin.com/" target="_blank">
-            <img src="/assets/images/users/linkedin.png">
+            <img alt="LinkedIn Logo" src="/assets/images/users/linkedin.png">
           </a>
         </li>
         <li>
           <a href="https://slack.com/" target="_blank">
-            <img src="/assets/images/users/slack.png">
+            <img alt="Slack Logo" src="/assets/images/users/slack.png">
           </a>
         </li>
         <li>
           <a href="http://www.voxmedia.com/" target="_blank">
-            <img src="/assets/images/users/voxmedia.png">
+            <img alt="Vox Media Logo" src="/assets/images/users/voxmedia.png">
           </a>
         </li>
       </ul>
@@ -90,10 +90,10 @@ redirect_from: /latest/
                   <button class="ql-list" value="ordered"></button>
                   <button class="ql-list" value="bullet"></button>
                   <select class="ql-align">
-                    <option selected></option>
-                    <option value="center"></option>
-                    <option value="right"></option>
-                    <option value="justify"></option>
+                    <option label="left" selected></option>
+                    <option label="center" value="center"></option>
+                    <option label="right" value="right"></option>
+                    <option label="justify" value="justify"></option>
                   </select>
                 </span>
                 <span class="ql-formats">
@@ -114,7 +114,7 @@ redirect_from: /latest/
                 <p><br></p>
                 <p>Quill is a free, <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor built for the modern web. With its <a href="http://quilljs.com/docs/modules/">modular architecture</a> and expressive <a href="http://quilljs.com/docs/api/">API</a>, it is completely customizable to fit any need.</p>
                 <p><br></p>
-                <iframe class="ql-video ql-align-center" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0" width="560" height="238" allowfullscreen="true" frameborder="0"></iframe>
+                <iframe class="ql-video ql-align-center" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0" width="560" height="238" allowfullscreen></iframe>
                 <p><br></p>
                 <p><br></p>
                 <h2 class="ql-align-center">Getting Started is Easy</h2>
@@ -161,7 +161,7 @@ redirect_from: /latest/
   <div class="container">
     <div class="row">
       <div class="feature columns">
-        <img src="/assets/images/features/developers.svg">
+        <img alt="Built for Developers" src="/assets/images/features/developers.svg">
         <div class="details">
           <h2>Built for Developers</h2>
           <span>Granular access to the editor's content, changes and events through a simple API. Works consistently and deterministically with JSON as both input and output.</span>
@@ -169,7 +169,7 @@ redirect_from: /latest/
         </div>
       </div>
       <div class="feature columns">
-        <img src="/assets/images/features/cross-platform.svg">
+        <img alt="Cross Platform" src="/assets/images/features/cross-platform.svg">
         <div class="details">
           <h2>Cross Platform</h2>
           <span>Supports all modern browsers on desktops, tablets and phones. Experience the same consistent behavior and produced HTML across platforms.</span>
@@ -192,7 +192,7 @@ redirect_from: /latest/
         <span>Used in small projects and giant Fortune 500s alike. Start simple with the Quill core then easily customize or add your own extensions later if your product needs grow.</span>
         <a class="action-link" href="/docs/">Learn More</a>
       </div>
-      <img class="columns" src="/assets/images/features/scale.svg">
+      <img alt="Fits Like a Glove" class="columns" src="/assets/images/features/scale.svg">
     </div>
   </div>
 </div>
@@ -297,7 +297,7 @@ redirect_from: /latest/
       $(link).attr({ href: bucket[name], title: name });
       $('img', link).attr({
         src: '/assets/images/users/' + (name.toLowerCase().replace(/\s/g, '')) + '.png',
-        alt: name
+        alt: name + ' Logo'
       });
     });
 
