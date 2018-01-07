@@ -150,5 +150,5 @@ var counter = quill.addModule('counter', {
 That's all there is to it! Stay tuned for more guides on common types of modules you can build.
 
 <!-- script -->
-<script src="//codepen.io/assets/embed/ei.js" type="text/javascript"></script>
+<script src="//codepen.io/assets/embed/ei.js"></script>
 <!-- script -->

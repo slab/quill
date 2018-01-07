@@ -24,13 +24,13 @@ pens:
 <div class="container">
   <div id="playground-container">
    <h1>Interactive Playground</h1>
-    <iframe src="//codepen.io/anon/embed/{{page.pens.last.slug}}/?height=500&amp;editable=true&amp;embed-version=2&amp;theme-id=23269&amp;default-tab=js%2Cresult&amp;user=anon" scrolling="no" frameborder="0" height="500" allowfullscreen="true"></iframe>
+    <iframe src="//codepen.io/anon/embed/{{page.pens.last.slug}}/?height=500&amp;editable=true&amp;embed-version=2&amp;theme-id=23269&amp;default-tab=js%2Cresult&amp;user=anon" height="500" allowfullscreen></iframe>
   </div>
   <div id="gallery-container">
   {% for pen in page.pens %}
     <div class="four columns{% if forloop.last %} selected-pen{% endif %}">
       <a href="/playground/#{{ pen.title | slugify }}" title="{{ pen.title }}" data-id="{{pen.slug}}">
-        <img src="https://codepen.io/quill/pen/{{pen.slug}}/image/small.png">
+        <img alt="{{pen.title}} Screenshot" src="https://codepen.io/quill/pen/{{pen.slug}}/image/small.png">
         <span class="pen-label">{{pen.title}}</span>
       </a>
     </div>
@@ -40,7 +40,7 @@ pens:
   {% include open-source.html %}
 </div>
 <!-- script -->
-<script type="text/javascript">
+<script>
 $(document).ready(function() {
   $('#gallery-container a').click(function(e) {
     switchSelected(this);

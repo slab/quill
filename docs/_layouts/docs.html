@@ -2,7 +2,7 @@
 layout: default
 ---
 <!-- head -->
-<link href="https://fonts.googleapis.com/css?family=Inconsolata">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css">
 <!-- head -->
 
@@ -60,7 +60,7 @@ layout: default
         {% elsif page.stability == "incomplete" %}
         <div class="alert alert-warning">This page is incomplete.</div>
         {% endif %}
-        <h1 id="{{ page.title | handelize | downcase }}">{{ page.title }}</h1>
+        <h1 id="{{ page.title | slugify }}">{{ page.title }}</h1>
         {{ content }}
       </div>
       <div class="row" id="pagination-container">
@@ -100,8 +100,8 @@ layout: default
 </div>
 
 <!-- script -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>
-<script type="text/javascript">
+<script src="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>
+<script>
 $(document).ready(function() {
   $('h1, h2, h3, h4', $('#docs-container')).each(function(i, h) {
     if (!h.id) return;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>{{ page.title }}{% if page.path != "index.html" %} - Quill{% endif %}</title>
     {% include meta.html %}
@@ -34,7 +34,7 @@
       {% endif %}
     {% endfor %}
     {% include footer.html %}
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     {% assign sections = content | split: '<!-- script -->' %}
     {% for section in sections %}
       {% assign mod = forloop.index | modulo: 2 %}
@@ -42,7 +42,7 @@
         {{ section | strip }}
       {% endif %}
     {% endfor %}
-    <script type="text/javascript">
+    <script>
     $(document).ready(function() {
       $('.navbar-open').click(function() {
         $('.navbar-drop').addClass('active');
@@ -61,6 +61,5 @@
       }
     });
     </script>
-    </div>
   </body>
 </html>

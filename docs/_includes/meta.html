@@ -22,4 +22,5 @@
 <meta property="og:title" content="{{ page.title }}{% if page.path != "index.html" %} - Quill{% endif %}">
 <meta property="og:site_name" content="Quill">
 <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico" />
+<link rel="canonical" href="{{ site.url }}{{ page.url | replace:'index.html',''}}">
 {% feed_meta %}

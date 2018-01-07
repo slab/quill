@@ -1,36 +1,40 @@
 @font-face {
   font-family: 'Sofia Pro';
   src: url('//cdn.quilljs.com/fonts/sofia-pro.eot');
-  src: url('//cdn.quilljs.com/fonts/sofia-pro.eot?#iefix') format('embedded-opentype'),
-       url('//cdn.quilljs.com/fonts/sofia-pro.woff2') format('woff2'),
-       url('//cdn.quilljs.com/fonts/sofia-pro.woff') format('woff'),
-       url('//cdn.quilljs.com/fonts/sofia-pro.ttf') format('truetype');
+  src: url('//cdn.quilljs.com/fonts/sofia-pro.eot?#iefix')
+      format('embedded-opentype'),
+    url('//cdn.quilljs.com/fonts/sofia-pro.woff2') format('woff2'),
+    url('//cdn.quilljs.com/fonts/sofia-pro.woff') format('woff'),
+    url('//cdn.quilljs.com/fonts/sofia-pro.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Sofia Pro';
   font-weight: bold;
   src: url('//cdn.quilljs.com/fonts/sofia-pro-bold.eot');
-  src: url('//cdn.quilljs.com/fonts/sofia-pro-bold.eot?#iefix') format('embedded-opentype'),
-       url('//cdn.quilljs.com/fonts/sofia-pro-bold.woff2') format('woff2'),
-       url('//cdn.quilljs.com/fonts/sofia-pro-bold.woff') format('woff'),
-       url('//cdn.quilljs.com/fonts/sofia-pro-bold.ttf') format('truetype');
+  src: url('//cdn.quilljs.com/fonts/sofia-pro-bold.eot?#iefix')
+      format('embedded-opentype'),
+    url('//cdn.quilljs.com/fonts/sofia-pro-bold.woff2') format('woff2'),
+    url('//cdn.quilljs.com/fonts/sofia-pro-bold.woff') format('woff'),
+    url('//cdn.quilljs.com/fonts/sofia-pro-bold.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Sailec Light';
   src: url('//cdn.quilljs.com/fonts/sailec-light.eot');
-  src: url('//cdn.quilljs.com/fonts/sailec-light.eot?#iefix') format('embedded-opentype'),
-       url('//cdn.quilljs.com/fonts/sailec-light.woff2') format('woff2'),
-       url('//cdn.quilljs.com/fonts/sailec-light.woff') format('woff'),
-       url('//cdn.quilljs.com/fonts/sailec-light.ttf') format('truetype');
+  src: url('//cdn.quilljs.com/fonts/sailec-light.eot?#iefix')
+      format('embedded-opentype'),
+    url('//cdn.quilljs.com/fonts/sailec-light.woff2') format('woff2'),
+    url('//cdn.quilljs.com/fonts/sailec-light.woff') format('woff'),
+    url('//cdn.quilljs.com/fonts/sailec-light.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Sailec Light';
   font-weight: bold;
   src: url('//cdn.quilljs.com/fonts/sailec-bold.eot');
-  src: url('//cdn.quilljs.com/fonts/sailec-bold.eot?#iefix') format('embedded-opentype'),
-       url('//cdn.quilljs.com/fonts/sailec-bold.woff2') format('woff2'),
-       url('//cdn.quilljs.com/fonts/sailec-bold.woff') format('woff'),
-       url('//cdn.quilljs.com/fonts/sailec-bold.ttf') format('truetype');
+  src: url('//cdn.quilljs.com/fonts/sailec-bold.eot?#iefix')
+      format('embedded-opentype'),
+    url('//cdn.quilljs.com/fonts/sailec-bold.woff2') format('woff2'),
+    url('//cdn.quilljs.com/fonts/sailec-bold.woff') format('woff'),
+    url('//cdn.quilljs.com/fonts/sailec-bold.ttf') format('truetype');
 }
 
 /*** Native ***/
@@ -48,7 +52,12 @@ body {
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Sofia Pro', sans-serif;
   font-weight: normal;
 }
@@ -106,8 +115,9 @@ strong {
   font-weight: bold;
 }
 
-pre, code {
-  font-family: "Inconsolata", monospace;
+pre,
+code {
+  font-family: 'Inconsolata', monospace;
 }
 
 pre {
@@ -139,6 +149,20 @@ h2 + hr {
 }
 
 /*** Global ***/
+
+svg .logo {
+  fill: #1d1e30;
+}
+
+svg .feat-1 {
+  fill: #f2d123;
+}
+svg .feat-2 {
+  fill: #e3a931;
+}
+svg .feat-3 {
+  fill: #4f5363;
+}
 
 .action {
   background-color: #f2d123;
@@ -256,12 +280,12 @@ h2 + hr {
   padding: 0.33em 0.67em;
 }
 .prev:hover .arrow {
-  padding-left: .77em;
-  padding-right: .57em;
+  padding-left: 0.77em;
+  padding-right: 0.57em;
 }
 .next:hover .arrow {
-  padding-left: .57em;
-  padding-right: .77em;
+  padding-left: 0.57em;
+  padding-right: 0.77em;
 }
 .arrow .shaft {
   background-color: #000;
@@ -288,7 +312,6 @@ h2 + hr {
 .row > hr {
   width: 90%;
 }
-
 
 /*** Header ***/
 
@@ -344,7 +367,7 @@ body:not(.home) header .logo path {
   background-color: #f2d123;
   border-radius: 6px;
   color: #1d1e30;
-  content: "new";
+  content: 'new';
   font-size: 0.8rem;
   font-weight: bold;
   margin-left: 5px;
@@ -402,10 +425,12 @@ body:not(.home) header .logo path {
   background-color: #1d1e30;
   color: #fff;
 }
-.navbar-link, .action-link {
+.navbar-link,
+.action-link {
   position: relative;
 }
-.navbar-open, .navbar-close {
+.navbar-open,
+.navbar-close {
   border: none;
   margin-right: 10%;
   padding: 0;
@@ -429,7 +454,6 @@ body:not(.home) header .logo path {
   width: 2.5em;
 }
 
-
 /*** Footer ***/
 
 footer {
@@ -443,7 +467,7 @@ footer {
 }
 
 footer h1 {
-  font-family: "Sailec Light", sans-serif;
+  font-family: 'Sailec Light', sans-serif;
   font-size: 3.75rem;
   letter-spacing: 0.2rem;
   margin-bottom: 1.67em;
@@ -490,7 +514,7 @@ footer .users.row {
   color: #494c59;
   height: 120px;
   margin: 4.5em auto 0;
-    width: 450px;
+  width: 450px;
 }
 
 footer .users.row h3 {
@@ -498,7 +522,6 @@ footer .users.row h3 {
   letter-spacing: 0.2rem;
   text-transform: uppercase;
 }
-
 
 /*** Home ***/
 
@@ -571,8 +594,63 @@ body.home .arrow .shaft {
 #users-container li:not(:first-child) {
   width: 10em;
 }
-#users-container img {
+#users-container a {
+  background-image: url('/assets/images/users.png');
+  background-size: 100%;
+  display: block;
   height: 100px;
+  width: 150px;
+}
+#users-container .user-linkedin {
+  background-position: 0 0;
+}
+#users-container .user-asana {
+  background-position: 0 -100%;
+}
+#users-container .user-front {
+  background-position: 0 -200%;
+}
+#users-container .user-gannett {
+  background-position: 0 -300%;
+}
+#users-container .user-gusto {
+  background-position: 0 -400%;
+}
+#users-container .user-hubspot {
+  background-position: 0 -500%;
+}
+#users-container .user-intuit {
+  background-position: 0 -600%;
+}
+#users-container .user-lever {
+  background-position: 0 -700%;
+}
+#users-container .user-buffer {
+  background-position: 0 -800%;
+}
+#users-container .user-microsoft {
+  background-position: 0 -900%;
+}
+#users-container .user-modeanalytics {
+  background-position: 0 -1000%;
+}
+#users-container .user-reedsy {
+  background-position: 0 -1100%;
+}
+#users-container .user-salesforce {
+  background-position: 0 -1200%;
+}
+#users-container .user-slab {
+  background-position: 0 -1300%;
+}
+#users-container .user-slack {
+  background-position: 0 -1400%;
+}
+#users-container .user-usatoday {
+  background-position: 0 -1500%;
+}
+#users-container .user-voxmedia {
+  background-position: 0 -1600%;
 }
 
 #laptop-container {
@@ -615,7 +693,7 @@ body.home .arrow .shaft {
 #demo-container {
   background-color: #fff;
   border: 2px solid #000;
-  opacity: .85;
+  opacity: 0.85;
   overflow: hidden;
   width: 100%;
 }
@@ -644,7 +722,7 @@ body.home .arrow .shaft {
 }
 #carousel-container::after {
   clear: both;
-  content: "";
+  content: '';
   display: table;
 }
 #demo-container .ql-snow {
@@ -676,7 +754,9 @@ body.home .arrow .shaft {
   flex: 2;
   overflow: hidden;
 }
-#bubble-wrapper, #snow-wrapper, #full-wrapper {
+#bubble-wrapper,
+#snow-wrapper,
+#full-wrapper {
   display: inline-block;
   float: left;
   height: 595px;
@@ -741,8 +821,8 @@ body.home .arrow .shaft {
 }
 
 #detail-container h1 {
-  font-family: "Sailec Light", sans-serif;
-  letter-spacing: 0.20rem;
+  font-family: 'Sailec Light', sans-serif;
+  letter-spacing: 0.2rem;
   font-size: 3.33rem;
 }
 
@@ -770,7 +850,8 @@ body.home .arrow .shaft {
 #features-container .feature.row {
   margin-top: 5.56em;
 }
-.feature.columns, .feature.row .columns {
+.feature.columns,
+.feature.row .columns {
   width: 48%;
 }
 .feature.row {
@@ -783,7 +864,7 @@ body.home .arrow .shaft {
 #features-container #github-container {
   background-color: #fff;
   margin-left: 1.8em;
-  margin-top: -1.67em
+  margin-top: -1.67em;
 }
 #playground-container iframe {
   overflow: hidden;
@@ -842,7 +923,7 @@ body.home .arrow .shaft {
 
 .feature .action-link {
   display: inline-block;
-  font-family: "Sofia Pro", sans-serif;
+  font-family: 'Sofia Pro', sans-serif;
   font-size: 1.25rem;
   font-weight: bold;
   letter-spacing: 0.15rem;
@@ -886,35 +967,56 @@ body.home .arrow .shaft {
 #demo-container .ql-snow .ql-font.ql-picker {
   width: 132px;
 }
-#demo-container .ql-snow .ql-picker.ql-font .ql-picker-label:not([data-label])::before {
+#demo-container
+  .ql-snow
+  .ql-picker.ql-font
+  .ql-picker-label:not([data-label])::before {
   content: 'Sailec Light';
 }
-#demo-container .ql-snow .ql-font .ql-picker-item[data-value=sofia]::before,
-#demo-container .ql-snow .ql-font .ql-picker-label[data-value=sofia]:not([data-label])::before,
+#demo-container .ql-snow .ql-font .ql-picker-item[data-value='sofia']::before,
+#demo-container
+  .ql-snow
+  .ql-font
+  .ql-picker-label[data-value='sofia']:not([data-label])::before,
 #demo-container .ql-font-sofia {
   content: 'Sofia Pro';
   font-family: 'Sofia Pro', sans-serif;
 }
-#demo-container .ql-snow .ql-font .ql-picker-item[data-value=slabo]::before,
-#demo-container .ql-snow .ql-font .ql-picker-label[data-value=slabo]:not([data-label])::before,
+#demo-container .ql-snow .ql-font .ql-picker-item[data-value='slabo']::before,
+#demo-container
+  .ql-snow
+  .ql-font
+  .ql-picker-label[data-value='slabo']:not([data-label])::before,
 #demo-container .ql-font-slabo {
   content: 'Slabo 13px';
   font-family: 'Slabo 13px', sans-serif;
 }
-#demo-container .ql-snow .ql-font .ql-picker-item[data-value=roboto]::before,
-#demo-container .ql-snow .ql-font .ql-picker-label[data-value=roboto]:not([data-label])::before,
+#demo-container .ql-snow .ql-font .ql-picker-item[data-value='roboto']::before,
+#demo-container
+  .ql-snow
+  .ql-font
+  .ql-picker-label[data-value='roboto']:not([data-label])::before,
 #demo-container .ql-font-roboto {
   content: 'Roboto Slab';
   font-family: 'Roboto Slab', serif;
 }
-#demo-container .ql-snow .ql-font .ql-picker-item[data-value=inconsolata]::before,
-#demo-container .ql-snow .ql-font .ql-picker-label[data-value=inconsolata]:not([data-label])::before,
+#demo-container
+  .ql-snow
+  .ql-font
+  .ql-picker-item[data-value='inconsolata']::before,
+#demo-container
+  .ql-snow
+  .ql-font
+  .ql-picker-label[data-value='inconsolata']:not([data-label])::before,
 #demo-container .ql-font-inconsolata {
   content: 'Inconsolata';
   font-family: 'Inconsolata', monospace;
 }
-#demo-container .ql-snow .ql-font .ql-picker-item[data-value=ubuntu]::before,
-#demo-container .ql-snow .ql-font .ql-picker-label[data-value=ubuntu]:not([data-label])::before,
+#demo-container .ql-snow .ql-font .ql-picker-item[data-value='ubuntu']::before,
+#demo-container
+  .ql-snow
+  .ql-font
+  .ql-picker-label[data-value='ubuntu']:not([data-label])::before,
 #demo-container .ql-font-ubuntu {
   content: 'Ubuntu Mono';
   font-family: 'Ubuntu Mono', monospace;
@@ -954,7 +1056,7 @@ body:not(.home) .navbar-link:before {
 .edit-link {
   display: inline-block;
   float: right;
-  font-family: "Sofia Pro", sans-serif;
+  font-family: 'Sofia Pro', sans-serif;
   font-size: 1.08rem;
   font-weight: bold;
   height: 2.5em;
@@ -984,24 +1086,26 @@ body:not(.home) .navbar-link:before {
   text-transform: uppercase;
   vertical-align: top;
 }
-.experimental:hover::before, .experimental:hover::after {
+.experimental:hover::before,
+.experimental:hover::after {
   visibility: visible;
 }
-.experimental::before, .experimental::after {
+.experimental::before,
+.experimental::after {
   top: 0;
   left: 0;
   margin-left: 100%;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  transition: visibility 0s ease .2s;
+  transition: visibility 0s ease 0.2s;
   visibility: hidden;
 }
 .experimental::before {
   border-right: 6px solid #444;
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
-  content: " ";
+  content: ' ';
   height: 0;
   margin-left: calc(100% + 5px);
   width: 0;
@@ -1010,7 +1114,7 @@ body:not(.home) .navbar-link:before {
   background-color: #444;
   border-radius: 5px;
   color: #fff;
-  content: "Semantic Versioning does not apply to experimental APIs";
+  content: 'Semantic Versioning does not apply to experimental APIs';
   font-size: 1rem;
   font-weight: 400;
   letter-spacing: 0;
@@ -1032,7 +1136,7 @@ body:not(.home) .navbar-link:before {
 }
 
 #sidebar-container {
-  font-family: "Sofia Pro", sans-serif;
+  font-family: 'Sofia Pro', sans-serif;
   font-size: 1.2rem;
   margin-top: 11em;
   text-transform: uppercase;
@@ -1173,7 +1277,7 @@ body:not(.home) .navbar-link:before {
 }
 #content-container h2:after {
   border-bottom: 1px solid #d9dce1;
-  content: " ";
+  content: ' ';
   display: block;
 }
 #content-container h1,
@@ -1200,16 +1304,15 @@ body:not(.home) .navbar-link:before {
   max-width: 800px;
 }
 #pagination-container .prev:after {
-  content: "Previous";
+  content: 'Previous';
 }
 #pagination-container .next:before {
-  content: "Next";
+  content: 'Next';
 }
 #pagination-container .next:before,
 #pagination-container .prev:after {
-  font-family: "Sofia Pro", sans-serif;
+  font-family: 'Sofia Pro', sans-serif;
 }
-
 
 /*** Playground ***/
 
@@ -1220,7 +1323,6 @@ body:not(.home) .navbar-link:before {
 #playground-container .codepen {
   height: 500px;
 }
-
 
 /*** Blog Container ***/
 
@@ -1268,7 +1370,6 @@ body:not(.home) .navbar-link:before {
   margin-top: 2.78em;
 }
 
-
 /*** Responsive Rules ***/
 
 @media (max-width: 1023px) {
@@ -1279,7 +1380,8 @@ body:not(.home) .navbar-link:before {
     margin-bottom: -25em;
     transition: margin-bottom 1s ease-out 0s;
   }
-  .navbar-list .navbar-item, .navbar-list .download-item {
+  .navbar-list .navbar-item,
+  .navbar-list .download-item {
     display: none;
   }
   #users-container h1 {
@@ -1316,7 +1418,8 @@ body:not(.home) .navbar-link:before {
   .announcement {
     display: none;
   }
-  .navbar-open, .navbar-close {
+  .navbar-open,
+  .navbar-close {
     top: 4em;
   }
   .logo {
@@ -1364,8 +1467,9 @@ body:not(.home) .navbar-link:before {
   #users-container ul li:first-child {
     display: block;
   }
-  #users-container img {
-    height: 55px;
+  #users-container a {
+    height: 50px;
+    width: 75px;
   }
   #demo-container {
     padding-left: 0;
@@ -1384,7 +1488,9 @@ body:not(.home) .navbar-link:before {
   .demo-active #full-wrapper {
     height: 455px;
   }
-  #bubble-wrapper, #snow-wrapper, #full-wrapper {
+  #bubble-wrapper,
+  #snow-wrapper,
+  #full-wrapper {
     height: 495px;
   }
   #snow-wrapper .toolbar .ql-font,
@@ -1436,7 +1542,8 @@ body:not(.home) .navbar-link:before {
   .feature .action-link {
     margin-top: 1em;
   }
-  .feature.columns, .feature.row .columns {
+  .feature.columns,
+  .feature.row .columns {
     width: 100%;
   }
   .feature.row {
@@ -1457,7 +1564,9 @@ body:not(.home) .navbar-link:before {
   }
 }
 @media (max-width: 550px) {
-  #bubble-wrapper, #snow-wrapper, #full-wrapper {
+  #bubble-wrapper,
+  #snow-wrapper,
+  #full-wrapper {
     height: 475px;
   }
   #snow-wrapper .toolbar .ql-formats:nth-child(4),
@@ -1490,7 +1599,8 @@ body:not(.home) .navbar-link:before {
     position: absolute;
     right: 0;
     text-align: center;
-    transition: max-height 800ms ease-in-out 0s, background-color 500ms linear 0s;
+    transition: max-height 800ms ease-in-out 0s,
+      background-color 500ms linear 0s;
   }
   #sidebar-container.active {
     background-color: #ececec;
@@ -1544,10 +1654,11 @@ body:not(.home) .navbar-link:before {
   .container {
     width: 90%;
   }
-  .navbar-list .navbar-link:before, .action-link:before {
+  .navbar-list .navbar-link:before,
+  .action-link:before {
     background-color: #000;
     bottom: -18px;
-    content: "";
+    content: '';
     height: 3px;
     left: 0;
     position: absolute;
@@ -1556,7 +1667,8 @@ body:not(.home) .navbar-link:before {
     visibility: hidden;
     width: 100%;
   }
-  .navbar-list .navbar-link:hover:before, .action-link:hover:before {
+  .navbar-list .navbar-link:hover:before,
+  .action-link:hover:before {
     transform: scaleX(1);
     visibility: visible;
   }

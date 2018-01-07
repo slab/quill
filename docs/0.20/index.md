@@ -210,7 +210,7 @@ title: A Rich Text WYSIWYG Editor with an API - Quill v0.20
     <a href="https://github.com/quilljs/quill/releases/download/v0.20.1/quill.tar.gz" class="btn-lg btn" title="Quill v0.20.1" onclick="ga('send','event','download',this.href);">Download Quill</a>
   </div>
 </div>
-<script type="text/javascript" src="//cdn.quilljs.com/0.20.1/quill.js"></script>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/0.20/assets/js/index.js"></script>
+<script src="//cdn.quilljs.com/0.20.1/quill.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="/0.20/assets/js/index.js"></script>
