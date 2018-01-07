@@ -60,7 +60,7 @@ layout: default
         {% elsif page.stability == "incomplete" %}
         <div class="alert alert-warning">This page is incomplete.</div>
         {% endif %}
-        <h1 id="{{ page.title | handelize | downcase }}">{{ page.title }}</h1>
+        <h1 id="{{ page.title | slugify }}">{{ page.title }}</h1>
         {{ content }}
       </div>
       <div class="row" id="pagination-container">
