@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>{{ page.title }}{% if page.path != "index.html" %} - Quill{% endif %}</title>
+    {% if page.path == "index.html" %}
+    <title>{{ page.title }}</title>
+    {% elsif page.title.size > 25 %}
+    <title>{{ page.title }} - Quill</title>
+    {% else %}
+    <title>{{ page.title }} - Quill Rich Text Editor</title>
+    {% endif %}
     {% include meta.html %}
     <link rel="stylesheet" href="/assets/css/base.css">
     {% assign sections = content | split: '<!-- head -->' %}
