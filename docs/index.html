@@ -33,19 +33,13 @@ redirect_from: /latest/
       <ul>
         <li>Trusted by:</li>
         <li>
-          <a href="https://www.linkedin.com/" target="_blank">
-            <img alt="LinkedIn Logo" src="/assets/images/users/linkedin.png">
-          </a>
+          <a class="user-linkedin" href="https://www.linkedin.com/" title="LinkedIn" target="_blank"></a>
         </li>
         <li>
-          <a href="https://slack.com/" target="_blank">
-            <img alt="Slack Logo" src="/assets/images/users/slack.png">
-          </a>
+          <a class="user-slack" href="https://slack.com/" target="_blank" title="Slack"></a>
         </li>
         <li>
-          <a href="http://www.voxmedia.com/" target="_blank">
-            <img alt="Vox Media Logo" src="/assets/images/users/voxmedia.png">
-          </a>
+          <a class="user-voxmedia" href="http://www.voxmedia.com/" target="_blank" title="Vox Media"></a>
         </li>
       </ul>
     </div>
@@ -280,6 +274,7 @@ redirect_from: /latest/
       'Gannett': 'http://www.gannett.com/',
       'Gusto': 'http://www.gusto.com/',
       'Hubspot': 'https://www.hubspot.com/',
+      'Mode Analytics': 'https://modeanalytics.com/',
       'USA Today': 'http://www.usatoday.com/',
     }, {
       'Buffer': 'https://buffer.com/',
@@ -294,10 +289,10 @@ redirect_from: /latest/
       var bucket = users[i];
       var keys = Object.keys(bucket);
       var name = keys[Math.floor(Math.random() * keys.length)];
-      $(link).attr({ href: bucket[name], title: name });
-      $('img', link).attr({
-        src: '/assets/images/users/' + (name.toLowerCase().replace(/\s/g, '')) + '.png',
-        alt: name + ' Logo'
+      $(link).attr({
+        href: bucket[name],
+        title: name,
+        class: 'user-' + (name.toLowerCase().replace(/\s/g, ''))
       });
     });
 
