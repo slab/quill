@@ -3,6 +3,7 @@ layout: docs
 title: Delta
 permalink: /docs/delta/
 redirect_from:
+  - /docs/deltas/
   - /docs/api/deltas/
   - /guides/working-with-deltas/
 ---
