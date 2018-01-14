@@ -13,7 +13,7 @@ In general, common customizations are handled in [configurations](#configuration
 
 ### Configurations
 
-Quill favors Code over Configuration&trade;, but for very common needs, especially where the equivalent code would be lengthy or complex, Quill provides [configuration](/docs/configuration/) options. This would be a good first place too look to determine if you even need to implement any custom functionality.
+Quill favors Code over Configuration&trade;, but for very common needs, especially where the equivalent code would be lengthy or complex, Quill provides [configuration](/docs/configuration/) options. This would be a good first place to look to determine if you even need to implement any custom functionality.
 
 Two of the most powerful options is `modules` and `theme`. You can drastically change or expand what Quill can and does do by simply adding or removing individual [modules](/docs/modules/) or using a different [theme](/docs/themes/).
 
