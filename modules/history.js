@@ -27,13 +27,13 @@ class History extends Module {
   change(source, dest) {
     if (this.stack[source].length === 0) return;
     let delta = this.stack[source].pop();
+    this.stack[dest].push(delta);
     this.lastRecorded = 0;
     this.ignoreChange = true;
     this.quill.updateContents(delta[source], Quill.sources.USER);
     this.ignoreChange = false;
     let index = getLastChangeIndex(delta[source]);
     this.quill.setSelection(index);
-    this.stack[dest].push(delta);
   }
 
   clear() {
