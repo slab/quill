@@ -4,7 +4,6 @@ import extend from 'extend';
 import Delta from 'quill-delta';
 import DeltaOp from 'quill-delta/lib/op';
 import Parchment from 'parchment';
-import Embed from '../blots/embed';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
@@ -307,6 +306,7 @@ function makeEmbedArrowHandler(key, shiftKey) {
   return {
     key,
     shiftKey,
+    altKey: null,
     [where]: /^$/,
     handler: function(range) {
       let index = range.index;
@@ -314,7 +314,7 @@ function makeEmbedArrowHandler(key, shiftKey) {
         index += (range.length + 1);
       }
       const [leaf, ] = this.quill.getLeaf(index);
-      if (!(leaf instanceof Embed)) return true;
+      if (!(leaf instanceof Parchment.Embed)) return true;
       if (key === Keyboard.keys.LEFT) {
         if (shiftKey) {
           this.quill.setSelection(range.index - 1, range.length + 1, Quill.sources.USER);
