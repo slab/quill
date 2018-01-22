@@ -96,10 +96,12 @@ class Clipboard extends Module {
 
   dangerouslyPasteHTML(index, html, source = Quill.sources.API) {
     if (typeof index === 'string') {
-      return this.quill.setContents(this.convert(index), html);
+      this.quill.setContents(this.convert(index), html);
+      this.quill.setSelection(0, Quill.sources.SILENT);
     } else {
       let paste = this.convert(html);
-      return this.quill.updateContents(new Delta().retain(index).concat(paste), source);
+      this.quill.updateContents(new Delta().retain(index).concat(paste), source);
+      this.quill.setSelection(index, Quill.source.SILENT);
     }
   }
 
