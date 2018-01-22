@@ -56,7 +56,7 @@ var Module = Quill.import('core/module');
 
 class CustomModule extends Module {}
 
-Quill.register('modules/custom-module', Module);
+Quill.register('modules/custom-module', CustomModule);
 ```
 
 ```javascript
