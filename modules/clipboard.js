@@ -106,7 +106,7 @@ class Clipboard extends Module {
         new Delta().retain(index).concat(paste),
         source,
       );
-      this.quill.setSelection(index, Quill.source.SILENT);
+      this.quill.setSelection(index, Quill.sources.SILENT);
     }
   }
 
