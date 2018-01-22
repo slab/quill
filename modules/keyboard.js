@@ -220,8 +220,9 @@ Keyboard.DEFAULTS = {
       format: { list: 'checked' },
       handler: function(range) {
         let [line, offset] = this.quill.getLine(range.index);
+        let formats = extend({}, line.formats(), { list: 'checked' });
         let delta = new Delta().retain(range.index)
-                               .insert('\n', { list: 'checked' })
+                               .insert('\n', formats)
                                .retain(line.length() - offset - 1)
                                .retain(1, { list: 'unchecked' });
         this.quill.updateContents(delta, Quill.sources.USER);
