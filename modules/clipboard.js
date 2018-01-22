@@ -259,11 +259,11 @@ function matchAttributor(node, delta) {
         if (formats[attr.attrName]) return;
       }
       attr = ATTRIBUTE_ATTRIBUTORS[name];
-      if (attr != null && attr.attrName === name) {
+      if (attr != null && (attr.attrName === name || attr.keyName === name)) {
         formats[attr.attrName] = attr.value(node) || undefined;
       }
       attr = STYLE_ATTRIBUTORS[name];
-      if (attr != null && attr.attrName === name) {
+      if (attr != null && (attr.attrName === name || attr.keyName === name)) {
         attr = STYLE_ATTRIBUTORS[name];
         formats[attr.attrName] = attr.value(node) || undefined;
       }
