@@ -36,6 +36,7 @@ resets(arr)
 
 .ql-editor
   box-sizing: border-box
+  counter-reset: list-0
   line-height: 1.42
   height: 100%
   outline: none
@@ -52,7 +53,8 @@ resets(arr)
   p, ol, ul, pre, blockquote, h1, h2, h3, h4, h5, h6
     margin: 0
     padding: 0
-    counter-reset: resets(1..MAX_INDENT)
+  p, pre, blockquote, h1, h2, h3, h4, h5, h6
+    counter-reset: resets(0..MAX_INDENT)
   ol, ul
     padding-left: 1.5em
   ol > li, ul > li
@@ -91,7 +93,7 @@ resets(arr)
   ol
     li
       counter-reset: resets(1..MAX_INDENT)
-      counter-increment: unquote('list-0')
+      counter-increment: list-0
       &:before
         content: unquote('counter(list-0, ' + LIST_STYLE[0] + ')') '. '
     for num in (1..MAX_INDENT)
