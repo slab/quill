@@ -376,8 +376,7 @@ function makeEmbedArrowHandler(key, shiftKey) {
         } else {
           this.quill.setSelection(range.index - 1, Quill.sources.USER);
         }
-      }
-      if (shiftKey) {
+      } else if (shiftKey) {
         this.quill.setSelection(
           range.index,
           range.length + 1,
