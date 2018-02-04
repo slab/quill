@@ -1,5 +1,5 @@
 language: node_js
-node_js: '8.2'
+node_js: '8.9'
 script:
   - npm run build
   - travis_retry npm run travis
