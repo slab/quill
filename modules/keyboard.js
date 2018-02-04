@@ -21,7 +21,7 @@ class Keyboard extends Module {
     ) {
       return false;
     }
-    return binding.key === evt.key;
+    return binding.key === evt.key || binding.key === evt.which;
   }
 
   constructor(quill, options) {
@@ -107,10 +107,11 @@ class Keyboard extends Module {
   listen() {
     this.quill.root.addEventListener('keydown', evt => {
       if (evt.defaultPrevented) return;
-      const bindings = (this.bindings[evt.key] || []).filter(binding =>
-        Keyboard.match(evt, binding),
+      const bindings = (this.bindings[evt.key] || []).concat(
+        this.bindings[evt.which] || [],
       );
-      if (bindings.length === 0) return;
+      const matches = bindings.filter(binding => Keyboard.match(evt, binding));
+      if (matches.length === 0) return;
       const range = this.quill.getSelection();
       if (range == null || !this.quill.hasFocus()) return;
       const [line, offset] = this.quill.getLine(range.index);
@@ -136,7 +137,7 @@ class Keyboard extends Module {
         suffix: suffixText,
         event: evt,
       };
-      const prevented = bindings.some(binding => {
+      const prevented = matches.some(binding => {
         if (
           binding.collapsed != null &&
           binding.collapsed !== curContext.collapsed
@@ -543,7 +544,7 @@ function makeFormatHandler(format) {
 }
 
 function normalize(binding) {
-  if (typeof binding === 'string') {
+  if (typeof binding === 'string' || typeof binding === 'number') {
     binding = { key: binding };
   } else if (typeof binding === 'object') {
     binding = clone(binding, false);
