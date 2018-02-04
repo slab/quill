@@ -207,7 +207,7 @@ function addSelect(container, format, values) {
 Toolbar.DEFAULTS = {
   container: null,
   handlers: {
-    clean: () => {
+    clean() {
       const range = this.quill.getSelection();
       if (range == null) return;
       if (range.length === 0) {
@@ -222,7 +222,7 @@ Toolbar.DEFAULTS = {
         this.quill.removeFormat(range, Quill.sources.USER);
       }
     },
-    direction: value => {
+    direction(value) {
       const { align } = this.quill.getFormat();
       if (value === 'rtl' && align == null) {
         this.quill.format('align', 'right', Quill.sources.USER);
@@ -231,7 +231,7 @@ Toolbar.DEFAULTS = {
       }
       this.quill.format('direction', value, Quill.sources.USER);
     },
-    indent: value => {
+    indent(value) {
       const range = this.quill.getSelection();
       const formats = this.quill.getFormat(range);
       const indent = parseInt(formats.indent || 0, 10);
@@ -241,13 +241,13 @@ Toolbar.DEFAULTS = {
         this.quill.format('indent', indent + modifier, Quill.sources.USER);
       }
     },
-    link: value => {
+    link(value) {
       if (value === true) {
         value = prompt('Enter link URL:'); // eslint-disable-line no-alert
       }
       this.quill.format('link', value, Quill.sources.USER);
     },
-    list: value => {
+    list(value) {
       const range = this.quill.getSelection();
       const formats = this.quill.getFormat(range);
       if (value === 'check') {
