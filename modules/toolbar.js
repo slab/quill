@@ -215,7 +215,7 @@ Toolbar.DEFAULTS = {
         Object.keys(formats).forEach(name => {
           // Clean functionality in existing apps only clean inline formats
           if (Parchment.query(name, Parchment.Scope.INLINE) != null) {
-            this.quill.format(name, false);
+            this.quill.format(name, false, Quill.sources.USER);
           }
         });
       } else {
