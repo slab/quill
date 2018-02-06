@@ -105,13 +105,15 @@ describe('Toolbar', function() {
         <p><a href="http://quilljs.com/">0123</a></p>
         <p class="ql-align-center">5678</p>
         <p><span class="ql-size-small">01</span><span class="ql-size-large">23</span></p>
+        <ul data-checked="false"><li>27</li></ul>
       `);
       this.quill = new Quill(container, {
         modules: {
           toolbar: [
             ['bold', 'link'],
             [{ 'size': ['small', false, 'large'] }],
-            [{ 'align': '' }, { 'align': 'center' }]
+            [{ 'align': '' }, { 'align': 'center' }],
+            [{ 'list': 'check' }]
           ]
         },
         theme: 'snow'
@@ -158,6 +160,14 @@ describe('Toolbar', function() {
       this.quill.blur();
       expect(centerButton.classList.contains('ql-active')).toBe(false);
       expect(leftButton.classList.contains('ql-active')).toBe(false);
+    });
+
+    it('check list', function() {
+      let checkListButton = this.container.parentNode.querySelector('button.ql-list[value="check"]');
+      this.quill.setSelection(27);
+      expect(checkListButton.classList.contains('ql-active')).toBe(true);
+      this.quill.setSelection(2);
+      expect(checkListButton.classList.contains('ql-active')).toBe(false);
     });
   });
 });

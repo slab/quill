@@ -6,6 +6,10 @@ import Module from '../core/module';
 
 let debug = logger('quill:toolbar');
 
+let formatLookup = {
+  unchecked: 'check',
+  checked: 'check',
+};
 
 class Toolbar extends Module {
   constructor(quill, options) {
@@ -133,11 +137,13 @@ class Toolbar extends Module {
         if (range == null) {
           input.classList.remove('ql-active');
         } else if (input.hasAttribute('value')) {
+          // lookup correct format for checklists, which don't match the toolbar value
+          let normalizedFormat = formatLookup[formats[format]] || formats[format];
           // both being null should match (default values)
           // '1' should match with 1 (headers)
-          let isActive = formats[format] === input.getAttribute('value') ||
-                         (formats[format] != null && formats[format].toString() === input.getAttribute('value')) ||
-                         (formats[format] == null && !input.getAttribute('value'));
+          let isActive = normalizedFormat === input.getAttribute('value') ||
+                         (normalizedFormat != null && normalizedFormat.toString() === input.getAttribute('value')) ||
+                         (normalizedFormat == null && !input.getAttribute('value'));
           input.classList.toggle('ql-active', isActive);
         } else {
           input.classList.toggle('ql-active', formats[format] != null);
