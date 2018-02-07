@@ -74,8 +74,11 @@ class List extends Container {
       }
     }
 
-    domNode.addEventListener('touchstart', listEventHandler);
-    domNode.addEventListener('mousedown', listEventHandler);
+    if ('ontouchstart' in document.documentElement) {
+      domNode.addEventListener('touchstart', listEventHandler);
+    } else {
+      domNode.addEventListener('mousedown', listEventHandler);
+    }
   }
 
   format(name, value) {
