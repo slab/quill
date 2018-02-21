@@ -39,6 +39,7 @@ class Image extends Parchment.Embed {
   }
 
   format(name, value) {
+    debugger;
     if (ATTRIBUTES.indexOf(name) > -1) {
       if (value) {
         this.domNode.setAttribute(name, value);
