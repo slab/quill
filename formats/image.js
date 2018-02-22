@@ -1,20 +1,36 @@
 import Parchment from 'parchment';
 import { sanitize } from '../formats/link';
 
+// override attributes to support image attributes.
+//  alt, width, height, and style alignment )
+// TODO: make checks to ensure style only contains the desired declarations
+//      float; margin; display;
 const ATTRIBUTES = [
+  'src',
   'alt',
   'height',
-  'width'
+  'width',
+  'style'
 ];
 
 
 class Image extends Parchment.Embed {
+
   static create(value) {
-    let node = super.create(value);
+    const imageNode = ATTRIBUTES.reduce(function(node, attribute) {
+      const attrPresent = Object.prototype.hasOwnProperty.call(value, attribute);
+      if (attrPresent) {
+        node.setAttribute(attribute, value[attribute]);
+      }
+      return node;
+    }, super.create(value));
+
+    // check for string only as in when uploading or dropping an image file
     if (typeof value === 'string') {
-      node.setAttribute('src', this.sanitize(value));
+      imageNode.setAttribute('src', this.sanitize(value));
     }
-    return node;
+
+    return imageNode;
   }
 
   static formats(domNode) {
@@ -35,11 +51,15 @@ class Image extends Parchment.Embed {
   }
 
   static value(domNode) {
-    return domNode.getAttribute('src');
+    return ATTRIBUTES.reduce(function(formats, attribute) {
+      if (domNode.hasAttribute(attribute)) {
+        formats[attribute] = domNode.getAttribute(attribute);
+      }
+      return formats;
+    }, {});
   }
 
   format(name, value) {
-    debugger;
     if (ATTRIBUTES.indexOf(name) > -1) {
       if (value) {
         this.domNode.setAttribute(name, value);
