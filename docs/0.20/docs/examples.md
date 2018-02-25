@@ -75,7 +75,7 @@ title: Examples - Quill v0.20
           </div>
           <div class="editor" id="basic-editor">
             <div><span style="font-size: 18px;">One Ring to Rule Them All</span></div>
-<div><a href="http://en.wikipedia.org/wiki/One_Ring">http://en.wikipedia.org/wiki/One_Ring</a></div>
+<div><a href="https://en.wikipedia.org/wiki/One_Ring">https://en.wikipedia.org/wiki/One_Ring</a></div>
 <div><br></div>
 <div><span>Three Rings for the </span><u>Elven-kings</u><span> under the sky,</span></div>
 <div><span>Seven for the </span><u>Dwarf-lords</u><span> in halls of stone,</span></div>
@@ -281,7 +281,7 @@ title: Examples - Quill v0.20
           </div>
           <div class="editor" id="full-editor">
             <div><span style="font-size: 18px;">One Ring to Rule Them All</span></div>
-<div><a href="http://en.wikipedia.org/wiki/One_Ring">http://en.wikipedia.org/wiki/One_Ring</a></div>
+<div><a href="https://en.wikipedia.org/wiki/One_Ring">https://en.wikipedia.org/wiki/One_Ring</a></div>
 <div><br></div>
 <div><span>Three Rings for the </span><u>Elven-kings</u><span> under the sky,</span></div>
 <div><span>Seven for the </span><u>Dwarf-lords</u><span> in halls of stone,</span></div>

@@ -79,7 +79,7 @@ insertEmbed(index: Number, type: String, value: any, source: String = 'api'): De
 **Examples**
 
 ```javascript
-quill.insertEmbed(10, 'image', 'http://quilljs.com/images/cloud.png');
+quill.insertEmbed(10, 'image', 'https://quilljs.com/images/cloud.png');
 ```
 
 ### insertText

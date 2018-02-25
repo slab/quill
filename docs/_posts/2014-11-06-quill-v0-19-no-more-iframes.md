@@ -44,4 +44,4 @@ Quill is now listed in npm as `quill` instead of `quilljs`. Quill was already li
 Finally, community contribution and involvement has been tremendous and both the project and everyone using it reaps the benefits. A big thanks for all the contributions so far and keep them coming!
 
 
-[^1]: See [Editors and Iframes](http://www.jasonchen.me/editors-and-iframes/) for full details.
+[^1]: See [Editors and Iframes](https://www.jasonchen.me/editors-and-iframes/) for full details.

@@ -32,13 +32,13 @@ $(document).ready(function() {
     'Front': 'https://frontapp.com/',
     'Intuit': 'https://www.intuit.com/',
     'Lever': 'https://www.lever.co/',
-    'MerchantCircle': 'http://www.merchantcircle.com/',
+    'MerchantCircle': 'https://www.merchantcircle.com/',
     'Reedsy': 'https://reedsy.com/',
     'RelateIQ': 'https://www.relateiq.com/',
     'Respondly': 'https://respond.ly/',
-    'Salesforce': 'http://www.salesforce.com/',
+    'Salesforce': 'https://www.salesforce.com/',
     'ThemeXpert': 'https://www.themexpert.com/',
-    'Vox Media': 'http://www.voxmedia.com/',
+    'Vox Media': 'https://www.voxmedia.com/',
     'Writer': 'https://chrome.google.com/webstore/detail/writer/hlddiopdeghmcmdjjmpdegemnojihpib?hl=en'
   };
 
@@ -55,5 +55,5 @@ $(document).ready(function() {
     });
   });
 
-  console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(6, 10, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");
+  console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(6, 10, 'bold', true);\n\nVisit the API documenation page to learn more: https://quilljs.com/docs/api/\n");
 });

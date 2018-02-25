@@ -635,7 +635,7 @@ title: API - Quill v0.20
 "nx">insertEmbed</span><span class="p">(</span><span class=
 "mi">10</span><span class="p">,</span> <span class=
 "s1">'image'</span><span class="p">,</span> <span class=
-"s1">'http://quilljs.com/images/cloud.png'</span><span class=
+"s1">'https://quilljs.com/images/cloud.png'</span><span class=
 "p">);</span></code>
 </pre>
       </figure>

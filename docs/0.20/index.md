@@ -130,9 +130,9 @@ title: A Rich Text WYSIWYG Editor with an API - Quill v0.20
         <span>Quill is a free, </span>
         <a href="https://github.com/quilljs/quill/">open source</a>
         <span> WYSIWYG editor built for the modern web. With its </span>
-        <a href="http://quilljs.com/0.20/docs/modules/">extensible architecture</a>
+        <a href="https://quilljs.com/0.20/docs/modules/">extensible architecture</a>
         <span> and a </span>
-        <a href="http://quilljs.com/0.20/docs/api/">expressive API</a>
+        <a href="https://quilljs.com/0.20/docs/api/">expressive API</a>
         <span> you can completely customize it to fulfill your needs. Some built in features include:</span>
       </div>
       <div><br /></div>
@@ -186,7 +186,7 @@ title: A Rich Text WYSIWYG Editor with an API - Quill v0.20
         </a>
       </div>
       <div class="col-sm-2">
-        <a href="http://www.intuit.com/" title="Intuit" target="_blank">
+        <a href="https://www.intuit.com/" title="Intuit" target="_blank">
           <img class="img-responsive" src="/0.20/assets/images/users/intuit.png" alt="Intuit" />
         </a>
       </div>
