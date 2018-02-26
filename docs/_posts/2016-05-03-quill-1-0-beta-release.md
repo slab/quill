@@ -10,7 +10,7 @@ Today Quill is ready for its first beta preview of 1.0. This is the biggest rewr
 npm install quill@1.0.0-beta.0
 ```
 
-The skeleton of a new documentation site is also being built out at [beta.quilljs.com](http://beta.quilljs.com). Whereas the current site focuses on being a referential resource, the new site will also be a guide to provide insight on approaching different customization goals. There is also an [interactive playground](http://beta.quilljs.com/playground/) to try out various configurations and explore the API.
+The skeleton of a new documentation site is also being built out at [beta.quilljs.com](https://beta.quilljs.com). Whereas the current site focuses on being a referential resource, the new site will also be a guide to provide insight on approaching different customization goals. There is also an [interactive playground](https://beta.quilljs.com/playground/) to try out various configurations and explore the API.
 
 <!-- more -->
 

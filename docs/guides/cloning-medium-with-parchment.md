@@ -21,7 +21,7 @@ In this guide, we will use the building blocks provided by Parchment and Quill t
 
 ### Groundwork
 
-Let's start without even using Quill, with just a textarea and button, hooked up to a dummy event listener. We'll use jQuery for convenience throughout this guide, but neither Quill nor Parchment depends on this. We'll also add some basic styling, with the help of [Google Fonts](https://fonts.google.com/) and [Font Awesome](http://fontawesome.io/). None of this has anything to do with Quill or Parchment, so we'll move through quickly.
+Let's start without even using Quill, with just a textarea and button, hooked up to a dummy event listener. We'll use jQuery for convenience throughout this guide, but neither Quill nor Parchment depends on this. We'll also add some basic styling, with the help of [Google Fonts](https://fonts.google.com/) and [Font Awesome](https://fontawesome.io/). None of this has anything to do with Quill or Parchment, so we'll move through quickly.
 
 <div data-height="400" data-theme-id="23269" data-slug-hash="oLVAKZ" data-default-tab="result" data-embed-version="2" class="codepen"></div>
 
