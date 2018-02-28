@@ -84,7 +84,7 @@ class Scroll extends Parchment.Scroll {
         def == null ||
         Parchment.query(value, Parchment.Scope.BLOCK) == null
       ) {
-        const blot = Parchment.create(this.statics.defaultChild);
+        const blot = Parchment.create(this.statics.defaultChild.blotName);
         this.appendChild(blot);
         if (def == null && value.endsWith('\n')) {
           blot.insertAt(0, value.slice(0, -1), def);
@@ -103,7 +103,7 @@ class Scroll extends Parchment.Scroll {
 
   insertBefore(blot, ref) {
     if (blot.statics.scope === Parchment.Scope.INLINE_BLOT) {
-      const wrapper = Parchment.create(this.statics.defaultChild);
+      const wrapper = Parchment.create(this.statics.defaultChild.blotName);
       wrapper.appendChild(blot);
       super.insertBefore(wrapper, ref);
     } else {
@@ -176,7 +176,7 @@ class Scroll extends Parchment.Scroll {
 Scroll.blotName = 'scroll';
 Scroll.className = 'ql-editor';
 Scroll.tagName = 'DIV';
-Scroll.defaultChild = 'block';
+Scroll.defaultChild = Block;
 Scroll.allowedChildren = [Block, BlockEmbed, Container];
 
 export default Scroll;
