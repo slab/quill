@@ -57,7 +57,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 </div>
 
 <!-- Include the Quill library -->
-<script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
+<script src="https://cdn.quilljs.com/1.3.5/quill.js"></script>
 
 <!-- Initialize Quill editor -->
 <script>
@@ -81,16 +81,16 @@ Take a look at the [Quill](https://quilljs.com/) website for more documentation,
 
 ```html
 <!-- Main Quill library -->
-<script src="//cdn.quilljs.com/1.0.0/quill.js"></script>
-<script src="//cdn.quilljs.com/1.0.0/quill.min.js"></script>
+<script src="//cdn.quilljs.com/1.3.5/quill.js"></script>
+<script src="//cdn.quilljs.com/1.3.5/quill.min.js"></script>
 
 <!-- Theme included stylesheets -->
-<link href="//cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
-<link href="//cdn.quilljs.com/1.0.0/quill.bubble.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.5/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.5/quill.bubble.css" rel="stylesheet">
 
 <!-- Core build with no theme, formatting, non-essential modules -->
-<link href="//cdn.quilljs.com/1.0.0/quill.core.css" rel="stylesheet">
-<script src="//cdn.quilljs.com/1.0.0/quill.core.js"></script>
+<link href="//cdn.quilljs.com/1.3.5/quill.core.css" rel="stylesheet">
+<script src="//cdn.quilljs.com/1.3.5/quill.core.js"></script>
   ```
 
 
