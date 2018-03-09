@@ -105,6 +105,7 @@ class CodeBlock extends Block {
     }
   }
 
+  // TODO no longer a thing
   replace(target) {
     super.replace(target);
     [].slice.call(this.domNode.querySelectorAll('*')).forEach(node => {

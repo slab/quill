@@ -10,7 +10,7 @@ import Indent from './formats/indent';
 
 import Blockquote from './formats/blockquote';
 import Header from './formats/header';
-import List, { ListItem } from './formats/list';
+import List, { ListContainer } from './formats/list';
 
 import { BackgroundClass, BackgroundStyle } from './formats/background';
 import { ColorClass, ColorStyle } from './formats/color';
@@ -65,6 +65,8 @@ Quill.register(
 
 Quill.register(
   {
+    'blots/list-container': ListContainer,
+
     'formats/align': AlignClass,
     'formats/direction': DirectionClass,
     'formats/indent': Indent,
@@ -90,8 +92,6 @@ Quill.register(
     'formats/formula': Formula,
     'formats/image': Image,
     'formats/video': Video,
-
-    'formats/list/item': ListItem,
 
     'modules/syntax': Syntax,
     'modules/toolbar': Toolbar,

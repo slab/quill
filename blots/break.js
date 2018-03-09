@@ -5,10 +5,8 @@ class Break extends Parchment.Embed {
     return undefined;
   }
 
-  insertInto(parent, ref) {
-    if (parent.children.length === 0) {
-      super.insertInto(parent, ref);
-    } else {
+  optimize() {
+    if (this.prev || this.next) {
       this.remove();
     }
   }
