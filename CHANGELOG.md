@@ -1,3 +1,11 @@
+# 1.3.6
+
+- Make picker accessible [#1999](https://github.com/quilljs/quill/pull/1999)
+- Fix Japanese composition in Chrome 65 [#2009](https://github.com/quilljs/quill/issues/2009)
+
+Thanks to [@berylw](https://github.com/berylw) and [@erinsinger93](https://github.com/erinsinger93) for contributions to this release!
+
+
 # 1.3.5
 
 - Fix indent preservation of a checked checklist item [#1818](https://github.com/quilljs/quill/issues/1818)
