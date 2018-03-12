@@ -1,7 +1,7 @@
 import Keyboard from '../modules/keyboard';
 import DropdownIcon from '../assets/icons/dropdown.svg';
 
-let OPTIONS_ID = 0;
+let optionsCounter = 0;
 
 function toggleAriaAttribute(element, attribute) {
   element.setAttribute(attribute, !(element.getAttribute(attribute) === 'true'));
@@ -98,8 +98,8 @@ class Picker {
     options.tabIndex = '-1';
 
     // Need a unique id for aria-controls
-    options.id = `ql-picker-options-${OPTIONS_ID}`;
-    OPTIONS_ID += 1;
+    options.id = `ql-picker-options-${optionsCounter}`;
+    optionsCounter += 1;
     this.label.setAttribute('aria-controls', options.id);
 
     this.options = options;
