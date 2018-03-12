@@ -1,4 +1,11 @@
+import Keyboard from '../modules/keyboard';
 import DropdownIcon from '../assets/icons/dropdown.svg';
+
+let optionsCounter = 0;
+
+function toggleAriaAttribute(element, attribute) {
+  element.setAttribute(attribute, !(element.getAttribute(attribute) === 'true'));
+}
 
 class Picker {
   constructor(select) {
@@ -7,14 +14,39 @@ class Picker {
     this.buildPicker();
     this.select.style.display = 'none';
     this.select.parentNode.insertBefore(this.container, this.select);
+
     this.label.addEventListener('mousedown', () => {
-      this.container.classList.toggle('ql-expanded');
+      this.togglePicker();
+    });
+    this.label.addEventListener('keydown', (event) => {
+      switch(event.keyCode) {
+        // Allows the "Enter" key to open the picker
+        case Keyboard.keys.ENTER:
+          this.togglePicker();
+          break;
+
+        // Allows the "Escape" key to close the picker
+        case Keyboard.keys.ESCAPE:
+          this.escape();
+          event.preventDefault();
+          break;
+        default:
+      }
     });
     this.select.addEventListener('change', this.update.bind(this));
   }
 
+  togglePicker() {
+    this.container.classList.toggle('ql-expanded');
+    // Toggle aria-expanded and aria-hidden to make the picker accessible
+    toggleAriaAttribute(this.label, 'aria-expanded');
+    toggleAriaAttribute(this.options, 'aria-hidden');
+  }
+
   buildItem(option) {
     const item = document.createElement('span');
+    item.tabIndex = '0';
+    item.setAttribute('role', 'button');
     item.classList.add('ql-picker-item');
     if (option.hasAttribute('value')) {
       item.setAttribute('data-value', option.getAttribute('value'));
@@ -25,6 +57,23 @@ class Picker {
     item.addEventListener('click', () => {
       this.selectItem(item, true);
     });
+    item.addEventListener('keydown', (event) => {
+      switch(event.keyCode) {
+        // Allows the "Enter" key to select an item
+        case Keyboard.keys.ENTER:
+          this.selectItem(item, true);
+          event.preventDefault();
+          break;
+
+        // Allows the "Escape" key to close the picker
+        case Keyboard.keys.ESCAPE:
+          this.escape();
+          event.preventDefault();
+          break;
+        default:
+      }
+    });
+
     return item;
   }
 
@@ -32,6 +81,9 @@ class Picker {
     const label = document.createElement('span');
     label.classList.add('ql-picker-label');
     label.innerHTML = DropdownIcon;
+    label.tabIndex = '0';
+    label.setAttribute('role', 'button');
+    label.setAttribute('aria-expanded', 'false');
     this.container.appendChild(label);
     return label;
   }
@@ -39,7 +91,19 @@ class Picker {
   buildOptions() {
     const options = document.createElement('span');
     options.classList.add('ql-picker-options');
-    [].slice.call(this.select.options).forEach(option => {
+
+    // Don't want screen readers to read this until options are visible
+    options.setAttribute('aria-hidden', 'true');
+    options.tabIndex = '-1';
+
+    // Need a unique id for aria-controls
+    options.id = `ql-picker-options-${optionsCounter}`;
+    optionsCounter += 1;
+    this.label.setAttribute('aria-controls', options.id);
+
+    this.options = options;
+
+    [].slice.call(this.select.options).forEach((option) => {
       const item = this.buildItem(option);
       options.appendChild(item);
       if (option.selected === true) {
@@ -58,8 +122,18 @@ class Picker {
     this.buildOptions();
   }
 
+  escape() {
+    // Close menu and return focus to trigger label
+    this.close();
+    // Need setTimeout for accessibility to ensure that the browser executes
+    // focus on the next process thread and after any DOM content changes
+    setTimeout(() => this.label.focus(), 1);
+  }
+
   close() {
     this.container.classList.remove('ql-expanded');
+    this.label.setAttribute('aria-expanded', 'false');
+    this.options.setAttribute('aria-hidden', 'true');
   }
 
   selectItem(item, trigger = false) {
