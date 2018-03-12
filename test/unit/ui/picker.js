@@ -1,9 +1,5 @@
+import Keyboard from '../../../modules/keyboard';
 import Picker from '../../../ui/picker';
-
-const KEYCODES = {
-  ENTER: 13,
-  ESCAPE: 27,
-}
 
 function createKeydownEvent(keyCode) {
   let event;
@@ -64,7 +60,7 @@ describe('Picker', function() {
     const pickerLabel = this.pickerSelector.querySelector('.ql-picker-label');
 
     // Select picker via enter key
-    const e = createKeydownEvent(KEYCODES.ENTER);
+    const e = createKeydownEvent(Keyboard.keys.ENTER);
     pickerLabel.dispatchEvent(e);
 
     expect(pickerLabel.getAttribute('aria-expanded')).toEqual('true');
@@ -110,7 +106,7 @@ describe('Picker', function() {
 
     const pickerItem = this.pickerSelector.querySelector('.ql-picker-item');
     // Select picker item via enter key
-    const e = createKeydownEvent(KEYCODES.ENTER);
+    const e = createKeydownEvent(Keyboard.keys.ENTER);
     pickerItem.dispatchEvent(e);
 
     expect(pickerLabel.getAttribute('aria-expanded')).toEqual('false');
@@ -131,7 +127,7 @@ describe('Picker', function() {
     pickerLabel.click();
 
     // Escape out of the picker
-    const e = createKeydownEvent(KEYCODES.ESCAPE);
+    const e = createKeydownEvent(Keyboard.keys.ESCAPE);
     pickerLabel.dispatchEvent(e);
 
     expect(pickerLabel.getAttribute('aria-expanded')).toEqual('false');

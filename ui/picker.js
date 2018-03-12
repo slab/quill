@@ -1,9 +1,5 @@
+import Keyboard from '../modules/keyboard';
 import DropdownIcon from '../assets/icons/dropdown.svg';
-
-const KEYCODES = {
-  ENTER: 13,
-  ESCAPE: 27,
-}
 
 let OPTIONS_ID = 0;
 
@@ -25,12 +21,12 @@ class Picker {
     this.label.addEventListener('keydown', (event) => {
       switch(event.keyCode) {
         // Allows the "Enter" key to open the picker
-        case KEYCODES.ENTER:
+        case Keyboard.keys.ENTER:
           this.togglePicker();
           break;
 
         // Allows the "Escape" key to close the picker
-        case KEYCODES.ESCAPE:
+        case Keyboard.keys.ESCAPE:
           this.escape();
           event.preventDefault();
           break;
@@ -65,13 +61,13 @@ class Picker {
     item.addEventListener('keydown', (event) => {
       switch(event.keyCode) {
         // Allows the "Enter" key to select an item
-        case KEYCODES.ENTER:
+        case Keyboard.keys.ENTER:
           this.selectItem(item, true);
           event.preventDefault();
           break;
 
         // Allows the "Escape" key to close the picker
-        case KEYCODES.ESCAPE:
+        case Keyboard.keys.ESCAPE:
           this.escape();
           event.preventDefault();
           break;
