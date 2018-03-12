@@ -217,6 +217,9 @@ class BaseTooltip extends Tooltip {
       } // eslint-disable-next-line no-fallthrough
       case 'formula': {
         if (!value) break;
+        if (this.linkRange && this.linkRange.length) {
+          this.quill.deleteText(this.linkRange.index, this.linkRange.length);
+        }
         let range = this.quill.getSelection(true);
         if (range != null) {
           let index = range.index + range.length;
