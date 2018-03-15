@@ -20,9 +20,9 @@ resets(arr)
 .ql-container.ql-disabled
   .ql-tooltip
     visibility: hidden
-  .ql-editor
-    ul[data-checked] > li::before
-      pointer-events: none
+  // .ql-editor
+  //   ul[data-checked] > li::before
+  //     pointer-events: none
 
 .ql-clipboard
   left: -100000px
@@ -50,60 +50,45 @@ resets(arr)
   > *
     cursor: text
 
-  p, ol, ul, pre, blockquote, h1, h2, h3, h4, h5, h6
+  p, ol, pre, blockquote, h1, h2, h3, h4, h5, h6
     margin: 0
     padding: 0
   p, pre, blockquote, h1, h2, h3, h4, h5, h6
     counter-reset: resets(0..MAX_INDENT)
-  ol, ul
-    padding-left: 1.5em
-  ol > li, ul > li
-    list-style-type: none
-  ul > li::before
-    content: '\2022'
-  ul[data-checked=true],
-  ul[data-checked=false]
-    pointer-events: none
-    > li *
-      pointer-events: all
-    > li::before
-      color: #777
-      cursor: pointer
-      pointer-events: all
-  ul[data-checked=true] > li::before
-    content: '\2611'
-  ul[data-checked=false] > li::before
-    content: '\2610'
-  li::before
-    display: inline-block
-    white-space: nowrap
-    width: LIST_STYLE_WIDTH
-  li:not(.ql-direction-rtl)::before
-    margin-left: -1*LIST_STYLE_OUTER_WIDTH
-    margin-right: LIST_STYLE_MARGIN
-    text-align: right
-  li.ql-direction-rtl::before
-    margin-left: LIST_STYLE_MARGIN
-    margin-right: -1*LIST_STYLE_OUTER_WIDTH
-  ol, ul
-    li:not(.ql-direction-rtl)
-      padding-left: LIST_STYLE_OUTER_WIDTH
-    li.ql-direction-rtl
-      padding-right: LIST_STYLE_OUTER_WIDTH
   ol
-    li
-      counter-reset: resets(1..MAX_INDENT)
-      counter-increment: list-0
+    padding-left: 1.5em
+  li
+    list-style-type: none
+    padding-left: LIST_STYLE_OUTER_WIDTH
+    &:before
+      display: inline-block
+      margin-left: -1*LIST_STYLE_OUTER_WIDTH
+      margin-right: LIST_STYLE_MARGIN
+      text-align: right
+      white-space: nowrap
+      width: LIST_STYLE_WIDTH
+
+  li[data-list=bullet]:before
+    content: '\2022'
+  li[data-list=checked]:before
+    content: '\2611'
+  li[data-list=unchecked]:before
+    content: '\2610'
+
+  li[data-list=ordered]
+    counter-reset: resets(1..MAX_INDENT)
+    counter-increment: list-0
+    &:before
+      content: unquote('counter(list-0, ' + LIST_STYLE[0] + ')') '. '
+  for num in (1..MAX_INDENT)
+    li[data-list=ordered].ql-indent-{num}
+      counter-increment: unquote('list-' + num)
       &:before
-        content: unquote('counter(list-0, ' + LIST_STYLE[0] + ')') '. '
-    for num in (1..MAX_INDENT)
-      li.ql-indent-{num}
-        counter-increment: unquote('list-' + num)
-        &:before
-          content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
-      if (num < MAX_INDENT)
-        li.ql-indent-{num}
-          counter-reset: resets((num+1)..MAX_INDENT)
+        content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
+    if (num < MAX_INDENT)
+      li[data-list=ordered].ql-indent-{num}
+        counter-reset: resets((num+1)..MAX_INDENT)
+
   for num in (1..MAX_INDENT)
     .ql-indent-{num}:not(.ql-direction-rtl)
       padding-left: (3*num)em
@@ -113,6 +98,23 @@ resets(arr)
       padding-right: (3*num)em
     li.ql-indent-{num}.ql-direction-rtl.ql-align-right
       padding-right: (3*num + LIST_STYLE_OUTER_WIDTH)em
+
+    // > li[data-list=checked],
+    // > li[data-list=unchecked]
+    //   pointer-events: none
+    //   > li *
+    //     pointer-events: all
+    //   > li::before
+    //     color: #777
+    //     cursor: pointer
+    //     pointer-events: all
+
+  li.ql-direction-rtl
+    padding-right: LIST_STYLE_OUTER_WIDTH
+    &:before
+      margin-left: LIST_STYLE_MARGIN
+      margin-right: -1*LIST_STYLE_OUTER_WIDTH
+      text-align: left
 
   .ql-video
     display: block
