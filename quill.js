@@ -11,6 +11,12 @@ import Indent from './formats/indent';
 import Blockquote from './formats/blockquote';
 import Header from './formats/header';
 import List, { ListContainer } from './formats/list';
+import {
+  TableContainer,
+  TableBody,
+  TableRow,
+  TableCell,
+} from './formats/table';
 
 import { BackgroundClass, BackgroundStyle } from './formats/background';
 import { ColorClass, ColorStyle } from './formats/color';
@@ -66,6 +72,9 @@ Quill.register(
 Quill.register(
   {
     'blots/list-container': ListContainer,
+    'blots/table-container': TableContainer,
+    'blots/table-body': TableBody,
+    'blots/table-row': TableRow,
 
     'formats/align': AlignClass,
     'formats/direction': DirectionClass,
@@ -80,6 +89,7 @@ Quill.register(
     'formats/code-block': CodeBlock,
     'formats/header': Header,
     'formats/list': List,
+    'formats/table': TableCell,
 
     'formats/bold': Bold,
     'formats/code': InlineCode,
