@@ -1,10 +1,12 @@
-import Keyboard from '../modules/keyboard';
 import DropdownIcon from '../assets/icons/dropdown.svg';
 
 let optionsCounter = 0;
 
 function toggleAriaAttribute(element, attribute) {
-  element.setAttribute(attribute, !(element.getAttribute(attribute) === 'true'));
+  element.setAttribute(
+    attribute,
+    !(element.getAttribute(attribute) === 'true'),
+  );
 }
 
 class Picker {
@@ -18,15 +20,12 @@ class Picker {
     this.label.addEventListener('mousedown', () => {
       this.togglePicker();
     });
-    this.label.addEventListener('keydown', (event) => {
-      switch(event.keyCode) {
-        // Allows the "Enter" key to open the picker
-        case Keyboard.keys.ENTER:
+    this.label.addEventListener('keydown', event => {
+      switch (event.key) {
+        case 'Enter':
           this.togglePicker();
           break;
-
-        // Allows the "Escape" key to close the picker
-        case Keyboard.keys.ESCAPE:
+        case 'Escape':
           this.escape();
           event.preventDefault();
           break;
@@ -57,16 +56,13 @@ class Picker {
     item.addEventListener('click', () => {
       this.selectItem(item, true);
     });
-    item.addEventListener('keydown', (event) => {
-      switch(event.keyCode) {
-        // Allows the "Enter" key to select an item
-        case Keyboard.keys.ENTER:
+    item.addEventListener('keydown', event => {
+      switch (event.key) {
+        case 'Enter':
           this.selectItem(item, true);
           event.preventDefault();
           break;
-
-        // Allows the "Escape" key to close the picker
-        case Keyboard.keys.ESCAPE:
+        case 'Escape':
           this.escape();
           event.preventDefault();
           break;
@@ -103,7 +99,7 @@ class Picker {
 
     this.options = options;
 
-    [].slice.call(this.select.options).forEach((option) => {
+    [].slice.call(this.select.options).forEach(option => {
       const item = this.buildItem(option);
       options.appendChild(item);
       if (option.selected === true) {

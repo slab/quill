@@ -1,22 +1,4 @@
-import Keyboard from '../../../modules/keyboard';
 import Picker from '../../../ui/picker';
-
-function createKeydownEvent(keyCode) {
-  let event;
-  if (typeof Event === 'function') {
-    event = new Event('keydown', {
-      bubbles: true,
-      cancelable: true,
-    });
-    Object.defineProperty(event, 'keyCode', { value: keyCode });
-  } else if (typeof Event === 'object') {
-    // IE11
-    event = document.createEvent('Event');
-    Object.defineProperty(event, 'keyCode', { value: keyCode });
-    event.initEvent('keydown', true, true);
-  }
-  return event;
-}
 
 describe('Picker', function() {
   beforeEach(function() {
@@ -88,11 +70,7 @@ describe('Picker', function() {
 
   it('aria attributes toggle correctly when the picker is opened via enter key', function() {
     const pickerLabel = this.pickerSelector.querySelector('.ql-picker-label');
-
-    // Select picker via enter key
-    const e = createKeydownEvent(Keyboard.keys.ENTER);
-    pickerLabel.dispatchEvent(e);
-
+    pickerLabel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     expect(pickerLabel.getAttribute('aria-expanded')).toEqual('true');
     expect(
       this.pickerSelector
@@ -148,12 +126,8 @@ describe('Picker', function() {
   it('aria attributes toggle correctly when an item is selected via enter', function() {
     const pickerLabel = this.pickerSelector.querySelector('.ql-picker-label');
     pickerLabel.click();
-
     const pickerItem = this.pickerSelector.querySelector('.ql-picker-item');
-    // Select picker item via enter key
-    const e = createKeydownEvent(Keyboard.keys.ENTER);
-    pickerItem.dispatchEvent(e);
-
+    pickerItem.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     expect(pickerLabel.getAttribute('aria-expanded')).toEqual('false');
     expect(
       this.pickerSelector
@@ -180,11 +154,7 @@ describe('Picker', function() {
   it('aria attributes toggle correctly when the picker is closed via escaping out of it', function() {
     const pickerLabel = this.pickerSelector.querySelector('.ql-picker-label');
     pickerLabel.click();
-
-    // Escape out of the picker
-    const e = createKeydownEvent(Keyboard.keys.ESCAPE);
-    pickerLabel.dispatchEvent(e);
-
+    pickerLabel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     expect(pickerLabel.getAttribute('aria-expanded')).toEqual('false');
     expect(
       this.pickerSelector
