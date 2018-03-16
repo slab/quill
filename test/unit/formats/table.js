@@ -23,21 +23,23 @@ const tableDelta = new Delta()
 
 const tableHTML = `
   <table>
-    <tr>
-      <td data-row="a">A1</td>
-      <td data-row="a">A2</td>
-      <td data-row="a">A3</td>
-    </tr>
-    <tr>
-      <td data-row="b">B1</td>
-      <td data-row="b">B2</td>
-      <td data-row="b">B3</td>
-    </tr>
-    <tr>
-      <td data-row="c">C1</td>
-      <td data-row="c">C2</td>
-      <td data-row="c">C3</td>
-    </tr>
+    <tbody>
+      <tr>
+        <td data-row="a">A1</td>
+        <td data-row="a">A2</td>
+        <td data-row="a">A3</td>
+      </tr>
+      <tr>
+        <td data-row="b">B1</td>
+        <td data-row="b">B2</td>
+        <td data-row="b">B3</td>
+      </tr>
+      <tr>
+        <td data-row="c">C1</td>
+        <td data-row="c">C2</td>
+        <td data-row="c">C3</td>
+      </tr>
+    </tbody>
   </table>`;
 
 describe('Table', function() {
@@ -52,5 +54,38 @@ describe('Table', function() {
     editor.applyDelta(tableDelta.delete(1));
     expect(this.container).toEqualHTML(tableHTML);
   });
-});
 
+  it('add format plaintext', function() {
+    const editor = this.initialize(Editor, '<p>Test</p>');
+    editor.formatLine(0, 5, { table: { row: 'a' } });
+    expect(this.container).toEqualHTML(
+      '<table><tr><td data-row="a">Test</td></tr></table>',
+    );
+  });
+
+  it('add format replace', function() {
+    const editor = this.initialize(Editor, '<h1>Test</h1>');
+    editor.formatLine(0, 5, { table: { row: 'a' } });
+    expect(this.container).toEqualHTML(
+      '<table><tr><td data-row="a">Test</td></tr></table>',
+    );
+  });
+
+  it('remove format plaintext', function() {
+    const editor = this.initialize(
+      Editor,
+      '<table><tr><td data-row="a">Test</td></tr></table>',
+    );
+    editor.formatLine(0, 5, { table: null });
+    expect(this.container).toEqualHTML('<p>Test</p>');
+  });
+
+  it('remove format replace', function() {
+    const editor = this.initialize(
+      Editor,
+      '<table><tr><td data-row="a">Test</td></tr></table>',
+    );
+    editor.formatLine(0, 5, { header: 1 });
+    expect(this.container).toEqualHTML('<h1>Test</h1>');
+  });
+});
