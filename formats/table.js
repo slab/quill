@@ -3,7 +3,7 @@ import Container from '../blots/container';
 
 class TableCell extends Block {
   static create(value) {
-    const node = super.create(value);
+    const node = super.create();
     if (value && value.row) {
       node.setAttribute('data-row', value.row);
     } else {
@@ -50,15 +50,12 @@ class TableContainer extends Container {}
 TableContainer.blotName = 'table-container';
 TableContainer.tagName = 'TABLE';
 
-TableContainer.defaultChild = TableBody;
 TableContainer.allowedChildren = [TableBody];
 TableBody.requiredParent = TableContainer;
 
-TableBody.defaultChild = TableRow;
 TableBody.allowedChildren = [TableRow];
 TableRow.requiredParent = TableBody;
 
-TableRow.defaultChild = TableCell;
 TableRow.allowedChildren = [TableCell];
 TableCell.requiredParent = TableRow;
 

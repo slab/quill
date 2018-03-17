@@ -8,6 +8,10 @@ class ListItem extends Block {
     return node;
   }
 
+  static formats(domNode) {
+    return domNode.getAttribute('data-list');
+  }
+
   format(name, value) {
     if (name === this.statics.blotName && value) {
       this.domNode.setAttribute('data-list', value);
@@ -23,7 +27,6 @@ class ListContainer extends Container {}
 ListContainer.blotName = 'list-container';
 ListContainer.tagName = 'OL';
 
-ListContainer.defaultChild = ListItem;
 ListContainer.allowedChildren = [ListItem];
 ListItem.requiredParent = ListContainer;
 

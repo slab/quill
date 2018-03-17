@@ -248,7 +248,7 @@ describe('Editor', function() {
     it('partial line', function() {
       const editor = this.initialize(
         Editor,
-        '<ul><li>01</li></ul><ol><li>34</li></ol>',
+        '<h1>01</h1><ol><li data-list="ordered">34</li></ol>',
       );
       editor.removeFormat(1, 3);
       expect(this.container).toEqualHTML('<p>01</p><p>34</p>');
@@ -267,11 +267,9 @@ describe('Editor', function() {
       const editor = this.initialize(
         Editor,
         `
-        <ul>
-          <li>01<img src="/assets/favicon.png">3</li>
-        </ul>
+        <h1>01<img src="/assets/favicon.png">3</h1>
         <ol>
-          <li>5<strong>6<em>78</em>9</strong>0</li>
+          <li data-list="ordered">5<strong>6<em>78</em>9</strong>0</li>
         </ol>
       `,
       );
@@ -286,9 +284,9 @@ describe('Editor', function() {
       const editor = this.initialize(
         Editor,
         `
-        <ul>
-          <li>0123</li>
-          <li>5678</li>
+        <ol>
+          <li data-list="ordered">0123</li>
+          <li data-list="ordered">5678</li>
         </ol>
       `,
       );
@@ -366,16 +364,6 @@ describe('Editor', function() {
       );
       expect(this.container).toEqualHTML(
         '<p><em><img src="/assets/favicon.png"></em>',
-      );
-    });
-
-    it('old list', function() {
-      const editor = this.initialize(Editor, '');
-      editor.applyDelta(
-        new Delta().insert('\n', { bullet: true }).insert('\n', { list: true }),
-      );
-      expect(this.container).toEqualHTML(
-        '<ul><li><br></li></ul><ol><li><br></li></ol><p><br></p>',
       );
     });
 
