@@ -237,10 +237,15 @@ class Selection {
           offset = 0;
         } else if (node.childNodes.length === offset) {
           node = node.lastChild;
-          offset =
-            node instanceof Text
-              ? node.data.length
-              : node.childNodes.length + 1;
+          if (node instanceof Text) {
+            offset = node.data.length;
+          } else if (node.childNodes.length > 0) {
+            // Container case
+            offset = node.childNodes.length;
+          } else {
+            // Embed case
+            offset = node.childNodes.length + 1;
+          }
         } else {
           break;
         }
