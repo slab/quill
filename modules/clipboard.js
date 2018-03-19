@@ -26,6 +26,7 @@ const CLIPBOARD_CONFIG = [
   [Node.ELEMENT_NODE, matchAttributor],
   [Node.ELEMENT_NODE, matchStyles],
   ['li', matchIndent],
+  ['ol, ul', matchList],
   ['b', matchAlias.bind(matchAlias, 'bold')],
   ['i', matchAlias.bind(matchAlias, 'italic')],
   ['style', matchIgnore],
@@ -305,7 +306,7 @@ function matchIndent(node, delta) {
   const match = Parchment.query(node);
   if (
     match == null ||
-    match.blotName !== 'list-item' ||
+    match.blotName !== 'list' ||
     !deltaEndsWith(delta, '\n')
   ) {
     return delta;
@@ -313,7 +314,7 @@ function matchIndent(node, delta) {
   let indent = -1;
   let parent = node.parentNode;
   while (!parent.classList.contains('ql-clipboard')) {
-    if ((Parchment.query(parent) || {}).blotName === 'list') {
+    if ((Parchment.query(parent) || {}).blotName === 'list-container') {
       indent += 1;
     }
     parent = parent.parentNode;
@@ -322,6 +323,11 @@ function matchIndent(node, delta) {
   return delta.compose(
     new Delta().retain(delta.length() - 1).retain(1, { indent }),
   );
+}
+
+function matchList(node, delta) {
+  const list = node.tagName === 'OL' ? 'ordered' : 'bullet';
+  return delta.compose(new Delta().retain(delta.length(), { list }));
 }
 
 function matchNewline(node, delta) {
