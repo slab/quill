@@ -251,23 +251,6 @@ function combineFormats(formats, combined) {
 
 function normalizeDelta(delta) {
   return delta.reduce((normalizedDelta, op) => {
-    if (op.insert === 1) {
-      const attributes = clone(op.attributes);
-      delete attributes.image;
-      return normalizedDelta.insert({ image: op.attributes.image }, attributes);
-    }
-    if (
-      op.attributes != null &&
-      (op.attributes.list === true || op.attributes.bullet === true)
-    ) {
-      op = clone(op);
-      if (op.attributes.list) {
-        op.attributes.list = 'ordered';
-      } else {
-        op.attributes.list = 'bullet';
-        delete op.attributes.bullet;
-      }
-    }
     if (typeof op.insert === 'string') {
       const text = op.insert.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
       return normalizedDelta.insert(text, op.attributes);

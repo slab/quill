@@ -357,16 +357,6 @@ describe('Editor', function() {
       );
     });
 
-    it('old embed', function() {
-      const editor = this.initialize(Editor, '');
-      editor.applyDelta(
-        new Delta().insert(1, { image: '/assets/favicon.png', italic: true }),
-      );
-      expect(this.container).toEqualHTML(
-        '<p><em><img src="/assets/favicon.png"></em>',
-      );
-    });
-
     it('improper block embed insert', function() {
       const editor = this.initialize(Editor, '<p>0123</p>');
       editor.applyDelta(new Delta().retain(2).insert({ video: '#' }));
