@@ -27,6 +27,7 @@ const CLIPBOARD_CONFIG = [
   [Node.ELEMENT_NODE, matchStyles],
   ['li', matchIndent],
   ['ol, ul', matchList],
+  ['tr', matchTable],
   ['b', matchAlias.bind(matchAlias, 'bold')],
   ['i', matchAlias.bind(matchAlias, 'italic')],
   ['style', matchIgnore],
@@ -363,6 +364,16 @@ function matchStyles(node, delta) {
     return new Delta().insert('\t').concat(delta);
   }
   return delta;
+}
+
+function matchTable(node, delta) {
+  const table =
+    node.parentNode.tagName === 'TABLE'
+      ? node.parentNode
+      : node.parentNode.parentNode;
+  const rows = Array.from(table.querySelectorAll('tr'));
+  const row = rows.indexOf(node) + 1;
+  return delta.compose(new Delta().retain(delta.length(), { table: { row } }));
 }
 
 function matchText(node, delta) {

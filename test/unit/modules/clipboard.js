@@ -150,6 +150,20 @@ describe('Clipboard', function() {
       );
     });
 
+    it('html table', function() {
+      const delta = this.clipboard.convert(
+        '<table>' +
+          '<thead><tr><td>A1</td><td>A2</td><td>A3</td></tr></thead>' +
+          '<tbody><tr><td>B1</td><td>B2</td><td>B3</td></tr></tbody>' +
+          '</table>',
+      );
+      expect(delta).toEqual(
+        new Delta()
+          .insert('A1\nA2\nA3\n', { table: { row: 1 } })
+          .insert('B1\nB2\nB3\n', { table: { row: 2 } }),
+      );
+    });
+
     it('embeds', function() {
       const delta = this.clipboard.convert(
         '<div>01<img src="/assets/favicon.png" height="200" width="300">34</div>',
