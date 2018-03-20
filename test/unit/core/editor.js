@@ -443,9 +443,10 @@ describe('Editor', function() {
       expect(this.container).toEqualHTML('<p>0123</p><h1>56</h1><h2>89</h2>');
     });
 
-    it('code', function() {
+    it('code block', function() {
       const editor = this.initialize(Editor, {
-        html: '<p>0</p><pre>1\n23\n</pre><p><br></p>',
+        html:
+          '<p>0</p><div class="ql-code-block-container"><div class="ql-code-block">1</div><div class="ql-code-block">23</div></div><p><br></p>',
       });
       editor.applyDelta(
         new Delta()

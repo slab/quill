@@ -8,9 +8,14 @@ const HIGHLIGHT_INTERVAL = 10;
 
 describe('Syntax', function() {
   beforeEach(function() {
-    const container = this.initialize(HTMLElement, {
-      html: '<pre>var test = 1;\nvar bugz = 0;\n</pre><p><br></p>',
-    });
+    const container = this.initialize(
+      HTMLElement,
+      `<div class="ql-code-block-container" spellcheck="false">
+        <div class="ql-code-block">var test = 1;</div>
+        <div class="ql-code-block">var bugz = 0;</div>
+      </div>
+      <p><br></p>`,
+    );
     Syntax.register();
     this.quill = new Quill(container, {
       modules: {
@@ -34,13 +39,12 @@ describe('Syntax', function() {
   describe('highlighting', function() {
     it('adds token', function(done) {
       setTimeout(() => {
-        expect(this.quill.root.innerHTML).toEqual(
-          [
-            '<pre class="ql-syntax" spellcheck="false"><span class="hljs-attribute ql-token">var test</span> = 1;\n',
-            '<span class="hljs-attribute ql-token">var bugz</span> = 0;\n',
-            '</pre>',
-            '<p><br></p>',
-          ].join(''),
+        expect(this.quill.root).toEqualHTML(
+          `<div class="ql-code-block-container" spellcheck="false">
+            <div class="ql-code-block"><span class="hljs-attribute ql-token">var test</span> = 1;</div>
+            <div class="ql-code-block"><span class="hljs-attribute ql-token">var bugz</span> = 0;</div>
+          </div>
+          <p><br></p>`,
         );
         expect(this.quill.getContents()).toEqual(
           new Delta()
@@ -58,12 +62,11 @@ describe('Syntax', function() {
       setTimeout(() => {
         this.quill.deleteText(22, 6);
         setTimeout(() => {
-          expect(this.quill.root.innerHTML).toEqual(
-            [
-              '<pre class="ql-syntax" spellcheck="false"><span class="hljs-attribute ql-token">var test</span> = 1;\n</pre>',
-              '<p>var bugz</p>',
-            ].join(''),
-          );
+          expect(this.quill.root).toEqualHTML(`
+            <div class="ql-code-block-container" spellcheck="false">
+              <div class="ql-code-block"><span class="hljs-attribute ql-token">var test</span> = 1;</div>
+            </div>
+            <p>var bugz</p>`);
           expect(this.quill.getContents()).toEqual(
             new Delta()
               .insert('var test = 1;')

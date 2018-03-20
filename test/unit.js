@@ -1,9 +1,11 @@
 /* eslint-disable */
 
 import Quill from '../quill.js';
-import CodeBlock from '../formats/code';
+import CodeBlock, { CodeBlockContainer } from '../formats/code';
 
-Quill.register(CodeBlock, true); // Syntax version will otherwise be registered
+// Syntax version will otherwise be registered
+Quill.register(CodeBlockContainer, true);
+Quill.register(CodeBlock, true);
 
 import './helpers/unit';
 

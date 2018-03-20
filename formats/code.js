@@ -1,12 +1,24 @@
+import Delta from 'quill-delta';
 import Block from '../blots/block';
+import Break from '../blots/break';
 import Inline from '../blots/inline';
+import TextBlot from '../blots/text';
 import Container from '../blots/container';
 
 class Code extends Inline {}
 Code.blotName = 'code';
 Code.tagName = 'CODE';
 
-class CodeBlock extends Block {}
+class CodeBlock extends Block {
+  delta() {
+    if (this.cache.delta == null) {
+      this.cache.delta = new Delta()
+        .insert(this.domNode.textContent)
+        .insert('\n', this.formats());
+    }
+    return this.cache.delta;
+  }
+}
 CodeBlock.blotName = 'code-block';
 CodeBlock.className = 'ql-code-block';
 CodeBlock.tagName = 'DIV';
@@ -23,6 +35,8 @@ CodeBlockContainer.className = 'ql-code-block-container';
 CodeBlockContainer.tagName = 'DIV';
 
 CodeBlockContainer.allowedChildren = [CodeBlock];
+
+CodeBlock.allowedChildren = [TextBlot, Break];
 CodeBlock.requiredContainer = CodeBlockContainer;
 CodeBlock.TAB = '  ';
 
