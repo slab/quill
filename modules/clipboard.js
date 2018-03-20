@@ -328,7 +328,7 @@ function matchIndent(node, delta) {
 
 function matchList(node, delta) {
   const list = node.tagName === 'OL' ? 'ordered' : 'bullet';
-  return delta.compose(new Delta().retain(delta.length(), { list }));
+  return applyFormat(delta, 'list', list);
 }
 
 function matchNewline(node, delta) {
@@ -373,7 +373,7 @@ function matchTable(node, delta) {
       : node.parentNode.parentNode;
   const rows = Array.from(table.querySelectorAll('tr'));
   const row = rows.indexOf(node) + 1;
-  return delta.compose(new Delta().retain(delta.length(), { table: { row } }));
+  return applyFormat(delta, 'table', { row });
 }
 
 function matchText(node, delta) {

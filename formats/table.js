@@ -23,7 +23,7 @@ class TableCell extends Block {
         row: domNode.getAttribute('data-row'),
       };
     }
-    return null;
+    return undefined;
   }
 }
 TableCell.blotName = 'table';

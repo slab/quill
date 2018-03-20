@@ -9,7 +9,7 @@ class ListItem extends Block {
   }
 
   static formats(domNode) {
-    return domNode.getAttribute('data-list');
+    return domNode.getAttribute('data-list') || undefined;
   }
 
   format(name, value) {
