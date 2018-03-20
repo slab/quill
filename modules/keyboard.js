@@ -496,7 +496,10 @@ function makeCodeBlockHandler(indent) {
     format: { 'code-block': true },
     handler(range) {
       const CodeBlock = Parchment.query('code-block');
-      const lines = this.quill.getLines(range);
+      const lines =
+        range.length === 0
+          ? this.quill.getLines(range.index, 1)
+          : this.quill.getLines(range);
       let { index, length } = range;
       lines.forEach((line, i) => {
         if (indent) {
