@@ -12,6 +12,21 @@ class ListItem extends Block {
     return domNode.getAttribute('data-list') || undefined;
   }
 
+  constructor(domNode) {
+    super(domNode);
+    const listEventHandler = e => {
+      if (e.target !== domNode) return;
+      const format = this.statics.formats(domNode);
+      if (format === 'checked') {
+        this.format('list', 'unchecked');
+      } else if (format === 'unchecked') {
+        this.format('list', 'checked');
+      }
+    };
+    domNode.addEventListener('touchstart', listEventHandler);
+    domNode.addEventListener('mousedown', listEventHandler);
+  }
+
   format(name, value) {
     if (name === this.statics.blotName && value) {
       this.domNode.setAttribute('data-list', value);

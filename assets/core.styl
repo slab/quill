@@ -20,9 +20,10 @@ resets(arr)
 .ql-container.ql-disabled
   .ql-tooltip
     visibility: hidden
-  // .ql-editor
-  //   ul[data-checked] > li::before
-  //     pointer-events: none
+  .ql-editor
+    li[data-list="checked"]:before,
+    li[data-list="unchecked"]:before
+      pointer-events: none
 
 .ql-clipboard
   left: -100000px
@@ -74,6 +75,16 @@ resets(arr)
       white-space: nowrap
       width: LIST_STYLE_WIDTH
 
+  li[data-list=checked],
+  li[data-list=unchecked]
+    pointer-events: none
+    *
+      pointer-events: all
+    &:before
+      color: #777
+      cursor: pointer
+      pointer-events: all
+
   li[data-list=bullet]:before
     content: '\2022'
   li[data-list=checked]:before
@@ -104,16 +115,6 @@ resets(arr)
       padding-right: (3*num)em
     li.ql-indent-{num}.ql-direction-rtl.ql-align-right
       padding-right: (3*num + LIST_STYLE_OUTER_WIDTH)em
-
-    // > li[data-list=checked],
-    // > li[data-list=unchecked]
-    //   pointer-events: none
-    //   > li *
-    //     pointer-events: all
-    //   > li::before
-    //     color: #777
-    //     cursor: pointer
-    //     pointer-events: all
 
   li.ql-direction-rtl
     padding-right: LIST_STYLE_OUTER_WIDTH
