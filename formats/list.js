@@ -28,6 +28,6 @@ ListContainer.blotName = 'list-container';
 ListContainer.tagName = 'OL';
 
 ListContainer.allowedChildren = [ListItem];
-ListItem.requiredParent = ListContainer;
+ListItem.requiredContainer = ListContainer;
 
 export { ListContainer, ListItem as default };

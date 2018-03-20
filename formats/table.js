@@ -51,14 +51,12 @@ TableContainer.blotName = 'table-container';
 TableContainer.tagName = 'TABLE';
 
 TableContainer.allowedChildren = [TableBody];
-TableBody.requiredParent = TableContainer;
+TableBody.requiredContainer = TableContainer;
 
 TableBody.allowedChildren = [TableRow];
-TableRow.requiredParent = TableBody;
+TableRow.requiredContainer = TableBody;
 
 TableRow.allowedChildren = [TableCell];
-TableCell.requiredParent = TableRow;
-
-TableCell.requiredParent = TableRow;
+TableCell.requiredContainer = TableRow;
 
 export { TableContainer, TableBody, TableRow, TableCell };
