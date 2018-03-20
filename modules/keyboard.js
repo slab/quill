@@ -496,36 +496,24 @@ function makeCodeBlockHandler(indent) {
     format: { 'code-block': true },
     handler(range) {
       const CodeBlock = Parchment.query('code-block');
+      const lines = this.quill.getLines(range);
       let { index, length } = range;
-      const [block, blockOffset] = this.quill.scroll.descendant(
-        CodeBlock,
-        index,
-      );
-      if (block == null) return;
-      const scrollIndex = this.quill.getIndex(block);
-      const start = block.newlineIndex(blockOffset, true) + 1;
-      const end = block.newlineIndex(scrollIndex + blockOffset + length);
-      const lines = block.domNode.textContent.slice(start, end).split('\n');
-      let offset = 0;
       lines.forEach((line, i) => {
         if (indent) {
-          block.insertAt(start + offset, CodeBlock.TAB);
-          offset += CodeBlock.TAB.length;
+          line.insertAt(0, CodeBlock.TAB);
           if (i === 0) {
             index += CodeBlock.TAB.length;
           } else {
             length += CodeBlock.TAB.length;
           }
-        } else if (line.startsWith(CodeBlock.TAB)) {
-          block.deleteAt(start + offset, CodeBlock.TAB.length);
-          offset -= CodeBlock.TAB.length;
+        } else if (line.domNode.textContent.startsWith(CodeBlock.TAB)) {
+          line.deleteAt(0, CodeBlock.TAB.length);
           if (i === 0) {
             index -= CodeBlock.TAB.length;
           } else {
             length -= CodeBlock.TAB.length;
           }
         }
-        offset += line.length + 1;
       });
       this.quill.update(Quill.sources.USER);
       this.quill.setSelection(index, length, Quill.sources.SILENT);

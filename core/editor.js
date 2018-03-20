@@ -77,19 +77,8 @@ class Editor {
     Object.keys(formats).forEach(format => {
       if (this.scroll.whitelist != null && !this.scroll.whitelist[format])
         return;
-      const lines = this.scroll.lines(index, Math.max(length, 1));
-      let lengthRemaining = length;
-      lines.forEach(line => {
-        const lineLength = line.length();
-        if (!(line instanceof CodeBlock)) {
-          line.format(format, formats[format]);
-        } else {
-          const codeIndex = index - line.offset(this.scroll);
-          const codeLength =
-            line.newlineIndex(codeIndex + lengthRemaining) - codeIndex + 1;
-          line.formatAt(codeIndex, codeLength, format, formats[format]);
-        }
-        lengthRemaining -= lineLength;
+      this.scroll.lines(index, Math.max(length, 1)).forEach(line => {
+        line.format(format, formats[format]);
       });
     });
     this.scroll.optimize();
@@ -182,11 +171,7 @@ class Editor {
     let suffixLength = 0;
     let suffix = new Delta();
     if (line != null) {
-      if (!(line instanceof CodeBlock)) {
-        suffixLength = line.length() - offset;
-      } else {
-        suffixLength = line.newlineIndex(offset) - offset + 1;
-      }
+      suffixLength = line.length() - offset;
       suffix = line
         .delta()
         .slice(offset, offset + suffixLength - 1)

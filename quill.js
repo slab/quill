@@ -34,7 +34,10 @@ import Formula from './formats/formula';
 import Image from './formats/image';
 import Video from './formats/video';
 
-import CodeBlock, { Code as InlineCode } from './formats/code';
+import CodeBlock, {
+  CodeBlockContainer,
+  Code as InlineCode,
+} from './formats/code';
 
 import Syntax from './modules/syntax';
 import Toolbar from './modules/toolbar';
@@ -71,6 +74,7 @@ Quill.register(
 
 Quill.register(
   {
+    'blots/code-block-container': CodeBlockContainer,
     'blots/list-container': ListContainer,
     'blots/table-container': TableContainer,
     'blots/table-body': TableBody,

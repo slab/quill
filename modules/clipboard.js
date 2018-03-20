@@ -27,6 +27,7 @@ const CLIPBOARD_CONFIG = [
   [Node.ELEMENT_NODE, matchStyles],
   ['li', matchIndent],
   ['ol, ul', matchList],
+  ['pre', matchCodeBlock],
   ['tr', matchTable],
   ['b', matchAlias.bind(matchAlias, 'bold')],
   ['i', matchAlias.bind(matchAlias, 'italic')],
@@ -297,6 +298,10 @@ function matchBreak(node, delta) {
     delta.insert('\n');
   }
   return delta;
+}
+
+function matchCodeBlock(node, delta) {
+  return applyFormat(delta, 'code-block', true);
 }
 
 function matchIgnore() {
