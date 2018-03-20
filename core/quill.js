@@ -506,14 +506,15 @@ function expandConfig(container, userConfig) {
       userConfig[key] = document.querySelector(userConfig[key]);
     }
   });
-  userConfig.modules = Object.keys(
-    userConfig.modules,
-  ).reduce((config, name) => {
-    if (userConfig.modules[name]) {
-      config[name] = userConfig.modules[name];
-    }
-    return config;
-  }, {});
+  userConfig.modules = Object.keys(userConfig.modules).reduce(
+    (config, name) => {
+      if (userConfig.modules[name]) {
+        config[name] = userConfig.modules[name];
+      }
+      return config;
+    },
+    {},
+  );
   return userConfig;
 }
 
