@@ -1,30 +1,38 @@
 import Inline from '../blots/inline';
 import Quill from '../core/quill';
 import Module from '../core/module';
-import CodeBlock from '../formats/code';
+import TextBlot from '../blots/text';
+import CodeBlock, { CodeBlockContainer } from '../formats/code';
 
 const CODE_TOKEN_CLASS = 'ql-token';
 
 class SyntaxCodeBlock extends CodeBlock {
-  static formats(node) {
-    return node.getAttribute('data-language') || true;
-  }
-
   replaceWith(block) {
-    this.domNode.textContent = this.domNode.textContent;
+    this.domNode.textContent = this.domNode.textContent; // Get rid of code tokens
     this.attach();
     super.replaceWith(block);
   }
+}
 
+class SyntaxCodeBlockContainer extends CodeBlockContainer {
   highlight(highlight) {
-    const text = this.domNode.textContent;
+    const text = Array.from(this.domNode.childNodes)
+      .map(node => node.textContent)
+      .join('\n');
     if (this.cachedText !== text) {
       if (text.trim().length > 0 || this.cachedText == null) {
-        const language = this.statics.formats(this.domNode);
-        const subset = typeof language === 'string' ? [language] : undefined;
-        this.domNode.innerHTML = highlight(text, subset);
+        const html = highlight(text)
+          .split('\n')
+          .map(
+            line =>
+              `<${SyntaxCodeBlock.tagName} class="${
+                SyntaxCodeBlock.className
+              }">${line}</${SyntaxCodeBlock.tagName}>`,
+          )
+          .join('');
+        this.domNode.innerHTML = html;
         this.domNode.normalize();
-        [].slice.call(this.domNode.querySelectorAll('span')).forEach(token => {
+        Array.from(this.domNode.querySelectorAll('span')).forEach(token => {
           token.classList.add(CODE_TOKEN_CLASS);
         });
         this.attach();
@@ -33,7 +41,6 @@ class SyntaxCodeBlock extends CodeBlock {
     }
   }
 }
-SyntaxCodeBlock.className = 'ql-syntax';
 
 class CodeToken extends Inline {
   static formats(node) {
@@ -44,16 +51,21 @@ class CodeToken extends Inline {
       }
       node = node.parentNode;
     }
-    return null;
+    return undefined;
   }
 }
 CodeToken.blotName = 'code-token';
 CodeToken.className = CODE_TOKEN_CLASS;
 
+SyntaxCodeBlockContainer.allowedChildren = [SyntaxCodeBlock];
+SyntaxCodeBlock.requiredContainer = SyntaxCodeBlockContainer;
+SyntaxCodeBlock.allowedChildren = [CodeToken, TextBlot];
+
 class Syntax extends Module {
   static register() {
     Quill.register(CodeToken, true);
     Quill.register(SyntaxCodeBlock, true);
+    Quill.register(SyntaxCodeBlockContainer, true);
   }
 
   constructor(quill, options) {
@@ -78,7 +90,7 @@ class Syntax extends Module {
     if (this.quill.selection.composing) return;
     this.quill.update(Quill.sources.USER);
     const range = this.quill.getSelection();
-    this.quill.scroll.descendants(SyntaxCodeBlock).forEach(code => {
+    this.quill.scroll.descendants(SyntaxCodeBlockContainer).forEach(code => {
       code.highlight(this.options.highlight);
     });
     this.quill.update(Quill.sources.SILENT);
