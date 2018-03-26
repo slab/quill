@@ -78,7 +78,7 @@ class Quill {
       emitter: this.emitter,
       whitelist: this.options.formats
     });
-    this.editor = new Editor(this.scroll);
+    this.editor = new Editor(this.scroll, this.options);
     this.selection = new Selection(this.scroll, this.emitter);
     this.theme = new this.options.theme(this, this.options);
     this.keyboard = this.theme.addModule('keyboard');
@@ -353,7 +353,8 @@ Quill.DEFAULTS = {
   readOnly: false,
   scrollingContainer: null,
   strict: true,
-  theme: 'default'
+  theme: 'default',
+  normalizeDelta: true
 };
 Quill.events = Emitter.events;
 Quill.sources = Emitter.sources;
