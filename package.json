@@ -48,7 +48,8 @@
     "eslint": "^4.17.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-import": "^2.8.0",
+    "eslint-import-resolver-webpack": "~0.8.4",
+    "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.6.1",
@@ -97,11 +98,21 @@
     "plugins": [
       "prettier"
     ],
+    "settings": {
+      "import/resolver": {
+        "webpack": {
+          "config": "_develop/webpack.config.js"
+        }
+      }
+    },
     "rules": {
       "arrow-body-style": [
         "off"
       ],
       "class-methods-use-this": [
+        "off"
+      ],
+      "import/extensions": [
         "off"
       ],
       "import/no-extraneous-dependencies": [
