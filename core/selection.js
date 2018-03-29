@@ -1,4 +1,4 @@
-import Parchment from 'parchment2';
+import Parchment from 'parchment';
 import clone from 'clone';
 import equal from 'deep-equal';
 import Emitter from './emitter';

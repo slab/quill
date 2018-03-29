@@ -1,4 +1,4 @@
-import Parchment from 'parchment2';
+import Parchment from 'parchment';
 
 const config = {
   scope: Parchment.Scope.BLOCK,

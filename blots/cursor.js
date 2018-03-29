@@ -1,4 +1,4 @@
-import Parchment from 'parchment2';
+import Parchment from 'parchment';
 import TextBlot from './text';
 
 class Cursor extends Parchment.Embed {

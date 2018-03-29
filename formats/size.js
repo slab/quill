@@ -1,4 +1,4 @@
-import Parchment from 'parchment2';
+import Parchment from 'parchment';
 
 const SizeClass = new Parchment.Attributor.Class('size', 'ql-size', {
   scope: Parchment.Scope.INLINE,

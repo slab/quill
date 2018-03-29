@@ -1,6 +1,6 @@
 import extend from 'extend';
 import Delta from 'quill-delta';
-import Parchment from 'parchment2';
+import Parchment from 'parchment';
 import Break from './break';
 import Inline from './inline';
 import TextBlot from './text';

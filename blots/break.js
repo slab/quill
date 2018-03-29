@@ -1,4 +1,4 @@
-import Parchment from 'parchment2';
+import Parchment from 'parchment';
 
 class Break extends Parchment.Embed {
   static value() {
