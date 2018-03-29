@@ -1,6 +1,7 @@
 import Inline from '../blots/inline';
 import Quill from '../core/quill';
 import Module from '../core/module';
+import BreakBlot from '../blots/break';
 import TextBlot from '../blots/text';
 import CodeBlock, { CodeBlockContainer } from '../formats/code';
 
@@ -59,7 +60,7 @@ CodeToken.className = CODE_TOKEN_CLASS;
 
 SyntaxCodeBlockContainer.allowedChildren = [SyntaxCodeBlock];
 SyntaxCodeBlock.requiredContainer = SyntaxCodeBlockContainer;
-SyntaxCodeBlock.allowedChildren = [CodeToken, TextBlot];
+SyntaxCodeBlock.allowedChildren = [CodeToken, TextBlot, BreakBlot];
 
 class Syntax extends Module {
   static register() {
