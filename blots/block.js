@@ -117,6 +117,16 @@ class Block extends Parchment.Block {
     return this.cache.length;
   }
 
+  merge(source) {
+    let ref = this.children.head instanceof Break ? null : this.children.head;
+    source.moveChildren(this, ref);
+    source.remove();
+  }
+
+  mergeInto(target) {
+    target.merge(this);
+  }
+
   moveChildren(target, ref) {
     super.moveChildren(target, ref);
     this.cache = {};
