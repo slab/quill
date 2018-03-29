@@ -23,7 +23,7 @@ const P2 =
 describe('compose an epic', function() {
   it('load', function() {
     browser.url('/standalone/full/');
-    expect(browser.getTitle()).toEqual('Full Editor - Quill');
+    expect(browser.getTitle()).toEqual('Full Editor - Quill Rich Text Editor');
   });
 
   it('typing', function() {
