@@ -1,4 +1,4 @@
-import Parchment from 'parchment2';
+import Parchment from 'parchment';
 import Scroll from '../../../blots/scroll';
 
 describe('Block', function() {

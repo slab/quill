@@ -1,4 +1,4 @@
-import Parchment from 'parchment2';
+import Parchment from 'parchment';
 import Emitter from '../../../core/emitter';
 import Selection, { Range } from '../../../core/selection';
 import Cursor from '../../../blots/cursor';

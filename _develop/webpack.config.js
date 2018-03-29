@@ -50,9 +50,9 @@ module.exports = env => {
     },
     resolve: {
       alias: {
-        parchment2: path.resolve(
+        parchment: path.resolve(
           __dirname,
-          '../node_modules/parchment2/src/parchment',
+          '../node_modules/parchment/src/parchment',
         ),
       },
       extensions: ['.js', '.styl', '.ts'],
