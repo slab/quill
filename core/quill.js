@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import Parchment from 'parchment';
+import Parchment from 'parchment2';
 import extend from 'extend';
 import Editor from './editor';
 import Emitter from './emitter';

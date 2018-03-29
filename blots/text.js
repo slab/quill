@@ -1,5 +1,5 @@
-import Parchment from 'parchment';
+import Parchment from 'parchment2';
 
-class TextBlot extends Parchment.Text { }
+class TextBlot extends Parchment.Text {}
 
 export default TextBlot;

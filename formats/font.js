@@ -1,4 +1,4 @@
-import Parchment from 'parchment';
+import Parchment from 'parchment2';
 
 const config = {
   scope: Parchment.Scope.INLINE,

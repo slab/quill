@@ -1,4 +1,4 @@
-import Parchment from 'parchment';
+import Parchment from 'parchment2';
 import TextBlot from './text';
 
 const GUARD_TEXT = '\uFEFF';

@@ -1,4 +1,4 @@
-import Parchment from 'parchment';
+import Parchment from 'parchment2';
 
 class IdentAttributor extends Parchment.Attributor.Class {
   add(node, value) {

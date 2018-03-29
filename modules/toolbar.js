@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import Parchment from 'parchment';
+import Parchment from 'parchment2';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';

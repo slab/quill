@@ -1,4 +1,4 @@
-import Parchment from 'parchment';
+import Parchment from 'parchment2';
 import { ColorAttributor } from './color';
 
 const BackgroundClass = new Parchment.Attributor.Class('background', 'ql-bg', {

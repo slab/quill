@@ -1,4 +1,4 @@
-import Parchment from 'parchment';
+import Parchment from 'parchment2';
 import { sanitize } from '../formats/link';
 
 const ATTRIBUTES = ['alt', 'height', 'width'];

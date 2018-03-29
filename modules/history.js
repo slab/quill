@@ -1,4 +1,4 @@
-import Parchment from 'parchment';
+import Parchment from 'parchment2';
 import Quill from '../core/quill';
 import Module from '../core/module';
 

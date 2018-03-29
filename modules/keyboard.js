@@ -3,7 +3,7 @@ import equal from 'deep-equal';
 import extend from 'extend';
 import Delta from 'quill-delta';
 import DeltaOp from 'quill-delta/lib/op';
-import Parchment from 'parchment';
+import Parchment from 'parchment2';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
