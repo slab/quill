@@ -44,8 +44,6 @@ module.exports = config => {
         'record-screenshots': false,
       },
       build: sauce.build,
-      username: sauce.username,
-      accessKey: sauce.accessKey,
       tunnelIdentifier: sauce.tunnel,
     },
     customLaunchers: browsers,

@@ -11,8 +11,9 @@ cache:
 addons:
   sauce_connect:
     username: "quill"
-  jwt:
-    secure: "AAqywYhvkaoJyqLvtcm+urFZsL4Z6q+0WIbN9oFwGaS02bP2trJkRQmI0+TwK6Spsvn0t1idAORuLM6I5ABdJ6+pe3AMTIIGL06dyQQj5r1cRKPCrOpySjZe4L18XYb6PvcyibI0ZLo8szptGeBYDXqOzMlNLy2a+JR+USqsQoU="
+    # There is no way to securely allow community PRs to be built and tested
+    # by Travis and SauceLabs. Please do not abuse.
+    access_key: "ced60aed-80ad-436b-9ba8-690ed1205180"
 env:
   matrix:
     - BROWSER=mac-chrome-latest

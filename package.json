@@ -36,7 +36,7 @@
     "deep-equal": "^1.0.1",
     "eventemitter3": "^3.0.0",
     "extend": "^3.0.1",
-    "parchment": "quilljs/parchment#c61c3b2c0c0c96027021a2b30fa32a4cf93face1",
+    "parchment": "quilljs/parchment#df4c45ddc44a72bbdffe34a5512c52a459176e98",
     "quill-delta": "^3.6.2"
   },
   "devDependencies": {
