@@ -113,7 +113,7 @@ SnowTheme.DEFAULTS = extend(true, {}, BaseTheme.DEFAULTS, {
   modules: {
     toolbar: {
       handlers: {
-        link: value => {
+        link(value) {
           if (value) {
             const range = this.quill.getSelection();
             if (range == null || range.length === 0) return;

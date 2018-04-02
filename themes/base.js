@@ -155,10 +155,10 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
   modules: {
     toolbar: {
       handlers: {
-        formula: () => {
+        formula() {
           this.quill.theme.tooltip.edit('formula');
         },
-        image: () => {
+        image() {
           let fileInput = this.container.querySelector(
             'input.ql-image[type=file]',
           );
@@ -195,7 +195,7 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
           }
           fileInput.click();
         },
-        video: () => {
+        video() {
           this.quill.theme.tooltip.edit('video');
         },
       },
@@ -304,8 +304,9 @@ function extractVideoUrl(url) {
     ) ||
     url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
   if (match) {
-    return `${match[1] ||
-      'https'}://www.youtube.com/embed/${match[2]}?showinfo=0`;
+    return `${match[1] || 'https'}://www.youtube.com/embed/${
+      match[2]
+    }?showinfo=0`;
   }
   // eslint-disable-next-line no-cond-assign
   if ((match = url.match(/^(?:(https?):\/\/)?(?:www\.)?vimeo\.com\/(\d+)/))) {

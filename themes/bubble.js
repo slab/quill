@@ -117,7 +117,7 @@ BubbleTheme.DEFAULTS = extend(true, {}, BaseTheme.DEFAULTS, {
   modules: {
     toolbar: {
       handlers: {
-        link: value => {
+        link(value) {
           if (!value) {
             this.quill.format('link', false);
           } else {
