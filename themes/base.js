@@ -167,29 +167,13 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
             fileInput.setAttribute('type', 'file');
             fileInput.setAttribute(
               'accept',
-              'image/png, image/gif, image/jpeg, image/bmp, image/x-icon',
+              this.quill.uploader.options.mimetypes.join(', '),
             );
             fileInput.classList.add('ql-image');
             fileInput.addEventListener('change', () => {
-              if (fileInput.files != null && fileInput.files[0] != null) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                  const range = this.quill.getSelection(true);
-                  this.quill.updateContents(
-                    new Delta()
-                      .retain(range.index)
-                      .delete(range.length)
-                      .insert({ image: e.target.result }),
-                    Emitter.sources.USER,
-                  );
-                  this.quill.setSelection(
-                    range.index + 1,
-                    Emitter.sources.SILENT,
-                  );
-                  fileInput.value = '';
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-              }
+              const range = this.quill.getSelection(true);
+              this.quill.uploader.upload(range, fileInput.files);
+              fileInput.value = '';
             });
             this.container.appendChild(fileInput);
           }

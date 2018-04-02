@@ -13,6 +13,7 @@ import TextBlot from './blots/text';
 import Clipboard from './modules/clipboard';
 import History from './modules/history';
 import Keyboard from './modules/keyboard';
+import Uploader from './modules/uploader';
 
 Quill.register({
   'blots/block': Block,
@@ -28,6 +29,7 @@ Quill.register({
   'modules/clipboard': Clipboard,
   'modules/history': History,
   'modules/keyboard': Keyboard,
+  'modules/uploader': Uploader,
 });
 
 Parchment.register(Block, Break, Cursor, Inline, Scroll, TextBlot);

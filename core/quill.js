@@ -72,6 +72,9 @@ class Quill {
     this.container.innerHTML = '';
     this.container.__quill = this; // eslint-disable-line no-underscore-dangle
     this.root = this.addContainer('ql-editor');
+    this.root.addEventListener('dragstart', e => {
+      e.preventDefault();
+    });
     this.root.classList.add('ql-blank');
     this.root.setAttribute('data-gramm', false);
     this.scrollingContainer = this.options.scrollingContainer || this.root;
@@ -86,6 +89,7 @@ class Quill {
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
+    this.uploader = this.theme.addModule('uploader');
     this.theme.init();
     this.emitter.on(Emitter.events.EDITOR_CHANGE, type => {
       if (type === Emitter.events.TEXT_CHANGE) {
@@ -446,6 +450,7 @@ function expandConfig(container, userConfig) {
         clipboard: true,
         keyboard: true,
         history: true,
+        uploader: true,
       },
     },
     userConfig,

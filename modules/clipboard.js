@@ -115,8 +115,14 @@ class Clipboard extends Module {
 
   onCapturePaste(e) {
     if (e.defaultPrevented || !this.quill.isEnabled()) return;
-    const { scrollTop } = this.quill.scrollingContainer;
     const range = this.quill.getSelection();
+    const files = Array.from(e.clipboardData.files);
+    if (files.length > 0) {
+      e.preventDefault();
+      this.quill.uploader.upload(range, files);
+      return;
+    }
+    const { scrollTop } = this.quill.scrollingContainer;
     this.container.focus();
     this.quill.selection.update(Quill.sources.SILENT);
     setTimeout(() => {
