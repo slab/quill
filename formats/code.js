@@ -72,6 +72,28 @@ class CodeBlock extends Block {
     return length;
   }
 
+  merge(source) {
+    let newlineIndex = this.newlineIndex(0);
+    if (newlineIndex > -1) {
+      this.split(newlineIndex + 1);
+    }
+    super.merge(source);
+  }
+
+  mergeInto(target) {
+    let newlineIndex = this.newlineIndex(this.length(), true);
+    if (newlineIndex > -1) {
+      let after = this.split(newlineIndex + 1);
+      if (after === target) {
+        this.optimize();
+      } else {
+        after.mergeInto(target);
+      }
+    } else {
+      super.mergeInto(target);
+    }
+  }
+
   newlineIndex(searchIndex, reverse = false) {
     if (!reverse) {
       let offset = this.domNode.textContent.slice(searchIndex).indexOf('\n');
