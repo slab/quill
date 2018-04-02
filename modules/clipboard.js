@@ -116,7 +116,7 @@ class Clipboard extends Module {
   onCapturePaste(e) {
     if (e.defaultPrevented || !this.quill.isEnabled()) return;
     const range = this.quill.getSelection();
-    const files = Array.from(e.clipboardData.files);
+    const files = Array.from(e.clipboardData.files || []);
     if (files.length > 0) {
       e.preventDefault();
       this.quill.uploader.upload(range, files);
