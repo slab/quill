@@ -1,5 +1,4 @@
 import extend from 'extend';
-import Delta from 'quill-delta';
 import Emitter from '../core/emitter';
 import Theme from '../core/theme';
 import ColorPicker from '../ui/color-picker';
