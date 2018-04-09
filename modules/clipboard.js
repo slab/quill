@@ -307,7 +307,8 @@ function matchBreak(node, delta) {
 }
 
 function matchCodeBlock(node, delta) {
-  return applyFormat(delta, 'code-block', true);
+  const language = node.getAttribute('data-language') || true;
+  return applyFormat(delta, 'code-block', language);
 }
 
 function matchIgnore() {

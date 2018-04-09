@@ -33,6 +33,14 @@ class Scroll extends Parchment.Scroll {
     this.optimize();
   }
 
+  emitMount(blot) {
+    this.emitter.emit(Emitter.events.SCROLL_BLOT_MOUNT, blot);
+  }
+
+  emitUnmount(blot) {
+    this.emitter.emit(Emitter.events.SCROLL_BLOT_UNMOUNT, blot);
+  }
+
   deleteAt(index, length) {
     const [first, offset] = this.line(index);
     const [last] = this.line(index + length);

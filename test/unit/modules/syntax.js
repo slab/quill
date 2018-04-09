@@ -1,31 +1,27 @@
 import hljs from 'highlight.js';
 import Delta from 'quill-delta';
 import Quill from '../../../core/quill';
-import CodeBlock from '../../../formats/code';
+import CodeBlock, { CodeBlockContainer } from '../../../formats/code';
 import Syntax from '../../../modules/syntax';
 
 const HIGHLIGHT_INTERVAL = 10;
 
-describe('Syntax', function() {
+fdescribe('Syntax', function() {
   beforeEach(function() {
     const container = this.initialize(
       HTMLElement,
-      `<div class="ql-code-block-container" spellcheck="false">
-        <div class="ql-code-block">var test = 1;</div>
-        <div class="ql-code-block">var bugz = 0;</div>
-      </div>
+      `<pre data-language="javascript">var test = 1;<br>var bugz = 0;<br></pre>
       <p><br></p>`,
     );
     Syntax.register();
+    Syntax.DEFAULTS.languages = [
+      { key: 'javascript', label: 'Javascript' },
+      { key: 'ruby', label: 'Ruby' },
+    ];
     this.quill = new Quill(container, {
       modules: {
         syntax: {
-          highlight: (function() {
-            return function(text) {
-              const result = hljs.highlightAuto(text);
-              return result.value;
-            };
-          })(),
+          hljs,
           interval: HIGHLIGHT_INTERVAL,
         },
       },
@@ -34,24 +30,51 @@ describe('Syntax', function() {
 
   afterEach(function() {
     Quill.register(CodeBlock, true);
+    Quill.register(CodeBlockContainer, true);
   });
 
   describe('highlighting', function() {
+    it('initialize', function() {
+      expect(this.quill.root).toEqualHTML(
+        `<div class="ql-code-block-container" spellcheck="false">
+          <select contenteditable="false">
+            <option value="javascript">Javascript</option>
+            <option value="ruby">Ruby</option>
+          </select>
+          <div class="ql-code-block" data-language="javascript">var test = 1;</div>
+          <div class="ql-code-block" data-language="javascript">var bugz = 0;</div>
+        </div>
+        <p><br></p>`,
+      );
+      expect(this.quill.getContents()).toEqual(
+        new Delta()
+          .insert('var test = 1;')
+          .insert('\n', { 'code-block': 'javascript' })
+          .insert('var bugz = 0;')
+          .insert('\n', { 'code-block': 'javascript' })
+          .insert('\n'),
+      );
+    });
+
     it('adds token', function(done) {
       setTimeout(() => {
         expect(this.quill.root).toEqualHTML(
           `<div class="ql-code-block-container" spellcheck="false">
-            <div class="ql-code-block"><span class="hljs-attribute ql-token">var test</span> = 1;</div>
-            <div class="ql-code-block"><span class="hljs-attribute ql-token">var bugz</span> = 0;</div>
+            <select contenteditable="false">
+              <option value="javascript">Javascript</option>
+              <option value="ruby">Ruby</option>
+            </select>
+            <div class="ql-code-block" data-language="javascript"><span class="hljs-keyword ql-token">var</span> test = <span class="hljs-number ql-token">1</span>;</div>
+            <div class="ql-code-block" data-language="javascript"><span class="hljs-keyword ql-token">var</span> bugz = <span class="hljs-number ql-token">0</span>;</div>
           </div>
           <p><br></p>`,
         );
         expect(this.quill.getContents()).toEqual(
           new Delta()
             .insert('var test = 1;')
-            .insert('\n', { 'code-block': true })
+            .insert('\n', { 'code-block': 'javascript' })
             .insert('var bugz = 0;')
-            .insert('\n', { 'code-block': true })
+            .insert('\n', { 'code-block': 'javascript' })
             .insert('\n'),
         );
         done();
@@ -64,13 +87,17 @@ describe('Syntax', function() {
         setTimeout(() => {
           expect(this.quill.root).toEqualHTML(`
             <div class="ql-code-block-container" spellcheck="false">
-              <div class="ql-code-block"><span class="hljs-attribute ql-token">var test</span> = 1;</div>
+              <select contenteditable="false">
+                <option value="javascript">Javascript</option>
+                <option value="ruby">Ruby</option>
+              </select>
+              <div class="ql-code-block" data-language="javascript"><span class="hljs-keyword ql-token">var</span> test = <span class="hljs-number ql-token">1</span>;</div>
             </div>
             <p>var bugz</p>`);
           expect(this.quill.getContents()).toEqual(
             new Delta()
               .insert('var test = 1;')
-              .insert('\n', { 'code-block': true })
+              .insert('\n', { 'code-block': 'javascript' })
               .insert('var bugz\n'),
           );
           done();
