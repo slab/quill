@@ -2,6 +2,7 @@ import Inline from '../blots/inline';
 import Quill from '../core/quill';
 import Module from '../core/module';
 import BreakBlot from '../blots/break';
+import CursorBlot from '../blots/cursor';
 import TextBlot from '../blots/text';
 import CodeBlock, { CodeBlockContainer } from '../formats/code';
 
@@ -124,7 +125,7 @@ CodeToken.className = 'ql-token';
 
 SyntaxCodeBlockContainer.allowedChildren = [SyntaxCodeBlock];
 SyntaxCodeBlock.requiredContainer = SyntaxCodeBlockContainer;
-SyntaxCodeBlock.allowedChildren = [CodeToken, TextBlot, BreakBlot];
+SyntaxCodeBlock.allowedChildren = [CodeToken, CursorBlot, TextBlot, BreakBlot];
 
 class Syntax extends Module {
   static register() {
@@ -157,7 +158,8 @@ class Syntax extends Module {
       });
       select.addEventListener('change', () => {
         blot.format(SyntaxCodeBlock.blotName, select.value);
-        blot.highlight(this.highlightBlot, true);
+        this.quill.focus();
+        this.highlight(blot, true);
       });
       if (blot.uiNode == null) {
         blot.attachUI(select);
@@ -179,12 +181,16 @@ class Syntax extends Module {
     });
   }
 
-  highlight() {
+  highlight(blot = null, force = false) {
     if (this.quill.selection.composing) return;
     this.quill.update(Quill.sources.USER);
     const range = this.quill.getSelection();
-    this.quill.scroll.descendants(SyntaxCodeBlockContainer).forEach(blot => {
-      blot.highlight(this.highlightBlot);
+    const blots =
+      blot == null
+        ? this.quill.scroll.descendants(SyntaxCodeBlockContainer)
+        : [blot];
+    blots.forEach(container => {
+      container.highlight(this.highlightBlot, force);
     });
     this.quill.update(Quill.sources.SILENT);
     if (range != null) {

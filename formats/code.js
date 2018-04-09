@@ -1,6 +1,7 @@
 import Delta from 'quill-delta';
 import Block from '../blots/block';
 import Break from '../blots/break';
+import Cursor from '../blots/cursor';
 import Inline from '../blots/inline';
 import TextBlot from '../blots/text';
 import Container from '../blots/container';
@@ -36,7 +37,7 @@ CodeBlockContainer.tagName = 'DIV';
 
 CodeBlockContainer.allowedChildren = [CodeBlock];
 
-CodeBlock.allowedChildren = [TextBlot, Break];
+CodeBlock.allowedChildren = [TextBlot, Break, Cursor];
 CodeBlock.requiredContainer = CodeBlockContainer;
 CodeBlock.TAB = '  ';
 
