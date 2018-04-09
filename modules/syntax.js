@@ -16,14 +16,12 @@ class SyntaxCodeBlock extends CodeBlock {
   }
 
   static formats(domNode) {
-    return domNode.getAttribute('data-language') || true;
+    return domNode.getAttribute('data-language') || 'auto';
   }
 
   format(name, value) {
     if (name !== this.statics.blotName) return;
-    if (value === true) {
-      this.domNode.removeAttribute('data-language');
-    } else if (value) {
+    if (value) {
       this.domNode.setAttribute('data-language', value);
     } else {
       super.format(name, value);
@@ -53,15 +51,24 @@ class CodeToken extends Inline {
 class SyntaxCodeBlockContainer extends CodeBlockContainer {
   attach() {
     super.attach();
+    this.forceNext = false;
     this.scroll.emitMount(this);
   }
 
   format(name, value) {
     if (name === SyntaxCodeBlock.blotName) {
+      this.forceNext = true;
       this.children.forEach(child => {
         child.format(name, value);
       });
     }
+  }
+
+  formatAt(index, length, name, value) {
+    if (name === SyntaxCodeBlock.blotName) {
+      this.forceNext = true;
+    }
+    super.formatAt(index, length, name, value);
   }
 
   highlight(highlight, forced = false) {
@@ -71,7 +78,7 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
     );
     const text = nodes.map(node => node.textContent).join('\n');
     const language = SyntaxCodeBlock.formats(this.children.head.domNode);
-    if (forced || this.cachedText !== text) {
+    if (forced || this.forceNext || this.cachedText !== text) {
       if (text.trim().length > 0 || this.cachedText == null) {
         const html = highlight(text, language)
           .split('\n')
@@ -102,6 +109,7 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
         // this.scroll.observer.takeRecords();
       }
       this.cachedText = text;
+      this.forceNext = false;
     }
   }
 
@@ -198,11 +206,11 @@ class Syntax extends Module {
     }
   }
 
-  highlightBlot(text, language = true) {
+  highlightBlot(text, language = 'auto') {
     const { value } =
-      typeof language === 'string'
-        ? this.options.hljs.highlight(language, text)
-        : this.options.hljs.highlightAuto(text);
+      language === 'auto'
+        ? this.options.hljs.highlightAuto(text)
+        : this.options.hljs.highlight(language, text);
     return value;
   }
 }
@@ -212,6 +220,7 @@ Syntax.DEFAULTS = {
   })(),
   interval: 1000,
   languages: [
+    { key: 'auto', label: 'Auto' },
     { key: 'bash', label: 'Bash' },
     { key: 'cpp', label: 'C++' },
     { key: 'cs', label: 'C#' },

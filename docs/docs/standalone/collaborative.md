@@ -3,7 +3,10 @@ layout: standalone
 title: Collaborative Example
 permalink: /standalone/collaborative/
 ---
+
 <!-- head -->
+
+<link rel="stylesheet" href="{{site.highlightjs}}/styles/monokai-sublime.min.css">
 <link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.bubble.css">
 <link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.snow.css">
 <style>
@@ -19,12 +22,14 @@ permalink: /standalone/collaborative/
 <div id="bubble-container"></div>
 <div id="snow-container"></div>
 <!-- script -->
+<script src="{{site.highlightjs}}/highlight.min.js"></script>
 <script src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
 <script>
   var Delta = Quill.import('delta');
   var bubble = new Quill('#bubble-container', {
     theme: 'bubble',
     modules: {
+      syntax: true,
       keyboard: {
         bindings: {
           'markdown-code-block': {
@@ -46,7 +51,11 @@ permalink: /standalone/collaborative/
     }
   });
   var snow = new Quill('#snow-container', {
-    theme: 'snow'
+    theme: 'snow',
+    modules: {
+      syntax: true,
+      toolbar: [['code-block', 'clean']]
+    }
   });
   bubble.on('text-change', function(delta, old, source) {
     if (source === 'user') {
