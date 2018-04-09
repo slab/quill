@@ -393,7 +393,7 @@ describe('Quill', function() {
       );
     });
 
-    it('convert module true to {}', function() {
+    xit('convert module true to {}', function() {
       Quill.debug(0);
       const oldModules = Theme.DEFAULTS.modules;
       Theme.DEFAULTS.modules = {
