@@ -207,11 +207,14 @@ class Syntax extends Module {
   }
 
   highlightBlot(text, language = 'auto') {
-    const { value } =
-      language === 'auto'
-        ? this.options.hljs.highlightAuto(text)
-        : this.options.hljs.highlight(language, text);
-    return value;
+    switch (language) {
+      case 'auto':
+        return this.options.hljs.highlightAuto(text).value;
+      case 'none':
+        return text;
+      default:
+        return this.options.hljs.highlight(language, text);
+    }
   }
 }
 Syntax.DEFAULTS = {
@@ -221,6 +224,7 @@ Syntax.DEFAULTS = {
   interval: 1000,
   languages: [
     { key: 'auto', label: 'Auto' },
+    { key: 'none', label: 'Plain' },
     { key: 'bash', label: 'Bash' },
     { key: 'cpp', label: 'C++' },
     { key: 'cs', label: 'C#' },
