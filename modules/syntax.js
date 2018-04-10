@@ -166,7 +166,7 @@ class Syntax extends Module {
       });
       select.addEventListener('change', () => {
         blot.format(SyntaxCodeBlock.blotName, select.value);
-        this.quill.focus();
+        this.quill.root.focus(); // Prevent scrolling
         this.highlight(blot, true);
       });
       if (blot.uiNode == null) {
