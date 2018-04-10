@@ -213,7 +213,7 @@ class Syntax extends Module {
       case 'none':
         return text;
       default:
-        return this.options.hljs.highlight(language, text);
+        return this.options.hljs.highlight(language, text).value;
     }
   }
 }
