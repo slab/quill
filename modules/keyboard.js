@@ -246,6 +246,15 @@ Keyboard.DEFAULTS = {
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
       },
     },
+    'blockquote empty enter': {
+      key: 'Enter',
+      collapsed: true,
+      format: ['blockquote'],
+      empty: true,
+      handler() {
+        this.quill.format('blockquote', false, Quill.sources.USER);
+      },
+    },
     'list empty enter': {
       key: 'Enter',
       collapsed: true,
