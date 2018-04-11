@@ -16,7 +16,7 @@ class SyntaxCodeBlock extends CodeBlock {
   }
 
   static formats(domNode) {
-    return domNode.getAttribute('data-language') || 'auto';
+    return domNode.getAttribute('data-language') || 'plain';
   }
 
   format(name, value) {
@@ -206,15 +206,11 @@ class Syntax extends Module {
     }
   }
 
-  highlightBlot(text, language = 'auto') {
-    switch (language) {
-      case 'auto':
-        return this.options.hljs.highlightAuto(text).value;
-      case 'none':
-        return text;
-      default:
-        return this.options.hljs.highlight(language, text).value;
+  highlightBlot(text, language = 'plain') {
+    if (language === 'plain') {
+      return text;
     }
+    return this.options.hljs.highlight(language, text).value;
   }
 }
 Syntax.DEFAULTS = {
@@ -223,8 +219,7 @@ Syntax.DEFAULTS = {
   })(),
   interval: 1000,
   languages: [
-    { key: 'auto', label: 'Auto' },
-    { key: 'none', label: 'Plain' },
+    { key: 'plain', label: 'Plain' },
     { key: 'bash', label: 'Bash' },
     { key: 'cpp', label: 'C++' },
     { key: 'cs', label: 'C#' },
