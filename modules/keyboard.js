@@ -334,16 +334,31 @@ Keyboard.DEFAULTS = {
       key: 'Enter',
       collapsed: true,
       format: ['code-block'],
-      prefix: /\n\n$/,
-      suffix: /^[ \t\v]*\n$/,
+      prefix: /^$/,
+      suffix: /^\s*$/,
       handler(range) {
         const [line, offset] = this.quill.getLine(range.index);
-        const delta = new Delta()
-          .retain(range.index + line.length() - offset - 2)
-          .retain(1, { 'code-block': null })
-          .delete(1);
-        this.quill.updateContents(delta, Quill.sources.USER);
-        this.quill.setSelection(range.index - 1, Quill.sources.SILENT);
+        let numLines = 2;
+        let cur = line;
+        while (
+          cur != null &&
+          cur.length() <= 1 &&
+          cur.formats()['code-block']
+        ) {
+          cur = cur.prev;
+          numLines -= 1;
+          // Requisite prev lines are empty
+          if (numLines <= 0) {
+            const delta = new Delta()
+              .retain(range.index + line.length() - offset - 2)
+              .retain(1, { 'code-block': null })
+              .delete(1);
+            this.quill.updateContents(delta, Quill.sources.USER);
+            this.quill.setSelection(range.index - 1, Quill.sources.SILENT);
+            return false;
+          }
+        }
+        return true;
       },
     },
     'embed left': makeEmbedArrowHandler('ArrowLeft', false),
