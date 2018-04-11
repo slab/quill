@@ -377,47 +377,6 @@ Keyboard.DEFAULTS = {
   },
 };
 
-function makeEmbedArrowHandler(key, shiftKey) {
-  const where = key === 'ArrowLeft' ? 'prefix' : 'suffix';
-  return {
-    key,
-    shiftKey,
-    altKey: null,
-    [where]: /^$/,
-    handler(range) {
-      let { index } = range;
-      if (key === 'ArrowRight') {
-        index += range.length + 1;
-      }
-      const [leaf] = this.quill.getLeaf(index);
-      if (!(leaf instanceof Parchment.Embed)) return true;
-      if (key === 'ArrowLeft') {
-        if (shiftKey) {
-          this.quill.setSelection(
-            range.index - 1,
-            range.length + 1,
-            Quill.sources.USER,
-          );
-        } else {
-          this.quill.setSelection(range.index - 1, Quill.sources.USER);
-        }
-      } else if (shiftKey) {
-        this.quill.setSelection(
-          range.index,
-          range.length + 1,
-          Quill.sources.USER,
-        );
-      } else {
-        this.quill.setSelection(
-          range.index + range.length + 1,
-          Quill.sources.USER,
-        );
-      }
-      return false;
-    },
-  };
-}
-
 function handleBackspace(range, context) {
   if (range.index === 0 || this.quill.getLength() <= 1) return;
   const [line] = this.quill.getLine(range.index);
@@ -544,6 +503,47 @@ function makeCodeBlockHandler(indent) {
       });
       this.quill.update(Quill.sources.USER);
       this.quill.setSelection(index, length, Quill.sources.SILENT);
+    },
+  };
+}
+
+function makeEmbedArrowHandler(key, shiftKey) {
+  const where = key === 'ArrowLeft' ? 'prefix' : 'suffix';
+  return {
+    key,
+    shiftKey,
+    altKey: null,
+    [where]: /^$/,
+    handler(range) {
+      let { index } = range;
+      if (key === 'ArrowRight') {
+        index += range.length + 1;
+      }
+      const [leaf] = this.quill.getLeaf(index);
+      if (!(leaf instanceof Parchment.Embed)) return true;
+      if (key === 'ArrowLeft') {
+        if (shiftKey) {
+          this.quill.setSelection(
+            range.index - 1,
+            range.length + 1,
+            Quill.sources.USER,
+          );
+        } else {
+          this.quill.setSelection(range.index - 1, Quill.sources.USER);
+        }
+      } else if (shiftKey) {
+        this.quill.setSelection(
+          range.index,
+          range.length + 1,
+          Quill.sources.USER,
+        );
+      } else {
+        this.quill.setSelection(
+          range.index + range.length + 1,
+          Quill.sources.USER,
+        );
+      }
+      return false;
     },
   };
 }
