@@ -170,7 +170,7 @@ class Keyboard extends Module {
           return false;
         if (binding.suffix != null && !binding.suffix.test(curContext.suffix))
           return false;
-        return binding.handler.call(this, range, curContext) !== true;
+        return binding.handler.call(this, range, curContext, binding) !== true;
       });
       if (prevented) {
         evt.preventDefault();
