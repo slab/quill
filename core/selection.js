@@ -50,6 +50,7 @@ class Selection {
             native.end.node,
             native.end.offset,
           );
+          this.update(Emitter.sources.SILENT);
         } catch (ignored) {
           // ignore
         }
@@ -59,6 +60,7 @@ class Selection {
       if (context.range) {
         const { startNode, startOffset, endNode, endOffset } = context.range;
         this.setNativeRange(startNode, startOffset, endNode, endOffset);
+        this.update(Emitter.sources.SILENT);
       }
     });
     this.update(Emitter.sources.SILENT);
