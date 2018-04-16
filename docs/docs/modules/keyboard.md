@@ -161,7 +161,7 @@ Some bindings are essential to preventing dangerous browser defaults, such as th
 
 Adding a binding with `quill.keyboard.addBinding` will not run before Quill's because the defaults bindings will have been added by that point.
 
-Pass the `bindings` option to the keyboard module, as an object of handler names to binding config objects. Each binding config must contain `key` and `handler` options, and may optionally include any of the `context` options.
+Each binding config must contain `key` and `handler` options, and may optionally include any of the `context` options.
 
 ```javascript
 var bindings = {
