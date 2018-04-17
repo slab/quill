@@ -99,6 +99,6 @@ quill.setText('Hello\nGood\nWorld!');
 quill.formatLine(1, 1, 'list', 'bullet');
 
 let lines = quill.getLines(2, 5);
-// array witha a ListItem and Block Blot,
+// array with a ListItem and Block Blot,
 // representing the first two lines
 ```
