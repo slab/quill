@@ -152,14 +152,7 @@ class Picker {
       this.label.removeAttribute('data-label');
     }
     if (trigger) {
-      if (typeof Event === 'function') {
-        this.select.dispatchEvent(new Event('change'));
-      } else if (typeof Event === 'object') {
-        // IE11
-        const event = document.createEvent('Event');
-        event.initEvent('change', true, true);
-        this.select.dispatchEvent(event);
-      }
+      this.select.dispatchEvent(new Event('change'));
       this.close();
     }
   }

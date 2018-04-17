@@ -81,21 +81,12 @@ describe('Picker', function() {
 
   it('aria attributes toggle correctly when the picker is opened via mousedown', function() {
     const pickerLabel = this.pickerSelector.querySelector('.ql-picker-label');
-
-    // Select picker via enter key
-    let e;
-    if (typeof Event === 'function') {
-      e = new Event('mousedown', {
+    pickerLabel.dispatchEvent(
+      new Event('mousedown', {
         bubbles: true,
         cancelable: true,
-      });
-    } else if (typeof Event === 'object') {
-      // IE11
-      e = document.createEvent('Event');
-      e.initEvent('mousedown', true, true);
-    }
-
-    pickerLabel.dispatchEvent(e);
+      }),
+    );
 
     expect(pickerLabel.getAttribute('aria-expanded')).toEqual('true');
     expect(

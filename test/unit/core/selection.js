@@ -423,7 +423,6 @@ describe('Selection', function() {
       if (this.reference != null) return;
       this.initialize(HTMLElement, '<p><span>0</span></p>', this.div);
       const span = this.div.firstChild.firstChild;
-      span.style.display = 'inline-block'; // IE11 needs this to respect line height
       const bounds = span.getBoundingClientRect();
       this.reference = {
         height: bounds.height,

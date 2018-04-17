@@ -339,7 +339,6 @@ class Selection {
     } else {
       selection.removeAllRanges();
       this.root.blur();
-      document.body.focus(); // root.blur() not enough on IE11+Travis+SauceLabs (but not local VMs)
     }
   }
 
@@ -394,11 +393,6 @@ function contains(parent, descendant) {
     descendant.parentNode; // eslint-disable-line no-unused-expressions
   } catch (e) {
     return false;
-  }
-  // IE11 has bug with Text nodes
-  // https://connect.microsoft.com/IE/feedback/details/780874/node-contains-is-incorrect
-  if (descendant instanceof Text) {
-    parent.contains(descendant.parentNode);
   }
   return parent.contains(descendant);
 }
