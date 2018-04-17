@@ -242,10 +242,11 @@ describe('Quill', function() {
       const textNode = this.container.firstChild.firstChild.firstChild;
       textNode.data = 'aaaaa';
       this.quill.selection.setNativeRange(textNode.data, 3);
-      // this.quill.selection.update(Emitter.sources.SILENT);
       const delta = new Delta().retain(2).insert('a');
       setTimeout(() => {
-        const { args } = this.quill.emitter.emit.calls.mostRecent();
+        const calls = this.quill.emitter.emit.calls.all();
+        calls.pop();
+        const { args } = calls.pop();
         expect(args).toEqual([
           Emitter.events.TEXT_CHANGE,
           delta,
