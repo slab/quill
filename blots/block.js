@@ -126,7 +126,7 @@ class Block extends Parchment.Block {
 Block.blotName = 'block';
 Block.tagName = 'P';
 Block.defaultChild = Break;
-Block.allowedChildren = [Inline, Parchment.Embed, TextBlot];
+Block.allowedChildren = [Break, Inline, Parchment.Embed, TextBlot];
 
 class BlockEmbed extends Parchment.Embed {
   attach() {
