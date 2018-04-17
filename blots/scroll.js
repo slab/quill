@@ -146,6 +146,10 @@ class Scroll extends Parchment.Scroll {
     return super.path(index).slice(1); // Exclude self
   }
 
+  remove() {
+    // Never remove self
+  }
+
   update(mutations) {
     if (this.batch === true) return;
     let source = Emitter.sources.USER;
