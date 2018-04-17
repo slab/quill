@@ -31,11 +31,6 @@ class Selection {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
       }
     });
-    this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
-      if (type === Emitter.events.TEXT_CHANGE && delta.length() > 0) {
-        this.update(Emitter.sources.SILENT);
-      }
-    });
     this.emitter.on(Emitter.events.SCROLL_BEFORE_UPDATE, () => {
       if (!this.hasFocus()) return;
       const native = this.getNativeRange();
