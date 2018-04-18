@@ -57,6 +57,7 @@ const STYLE_ATTRIBUTORS = [
 class Clipboard extends Module {
   constructor(quill, options) {
     super(quill, options);
+    this.quill.root.addEventListener('copy', this.onCaptureCopy.bind(this));
     this.quill.root.addEventListener('paste', this.onCapturePaste.bind(this));
     this.container = this.quill.addContainer('ql-clipboard');
     this.container.setAttribute('contenteditable', true);
@@ -113,9 +114,17 @@ class Clipboard extends Module {
     }
   }
 
+  onCaptureCopy(e) {
+    if (e.defaultPrevented) return;
+    this.quill.update();
+    const [range, native] = this.quill.selection.getRange();
+    this.onCopy(e, range, native);
+    e.preventDefault();
+  }
+
   onCapturePaste(e) {
     if (e.defaultPrevented || !this.quill.isEnabled()) return;
-    const range = this.quill.getSelection();
+    const range = this.quill.getSelection(true);
     const files = Array.from(e.clipboardData.files || []);
     if (files.length > 0) {
       e.preventDefault();
@@ -131,6 +140,18 @@ class Clipboard extends Module {
       this.quill.focus();
       this.container.innerHTML = '';
     }, 1);
+  }
+
+  onCopy(e, range, nativeRange) {
+    const text = this.quill.getText(range);
+    const fragment = nativeRange.native.cloneContents();
+    Array.from(fragment.querySelectorAll('select')).forEach(select => {
+      select.parentNode.removeChild(select);
+    });
+    const div = this.quill.root.ownerDocument.createElement('div');
+    div.appendChild(fragment);
+    e.clipboardData.setData('text/plain', text);
+    e.clipboardData.setData('text/html', div.innerHTML);
   }
 
   onPaste(e, range) {
