@@ -208,7 +208,7 @@ class Syntax extends Module {
 
   highlightBlot(text, language = 'plain') {
     if (language === 'plain') {
-      return text.replace(/[&<>"'/]/g, s => {
+      return text.replace(/[&<>"']/g, s => {
         // https://lodash.com/docs#escape
         const entityMap = {
           '&': '&amp;',
