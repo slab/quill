@@ -109,7 +109,6 @@ class Toolbar extends Module {
       }
       this.update(range);
     });
-    // TODO use weakmap
     this.controls.push([format, input]);
   }
 

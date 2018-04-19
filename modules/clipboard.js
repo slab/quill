@@ -15,8 +15,6 @@ import { SizeStyle } from '../formats/size';
 
 const debug = logger('quill:clipboard');
 
-const DOM_KEY = '__ql-matcher';
-
 const CLIPBOARD_CONFIG = [
   [Node.TEXT_NODE, matchText],
   [Node.TEXT_NODE, matchNewline],
@@ -86,8 +84,14 @@ class Clipboard extends Module {
         [CodeBlock.blotName]: formats[CodeBlock.blotName],
       });
     }
-    const [elementMatchers, textMatchers] = this.prepareMatching();
-    let delta = traverse(this.container, elementMatchers, textMatchers);
+    const nodeMatches = new WeakMap();
+    const [elementMatchers, textMatchers] = this.prepareMatching(nodeMatches);
+    let delta = traverse(
+      this.container,
+      elementMatchers,
+      textMatchers,
+      nodeMatches,
+    );
     // Remove trailing newline
     if (
       deltaEndsWith(delta, '\n') &&
@@ -165,7 +169,7 @@ class Clipboard extends Module {
     );
   }
 
-  prepareMatching() {
+  prepareMatching(nodeMatches) {
     const elementMatchers = [];
     const textMatchers = [];
     this.matchers.forEach(pair => {
@@ -178,11 +182,16 @@ class Clipboard extends Module {
           elementMatchers.push(matcher);
           break;
         default:
-          [].forEach.call(this.container.querySelectorAll(selector), node => {
-            // TODO use weakmap
-            node[DOM_KEY] = node[DOM_KEY] || [];
-            node[DOM_KEY].push(matcher);
-          });
+          Array.from(this.container.querySelectorAll(selector)).forEach(
+            node => {
+              if (nodeMatches.has(node)) {
+                const matches = nodeMatches.get(node);
+                matches.push(matcher);
+              } else {
+                nodeMatches.set(node, [matcher]);
+              }
+            },
+          );
           break;
       }
     });
@@ -240,7 +249,7 @@ function isLine(node) {
   return ['block', 'list-item', 'table-cell'].indexOf(style.display) > -1;
 }
 
-function traverse(node, elementMatchers, textMatchers) {
+function traverse(node, elementMatchers, textMatchers, nodeMatches) {
   // Post-order
   if (node.nodeType === node.TEXT_NODE) {
     return textMatchers.reduce((delta, matcher) => {
@@ -250,12 +259,17 @@ function traverse(node, elementMatchers, textMatchers) {
     return [].reduce.call(
       node.childNodes || [],
       (delta, childNode) => {
-        let childrenDelta = traverse(childNode, elementMatchers, textMatchers);
+        let childrenDelta = traverse(
+          childNode,
+          elementMatchers,
+          textMatchers,
+          nodeMatches,
+        );
         if (childNode.nodeType === node.ELEMENT_NODE) {
           childrenDelta = elementMatchers.reduce((reducedDelta, matcher) => {
             return matcher(childNode, reducedDelta);
           }, childrenDelta);
-          childrenDelta = (childNode[DOM_KEY] || []).reduce(
+          childrenDelta = (nodeMatches.get(childNode) || []).reduce(
             (reducedDelta, matcher) => {
               return matcher(childNode, reducedDelta);
             },
