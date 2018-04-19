@@ -1,17 +1,16 @@
 import EventEmitter from 'eventemitter3';
+import instances from './instances';
 import logger from './logger';
 
 const debug = logger('quill:events');
-
 const EVENTS = ['selectionchange', 'mousedown', 'mouseup', 'click'];
 
 EVENTS.forEach(eventName => {
   document.addEventListener(eventName, (...args) => {
-    [].slice.call(document.querySelectorAll('.ql-container')).forEach(node => {
-      // TODO use WeakMap
-      /* eslint-disable no-underscore-dangle */
-      if (node.__quill && node.__quill.emitter) {
-        node.__quill.emitter.handleDOM(...args);
+    Array.from(document.querySelectorAll('.ql-container')).forEach(node => {
+      const quill = instances.get(node);
+      if (quill && quill.emitter) {
+        quill.emitter.handleDOM(...args);
       }
     });
   });

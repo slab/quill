@@ -5,6 +5,7 @@ import Editor from './editor';
 import Emitter from './emitter';
 import Module from './module';
 import Selection, { Range } from './selection';
+import instances from './instances';
 import logger from './logger';
 import Theme from './theme';
 
@@ -19,8 +20,7 @@ class Quill {
   }
 
   static find(node) {
-    // eslint-disable-next-line no-underscore-dangle
-    return node.__quill || Parchment.find(node);
+    return instances.get(node) || Parchment.find(node);
   }
 
   static import(name) {
@@ -70,7 +70,7 @@ class Quill {
     const html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
-    this.container.__quill = this; // eslint-disable-line no-underscore-dangle
+    instances.set(this.container, this);
     this.root = this.addContainer('ql-editor');
     this.root.addEventListener('dragstart', e => {
       e.preventDefault();
