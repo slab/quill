@@ -153,9 +153,10 @@ class Clipboard extends Module {
       select.parentNode.removeChild(select);
     });
     const div = this.quill.root.ownerDocument.createElement('div');
+    div.style.whiteSpace = 'pre-wrap';
     div.appendChild(fragment);
     e.clipboardData.setData('text/plain', text);
-    e.clipboardData.setData('text/html', div.innerHTML);
+    e.clipboardData.setData('text/html', div.outerHTML);
   }
 
   onPaste(e, range) {
