@@ -16,7 +16,7 @@ describe('Inline', function() {
     const scroll = this.initialize(Scroll, '<p>0<strong>12</strong>3</p>');
     const p = scroll.domNode.firstChild;
     const em = document.createElement('em');
-    [].slice.call(p.childNodes).forEach(function(node) {
+    Array.from(p.childNodes).forEach(function(node) {
       em.appendChild(node);
     });
     p.appendChild(em);

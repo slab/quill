@@ -67,17 +67,13 @@ function compareNodes(node1, node2, ignoredAttributes = []) {
       return `Expected tagName '${node1.tagName}' to equal '${node2.tagName}'`;
     }
     const [attr1, attr2] = [node1, node2].map(function(node) {
-      return [].reduce.call(
-        node.attributes || {},
-        function(attr, elem) {
-          if (ignoredAttributes.indexOf(elem.name) < 0) {
-            attr[elem.name] =
-              elem.name === 'style' ? elem.value.trim() : elem.value;
-          }
-          return attr;
-        },
-        {},
-      );
+      return Array.from(node.attributes || []).reduce(function(attr, elem) {
+        if (ignoredAttributes.indexOf(elem.name) < 0) {
+          attr[elem.name] =
+            elem.name === 'style' ? elem.value.trim() : elem.value;
+        }
+        return attr;
+      }, {});
     });
     if (!equal(attr1, attr2)) {
       return `Expected attributes ${jasmine.pp(attr1)} to equal ${jasmine.pp(
@@ -85,13 +81,14 @@ function compareNodes(node1, node2, ignoredAttributes = []) {
       )}`;
     }
     if (node1.childNodes.length !== node2.childNodes.length) {
-      return `Expected node childNodes length '${node1.childNodes
-        .length}' to equal '${node2.childNodes.length}'`;
+      return `Expected node childNodes length '${
+        node1.childNodes.length
+      }' to equal '${node2.childNodes.length}'`;
     }
     if (node1.childNodes.length === 0) return null;
     let message = '';
     if (
-      [].some.call(node1.childNodes, function(child1, i) {
+      Array.from(node1.childNodes).some(function(child1, i) {
         message = compareNodes(child1, node2.childNodes[i], ignoredAttributes);
         return message;
       })

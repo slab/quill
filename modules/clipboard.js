@@ -256,30 +256,26 @@ function traverse(node, elementMatchers, textMatchers, nodeMatches) {
       return matcher(node, delta);
     }, new Delta());
   } else if (node.nodeType === node.ELEMENT_NODE) {
-    return [].reduce.call(
-      node.childNodes || [],
-      (delta, childNode) => {
-        let childrenDelta = traverse(
-          childNode,
-          elementMatchers,
-          textMatchers,
-          nodeMatches,
-        );
-        if (childNode.nodeType === node.ELEMENT_NODE) {
-          childrenDelta = elementMatchers.reduce((reducedDelta, matcher) => {
+    return Array.from(node.childNodes || []).reduce((delta, childNode) => {
+      let childrenDelta = traverse(
+        childNode,
+        elementMatchers,
+        textMatchers,
+        nodeMatches,
+      );
+      if (childNode.nodeType === node.ELEMENT_NODE) {
+        childrenDelta = elementMatchers.reduce((reducedDelta, matcher) => {
+          return matcher(childNode, reducedDelta);
+        }, childrenDelta);
+        childrenDelta = (nodeMatches.get(childNode) || []).reduce(
+          (reducedDelta, matcher) => {
             return matcher(childNode, reducedDelta);
-          }, childrenDelta);
-          childrenDelta = (nodeMatches.get(childNode) || []).reduce(
-            (reducedDelta, matcher) => {
-              return matcher(childNode, reducedDelta);
-            },
-            childrenDelta,
-          );
-        }
-        return delta.concat(childrenDelta);
-      },
-      new Delta(),
-    );
+          },
+          childrenDelta,
+        );
+      }
+      return delta.concat(childrenDelta);
+    }, new Delta());
   }
   return new Delta();
 }

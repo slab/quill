@@ -28,8 +28,7 @@ class Toolbar extends Module {
     Object.keys(this.options.handlers).forEach(format => {
       this.addHandler(format, this.options.handlers[format]);
     });
-    [].forEach.call(
-      this.container.querySelectorAll('button, select'),
+    Array.from(this.container.querySelectorAll('button, select')).forEach(
       input => {
         this.attach(input);
       },
@@ -50,7 +49,7 @@ class Toolbar extends Module {
   }
 
   attach(input) {
-    let format = [].find.call(input.classList, className => {
+    let format = Array.from(input.classList).find(className => {
       return className.indexOf('ql-') === 0;
     });
     if (!format) return;

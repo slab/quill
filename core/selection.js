@@ -320,14 +320,15 @@ class Selection {
         endOffset !== native.endOffset
       ) {
         if (startNode.tagName === 'BR') {
-          startOffset = [].indexOf.call(
-            startNode.parentNode.childNodes,
+          startOffset = Array.from(startNode.parentNode.childNodes).indexOf(
             startNode,
           );
           startNode = startNode.parentNode;
         }
         if (endNode.tagName === 'BR') {
-          endOffset = [].indexOf.call(endNode.parentNode.childNodes, endNode);
+          endOffset = Array.from(endNode.parentNode.childNodes).indexOf(
+            endNode,
+          );
           endNode = endNode.parentNode;
         }
         const range = document.createRange();

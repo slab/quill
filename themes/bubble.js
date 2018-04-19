@@ -103,14 +103,8 @@ class BubbleTheme extends BaseTheme {
   extendToolbar(toolbar) {
     this.tooltip = new BubbleTooltip(this.quill, this.options.bounds);
     this.tooltip.root.appendChild(toolbar.container);
-    this.buildButtons(
-      [].slice.call(toolbar.container.querySelectorAll('button')),
-      icons,
-    );
-    this.buildPickers(
-      [].slice.call(toolbar.container.querySelectorAll('select')),
-      icons,
-    );
+    this.buildButtons(toolbar.container.querySelectorAll('button'), icons);
+    this.buildPickers(toolbar.container.querySelectorAll('select'), icons);
   }
 }
 BubbleTheme.DEFAULTS = extend(true, {}, BaseTheme.DEFAULTS, {

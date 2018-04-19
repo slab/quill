@@ -88,7 +88,7 @@ class BaseTheme extends Theme {
   }
 
   buildButtons(buttons, icons) {
-    buttons.forEach(button => {
+    Array.from(buttons).forEach(button => {
       const className = button.getAttribute('class') || '';
       className.split(/\s+/).forEach(name => {
         if (!name.startsWith('ql-')) return;
@@ -109,7 +109,7 @@ class BaseTheme extends Theme {
   }
 
   buildPickers(selects, icons) {
-    this.pickers = selects.map(select => {
+    this.pickers = Array.from(selects).map(select => {
       if (select.classList.contains('ql-align')) {
         if (select.querySelector('option') == null) {
           fillSelect(select, ALIGNS);
