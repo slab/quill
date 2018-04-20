@@ -38,14 +38,10 @@ class Block extends Parchment.Block {
       if (index + length === this.length()) {
         this.format(name, value);
       }
-    } else {
-      super.formatAt(
-        index,
-        Math.min(length, this.length() - index - 1),
-        name,
-        value,
-      );
     }
+    this.children.forEachAt(index, Math.min(length, this.length() - index - 1), function(child, offset, length) {
+      child.formatAt(offset, length, name, value);
+    });
     this.cache = {};
   }
 

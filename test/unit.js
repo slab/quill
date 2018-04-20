@@ -2,6 +2,7 @@
 
 import Quill from '../quill.js';
 import CodeBlock, { CodeBlockContainer } from '../formats/code';
+import Author from '../formats/author';
 
 import './helpers/unit';
 
@@ -24,6 +25,7 @@ import './unit/formats/indent';
 import './unit/formats/list';
 import './unit/formats/bold';
 import './unit/formats/table';
+import './unit/formats/author';
 
 import './unit/modules/clipboard';
 import './unit/modules/history';
@@ -37,5 +39,6 @@ import './unit/theme/base/tooltip';
 // Syntax version will otherwise be registered
 Quill.register(CodeBlockContainer, true);
 Quill.register(CodeBlock, true);
+Quill.register(Author);
 
 export default Quill;
