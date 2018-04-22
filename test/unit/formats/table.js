@@ -22,22 +22,22 @@ const tableDelta = new Delta()
   .insert('\n', { table: { row: 'c' } });
 
 const tableHTML = `
-  <table>
+  <table contenteditable="false">
     <tbody>
       <tr>
-        <td data-row="a">A1</td>
-        <td data-row="a">A2</td>
-        <td data-row="a">A3</td>
+        <td data-row="a" contenteditable="true">A1</td>
+        <td data-row="a" contenteditable="true">A2</td>
+        <td data-row="a" contenteditable="true">A3</td>
       </tr>
       <tr>
-        <td data-row="b">B1</td>
-        <td data-row="b">B2</td>
-        <td data-row="b">B3</td>
+        <td data-row="b" contenteditable="true">B1</td>
+        <td data-row="b" contenteditable="true">B2</td>
+        <td data-row="b" contenteditable="true">B3</td>
       </tr>
       <tr>
-        <td data-row="c">C1</td>
-        <td data-row="c">C2</td>
-        <td data-row="c">C3</td>
+        <td data-row="c" contenteditable="true">C1</td>
+        <td data-row="c" contenteditable="true">C2</td>
+        <td data-row="c" contenteditable="true">C3</td>
       </tr>
     </tbody>
   </table>`;
@@ -59,7 +59,7 @@ describe('Table', function() {
     const editor = this.initialize(Editor, '<p>Test</p>');
     editor.formatLine(0, 5, { table: { row: 'a' } });
     expect(this.container).toEqualHTML(
-      '<table><tr><td data-row="a">Test</td></tr></table>',
+      '<table contenteditable="false"><tr><td data-row="a" contenteditable="true">Test</td></tr></table>',
     );
   });
 
@@ -67,7 +67,7 @@ describe('Table', function() {
     const editor = this.initialize(Editor, '<h1>Test</h1>');
     editor.formatLine(0, 5, { table: { row: 'a' } });
     expect(this.container).toEqualHTML(
-      '<table><tr><td data-row="a">Test</td></tr></table>',
+      '<table contenteditable="false"><tr><td data-row="a" contenteditable="true">Test</td></tr></table>',
     );
   });
 

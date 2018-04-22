@@ -14,6 +14,7 @@ class TableCell extends Block {
           .slice(4),
       );
     }
+    node.setAttribute('contenteditable', true);
     return node;
   }
 
@@ -46,7 +47,13 @@ class TableRow extends Container {
 TableRow.blotName = 'table-row';
 TableRow.tagName = 'TR';
 
-class TableContainer extends Container {}
+class TableContainer extends Container {
+  static create(value) {
+    const node = super.create(value);
+    node.setAttribute('contenteditable', false);
+    return node;
+  }
+}
 TableContainer.blotName = 'table-container';
 TableContainer.tagName = 'TABLE';
 
