@@ -88,4 +88,47 @@ describe('Table', function() {
     editor.formatLine(0, 5, { header: 1 });
     expect(this.container).toEqualHTML('<h1>Test</h1>');
   });
+
+  it('balance cells', function() {
+    this.initialize(
+      Editor,
+      `<table contenteditable="false">
+        <tbody>
+          <tr>
+            <td data-row="a" contenteditable="true">A1</td>
+          </tr>
+          <tr>
+            <td data-row="b" contenteditable="true">B1</td>
+            <td data-row="b" contenteditable="true">B2</td>
+          </tr>
+          <tr>
+            <td data-row="c" contenteditable="true">C1</td>
+            <td data-row="c" contenteditable="true">C2</td>
+            <td data-row="c" contenteditable="true">C3</td>
+          </tr>
+        </tbody>
+      </table>`,
+    );
+    expect(this.container).toEqualHTML(
+      `<table contenteditable="false">
+        <tbody>
+          <tr>
+            <td data-row="a" contenteditable="true">A1</td>
+            <td data-row="a" contenteditable="true"><br></td>
+            <td data-row="a" contenteditable="true"><br></td>
+          </tr>
+          <tr>
+            <td data-row="b" contenteditable="true">B1</td>
+            <td data-row="b" contenteditable="true">B2</td>
+            <td data-row="b" contenteditable="true"><br></td>
+          </tr>
+          <tr>
+            <td data-row="c" contenteditable="true">C1</td>
+            <td data-row="c" contenteditable="true">C2</td>
+            <td data-row="c" contenteditable="true">C3</td>
+          </tr>
+        </tbody>
+      </table>`,
+    );
+  });
 });

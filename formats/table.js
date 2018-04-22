@@ -1,3 +1,4 @@
+import Parchment from 'parchment';
 import Block from '../blots/block';
 import Container from '../blots/container';
 
@@ -52,6 +53,34 @@ class TableContainer extends Container {
     const node = super.create(value);
     node.setAttribute('contenteditable', false);
     return node;
+  }
+
+  balanceCells() {
+    const rows = this.descendants(TableRow);
+    const maxColumns = rows.reduce((max, row) => {
+      return Math.max(row.children.length, max);
+    }, 0);
+    rows.forEach(row => {
+      new Array(maxColumns - row.children.length).fill(0).forEach(() => {
+        let value;
+        if (row.children.head != null) {
+          value = TableCell.formats(row.children.head.domNode);
+        }
+        const blot = Parchment.create(TableCell.blotName, value);
+        row.appendChild(blot);
+        blot.optimize(); // Add break blot
+      });
+    });
+  }
+
+  build(...args) {
+    super.build(...args);
+    this.balanceCells();
+  }
+
+  update(...args) {
+    super.update(...args);
+    this.balanceCells();
   }
 }
 TableContainer.blotName = 'table-container';
