@@ -186,7 +186,10 @@ class Selection {
   }
 
   hasFocus() {
-    return document.activeElement === this.root;
+    return (
+      document.activeElement === this.root ||
+      contains(this.root, document.activeElement)
+    );
   }
 
   normalizedToRange(range) {

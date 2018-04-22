@@ -132,6 +132,7 @@ class Keyboard extends Module {
         collapsed: range.length === 0,
         empty: range.length === 0 && line.length() <= 1,
         format: this.quill.getFormat(range),
+        line,
         offset,
         prefix: prefixText,
         suffix: suffixText,
@@ -141,12 +142,15 @@ class Keyboard extends Module {
         if (
           binding.collapsed != null &&
           binding.collapsed !== curContext.collapsed
-        )
+        ) {
           return false;
-        if (binding.empty != null && binding.empty !== curContext.empty)
+        }
+        if (binding.empty != null && binding.empty !== curContext.empty) {
           return false;
-        if (binding.offset != null && binding.offset !== curContext.offset)
+        }
+        if (binding.offset != null && binding.offset !== curContext.offset) {
           return false;
+        }
         if (Array.isArray(binding.format)) {
           // any format is present
           if (binding.format.every(name => curContext.format[name] == null)) {
@@ -166,10 +170,12 @@ class Keyboard extends Module {
             return false;
           }
         }
-        if (binding.prefix != null && !binding.prefix.test(curContext.prefix))
+        if (binding.prefix != null && !binding.prefix.test(curContext.prefix)) {
           return false;
-        if (binding.suffix != null && !binding.suffix.test(curContext.suffix))
+        }
+        if (binding.suffix != null && !binding.suffix.test(curContext.suffix)) {
           return false;
+        }
         return binding.handler.call(this, range, curContext, binding) !== true;
       });
       if (prevented) {
@@ -374,6 +380,8 @@ Keyboard.DEFAULTS = {
     'embed left shift': makeEmbedArrowHandler('ArrowLeft', true),
     'embed right': makeEmbedArrowHandler('ArrowRight', false),
     'embed right shift': makeEmbedArrowHandler('ArrowRight', true),
+    'table down': makeTableArrowHandler(false),
+    'table up': makeTableArrowHandler(true),
   },
 };
 
@@ -446,6 +454,7 @@ function handleDeleteRange(range) {
   this.quill.focus();
 }
 
+// TODO use just updateContents()
 function handleEnter(range, context) {
   if (range.length > 0) {
     this.quill.scroll.deleteAt(range.index, range.length); // So we do not trigger text-change
@@ -554,6 +563,51 @@ function makeFormatHandler(format) {
     shortKey: true,
     handler(range, context) {
       this.quill.format(format, !context.format[format], Quill.sources.USER);
+    },
+  };
+}
+
+function makeTableArrowHandler(up) {
+  return {
+    key: up ? 'ArrowUp' : 'ArrowDown',
+    collapsed: true,
+    format: ['table'],
+    handler(range, context) {
+      const key = up ? 'prev' : 'next';
+      const cell = context.line;
+      const targetRow = cell.parent[key];
+      if (targetRow != null) {
+        if (targetRow.statics.blotName === 'table-row') {
+          let targetCell = targetRow.children.head;
+          let cur = cell;
+          while (cur.prev != null) {
+            cur = cur.prev;
+            targetCell = targetCell.next;
+          }
+          const index =
+            targetCell.offset(this.quill.scroll) +
+            Math.min(context.offset, targetCell.length() - 1);
+          this.quill.setSelection(index, 0, Quill.sources.USER);
+        }
+      } else {
+        const targetLine = cell.table()[key];
+        if (targetLine != null) {
+          if (up) {
+            this.quill.setSelection(
+              targetLine.offset(this.quill.scroll) + targetLine.length() - 1,
+              0,
+              Quill.sources.USER,
+            );
+          } else {
+            this.quill.setSelection(
+              targetLine.offset(this.quill.scroll),
+              0,
+              Quill.sources.USER,
+            );
+          }
+        }
+      }
+      return false;
     },
   };
 }

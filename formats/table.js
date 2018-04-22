@@ -27,6 +27,14 @@ class TableCell extends Block {
     }
     return undefined;
   }
+
+  table() {
+    let cur = this.parent;
+    while (cur != null && cur.statics.blotName !== 'table-container') {
+      cur = cur.parent;
+    }
+    return cur;
+  }
 }
 TableCell.blotName = 'table';
 TableCell.tagName = 'TD';
