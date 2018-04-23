@@ -241,7 +241,8 @@ Keyboard.DEFAULTS = {
     },
     tab: {
       key: 'Tab',
-      handler(range) {
+      handler(range, context) {
+        if (context.format.table) return true;
         this.quill.history.cutoff();
         const delta = new Delta()
           .retain(range.index)

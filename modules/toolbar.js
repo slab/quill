@@ -6,6 +6,8 @@ import Module from '../core/module';
 
 const debug = logger('quill:toolbar');
 
+let tableId = 0;
+
 class Toolbar extends Module {
   constructor(quill, options) {
     super(quill, options);
@@ -257,6 +259,20 @@ Toolbar.DEFAULTS = {
       } else {
         this.quill.format('list', value, Quill.sources.USER);
       }
+    },
+    table(value) {
+      if (!value) return;
+      const range = this.quill.getSelection();
+      if (range == null) return;
+      // Insert 2x2 table
+      this.quill.updateContents(
+        new Delta()
+          .retain(range.index)
+          .insert('\n\n', { table: { row: (tableId += 1) } })
+          .insert('\n\n', { table: { row: (tableId += 1) } }),
+        Quill.sources.USER,
+      );
+      this.quill.setSelection(range.index, Quill.sources.SILENT);
     },
   },
 };

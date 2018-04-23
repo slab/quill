@@ -24,6 +24,7 @@ import listOrderedIcon from '../assets/icons/list-ordered.svg';
 import subscriptIcon from '../assets/icons/subscript.svg';
 import superscriptIcon from '../assets/icons/superscript.svg';
 import strikeIcon from '../assets/icons/strike.svg';
+import tableIcon from '../assets/icons/table.svg';
 import underlineIcon from '../assets/icons/underline.svg';
 import videoIcon from '../assets/icons/video.svg';
 
@@ -67,6 +68,7 @@ module.exports = {
     super: superscriptIcon,
   },
   strike: strikeIcon,
+  table: tableIcon,
   underline: underlineIcon,
   video: videoIcon,
 };
