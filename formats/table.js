@@ -1,20 +1,38 @@
+import Parchment from 'parchment';
 import Block from '../blots/block';
 import Container from '../blots/container';
-import Quill from '../core/quill';
 
-class TableContainer extends Container {
+class TableCell extends Block {
   static create(value) {
-    const node = super.create(value);
-    node.setAttribute('contenteditable', false);
+    const node = super.create();
+    if (value && value.row) {
+      node.setAttribute('data-row', value.row);
+    } else {
+      node.setAttribute('data-row', tableId());
+    }
+    node.setAttribute('contenteditable', true);
     return node;
   }
-}
-TableContainer.blotName = 'table-container';
-TableContainer.tagName = 'TABLE';
 
-class TableBody extends Container {}
-TableBody.blotName = 'table-body';
-TableBody.tagName = 'TBODY';
+  static formats(domNode) {
+    if (domNode.hasAttribute('data-row')) {
+      return {
+        row: domNode.getAttribute('data-row'),
+      };
+    }
+    return undefined;
+  }
+
+  table() {
+    let cur = this.parent;
+    while (cur != null && cur.statics.blotName !== 'table-container') {
+      cur = cur.parent;
+    }
+    return cur;
+  }
+}
+TableCell.blotName = 'table';
+TableCell.tagName = 'TD';
 
 class TableRow extends Container {
   checkMerge() {
@@ -29,15 +47,14 @@ class TableRow extends Container {
 TableRow.blotName = 'table-row';
 TableRow.tagName = 'TR';
 
-class TableCell extends Block {
+class TableBody extends Container {}
+TableBody.blotName = 'table-body';
+TableBody.tagName = 'TBODY';
+
+class TableContainer extends Container {
   static create(value) {
-    const node = super.create();
-    if (value && value.row) {
-      node.setAttribute('data-row', value.row);
-    } else {
-      node.setAttribute('data-row', tableId());
-    }
-    node.setAttribute('contenteditable', true);
+    const node = super.create(value);
+    node.setAttribute('contenteditable', false);
     return node;
   }
 
@@ -57,31 +74,10 @@ class TableCell extends Block {
         blot.optimize(); // Add break blot
       });
     });
-  static formats(domNode) {
-    if (domNode.hasAttribute('data-row')) {
-      return {
-        row: domNode.getAttribute('data-row'),
-      };
-    }
-    return undefined;
-  }
-
-  static register() {
-    Quill.register(TableRow);
-    Quill.register(TableBody);
-    Quill.register(TableContainer);
-  }
-
-  table() {
-    let cur = this.parent;
-    while (cur != null && cur.statics.blotName !== 'table-container') {
-      cur = cur.parent;
-    }
-    return cur;
   }
 }
-TableCell.blotName = 'table';
-TableCell.tagName = 'TD';
+TableContainer.blotName = 'table-container';
+TableContainer.tagName = 'TABLE';
 
 TableContainer.allowedChildren = [TableBody];
 TableBody.requiredContainer = TableContainer;
@@ -98,4 +94,4 @@ function tableId() {
     .slice(4);
 }
 
-export { TableCell as default, tableId };
+export { TableCell, TableRow, TableBody, TableContainer, tableId };

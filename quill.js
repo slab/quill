@@ -11,7 +11,6 @@ import Indent from './formats/indent';
 import Blockquote from './formats/blockquote';
 import Header from './formats/header';
 import List from './formats/list';
-import Table from './formats/table';
 
 import { BackgroundClass, BackgroundStyle } from './formats/background';
 import { ColorClass, ColorStyle } from './formats/color';
@@ -32,6 +31,7 @@ import Video from './formats/video';
 import CodeBlock, { Code as InlineCode } from './formats/code';
 
 import Syntax from './modules/syntax';
+import Table from './modules/table';
 import Toolbar from './modules/toolbar';
 
 import Icons from './ui/icons';
@@ -79,7 +79,6 @@ Quill.register(
     'formats/code-block': CodeBlock,
     'formats/header': Header,
     'formats/list': List,
-    'formats/table': Table,
 
     'formats/bold': Bold,
     'formats/code': InlineCode,
@@ -94,6 +93,7 @@ Quill.register(
     'formats/video': Video,
 
     'modules/syntax': Syntax,
+    'modules/table': Table,
     'modules/toolbar': Toolbar,
 
     'themes/bubble': BubbleTheme,
