@@ -1,43 +1,16 @@
-import Parchment from 'parchment';
 import Block from '../blots/block';
 import Container from '../blots/container';
+import Quill from '../core/quill';
 
-class TableCell extends Block {
+class TableContainer extends Container {
   static create(value) {
-    const node = super.create();
-    if (value && value.row) {
-      node.setAttribute('data-row', value.row);
-    } else {
-      node.setAttribute(
-        'data-row',
-        Math.random()
-          .toString(36)
-          .slice(4),
-      );
-    }
-    node.setAttribute('contenteditable', true);
+    const node = super.create(value);
+    node.setAttribute('contenteditable', false);
     return node;
   }
-
-  static formats(domNode) {
-    if (domNode.hasAttribute('data-row')) {
-      return {
-        row: domNode.getAttribute('data-row'),
-      };
-    }
-    return undefined;
-  }
-
-  table() {
-    let cur = this.parent;
-    while (cur != null && cur.statics.blotName !== 'table-container') {
-      cur = cur.parent;
-    }
-    return cur;
-  }
 }
-TableCell.blotName = 'table';
-TableCell.tagName = 'TD';
+TableContainer.blotName = 'table-container';
+TableContainer.tagName = 'TABLE';
 
 class TableBody extends Container {}
 TableBody.blotName = 'table-body';
@@ -56,10 +29,15 @@ class TableRow extends Container {
 TableRow.blotName = 'table-row';
 TableRow.tagName = 'TR';
 
-class TableContainer extends Container {
+class TableCell extends Block {
   static create(value) {
-    const node = super.create(value);
-    node.setAttribute('contenteditable', false);
+    const node = super.create();
+    if (value && value.row) {
+      node.setAttribute('data-row', value.row);
+    } else {
+      node.setAttribute('data-row', tableId());
+    }
+    node.setAttribute('contenteditable', true);
     return node;
   }
 
@@ -79,20 +57,31 @@ class TableContainer extends Container {
         blot.optimize(); // Add break blot
       });
     });
+  static formats(domNode) {
+    if (domNode.hasAttribute('data-row')) {
+      return {
+        row: domNode.getAttribute('data-row'),
+      };
+    }
+    return undefined;
   }
 
-  build(...args) {
-    super.build(...args);
-    this.balanceCells();
+  static register() {
+    Quill.register(TableRow);
+    Quill.register(TableBody);
+    Quill.register(TableContainer);
   }
 
-  update(...args) {
-    super.update(...args);
-    this.balanceCells();
+  table() {
+    let cur = this.parent;
+    while (cur != null && cur.statics.blotName !== 'table-container') {
+      cur = cur.parent;
+    }
+    return cur;
   }
 }
-TableContainer.blotName = 'table-container';
-TableContainer.tagName = 'TABLE';
+TableCell.blotName = 'table';
+TableCell.tagName = 'TD';
 
 TableContainer.allowedChildren = [TableBody];
 TableBody.requiredContainer = TableContainer;
@@ -103,4 +92,10 @@ TableRow.requiredContainer = TableBody;
 TableRow.allowedChildren = [TableCell];
 TableCell.requiredContainer = TableRow;
 
-export { TableContainer, TableBody, TableRow, TableCell };
+function tableId() {
+  return Math.random()
+    .toString(36)
+    .slice(4);
+}
+
+export { TableCell as default, tableId };

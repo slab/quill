@@ -3,10 +3,9 @@ import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
+import { tableId } from '../formats/table';
 
 const debug = logger('quill:toolbar');
-
-let tableId = 0;
 
 class Toolbar extends Module {
   constructor(quill, options) {
@@ -268,8 +267,8 @@ Toolbar.DEFAULTS = {
       this.quill.updateContents(
         new Delta()
           .retain(range.index)
-          .insert('\n\n', { table: { row: (tableId += 1) } })
-          .insert('\n\n', { table: { row: (tableId += 1) } }),
+          .insert('\n\n', { table: { row: tableId() } })
+          .insert('\n\n', { table: { row: tableId() } }),
         Quill.sources.USER,
       );
       this.quill.setSelection(range.index, Quill.sources.SILENT);
