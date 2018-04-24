@@ -10,13 +10,13 @@ import Indent from './formats/indent';
 
 import Blockquote from './formats/blockquote';
 import Header from './formats/header';
-import List, { ListContainer } from './formats/list';
 import {
   TableContainer,
   TableBody,
   TableRow,
   TableCell,
 } from './formats/table';
+import List from './formats/list';
 
 import { BackgroundClass, BackgroundStyle } from './formats/background';
 import { ColorClass, ColorStyle } from './formats/color';
@@ -34,10 +34,7 @@ import Formula from './formats/formula';
 import Image from './formats/image';
 import Video from './formats/video';
 
-import CodeBlock, {
-  CodeBlockContainer,
-  Code as InlineCode,
-} from './formats/code';
+import CodeBlock, { Code as InlineCode } from './formats/code';
 
 import Syntax from './modules/syntax';
 import Toolbar from './modules/toolbar';
@@ -74,8 +71,6 @@ Quill.register(
 
 Quill.register(
   {
-    'blots/code-block-container': CodeBlockContainer,
-    'blots/list-container': ListContainer,
     'blots/table-container': TableContainer,
     'blots/table-body': TableBody,
     'blots/table-row': TableRow,

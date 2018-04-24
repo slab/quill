@@ -1,5 +1,10 @@
 import Block from '../blots/block';
 import Container from '../blots/container';
+import Quill from '../core/quill';
+
+class ListContainer extends Container {}
+ListContainer.blotName = 'list-container';
+ListContainer.tagName = 'OL';
 
 class ListItem extends Block {
   static create(value) {
@@ -10,6 +15,10 @@ class ListItem extends Block {
 
   static formats(domNode) {
     return domNode.getAttribute('data-list') || undefined;
+  }
+
+  static register() {
+    Quill.register(ListContainer);
   }
 
   constructor(domNode) {
@@ -37,10 +46,6 @@ class ListItem extends Block {
 }
 ListItem.blotName = 'list';
 ListItem.tagName = 'LI';
-
-class ListContainer extends Container {}
-ListContainer.blotName = 'list-container';
-ListContainer.tagName = 'OL';
 
 ListContainer.allowedChildren = [ListItem];
 ListItem.requiredContainer = ListContainer;

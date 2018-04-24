@@ -5,12 +5,21 @@ import Cursor from '../blots/cursor';
 import Inline from '../blots/inline';
 import TextBlot from '../blots/text';
 import Container from '../blots/container';
+import Quill from '../core/quill';
 
-class Code extends Inline {}
-Code.blotName = 'code';
-Code.tagName = 'CODE';
+class CodeBlockContainer extends Container {
+  static create(value) {
+    const domNode = super.create(value);
+    domNode.setAttribute('spellcheck', false);
+    return domNode;
+  }
+}
 
 class CodeBlock extends Block {
+  static register() {
+    Quill.register(CodeBlockContainer);
+  }
+
   delta() {
     if (this.cache.delta == null) {
       this.cache.delta = new Delta()
@@ -20,17 +29,14 @@ class CodeBlock extends Block {
     return this.cache.delta;
   }
 }
+
+class Code extends Inline {}
+Code.blotName = 'code';
+Code.tagName = 'CODE';
+
 CodeBlock.blotName = 'code-block';
 CodeBlock.className = 'ql-code-block';
 CodeBlock.tagName = 'DIV';
-
-class CodeBlockContainer extends Container {
-  static create(value) {
-    const domNode = super.create(value);
-    domNode.setAttribute('spellcheck', false);
-    return domNode;
-  }
-}
 CodeBlockContainer.blotName = 'code-block-container';
 CodeBlockContainer.className = 'ql-code-block-container';
 CodeBlockContainer.tagName = 'DIV';

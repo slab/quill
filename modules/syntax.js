@@ -19,6 +19,8 @@ class SyntaxCodeBlock extends CodeBlock {
     return domNode.getAttribute('data-language') || 'plain';
   }
 
+  static register() {} // Syntax module will register
+
   format(name, value) {
     if (name !== this.statics.blotName) return;
     if (value) {
