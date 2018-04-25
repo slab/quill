@@ -1,6 +1,3 @@
-import Parchment from 'parchment';
-import Block from '../blots/block';
-import Container from '../blots/container';
 import Quill from '../core/quill';
 import Module from '../core/module';
 import {
@@ -16,6 +13,26 @@ class Table extends Module {
     Quill.register(TableRow);
     Quill.register(TableBody);
     Quill.register(TableContainer);
+  }
+
+  constructor(...args) {
+    super(...args);
+    this.quill.on(Quill.events.SCROLL_OPTIMIZE, (mutations, context) => {
+      if (context.source !== Quill.sources.USER) return;
+      const tables = new Set(
+        mutations
+          .map(mutation => {
+            if (mutation.target.tagName === 'TABLE') {
+              return Quill.find(mutation.target);
+            }
+            return null;
+          })
+          .filter(blot => blot != null),
+      );
+      tables.forEach(table => {
+        table.balanceCells();
+      });
+    });
   }
 }
 

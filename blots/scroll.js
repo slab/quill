@@ -30,7 +30,6 @@ class Scroll extends Parchment.Scroll {
 
   batchEnd() {
     this.batch = false;
-    this.optimize();
   }
 
   emitMount(blot) {
@@ -150,21 +149,27 @@ class Scroll extends Parchment.Scroll {
     // Never remove self
   }
 
-  update(mutations) {
+  update(mutations, context = {}) {
     if (this.batch === true) return;
-    let source = Emitter.sources.USER;
-    if (typeof mutations === 'string') {
-      source = mutations;
-    }
+    context.source =
+      typeof mutations === 'string' ? mutations : Emitter.sources.USER;
     if (!Array.isArray(mutations)) {
       mutations = this.observer.takeRecords();
     }
     if (mutations.length > 0) {
-      this.emitter.emit(Emitter.events.SCROLL_BEFORE_UPDATE, source, mutations);
+      this.emitter.emit(
+        Emitter.events.SCROLL_BEFORE_UPDATE,
+        context.source,
+        mutations,
+      );
     }
-    super.update(mutations.concat([])); // pass copy
+    super.update(mutations.concat([]), context); // pass copy
     if (mutations.length > 0) {
-      this.emitter.emit(Emitter.events.SCROLL_UPDATE, source, mutations);
+      this.emitter.emit(
+        Emitter.events.SCROLL_UPDATE,
+        context.source,
+        mutations,
+      );
     }
   }
 }
