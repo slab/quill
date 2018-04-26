@@ -3,7 +3,6 @@ import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
-import { tableId } from '../formats/table';
 
 const debug = logger('quill:toolbar');
 
@@ -258,20 +257,6 @@ Toolbar.DEFAULTS = {
       } else {
         this.quill.format('list', value, Quill.sources.USER);
       }
-    },
-    table(value) {
-      if (!value) return;
-      const range = this.quill.getSelection();
-      if (range == null) return;
-      // Insert 2x2 table
-      this.quill.updateContents(
-        new Delta()
-          .retain(range.index)
-          .insert('\n\n', { table: { row: tableId() } })
-          .insert('\n\n', { table: { row: tableId() } }),
-        Quill.sources.USER,
-      );
-      this.quill.setSelection(range.index, Quill.sources.SILENT);
     },
   },
 };

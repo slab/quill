@@ -43,6 +43,21 @@ class TableRow extends Container {
     }
     return false;
   }
+
+  optimize(...args) {
+    super.optimize(...args);
+    this.children.forEach(child => {
+      if (child.next == null) return;
+      const childFormats = child.formats();
+      const nextFormats = child.next.formats();
+      if (childFormats.table.row !== nextFormats.table.row) {
+        this.splitAfter(child);
+        if (this.prev) {
+          this.prev.optimize();
+        }
+      }
+    });
+  }
 }
 TableRow.blotName = 'table-row';
 TableRow.tagName = 'TR';
@@ -75,6 +90,39 @@ class TableContainer extends Container {
       });
     });
   }
+
+  deleteColumn(index) {
+    const [body] = this.descendant(TableBody);
+    if (body == null || body.children.head == null) return;
+    body.children.forEach(row => {
+      const cell = row.children.at(index);
+      if (cell != null) {
+        cell.remove();
+      }
+    });
+  }
+
+  insertColumn(index) {
+    const [body] = this.descendant(TableBody);
+    if (body == null || body.children.head == null) return;
+    body.children.forEach(row => {
+      const ref = row.children.at(index);
+      const cell = Parchment.create(TableCell.blotName);
+      row.insertBefore(cell, ref);
+    });
+  }
+
+  insertRow(index) {
+    const [body] = this.descendant(TableBody);
+    if (body == null || body.children.head == null) return;
+    const row = Parchment.create(TableRow.blotName);
+    body.children.head.children.forEach(() => {
+      const cell = Parchment.create(TableCell.blotName);
+      row.appendChild(cell);
+    });
+    const ref = body.children.at(index);
+    body.insertBefore(row, ref);
+  }
 }
 TableContainer.blotName = 'table-container';
 TableContainer.tagName = 'TABLE';
@@ -91,7 +139,7 @@ TableCell.requiredContainer = TableRow;
 function tableId() {
   return Math.random()
     .toString(36)
-    .slice(4);
+    .slice(2, 6);
 }
 
 export { TableCell, TableRow, TableBody, TableContainer, tableId };

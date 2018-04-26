@@ -63,6 +63,7 @@ class Editor {
       return index + (op.retain || op.insert.length || 1);
     }, 0);
     this.scroll.batchEnd();
+    this.scroll.optimize();
     return this.update(normalizedDelta);
   }
 
