@@ -101,9 +101,7 @@ class Quill {
       const index = range && range.length === 0 ? range.index : undefined;
       modify.call(
         this,
-        () => {
-          return this.editor.update(null, mutations, index);
-        },
+        () => this.editor.update(null, mutations, index),
         source,
       );
     });

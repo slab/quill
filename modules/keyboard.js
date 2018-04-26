@@ -574,6 +574,7 @@ function makeTableArrowHandler(up) {
     collapsed: true,
     format: ['table'],
     handler(range, context) {
+      // TODO move to table module
       const key = up ? 'prev' : 'next';
       const cell = context.line;
       const targetRow = cell.parent[key];

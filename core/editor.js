@@ -82,18 +82,16 @@ class Editor {
       });
     });
     this.scroll.optimize();
-    return this.update(
-      new Delta().retain(index).retain(length, clone(formats)),
-    );
+    const delta = new Delta().retain(index).retain(length, clone(formats));
+    return this.update(delta);
   }
 
   formatText(index, length, formats = {}) {
     Object.keys(formats).forEach(format => {
       this.scroll.formatAt(index, length, format, formats[format]);
     });
-    return this.update(
-      new Delta().retain(index).retain(length, clone(formats)),
-    );
+    const delta = new Delta().retain(index).retain(length, clone(formats));
+    return this.update(delta);
   }
 
   getContents(index, length) {

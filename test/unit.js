@@ -3,10 +3,6 @@
 import Quill from '../quill.js';
 import CodeBlock, { CodeBlockContainer } from '../formats/code';
 
-// Syntax version will otherwise be registered
-Quill.register(CodeBlockContainer, true);
-Quill.register(CodeBlock, true);
-
 import './helpers/unit';
 
 import './unit/blots/scroll';
@@ -37,5 +33,9 @@ import './unit/modules/toolbar';
 
 import './unit/ui/picker';
 import './unit/theme/base/tooltip';
+
+// Syntax version will otherwise be registered
+Quill.register(CodeBlockContainer, true);
+Quill.register(CodeBlock, true);
 
 export default Quill;
