@@ -251,6 +251,7 @@ Keyboard.DEFAULTS = {
         this.quill.updateContents(delta, Quill.sources.USER);
         this.quill.history.cutoff();
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+        return false;
       },
     },
     'blockquote empty enter': {
