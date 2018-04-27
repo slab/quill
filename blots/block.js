@@ -40,8 +40,8 @@ class Block extends Parchment.Block {
       }
     }
     if (Parchment.query(name, Parchment.Scope.INLINE)) {
-      this.children.forEachAt(index, Math.min(length, this.length() - index - 1), function(child, offset, length) {
-        child.formatAt(offset, length, name, value);
+      this.children.forEachAt(index, Math.min(length, this.length() - index - 1), (child, offset, len) => {
+        child.formatAt(offset, len, name, value);
       });
     }
     this.cache = {};
