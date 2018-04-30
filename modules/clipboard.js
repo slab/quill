@@ -106,19 +106,47 @@ class Clipboard extends Module {
   }
 
   onPaste(e) {
+    var _this2 = this;
+    var dataClipboard;
+    var fileClipboard;
+
+    if (e.clipboardData) {
+      if (e.clipboardData.types) {
+        dataClipboard = e.clipboardData.types;
+      }
+
+      if (dataClipboard[0] && dataClipboard[0].match('Files')) {
+        if (e.clipboardData.items && e.clipboardData.items[0] && e.clipboardData.items[0].type && e.clipboardData.items[0].type.match("image/*")) {
+          fileClipboard = e.clipboardData.items[0].getAsFile();
+        }
+      }
+    }
+
     if (e.defaultPrevented || !this.quill.isEnabled()) return;
-    let range = this.quill.getSelection();
-    let delta = new Delta().retain(range.index);
-    let scrollTop = this.quill.scrollingContainer.scrollTop;
+
+    var range = this.quill.getSelection();
+    var delta = new Delta().retain(range.index);
+    var scrollTop = this.quill.scrollingContainer.scrollTop;
     this.container.focus();
     this.quill.selection.update(Quill.sources.SILENT);
-    setTimeout(() => {
-      delta = delta.concat(this.convert()).delete(range.length);
-      this.quill.updateContents(delta, Quill.sources.USER);
-      // range.length contributes to delta.length()
-      this.quill.setSelection(delta.length() - range.length, Quill.sources.SILENT);
-      this.quill.scrollingContainer.scrollTop = scrollTop;
-      this.quill.focus();
+    setTimeout(function () {
+      if (fileClipboard) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var range = _this2.quill.getSelection(true);
+          _this2.quill.updateContents(new Delta().retain(range.index).delete(range.length).insert({ image: e.target.result }), Quill.sources.USER);
+          _this2.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+          fileClipboard.value = "";
+        };
+        reader.readAsDataURL(fileClipboard);
+      } else {
+          delta = delta.concat(_this2.convert()).delete(range.length);
+          _this2.quill.updateContents(delta, Quill.sources.USER);
+          // range.length contributes to delta.length()
+          _this2.quill.setSelection(delta.length() - range.length, Quill.sources.SILENT);
+          _this2.quill.scrollingContainer.scrollTop = scrollTop;
+          _this2.quill.focus();
+      }
     }, 1);
   }
 
