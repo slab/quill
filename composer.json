@@ -1,0 +1,5 @@
+{
+    "name": "nohns/quill",
+    "description": "A fork of the quill js library with a composer file",
+    "license": "BSE" 
+}
