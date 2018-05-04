@@ -1,5 +1,5 @@
 {
-    "name": "nohns/bourbon",
-    "description": "A fork of the bourbon library with a composer file",
-    "license": "MIT" 
+    "name": "nohns/quill",
+    "description": "A fork of the quill js library with a composer file",
+    "license": "BSE" 
 }
