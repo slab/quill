@@ -1,9 +1,9 @@
-import Parchment from 'parchment';
+import Parchment, { EmbedBlot } from 'parchment';
 import TextBlot from './text';
 
 const GUARD_TEXT = '\uFEFF';
 
-class Embed extends Parchment.Embed {
+class Embed extends EmbedBlot {
   constructor(node) {
     super(node);
     this.contentNode = document.createElement('span');

@@ -1,6 +1,6 @@
-import Parchment from 'parchment';
+import { EmbedBlot } from 'parchment';
 
-class Break extends Parchment.Embed {
+class Break extends EmbedBlot {
   static value() {
     return undefined;
   }

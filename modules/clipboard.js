@@ -1,6 +1,11 @@
 import extend from 'extend';
 import Delta from 'quill-delta';
-import Parchment from 'parchment';
+import Parchment, {
+  Attributor,
+  ClassAttributor,
+  EmbedBlot,
+  StyleAttributor,
+} from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
@@ -286,9 +291,9 @@ function matchAlias(format, node, delta) {
 }
 
 function matchAttributor(node, delta) {
-  const attributes = Parchment.Attributor.Attribute.keys(node);
-  const classes = Parchment.Attributor.Class.keys(node);
-  const styles = Parchment.Attributor.Style.keys(node);
+  const attributes = Attributor.keys(node);
+  const classes = ClassAttributor.keys(node);
+  const styles = StyleAttributor.keys(node);
   const formats = {};
   attributes
     .concat(classes)
@@ -318,7 +323,7 @@ function matchAttributor(node, delta) {
 function matchBlot(node, delta) {
   const match = Parchment.query(node);
   if (match == null) return delta;
-  if (match.prototype instanceof Parchment.Embed) {
+  if (match.prototype instanceof EmbedBlot) {
     const embed = {};
     const value = match.value(node);
     if (value != null) {

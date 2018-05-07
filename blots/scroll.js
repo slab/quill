@@ -1,4 +1,4 @@
-import Parchment from 'parchment';
+import Parchment, { ScrollBlot, ContainerBlot } from 'parchment';
 import Emitter from '../core/emitter';
 import Block, { BlockEmbed } from './block';
 import Break from './break';
@@ -8,7 +8,7 @@ function isLine(blot) {
   return blot instanceof Block || blot instanceof BlockEmbed;
 }
 
-class Scroll extends Parchment.Scroll {
+class Scroll extends ScrollBlot {
   constructor(domNode, config) {
     super(domNode);
     this.emitter = config.emitter;
@@ -123,7 +123,7 @@ class Scroll extends Parchment.Scroll {
         (child, childIndex, childLength) => {
           if (isLine(child)) {
             lines.push(child);
-          } else if (child instanceof Parchment.Container) {
+          } else if (child instanceof ContainerBlot) {
             lines = lines.concat(getLines(child, childIndex, lengthLeft));
           }
           lengthLeft -= childLength;

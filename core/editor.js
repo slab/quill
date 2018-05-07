@@ -3,7 +3,7 @@ import equal from 'deep-equal';
 import extend from 'extend';
 import Delta from 'quill-delta';
 import DeltaOp from 'quill-delta/lib/op';
-import Parchment from 'parchment';
+import Parchment, { LeafBlot } from 'parchment';
 import CursorBlot from '../blots/cursor';
 import Block, { bubbleFormats } from '../blots/block';
 import Break from '../blots/break';
@@ -39,7 +39,7 @@ class Editor {
           const [line, offset] = this.scroll.line(index);
           let formats = extend({}, bubbleFormats(line));
           if (line instanceof Block) {
-            const [leaf] = line.descendant(Parchment.Leaf, offset);
+            const [leaf] = line.descendant(LeafBlot, offset);
             formats = extend(formats, bubbleFormats(leaf));
           }
           attributes = DeltaOp.attributes.diff(formats, attributes) || {};
@@ -112,13 +112,13 @@ class Editor {
         const [blot] = path;
         if (blot instanceof Block) {
           lines.push(blot);
-        } else if (blot instanceof Parchment.Leaf) {
+        } else if (blot instanceof LeafBlot) {
           leaves.push(blot);
         }
       });
     } else {
       lines = this.scroll.lines(index, length);
-      leaves = this.scroll.descendants(Parchment.Leaf, index, length);
+      leaves = this.scroll.descendants(LeafBlot, index, length);
     }
     const formatsArr = [lines, leaves].map(blots => {
       if (blots.length === 0) return {};

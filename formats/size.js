@@ -1,10 +1,10 @@
-import Parchment from 'parchment';
+import Parchment, { ClassAttributor, StyleAttributor } from 'parchment';
 
-const SizeClass = new Parchment.Attributor.Class('size', 'ql-size', {
+const SizeClass = new ClassAttributor('size', 'ql-size', {
   scope: Parchment.Scope.INLINE,
   whitelist: ['small', 'large', 'huge'],
 });
-const SizeStyle = new Parchment.Attributor.Style('size', 'font-size', {
+const SizeStyle = new StyleAttributor('size', 'font-size', {
   scope: Parchment.Scope.INLINE,
   whitelist: ['10px', '18px', '32px'],
 });

@@ -1,5 +1,5 @@
-import Parchment from 'parchment';
+import { ContainerBlot } from 'parchment';
 
-class Container extends Parchment.Container {}
+class Container extends ContainerBlot {}
 
 export default Container;

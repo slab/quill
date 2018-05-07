@@ -3,7 +3,7 @@ import equal from 'deep-equal';
 import extend from 'extend';
 import Delta from 'quill-delta';
 import DeltaOp from 'quill-delta/lib/op';
-import Parchment from 'parchment';
+import Parchment, { EmbedBlot, TextBlot } from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
@@ -121,13 +121,11 @@ class Keyboard extends Module {
           ? [leafStart, offsetStart]
           : this.quill.getLeaf(range.index + range.length);
       const prefixText =
-        leafStart instanceof Parchment.Text
+        leafStart instanceof TextBlot
           ? leafStart.value().slice(0, offsetStart)
           : '';
       const suffixText =
-        leafEnd instanceof Parchment.Text
-          ? leafEnd.value().slice(offsetEnd)
-          : '';
+        leafEnd instanceof TextBlot ? leafEnd.value().slice(offsetEnd) : '';
       const curContext = {
         collapsed: range.length === 0,
         empty: range.length === 0 && line.length() <= 1,
@@ -531,7 +529,7 @@ function makeEmbedArrowHandler(key, shiftKey) {
         index += range.length + 1;
       }
       const [leaf] = this.quill.getLeaf(index);
-      if (!(leaf instanceof Parchment.Embed)) return true;
+      if (!(leaf instanceof EmbedBlot)) return true;
       if (key === 'ArrowLeft') {
         if (shiftKey) {
           this.quill.setSelection(

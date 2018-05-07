@@ -1,7 +1,7 @@
-import Parchment from 'parchment';
+import Parchment, { EmbedBlot } from 'parchment';
 import TextBlot from './text';
 
-class Cursor extends Parchment.Embed {
+class Cursor extends EmbedBlot {
   static value() {
     return undefined;
   }

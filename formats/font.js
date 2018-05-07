@@ -1,13 +1,13 @@
-import Parchment from 'parchment';
+import Parchment, { ClassAttributor, StyleAttributor } from 'parchment';
 
 const config = {
   scope: Parchment.Scope.INLINE,
   whitelist: ['serif', 'monospace'],
 };
 
-const FontClass = new Parchment.Attributor.Class('font', 'ql-font', config);
+const FontClass = new ClassAttributor('font', 'ql-font', config);
 
-class FontStyleAttributor extends Parchment.Attributor.Style {
+class FontStyleAttributor extends StyleAttributor {
   value(node) {
     return super.value(node).replace(/["']/g, '');
   }

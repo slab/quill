@@ -1,9 +1,9 @@
-import Parchment from 'parchment';
+import { EmbedBlot } from 'parchment';
 import { sanitize } from '../formats/link';
 
 const ATTRIBUTES = ['alt', 'height', 'width'];
 
-class Image extends Parchment.Embed {
+class Image extends EmbedBlot {
   static create(value) {
     const node = super.create(value);
     if (typeof value === 'string') {

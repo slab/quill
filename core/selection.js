@@ -1,4 +1,4 @@
-import Parchment from 'parchment';
+import Parchment, { LeafBlot, ContainerBlot } from 'parchment';
 import clone from 'clone';
 import equal from 'deep-equal';
 import Emitter from './emitter';
@@ -111,7 +111,7 @@ class Selection {
       const blot = Parchment.find(nativeRange.start.node, false);
       if (blot == null) return;
       // TODO Give blot ability to not split
-      if (blot instanceof Parchment.Leaf) {
+      if (blot instanceof LeafBlot) {
         const after = blot.split(nativeRange.start.offset);
         blot.parent.insertBefore(this.cursor, after);
       } else {
@@ -203,7 +203,7 @@ class Selection {
       const index = blot.offset(this.scroll);
       if (offset === 0) {
         return index;
-      } else if (blot instanceof Parchment.Container) {
+      } else if (blot instanceof ContainerBlot) {
         return index + blot.length();
       }
       return index + blot.index(node, offset);

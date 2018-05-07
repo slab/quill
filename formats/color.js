@@ -1,6 +1,6 @@
-import Parchment from 'parchment';
+import Parchment, { ClassAttributor, StyleAttributor } from 'parchment';
 
-class ColorAttributor extends Parchment.Attributor.Style {
+class ColorAttributor extends StyleAttributor {
   value(domNode) {
     let value = super.value(domNode);
     if (!value.startsWith('rgb(')) return value;
@@ -13,7 +13,7 @@ class ColorAttributor extends Parchment.Attributor.Style {
   }
 }
 
-const ColorClass = new Parchment.Attributor.Class('color', 'ql-color', {
+const ColorClass = new ClassAttributor('color', 'ql-color', {
   scope: Parchment.Scope.INLINE,
 });
 const ColorStyle = new ColorAttributor('color', 'color', {

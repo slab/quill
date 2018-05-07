@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import Parchment from 'parchment';
+import Parchment, { EmbedBlot } from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
@@ -93,7 +93,7 @@ class Toolbar extends Module {
       const [range] = this.quill.selection.getRange();
       if (this.handlers[format] != null) {
         this.handlers[format].call(this, value);
-      } else if (Parchment.query(format).prototype instanceof Parchment.Embed) {
+      } else if (Parchment.query(format).prototype instanceof EmbedBlot) {
         value = prompt(`Enter ${format}`); // eslint-disable-line no-alert
         if (!value) return;
         this.quill.updateContents(

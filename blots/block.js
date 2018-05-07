@@ -1,13 +1,18 @@
 import extend from 'extend';
 import Delta from 'quill-delta';
-import Parchment from 'parchment';
+import Parchment, {
+  AttributorStore,
+  BlockBlot,
+  EmbedBlot,
+  LeafBlot,
+} from 'parchment';
 import Break from './break';
 import Inline from './inline';
 import TextBlot from './text';
 
 const NEWLINE_LENGTH = 1;
 
-class Block extends Parchment.Block {
+class Block extends BlockBlot {
   constructor(domNode) {
     super(domNode);
     this.cache = {};
@@ -15,7 +20,7 @@ class Block extends Parchment.Block {
 
   delta() {
     if (this.cache.delta == null) {
-      this.cache.delta = this.descendants(Parchment.Leaf)
+      this.cache.delta = this.descendants(LeafBlot)
         .reduce((delta, leaf) => {
           if (leaf.length() === 0) {
             return delta;
@@ -126,12 +131,12 @@ class Block extends Parchment.Block {
 Block.blotName = 'block';
 Block.tagName = 'P';
 Block.defaultChild = Break;
-Block.allowedChildren = [Break, Inline, Parchment.Embed, TextBlot];
+Block.allowedChildren = [Break, Inline, EmbedBlot, TextBlot];
 
-class BlockEmbed extends Parchment.Embed {
+class BlockEmbed extends EmbedBlot {
   attach() {
     super.attach();
-    this.attributes = new Parchment.Attributor.Store(this.domNode);
+    this.attributes = new AttributorStore(this.domNode);
   }
 
   delta() {

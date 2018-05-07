@@ -1,6 +1,6 @@
-import Parchment from 'parchment';
+import Parchment, { ClassAttributor } from 'parchment';
 
-class IndentAttributor extends Parchment.Attributor.Class {
+class IndentAttributor extends ClassAttributor {
   add(node, value) {
     if (value === '+1' || value === '-1') {
       const indent = this.value(node) || 0;
