@@ -168,7 +168,7 @@ quill.updateContents(new Delta()
   .delete(5)                  // 'World' is deleted
   .insert('Quill')
   .retain(1, { bold: true })  // Apply bold to exclamation mark
-});
+);
 // Editor should now be [
 //  { insert: 'Hello Quill' },
 //  { insert: '!', attributes: { bold: true} }
