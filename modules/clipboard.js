@@ -110,7 +110,18 @@ class Clipboard extends Module {
     let range = this.quill.getSelection();
     let delta = new Delta().retain(range.index);
     let scrollTop = this.quill.scrollingContainer.scrollTop;
-    this.container.focus();
+
+    if (
+      /Firefox/i.test(navigator.userAgent) &&
+      e.clipboardData &&
+      e.clipboardData.getData('text/html')
+    ) {
+      e.preventDefault();
+      this.container.innerHTML = e.clipboardData.getData('text/html');
+    } else {
+      this.container.focus();
+    }
+
     this.quill.selection.update(Quill.sources.SILENT);
     setTimeout(() => {
       delta = delta.concat(this.convert()).delete(range.length);
