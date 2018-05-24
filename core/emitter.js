@@ -3,25 +3,32 @@ import logger from './logger';
 
 let debug = logger('quill:events');
 
-const EVENTS = ['selectionchange', 'mousedown', 'mouseup', 'click'];
+const EVENTS = [ 'selectionchange', 'mousedown', 'mouseup', 'click' ];
 
-EVENTS.forEach(function(eventName) {
-  document.addEventListener(eventName, (...args) => {
-    [].slice.call(document.querySelectorAll('.ql-container')).forEach((node) => {
-      // TODO use WeakMap
-      if (node.__quill && node.__quill.emitter) {
-        node.__quill.emitter.handleDOM(...args);
-      }
-    });
+const setGlobalListeners = (emitter, doc) => {
+  return EVENTS.reduce((acc, eventName) => {
+    const handler = (...args) => emitter.handleDOM(...args);
+
+    // set the listener on the correctly scoped document. This allows callers to pass the correct document to the emitter b/c document can be window.document or shadowRoot
+    // In addition, this fixes a hack where the quill instance was being stored in the DOM instead of closure scope.
+    doc.addEventListener(eventName, handler);
+
+    return acc.concat({ eventName, doc, handler });
   });
-});
+};
 
 
 class Emitter extends EventEmitter {
-  constructor() {
+  constructor({ document = window.document }) {
     super();
     this.listeners = {};
     this.on('error', debug.error);
+    this.document = document;
+    this.globalListeners = setGlobalListeners(this, document);
+  }
+
+  destroy() {
+    this.globalListeners.forEach(({ eventName, doc, handler }) => doc.removeEventListener(eventName, handler));
   }
 
   emit() {

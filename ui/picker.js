@@ -9,6 +9,9 @@ function toggleAriaAttribute(element, attribute) {
 
 class Picker {
   constructor(select) {
+    const document = select.ownerDocument;
+    this.document = document;
+
     this.select = select;
     this.container = document.createElement('span');
     this.buildPicker();
@@ -44,6 +47,8 @@ class Picker {
   }
 
   buildItem(option) {
+    const document = this.document;
+
     let item = document.createElement('span');
     item.tabIndex = '0';
     item.setAttribute('role', 'button');
@@ -79,6 +84,8 @@ class Picker {
   }
 
   buildLabel() {
+    const document = this.document;
+
     let label = document.createElement('span');
     label.classList.add('ql-picker-label');
     label.innerHTML = DropdownIcon;
@@ -90,6 +97,8 @@ class Picker {
   }
 
   buildOptions() {
+    const document = this.document;
+
     let options = document.createElement('span');
     options.classList.add('ql-picker-options');
 
@@ -138,6 +147,8 @@ class Picker {
   }
 
   selectItem(item, trigger = false) {
+    const document = this.document;
+
     let selected = this.container.querySelector('.ql-selected');
     if (item === selected) return;
     if (selected != null) {

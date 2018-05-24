@@ -1,5 +1,7 @@
 class Tooltip {
   constructor(quill, boundsContainer) {
+    const document = quill.document;
+
     this.quill = quill;
     this.boundsContainer = boundsContainer || document.body;
     this.root = quill.addContainer('ql-tooltip');

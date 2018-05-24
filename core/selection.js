@@ -17,6 +17,8 @@ class Range {
 
 class Selection {
   constructor(scroll, emitter) {
+    this.document = emitter.document;
+
     this.emitter = emitter;
     this.scroll = scroll;
     this.composing = false;
@@ -75,6 +77,8 @@ class Selection {
   }
 
   handleDragging() {
+    const document = this.document;
+
     this.emitter.listenDOM('mousedown', document.body, () => {
       this.mouseDown = true;
     });
@@ -114,6 +118,8 @@ class Selection {
   }
 
   getBounds(index, length = 0) {
+    const document = this.document;
+
     let scrollLength = this.scroll.length();
     index = Math.min(index, scrollLength - 1);
     length = Math.min(index + length, scrollLength - 1) - index;
@@ -157,6 +163,8 @@ class Selection {
   }
 
   getNativeRange() {
+    const document = this.document;
+
     let selection = document.getSelection();
     if (selection == null || selection.rangeCount <= 0) return null;
     let nativeRange = selection.getRangeAt(0);
@@ -174,6 +182,8 @@ class Selection {
   }
 
   hasFocus() {
+    const document = this.document;
+
     return document.activeElement === this.root;
   }
 
@@ -265,6 +275,9 @@ class Selection {
 
   setNativeRange(startNode, startOffset, endNode = startNode, endOffset = startOffset, force = false) {
     debug.info('setNativeRange', startNode, startOffset, endNode, endOffset);
+
+    const document = this.document;
+
     if (startNode != null && (this.root.parentNode == null || startNode.parentNode == null || endNode.parentNode == null)) {
       return;
     }
