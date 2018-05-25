@@ -58,9 +58,11 @@ class Quill {
 
   constructor(container, options = {}) {
     const document = options.document || window.document;
-    this.document = document;
+    const selectionRoot = options.selectionRoot || document;
 
-    this.options = expandConfig(container, options, document);
+    this.document = document;
+    this.selectionRoot = selectionRoot;
+    this.options = expandConfig(container, options, selectionRoot);
     this.container = this.options.container;
     if (this.container == null) {
       return debug.error('Invalid Quill container', container);
@@ -76,7 +78,7 @@ class Quill {
     this.root.classList.add('ql-blank');
     this.root.setAttribute('data-gramm', false);
     this.scrollingContainer = this.options.scrollingContainer || this.root;
-    this.emitter = new Emitter({ document });
+    this.emitter = new Emitter({ selectionRoot });
     this.scroll = Parchment.create(this.root, {
       emitter: this.emitter,
       whitelist: this.options.formats
@@ -373,7 +375,7 @@ Quill.imports = {
 };
 
 
-function expandConfig(container, userConfig, document) {
+function expandConfig(container, userConfig, selectionRoot) {
 
   userConfig = extend(true, {
     container: container,
@@ -420,7 +422,7 @@ function expandConfig(container, userConfig, document) {
   userConfig = extend(true, {}, Quill.DEFAULTS, { modules: moduleConfig }, themeConfig, userConfig);
   ['bounds', 'container', 'scrollingContainer'].forEach(function(key) {
     if (typeof userConfig[key] === 'string') {
-      userConfig[key] = document.querySelector(userConfig[key]);
+      userConfig[key] = selectionRoot.querySelector(userConfig[key]);
     }
   });
   userConfig.modules = Object.keys(userConfig.modules).reduce(function(config, name) {

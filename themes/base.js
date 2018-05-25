@@ -29,11 +29,11 @@ const SIZES = [ 'small', false, 'large', 'huge' ];
 class BaseTheme extends Theme {
   constructor(quill, options) {
     super(quill, options);
-    const document = quill.document;
+    const selectionRoot = quill.selectionRoot;
 
     let listener = (e) => {
-      if (!document.body.contains(quill.root)) {
-        return document.body.removeEventListener('click', listener);
+      if (!selectionRoot.contains(quill.root)) {
+        return selectionRoot.removeEventListener('click', listener);
       }
       if (this.tooltip != null && !this.tooltip.root.contains(e.target) &&
           document.activeElement !== this.tooltip.textbox && !this.quill.hasFocus()) {
@@ -47,7 +47,7 @@ class BaseTheme extends Theme {
         });
       }
     };
-    quill.emitter.listenDOM('click', document.body, listener);
+    quill.emitter.listenDOM('click', selectionRoot, listener);
   }
 
   addModule(name) {

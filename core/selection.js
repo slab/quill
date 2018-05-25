@@ -14,10 +14,20 @@ class Range {
   }
 }
 
+const resolveSelectionRoot = (selectionRoot) => {
+  if (selectionRoot && typeof selectionRoot.getSelection === 'function' && !selectionRoot.isShady) {
+    return selectionRoot;
+  } else if (selectionRoot) {
+    return selectionRoot.ownerDocument || window.document;
+  }
+
+  return window.document;
+}
 
 class Selection {
   constructor(scroll, emitter) {
-    this.document = emitter.document;
+    const selectionRoot = resolveSelectionRoot(emitter.selectionRoot);
+    this.selectionRoot = selectionRoot;
 
     this.emitter = emitter;
     this.scroll = scroll;
@@ -29,7 +39,7 @@ class Selection {
     this.lastRange = this.savedRange = new Range(0, 0);
     this.handleComposition();
     this.handleDragging();
-    this.emitter.listenDOM('selectionchange', document, () => {
+    this.emitter.listenDOM('selectionchange', selectionRoot, () => {
       if (!this.mouseDown) {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
       }
@@ -77,12 +87,12 @@ class Selection {
   }
 
   handleDragging() {
-    const document = this.document;
+    const selectionRoot = this.selectionRoot;
 
-    this.emitter.listenDOM('mousedown', document.body, () => {
+    this.emitter.listenDOM('mousedown', selectionRoot, () => {
       this.mouseDown = true;
     });
-    this.emitter.listenDOM('mouseup', document.body, () => {
+    this.emitter.listenDOM('mouseup', selectionRoot, () => {
       this.mouseDown = false;
       this.update(Emitter.sources.USER);
     });
@@ -118,7 +128,8 @@ class Selection {
   }
 
   getBounds(index, length = 0) {
-    const document = this.document;
+    const selectionRoot = this.selectionRoot;
+    const document = selectionRoot.ownerDocument || selectionRoot;
 
     let scrollLength = this.scroll.length();
     index = Math.min(index, scrollLength - 1);
@@ -163,9 +174,9 @@ class Selection {
   }
 
   getNativeRange() {
-    const document = this.document;
+    const selectionRoot = this.selectionRoot;
 
-    let selection = document.getSelection();
+    let selection = selectionRoot.getSelection();
     if (selection == null || selection.rangeCount <= 0) return null;
     let nativeRange = selection.getRangeAt(0);
     if (nativeRange == null) return null;
@@ -182,9 +193,9 @@ class Selection {
   }
 
   hasFocus() {
-    const document = this.document;
+    const selectionRoot = this.selectionRoot;
 
-    return document.activeElement === this.root;
+    return selectionRoot.activeElement === this.root;
   }
 
   normalizedToRange(range) {
@@ -276,12 +287,13 @@ class Selection {
   setNativeRange(startNode, startOffset, endNode = startNode, endOffset = startOffset, force = false) {
     debug.info('setNativeRange', startNode, startOffset, endNode, endOffset);
 
-    const document = this.document;
+    const selectionRoot = this.selectionRoot;
+    const document = selectionRoot.ownerDocument || selectionRoot;
 
     if (startNode != null && (this.root.parentNode == null || startNode.parentNode == null || endNode.parentNode == null)) {
       return;
     }
-    let selection = document.getSelection();
+    let selection = selectionRoot.getSelection();
     if (selection == null) return;
     if (startNode != null) {
       if (!this.hasFocus()) this.root.focus();
