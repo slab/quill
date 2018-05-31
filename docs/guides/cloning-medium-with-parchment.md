@@ -257,9 +257,7 @@ Note if you open your console and call [`getContents`](/docs/api/#getcontents), 
 {
   ops: [{
     insert: {
-      video: {
-        src: 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0'
-      }
+      video: 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0'
     },
     attributes: {
       height: '170',
