@@ -1,9 +1,10 @@
 import extend from 'extend';
 import Delta from 'quill-delta';
-import Parchment, {
+import {
   Attributor,
   ClassAttributor,
   EmbedBlot,
+  Scope,
   StyleAttributor,
 } from 'parchment';
 import Quill from '../core/quill';
@@ -92,6 +93,7 @@ class Clipboard extends Module {
     const nodeMatches = new WeakMap();
     const [elementMatchers, textMatchers] = this.prepareMatching(nodeMatches);
     let delta = traverse(
+      this.quill.scroll,
       this.container,
       elementMatchers,
       textMatchers,
@@ -255,15 +257,16 @@ function isLine(node) {
   return ['block', 'list-item', 'table-cell'].indexOf(style.display) > -1;
 }
 
-function traverse(node, elementMatchers, textMatchers, nodeMatches) {
+function traverse(scroll, node, elementMatchers, textMatchers, nodeMatches) {
   // Post-order
   if (node.nodeType === node.TEXT_NODE) {
     return textMatchers.reduce((delta, matcher) => {
-      return matcher(node, delta);
+      return matcher(node, delta, scroll);
     }, new Delta());
   } else if (node.nodeType === node.ELEMENT_NODE) {
     return Array.from(node.childNodes || []).reduce((delta, childNode) => {
       let childrenDelta = traverse(
+        scroll,
         childNode,
         elementMatchers,
         textMatchers,
@@ -271,11 +274,11 @@ function traverse(node, elementMatchers, textMatchers, nodeMatches) {
       );
       if (childNode.nodeType === node.ELEMENT_NODE) {
         childrenDelta = elementMatchers.reduce((reducedDelta, matcher) => {
-          return matcher(childNode, reducedDelta);
+          return matcher(childNode, reducedDelta, scroll);
         }, childrenDelta);
         childrenDelta = (nodeMatches.get(childNode) || []).reduce(
           (reducedDelta, matcher) => {
-            return matcher(childNode, reducedDelta);
+            return matcher(childNode, reducedDelta, scroll);
           },
           childrenDelta,
         );
@@ -290,7 +293,7 @@ function matchAlias(format, node, delta) {
   return applyFormat(delta, format, true);
 }
 
-function matchAttributor(node, delta) {
+function matchAttributor(node, delta, scroll) {
   const attributes = Attributor.keys(node);
   const classes = ClassAttributor.keys(node);
   const styles = StyleAttributor.keys(node);
@@ -299,7 +302,7 @@ function matchAttributor(node, delta) {
     .concat(classes)
     .concat(styles)
     .forEach(name => {
-      let attr = Parchment.query(name, Parchment.Scope.ATTRIBUTE);
+      let attr = scroll.query(name, Scope.ATTRIBUTE);
       if (attr != null) {
         formats[attr.attrName] = attr.value(node);
         if (formats[attr.attrName]) return;
@@ -320,18 +323,18 @@ function matchAttributor(node, delta) {
   return delta;
 }
 
-function matchBlot(node, delta) {
-  const match = Parchment.query(node);
+function matchBlot(node, delta, scroll) {
+  const match = scroll.query(node);
   if (match == null) return delta;
   if (match.prototype instanceof EmbedBlot) {
     const embed = {};
     const value = match.value(node);
     if (value != null) {
       embed[match.blotName] = value;
-      return new Delta().insert(embed, match.formats(node));
+      return new Delta().insert(embed, match.formats(node, scroll));
     }
   } else if (typeof match.formats === 'function') {
-    return applyFormat(delta, match.blotName, match.formats(node));
+    return applyFormat(delta, match.blotName, match.formats(node, scroll));
   }
   return delta;
 }
@@ -352,8 +355,8 @@ function matchIgnore() {
   return new Delta();
 }
 
-function matchIndent(node, delta) {
-  const match = Parchment.query(node);
+function matchIndent(node, delta, scroll) {
+  const match = scroll.query(node);
   if (
     match == null ||
     match.blotName !== 'list' ||
@@ -364,7 +367,7 @@ function matchIndent(node, delta) {
   let indent = -1;
   let parent = node.parentNode;
   while (!parent.classList.contains('ql-clipboard')) {
-    if ((Parchment.query(parent) || {}).blotName === 'list-container') {
+    if ((scroll.query(parent) || {}).blotName === 'list-container') {
       indent += 1;
     }
     parent = parent.parentNode;

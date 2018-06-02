@@ -21,11 +21,11 @@ class ListItem extends Block {
     Quill.register(ListContainer);
   }
 
-  constructor(domNode) {
-    super(domNode);
+  constructor(scroll, domNode) {
+    super(scroll, domNode);
     const listEventHandler = e => {
       if (e.target !== domNode) return;
-      const format = this.statics.formats(domNode);
+      const format = this.statics.formats(domNode, scroll);
       if (format === 'checked') {
         this.format('list', 'unchecked');
       } else if (format === 'unchecked') {

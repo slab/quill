@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import Parchment from 'parchment';
+import * as Parchment from 'parchment';
 import extend from 'extend';
 import Editor from './editor';
 import Emitter from './emitter';
@@ -11,6 +11,8 @@ import Theme from './theme';
 
 const debug = logger('quill');
 
+const globalRegistry = new Parchment.Registry();
+
 class Quill {
   static debug(limit) {
     if (limit === true) {
@@ -20,7 +22,7 @@ class Quill {
   }
 
   static find(node) {
-    return instances.get(node) || Parchment.find(node);
+    return instances.get(node) || globalRegistry.find(node);
   }
 
   static import(name) {
@@ -50,10 +52,10 @@ class Quill {
         (path.startsWith('blots/') || path.startsWith('formats/')) &&
         target.blotName !== 'abstract'
       ) {
-        Parchment.register(target);
+        globalRegistry.register(target);
       }
       if (typeof target.register === 'function') {
-        target.register();
+        target.register(globalRegistry);
       }
     }
   }
@@ -79,9 +81,11 @@ class Quill {
     this.root.setAttribute('data-gramm', false);
     this.scrollingContainer = this.options.scrollingContainer || this.root;
     this.emitter = new Emitter();
-    this.scroll = Parchment.create(this.root, {
+    const ScrollBlot = this.options.registry.query(
+      Parchment.ScrollBlot.blotName,
+    );
+    this.scroll = new ScrollBlot(this.options.registry, this.root, {
       emitter: this.emitter,
-      whitelist: this.options.formats,
     });
     this.editor = new Editor(this.scroll);
     this.selection = new Selection(this.scroll, this.emitter);
@@ -169,7 +173,7 @@ class Quill {
         let change = new Delta();
         if (range == null) {
           return change;
-        } else if (Parchment.query(name, Parchment.Scope.BLOCK)) {
+        } else if (this.scroll.query(name, Parchment.Scope.BLOCK)) {
           change = this.editor.formatLine(range.index, range.length, {
             [name]: value,
           });
@@ -420,10 +424,10 @@ class Quill {
 }
 Quill.DEFAULTS = {
   bounds: null,
-  formats: null,
   modules: {},
   placeholder: '',
   readOnly: false,
+  registry: globalRegistry,
   scrollingContainer: null,
   theme: 'default',
 };
@@ -608,4 +612,4 @@ function shiftRange(range, index, length, source) {
   return new Range(start, end - start);
 }
 
-export { expandConfig, overload, Quill as default };
+export { globalRegistry, expandConfig, overload, Quill as default };

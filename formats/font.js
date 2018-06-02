@@ -1,7 +1,7 @@
-import Parchment, { ClassAttributor, StyleAttributor } from 'parchment';
+import { ClassAttributor, Scope, StyleAttributor } from 'parchment';
 
 const config = {
-  scope: Parchment.Scope.INLINE,
+  scope: Scope.INLINE,
   whitelist: ['serif', 'monospace'],
 };
 

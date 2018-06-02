@@ -1,4 +1,4 @@
-import Parchment, { ClassAttributor, StyleAttributor } from 'parchment';
+import { ClassAttributor, Scope, StyleAttributor } from 'parchment';
 
 class ColorAttributor extends StyleAttributor {
   value(domNode) {
@@ -14,10 +14,10 @@ class ColorAttributor extends StyleAttributor {
 }
 
 const ColorClass = new ClassAttributor('color', 'ql-color', {
-  scope: Parchment.Scope.INLINE,
+  scope: Scope.INLINE,
 });
 const ColorStyle = new ColorAttributor('color', 'color', {
-  scope: Parchment.Scope.INLINE,
+  scope: Scope.INLINE,
 });
 
 export { ColorAttributor, ColorClass, ColorStyle };

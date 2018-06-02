@@ -1,4 +1,4 @@
-import Parchment, { LeafBlot, ContainerBlot } from 'parchment';
+import { ContainerBlot, LeafBlot, Scope } from 'parchment';
 import clone from 'clone';
 import equal from 'deep-equal';
 import Emitter from './emitter';
@@ -20,7 +20,7 @@ class Selection {
     this.composing = false;
     this.mouseDown = false;
     this.root = this.scroll.domNode;
-    this.cursor = Parchment.create('cursor', this);
+    this.cursor = this.scroll.create('cursor', this);
     // savedRange is last non-null range
     this.savedRange = new Range(0, 0);
     this.lastRange = this.savedRange;
@@ -98,17 +98,16 @@ class Selection {
   }
 
   format(format, value) {
-    if (this.scroll.whitelist != null && !this.scroll.whitelist[format]) return;
     this.scroll.update();
     const nativeRange = this.getNativeRange();
     if (
       nativeRange == null ||
       !nativeRange.native.collapsed ||
-      Parchment.query(format, Parchment.Scope.BLOCK)
+      this.scroll.query(format, Scope.BLOCK)
     )
       return;
     if (nativeRange.start.node !== this.cursor.textNode) {
-      const blot = Parchment.find(nativeRange.start.node, false);
+      const blot = this.scroll.find(nativeRange.start.node, false);
       if (blot == null) return;
       // TODO Give blot ability to not split
       if (blot instanceof LeafBlot) {
@@ -199,7 +198,7 @@ class Selection {
     }
     const indexes = positions.map(position => {
       const [node, offset] = position;
-      const blot = Parchment.find(node, true);
+      const blot = this.scroll.find(node, true);
       const index = blot.offset(this.scroll);
       if (offset === 0) {
         return index;

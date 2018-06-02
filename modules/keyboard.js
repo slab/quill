@@ -3,7 +3,7 @@ import equal from 'deep-equal';
 import extend from 'extend';
 import Delta from 'quill-delta';
 import DeltaOp from 'quill-delta/lib/op';
-import Parchment, { EmbedBlot, TextBlot } from 'parchment';
+import { EmbedBlot, Scope, TextBlot } from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
@@ -28,13 +28,6 @@ class Keyboard extends Module {
     super(quill, options);
     this.bindings = {};
     Object.keys(this.options.bindings).forEach(name => {
-      if (
-        name === 'list autofill' &&
-        quill.scroll.whitelist != null &&
-        !quill.scroll.whitelist.list
-      ) {
-        return;
-      }
       if (this.options.bindings[name]) {
         this.addBinding(this.options.bindings[name]);
       }
@@ -313,6 +306,7 @@ Keyboard.DEFAULTS = {
       format: { list: false },
       prefix: /^\s*?(\d+\.|-|\*|\[ ?\]|\[x\])$/,
       handler(range, context) {
+        if (this.quill.scroll.query('list') == null) return true;
         const { length } = context.prefix;
         const [line, offset] = this.quill.getLine(range.index);
         if (offset > length) return true;
@@ -461,7 +455,7 @@ function handleEnter(range, context) {
   }
   const lineFormats = Object.keys(context.format).reduce((formats, format) => {
     if (
-      Parchment.query(format, Parchment.Scope.BLOCK) &&
+      this.quill.scroll.query(format, Scope.BLOCK) &&
       !Array.isArray(context.format[format])
     ) {
       formats[format] = context.format[format];
@@ -487,7 +481,7 @@ function makeCodeBlockHandler(indent) {
     shiftKey: !indent,
     format: { 'code-block': true },
     handler(range) {
-      const CodeBlock = Parchment.query('code-block');
+      const CodeBlock = this.quill.scroll.query('code-block');
       const lines =
         range.length === 0
           ? this.quill.getLines(range.index, 1)

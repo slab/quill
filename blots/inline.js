@@ -1,4 +1,4 @@
-import Parchment, { EmbedBlot, InlineBlot } from 'parchment';
+import { EmbedBlot, InlineBlot, Scope } from 'parchment';
 import Break from './break';
 import Text from './text';
 
@@ -19,7 +19,7 @@ class Inline extends InlineBlot {
   formatAt(index, length, name, value) {
     if (
       Inline.compare(this.statics.blotName, name) < 0 &&
-      Parchment.query(name, Parchment.Scope.BLOT)
+      this.scroll.query(name, Scope.BLOT)
     ) {
       const blot = this.isolate(index, length);
       if (value) {

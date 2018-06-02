@@ -1,11 +1,11 @@
-import Parchment, { ClassAttributor } from 'parchment';
+import { ClassAttributor, Scope } from 'parchment';
 import { ColorAttributor } from './color';
 
 const BackgroundClass = new ClassAttributor('background', 'ql-bg', {
-  scope: Parchment.Scope.INLINE,
+  scope: Scope.INLINE,
 });
 const BackgroundStyle = new ColorAttributor('background', 'background-color', {
-  scope: Parchment.Scope.INLINE,
+  scope: Scope.INLINE,
 });
 
 export { BackgroundClass, BackgroundStyle };

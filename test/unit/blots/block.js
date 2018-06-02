@@ -1,15 +1,16 @@
-import Parchment from 'parchment';
 import Scroll from '../../../blots/scroll';
 
 describe('Block', function() {
   it('childless', function() {
-    const block = Parchment.create('block');
+    const scroll = this.initialize(Scroll, '');
+    const block = scroll.create('block');
     block.optimize();
     expect(block.domNode).toEqualHTML('<br>');
   });
 
   it('insert into empty', function() {
-    const block = Parchment.create('block');
+    const scroll = this.initialize(Scroll, '');
+    const block = scroll.create('block');
     block.insertAt(0, 'Test');
     expect(block.domNode).toEqualHTML('Test');
   });

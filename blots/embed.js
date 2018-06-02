@@ -1,11 +1,11 @@
-import Parchment, { EmbedBlot } from 'parchment';
+import { EmbedBlot } from 'parchment';
 import TextBlot from './text';
 
 const GUARD_TEXT = '\uFEFF';
 
 class Embed extends EmbedBlot {
-  constructor(node) {
-    super(node);
+  constructor(scroll, node) {
+    super(scroll, node);
     this.contentNode = document.createElement('span');
     this.contentNode.setAttribute('contenteditable', false);
     Array.from(this.domNode.childNodes).forEach(childNode => {
@@ -38,7 +38,7 @@ class Embed extends EmbedBlot {
         };
       } else {
         textNode = document.createTextNode(text);
-        this.parent.insertBefore(Parchment.create(textNode), this);
+        this.parent.insertBefore(this.scroll.create(textNode), this);
         range = {
           startNode: textNode,
           startOffset: text.length,
@@ -53,7 +53,7 @@ class Embed extends EmbedBlot {
         };
       } else {
         textNode = document.createTextNode(text);
-        this.parent.insertBefore(Parchment.create(textNode), this.next);
+        this.parent.insertBefore(this.scroll.create(textNode), this.next);
         range = {
           startNode: textNode,
           startOffset: text.length,

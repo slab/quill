@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import Parchment, { EmbedBlot } from 'parchment';
+import { EmbedBlot, Scope } from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
@@ -57,18 +57,12 @@ class Toolbar extends Module {
     if (input.tagName === 'BUTTON') {
       input.setAttribute('type', 'button');
     }
-    if (this.handlers[format] == null) {
-      if (
-        this.quill.scroll.whitelist != null &&
-        this.quill.scroll.whitelist[format] == null
-      ) {
-        debug.warn('ignoring attaching to disabled format', format, input);
-        return;
-      }
-      if (Parchment.query(format) == null) {
-        debug.warn('ignoring attaching to nonexistent format', format, input);
-        return;
-      }
+    if (
+      this.handlers[format] == null &&
+      this.quill.scroll.query(format) == null
+    ) {
+      debug.warn('ignoring attaching to nonexistent format', format, input);
+      return;
     }
     const eventName = input.tagName === 'SELECT' ? 'change' : 'click';
     input.addEventListener(eventName, e => {
@@ -93,7 +87,9 @@ class Toolbar extends Module {
       const [range] = this.quill.selection.getRange();
       if (this.handlers[format] != null) {
         this.handlers[format].call(this, value);
-      } else if (Parchment.query(format).prototype instanceof EmbedBlot) {
+      } else if (
+        this.quill.scroll.query(format).prototype instanceof EmbedBlot
+      ) {
         value = prompt(`Enter ${format}`); // eslint-disable-line no-alert
         if (!value) return;
         this.quill.updateContents(
@@ -212,7 +208,7 @@ Toolbar.DEFAULTS = {
         const formats = this.quill.getFormat();
         Object.keys(formats).forEach(name => {
           // Clean functionality in existing apps only clean inline formats
-          if (Parchment.query(name, Parchment.Scope.INLINE) != null) {
+          if (this.quill.scroll.query(name, Scope.INLINE) != null) {
             this.quill.format(name, false, Quill.sources.USER);
           }
         });

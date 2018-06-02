@@ -1,4 +1,4 @@
-import Parchment, { ClassAttributor } from 'parchment';
+import { ClassAttributor, Scope } from 'parchment';
 
 class IndentAttributor extends ClassAttributor {
   add(node, value) {
@@ -23,7 +23,7 @@ class IndentAttributor extends ClassAttributor {
 }
 
 const IndentClass = new IndentAttributor('indent', 'ql-indent', {
-  scope: Parchment.Scope.BLOCK,
+  scope: Scope.BLOCK,
   whitelist: [1, 2, 3, 4, 5, 6, 7, 8],
 });
 

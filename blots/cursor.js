@@ -1,4 +1,4 @@
-import Parchment, { EmbedBlot } from 'parchment';
+import { EmbedBlot, Scope } from 'parchment';
 import TextBlot from './text';
 
 class Cursor extends EmbedBlot {
@@ -6,8 +6,8 @@ class Cursor extends EmbedBlot {
     return undefined;
   }
 
-  constructor(domNode, selection) {
-    super(domNode);
+  constructor(scroll, domNode, selection) {
+    super(scroll, domNode);
     this.selection = selection;
     this.textNode = document.createTextNode(Cursor.CONTENTS);
     this.domNode.appendChild(this.textNode);
@@ -26,10 +26,7 @@ class Cursor extends EmbedBlot {
     }
     let target = this;
     let index = 0;
-    while (
-      target != null &&
-      target.statics.scope !== Parchment.Scope.BLOCK_BLOT
-    ) {
+    while (target != null && target.statics.scope !== Scope.BLOCK_BLOT) {
       index += target.offset(target.parent);
       target = target.parent;
     }
@@ -94,7 +91,7 @@ class Cursor extends EmbedBlot {
         this.textNode.data = Cursor.CONTENTS;
       } else {
         this.textNode.data = text;
-        this.parent.insertBefore(Parchment.create(this.textNode), this);
+        this.parent.insertBefore(this.scroll.create(this.textNode), this);
         this.textNode = document.createTextNode(Cursor.CONTENTS);
         this.domNode.appendChild(this.textNode);
       }

@@ -3,7 +3,7 @@ import equal from 'deep-equal';
 import extend from 'extend';
 import Delta from 'quill-delta';
 import DeltaOp from 'quill-delta/lib/op';
-import Parchment, { LeafBlot } from 'parchment';
+import { LeafBlot } from 'parchment';
 import CursorBlot from '../blots/cursor';
 import Block, { bubbleFormats } from '../blots/block';
 import Break from '../blots/break';
@@ -75,8 +75,6 @@ class Editor {
   formatLine(index, length, formats = {}) {
     this.scroll.update();
     Object.keys(formats).forEach(format => {
-      if (this.scroll.whitelist != null && !this.scroll.whitelist[format])
-        return;
       this.scroll.lines(index, Math.max(length, 1)).forEach(line => {
         line.format(format, formats[format]);
       });
@@ -187,10 +185,10 @@ class Editor {
       mutations.length === 1 &&
       mutations[0].type === 'characterData' &&
       mutations[0].target.data.match(ASCII) &&
-      Parchment.find(mutations[0].target)
+      this.scroll.find(mutations[0].target)
     ) {
       // Optimization for character changes
-      const textBlot = Parchment.find(mutations[0].target);
+      const textBlot = this.scroll.find(mutations[0].target);
       const formats = bubbleFormats(textBlot);
       const index = textBlot.offset(this.scroll);
       const oldValue = mutations[0].oldValue.replace(CursorBlot.CONTENTS, '');

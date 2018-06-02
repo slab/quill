@@ -1,10 +1,11 @@
 import extend from 'extend';
 import Delta from 'quill-delta';
-import Parchment, {
+import {
   AttributorStore,
   BlockBlot,
   EmbedBlot,
   LeafBlot,
+  Scope,
 } from 'parchment';
 import Break from './break';
 import Inline from './inline';
@@ -13,8 +14,8 @@ import TextBlot from './text';
 const NEWLINE_LENGTH = 1;
 
 class Block extends BlockBlot {
-  constructor(domNode) {
-    super(domNode);
+  constructor(scroll, domNode) {
+    super(scroll, domNode);
     this.cache = {};
   }
 
@@ -39,7 +40,7 @@ class Block extends BlockBlot {
 
   formatAt(index, length, name, value) {
     if (length <= 0) return;
-    if (Parchment.query(name, Parchment.Scope.BLOCK)) {
+    if (this.scroll.query(name, Scope.BLOCK)) {
       if (index + length === this.length()) {
         this.format(name, value);
       }
@@ -147,7 +148,7 @@ class BlockEmbed extends EmbedBlot {
   }
 
   format(name, value) {
-    const attribute = Parchment.query(name, Parchment.Scope.BLOCK_ATTRIBUTE);
+    const attribute = this.scroll.query(name, Scope.BLOCK_ATTRIBUTE);
     if (attribute != null) {
       this.attributes.attribute(attribute, value);
     }
@@ -159,7 +160,7 @@ class BlockEmbed extends EmbedBlot {
 
   insertAt(index, value, def) {
     if (typeof value === 'string' && value.endsWith('\n')) {
-      const block = Parchment.create(Block.blotName);
+      const block = this.scroll.create(Block.blotName);
       this.parent.insertBefore(block, index === 0 ? this : this.next);
       block.insertAt(0, value.slice(0, -1));
     } else {
@@ -167,7 +168,7 @@ class BlockEmbed extends EmbedBlot {
     }
   }
 }
-BlockEmbed.scope = Parchment.Scope.BLOCK_BLOT;
+BlockEmbed.scope = Scope.BLOCK_BLOT;
 // It is important for cursor behavior BlockEmbeds use tags that are block level elements
 
 function bubbleFormats(blot, formats = {}) {

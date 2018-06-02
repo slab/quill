@@ -1,4 +1,3 @@
-import Parchment from 'parchment';
 import Emitter from '../../../core/emitter';
 import Selection, { Range } from '../../../core/selection';
 import Cursor from '../../../blots/cursor';
@@ -38,19 +37,6 @@ describe('Scroll', function() {
       );
       done();
     }, 1);
-  });
-
-  it('whitelist', function() {
-    const scroll = Parchment.create('scroll', {
-      emitter: new Emitter(),
-      whitelist: ['bold'],
-    });
-    scroll.insertAt(0, 'Hello World!');
-    scroll.formatAt(0, 5, 'bold', true);
-    scroll.formatAt(6, 5, 'italic', true);
-    expect(scroll.domNode.firstChild).toEqualHTML(
-      '<strong>Hello</strong> World!',
-    );
   });
 
   describe('leaf()', function() {

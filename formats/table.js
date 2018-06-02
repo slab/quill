@@ -1,4 +1,3 @@
-import Parchment from 'parchment';
 import Block from '../blots/block';
 import Container from '../blots/container';
 
@@ -84,7 +83,7 @@ class TableContainer extends Container {
         if (row.children.head != null) {
           value = TableCell.formats(row.children.head.domNode);
         }
-        const blot = Parchment.create(TableCell.blotName, value);
+        const blot = this.scroll.create(TableCell.blotName, value);
         row.appendChild(blot);
         blot.optimize(); // Add break blot
       });
@@ -107,7 +106,7 @@ class TableContainer extends Container {
     if (body == null || body.children.head == null) return;
     body.children.forEach(row => {
       const ref = row.children.at(index);
-      const cell = Parchment.create(TableCell.blotName);
+      const cell = this.scroll.create(TableCell.blotName);
       row.insertBefore(cell, ref);
     });
   }
@@ -115,9 +114,9 @@ class TableContainer extends Container {
   insertRow(index) {
     const [body] = this.descendant(TableBody);
     if (body == null || body.children.head == null) return;
-    const row = Parchment.create(TableRow.blotName);
+    const row = this.scroll.create(TableRow.blotName);
     body.children.head.children.forEach(() => {
-      const cell = Parchment.create(TableCell.blotName);
+      const cell = this.scroll.create(TableCell.blotName);
       row.appendChild(cell);
     });
     const ref = body.children.at(index);

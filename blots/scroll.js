@@ -1,4 +1,4 @@
-import Parchment, { ScrollBlot, ContainerBlot } from 'parchment';
+import { Scope, ScrollBlot, ContainerBlot } from 'parchment';
 import Emitter from '../core/emitter';
 import Block, { BlockEmbed } from './block';
 import Break from './break';
@@ -9,15 +9,9 @@ function isLine(blot) {
 }
 
 class Scroll extends ScrollBlot {
-  constructor(domNode, config) {
-    super(domNode);
-    this.emitter = config.emitter;
-    if (Array.isArray(config.whitelist)) {
-      this.whitelist = config.whitelist.reduce((whitelist, format) => {
-        whitelist[format] = true;
-        return whitelist;
-      }, {});
-    }
+  constructor(registry, domNode, { emitter }) {
+    super(registry, domNode);
+    this.emitter = emitter;
     // Some reason fixes composition issues with character languages in Windows/Chrome, Safari
     this.domNode.addEventListener('DOMNodeInserted', () => {});
     this.optimize();
@@ -63,19 +57,14 @@ class Scroll extends ScrollBlot {
   }
 
   formatAt(index, length, format, value) {
-    if (this.whitelist != null && !this.whitelist[format]) return;
     super.formatAt(index, length, format, value);
     this.optimize();
   }
 
   insertAt(index, value, def) {
-    if (def != null && this.whitelist != null && !this.whitelist[value]) return;
     if (index >= this.length()) {
-      if (
-        def == null ||
-        Parchment.query(value, Parchment.Scope.BLOCK) == null
-      ) {
-        const blot = Parchment.create(this.statics.defaultChild.blotName);
+      if (def == null || this.scroll.query(value, Scope.BLOCK) == null) {
+        const blot = this.scroll.create(this.statics.defaultChild.blotName);
         this.appendChild(blot);
         if (def == null && value.endsWith('\n')) {
           blot.insertAt(0, value.slice(0, -1), def);
@@ -83,7 +72,7 @@ class Scroll extends ScrollBlot {
           blot.insertAt(0, value, def);
         }
       } else {
-        const embed = Parchment.create(value, def);
+        const embed = this.scroll.create(value, def);
         this.appendChild(embed);
       }
     } else {
@@ -93,8 +82,8 @@ class Scroll extends ScrollBlot {
   }
 
   insertBefore(blot, ref) {
-    if (blot.statics.scope === Parchment.Scope.INLINE_BLOT) {
-      const wrapper = Parchment.create(this.statics.defaultChild.blotName);
+    if (blot.statics.scope === Scope.INLINE_BLOT) {
+      const wrapper = this.scroll.create(this.statics.defaultChild.blotName);
       wrapper.appendChild(blot);
       super.insertBefore(wrapper, ref);
     } else {

@@ -1,4 +1,3 @@
-import Parchment from 'parchment';
 import Quill from './core/quill';
 
 import Block, { BlockEmbed } from './blots/block';
@@ -31,7 +30,5 @@ Quill.register({
   'modules/keyboard': Keyboard,
   'modules/uploader': Uploader,
 });
-
-Parchment.register(Block, Break, Cursor, Inline, Scroll, TextBlot);
 
 export default Quill;
