@@ -63,7 +63,7 @@ Pull Requests modifying public facing interfaces or APIs, including backwards co
 Pull requests must:
 
 1. Be forked off the [develop](https://github.com/quilljs/quill/tree/develop) branch.
-2. Conform to existing coding styles.
+2. Pass the linter and conform to existing coding styles.
 3. Commits are [squashed](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History#Squashing-Commits) to minimally coherent units of changes.
 4. Are accompanied by tests covering the new feature or demonstrating the bug for fixes.
 5. Serve a single atomic purpose (add one feature or fix one bug).
