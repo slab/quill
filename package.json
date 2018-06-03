@@ -137,6 +137,11 @@
       "prettier/prettier": "error"
     }
   },
+  "eslintIgnore": [
+    "dist/",
+    "docs/",
+    "node_modules/"
+  ],
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all"
