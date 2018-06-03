@@ -51,7 +51,7 @@ describe('Table', function() {
 
   it('add', function() {
     const editor = this.initialize(Editor, '');
-    editor.applyDelta(tableDelta.delete(1));
+    editor.applyDelta(new Delta([...tableDelta.ops]).delete(1));
     expect(this.container).toEqualHTML(tableHTML);
   });
 
