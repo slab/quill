@@ -99,22 +99,17 @@ class Table extends Module {
 
   listenBalanceCells() {
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, mutations => {
-      const tables = new Set(
-        mutations
-          .map(mutation => {
-            if (mutation.target.tagName === 'TABLE') {
-              return Quill.find(mutation.target);
-            }
-            return null;
-          })
-          .filter(blot => blot != null),
-      );
-      if (tables.length === 0) return;
-      this.quill.once(Quill.events.TEXT_CHANGE, (delta, old, source) => {
-        if (source !== Quill.sources.USER) return;
-        tables.forEach(table => {
-          table.balanceCells();
-        });
+      mutations.some(mutation => {
+        if (mutation.target.tagName === 'TABLE') {
+          this.quill.once(Quill.events.TEXT_CHANGE, (delta, old, source) => {
+            if (source !== Quill.sources.USER) return;
+            this.quill.scroll.descendants(TableContainer).forEach(table => {
+              table.balanceCells();
+            });
+          });
+          return true;
+        }
+        return false;
       });
     });
   }
