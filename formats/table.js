@@ -106,7 +106,8 @@ class TableContainer extends Container {
     if (body == null || body.children.head == null) return;
     body.children.forEach(row => {
       const ref = row.children.at(index);
-      const cell = this.scroll.create(TableCell.blotName);
+      const value = TableCell.formats(ref.domNode);
+      const cell = this.scroll.create(TableCell.blotName, value);
       row.insertBefore(cell, ref);
     });
   }
@@ -114,9 +115,10 @@ class TableContainer extends Container {
   insertRow(index) {
     const [body] = this.descendant(TableBody);
     if (body == null || body.children.head == null) return;
+    const id = tableId();
     const row = this.scroll.create(TableRow.blotName);
     body.children.head.children.forEach(() => {
-      const cell = this.scroll.create(TableCell.blotName);
+      const cell = this.scroll.create(TableCell.blotName, { row: id });
       row.appendChild(cell);
     });
     const ref = body.children.at(index);

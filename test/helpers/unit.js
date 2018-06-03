@@ -45,7 +45,7 @@ function compareHTML(actual, expected, ignoreClassId) {
     container.innerHTML = html.replace(/\n\s*/g, '');
     return container;
   });
-  let ignoredAttributes = ['width', 'height'];
+  let ignoredAttributes = ['width', 'height', 'data-row', 'contenteditable'];
   if (ignoreClassId) {
     ignoredAttributes = ignoredAttributes.concat(['class', 'id']);
   }
@@ -101,14 +101,14 @@ function compareNodes(node1, node2, ignoredAttributes = []) {
   return null;
 }
 
-function initialize(klass, html, container = this.container) {
+function initialize(klass, html, container = this.container, options = {}) {
   if (typeof html === 'object') {
     container.innerHTML = html.html;
   } else {
     container.innerHTML = html.replace(/\n\s*/g, '');
   }
   if (klass === HTMLElement) return container;
-  if (klass === Quill) return new Quill(container);
+  if (klass === Quill) return new Quill(container, options);
   const emitter = new Emitter();
   const scroll = new Scroll(globalRegistry, container, { emitter });
   if (klass === Scroll) return scroll;

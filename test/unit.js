@@ -29,6 +29,7 @@ import './unit/modules/clipboard';
 import './unit/modules/history';
 import './unit/modules/keyboard';
 import './unit/modules/syntax';
+import './unit/modules/table';
 import './unit/modules/toolbar';
 
 import './unit/ui/picker';

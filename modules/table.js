@@ -92,7 +92,7 @@ class Table extends Module {
     const delta = new Array(rows).fill(0).reduce(memo => {
       const text = new Array(columns).fill('\n').join('');
       return memo.insert(text, { table: { row: tableId() } });
-    }, new Delta());
+    }, new Delta().retain(range.index));
     this.quill.updateContents(delta, Quill.sources.USER);
     this.quill.setSelection(range.index, Quill.sources.SILENT);
   }
