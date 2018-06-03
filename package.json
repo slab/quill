@@ -113,9 +113,6 @@
       "class-methods-use-this": [
         "off"
       ],
-      "import/extensions": [
-        "off"
-      ],
       "import/no-extraneous-dependencies": [
         "error",
         {
@@ -136,7 +133,8 @@
       ],
       "import/named": [
         "error"
-      ]
+      ],
+      "prettier/prettier": "error"
     }
   },
   "prettier": {
