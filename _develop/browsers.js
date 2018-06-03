@@ -1,7 +1,7 @@
 const desktop = {
   'mac-chrome-latest': ['OS X 10.13', 'chrome', '67.0'],
   'mac-firefox-latest': ['OS X 10.13', 'firefox', '60.0'],
-  'mac-safari-latest': ['OS X 10.13', 'safari', '11.0'],
+  'mac-safari-latest': ['OS X 10.13', 'safari', '11.1'],
   'mac-chrome-previous': ['OS X 10.12', 'chrome', '66.0'],
   'mac-firefox-previous': ['OS X 10.12', 'firefox', '59.0'],
   'mac-safari-previous': ['OS X 10.12', 'safari', '10.1'],
@@ -15,7 +15,7 @@ const desktop = {
 };
 
 const mobile = {
-  'ios-latest': ['iPhone X Simulator', 'iOS', '11.2', 'Safari'],
+  'ios-latest': ['iPhone X Simulator', 'iOS', '11.3', 'Safari'],
   'ios-previous': ['iPhone 7 Plus Simulator', 'iOS', '10.3', 'Safari'],
 
   'android-latest': ['Android GoogleAPI Emulator', 'Android', '7.1', 'Chrome'],
