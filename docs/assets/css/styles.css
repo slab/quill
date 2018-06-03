@@ -313,6 +313,11 @@ svg .feat-3 {
   width: 90%;
 }
 
+.about a {
+  color: #25408f;
+  text-decoration: underline;
+}
+
 /*** Header ***/
 
 header {
