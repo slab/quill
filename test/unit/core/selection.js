@@ -146,6 +146,14 @@ describe('Selection', function() {
       let [range, ] = selection.getRange();
       expect(range).toEqual(null);
     });
+
+    it('reversed', function() {
+      let selection = this.initialize(Selection, '<p>0123</p>');
+      selection.setNativeRange(this.container.firstChild.firstChild, 2, this.container.firstChild.firstChild, 0);
+      let [range, ] = selection.getRange();
+      expect(range.index).toEqual(0);
+      expect(range.length).toEqual(2);
+    });
   });
 
   describe('setRange()', function() {

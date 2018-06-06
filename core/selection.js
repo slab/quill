@@ -8,9 +8,10 @@ let debug = logger('quill:selection');
 
 
 class Range {
-  constructor(index, length = 0) {
+  constructor(index, length = 0, reversed = false) {
     this.index = index;
     this.length = length;
+    this.reversed = reversed;
   }
 }
 
@@ -161,6 +162,11 @@ class Selection {
     if (selection == null || selection.rangeCount <= 0) return null;
     let nativeRange = selection.getRangeAt(0);
     if (nativeRange == null) return null;
+    if (nativeRange.startContainer.isEqualNode(nativeRange.endContainer)) {
+      nativeRange.reversed =  selection.anchorOffset > nativeRange.endOffset;
+    } else {
+      nativeRange.reversed = selection.anchorNode.isEqualNode(nativeRange.endContainer);
+    }
     let range = this.normalizeNative(nativeRange);
     debug.info('getNativeRange', range);
     return range;
@@ -196,7 +202,8 @@ class Selection {
     });
     let end = Math.min(Math.max(...indexes), this.scroll.length() - 1);
     let start = Math.min(end, ...indexes);
-    return new Range(start, end-start);
+    let reversed = range.native.reversed;
+    return new Range(start, end-start, reversed);
   }
 
   normalizeNative(nativeRange) {
@@ -228,7 +235,12 @@ class Selection {
   }
 
   rangeToNative(range) {
-    let indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
+    let indexes = [];
+    if (range.reversed) {
+      indexes = range.collapsed ? [range.index] : [range.index - range.length, range.index - (2 * range.length)];
+    } else {
+      indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
+    }
     let args = [];
     let scrollLength = this.scroll.length();
     indexes.forEach((index, i) => {
@@ -287,11 +299,29 @@ class Selection {
           endOffset = [].indexOf.call(endNode.parentNode.childNodes, endNode);
           endNode = endNode.parentNode;
         }
+
+        let reversed = false;
+
+        if (startNode.isEqualNode(endNode) && startOffset > endOffset) {
+          reversed = true;
+        } else if (startOffset !== endOffset) {
+          reversed = startNode.compareDocumentPosition(endNode) & Node.DOCUMENT_POSITION_FOLLOWING;
+        }
         let range = document.createRange();
-        range.setStart(startNode, startOffset);
-        range.setEnd(endNode, endOffset);
-        selection.removeAllRanges();
-        selection.addRange(range);
+        if (reversed) {
+          range = document.createRange();
+          range.setStart(startNode, startOffset);
+          range.setEnd(startNode, startOffset);
+          selection.removeAllRanges();
+          selection.addRange(range);
+          let sel = window.getSelection();
+          sel.extend(endNode, endOffset);
+        } else {
+          range.setStart(startNode, startOffset);
+          range.setEnd(endNode, endOffset);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
       }
     } else {
       selection.removeAllRanges();
