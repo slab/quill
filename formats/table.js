@@ -9,7 +9,6 @@ class TableCell extends Block {
     } else {
       node.setAttribute('data-row', tableId());
     }
-    node.setAttribute('contenteditable', true);
     return node;
   }
 
@@ -66,12 +65,6 @@ TableBody.blotName = 'table-body';
 TableBody.tagName = 'TBODY';
 
 class TableContainer extends Container {
-  static create(value) {
-    const node = super.create(value);
-    node.setAttribute('contenteditable', false);
-    return node;
-  }
-
   balanceCells() {
     const rows = this.descendants(TableRow);
     const maxColumns = rows.reduce((max, row) => {

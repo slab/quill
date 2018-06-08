@@ -300,6 +300,31 @@ Keyboard.DEFAULTS = {
         this.quill.scrollIntoView();
       },
     },
+    'table backspace': {
+      key: 'Backspace',
+      format: ['table'],
+      collapsed: true,
+      offset: 0,
+      handler() {
+        return;
+      }
+    },
+    'table delete': {
+      key: 'Delete',
+      format: ['table'],
+      collapsed: true,
+      suffix: /^$/,
+      handler(range, context) {
+        return;
+      }
+    },
+    'table enter': {
+      key: 'Enter',
+      format: ['table'],
+      handler() {
+        return;
+      }
+    },
     'list autofill': {
       key: ' ',
       collapsed: true,
