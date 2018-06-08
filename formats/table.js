@@ -99,7 +99,7 @@ class TableContainer extends Container {
     if (body == null || body.children.head == null) return;
     body.children.forEach(row => {
       const ref = row.children.at(index);
-      const value = TableCell.formats(ref.domNode);
+      const value = TableCell.formats(row.children.head.domNode);
       const cell = this.scroll.create(TableCell.blotName, value);
       row.insertBefore(cell, ref);
     });
