@@ -22,22 +22,22 @@ const tableDelta = new Delta()
   .insert('\n', { table: { row: 'c' } });
 
 const tableHTML = `
-  <table contenteditable="false">
+  <table>
     <tbody>
       <tr>
-        <td data-row="a" contenteditable="true">A1</td>
-        <td data-row="a" contenteditable="true">A2</td>
-        <td data-row="a" contenteditable="true">A3</td>
+        <td data-row="a">A1</td>
+        <td data-row="a">A2</td>
+        <td data-row="a">A3</td>
       </tr>
       <tr>
-        <td data-row="b" contenteditable="true">B1</td>
-        <td data-row="b" contenteditable="true">B2</td>
-        <td data-row="b" contenteditable="true">B3</td>
+        <td data-row="b">B1</td>
+        <td data-row="b">B2</td>
+        <td data-row="b">B3</td>
       </tr>
       <tr>
-        <td data-row="c" contenteditable="true">C1</td>
-        <td data-row="c" contenteditable="true">C2</td>
-        <td data-row="c" contenteditable="true">C3</td>
+        <td data-row="c">C1</td>
+        <td data-row="c">C2</td>
+        <td data-row="c">C3</td>
       </tr>
     </tbody>
   </table>`;
@@ -59,7 +59,7 @@ describe('Table', function() {
     const editor = this.initialize(Editor, '<p>Test</p>');
     editor.formatLine(0, 5, { table: { row: 'a' } });
     expect(this.container).toEqualHTML(
-      '<table contenteditable="false"><tr><td data-row="a" contenteditable="true">Test</td></tr></table>',
+      '<table><tr><td data-row="a">Test</td></tr></table>',
     );
   });
 
@@ -67,7 +67,7 @@ describe('Table', function() {
     const editor = this.initialize(Editor, '<h1>Test</h1>');
     editor.formatLine(0, 5, { table: { row: 'a' } });
     expect(this.container).toEqualHTML(
-      '<table contenteditable="false"><tr><td data-row="a" contenteditable="true">Test</td></tr></table>',
+      '<table><tr><td data-row="a">Test</td></tr></table>',
     );
   });
 
@@ -159,41 +159,41 @@ describe('Table', function() {
   it('balance cells', function() {
     const editor = this.initialize(
       Editor,
-      `<table contenteditable="false">
+      `<table>
         <tbody>
           <tr>
-            <td data-row="a" contenteditable="true">A1</td>
+            <td data-row="a">A1</td>
           </tr>
           <tr>
-            <td data-row="b" contenteditable="true">B1</td>
-            <td data-row="b" contenteditable="true">B2</td>
+            <td data-row="b">B1</td>
+            <td data-row="b">B2</td>
           </tr>
           <tr>
-            <td data-row="c" contenteditable="true">C1</td>
-            <td data-row="c" contenteditable="true">C2</td>
-            <td data-row="c" contenteditable="true">C3</td>
+            <td data-row="c">C1</td>
+            <td data-row="c">C2</td>
+            <td data-row="c">C3</td>
           </tr>
         </tbody>
       </table>`,
     );
     editor.scroll.children.head.balanceCells();
     expect(this.container).toEqualHTML(
-      `<table contenteditable="false">
+      `<table>
         <tbody>
           <tr>
-            <td data-row="a" contenteditable="true">A1</td>
-            <td data-row="a" contenteditable="true"><br></td>
-            <td data-row="a" contenteditable="true"><br></td>
+            <td data-row="a">A1</td>
+            <td data-row="a"><br></td>
+            <td data-row="a"><br></td>
           </tr>
           <tr>
-            <td data-row="b" contenteditable="true">B1</td>
-            <td data-row="b" contenteditable="true">B2</td>
-            <td data-row="b" contenteditable="true"><br></td>
+            <td data-row="b">B1</td>
+            <td data-row="b">B2</td>
+            <td data-row="b"><br></td>
           </tr>
           <tr>
-            <td data-row="c" contenteditable="true">C1</td>
-            <td data-row="c" contenteditable="true">C2</td>
-            <td data-row="c" contenteditable="true">C3</td>
+            <td data-row="c">C1</td>
+            <td data-row="c">C2</td>
+            <td data-row="c">C3</td>
           </tr>
         </tbody>
       </table>`,
@@ -205,15 +205,15 @@ describe('Table', function() {
     editor.formatLine(0, 4, { table: { row: 'a' } });
     editor.formatLine(4, 4, { table: { row: 'b' } });
     expect(this.container).toEqualHTML(
-      `<table contenteditable="false">
+      `<table>
         <tbody>
           <tr>
-            <td data-row="a" contenteditable="true">a</td>
-            <td data-row="a" contenteditable="true">b</td>
+            <td data-row="a">a</td>
+            <td data-row="a">b</td>
           </tr>
           <tr>
-            <td data-row="b" contenteditable="true">1</td>
-            <td data-row="b" contenteditable="true">2</td>
+            <td data-row="b">1</td>
+            <td data-row="b">2</td>
           </tr>
         </tbody>
       </table>`,
@@ -228,15 +228,15 @@ describe('Table', function() {
         .insert('\n\n', { table: { row: 'b' } }),
     );
     expect(this.container).toEqualHTML(
-      `<table contenteditable="false">
+      `<table>
         <tbody>
           <tr>
-            <td data-row="a" contenteditable="true"><br></td>
-            <td data-row="a" contenteditable="true"><br></td>
+            <td data-row="a"><br></td>
+            <td data-row="a"><br></td>
           </tr>
           <tr>
-            <td data-row="b" contenteditable="true"><br></td>
-            <td data-row="b" contenteditable="true"><br></td>
+            <td data-row="b"><br></td>
+            <td data-row="b"><br></td>
           </tr>
         </tbody>
       </table>
@@ -253,21 +253,21 @@ describe('Table', function() {
         .insert('A3\nB3\n', { table: { row: 3 } }),
     );
     expect(this.container).toEqualHTML(
-      `<table contenteditable="false">
+      `<table>
         <tbody>
           <tr>
-            <td data-row="1" contenteditable="true">A1</td>
-            <td data-row="1" contenteditable="true">B1</td>
-            <td data-row="1" contenteditable="true">C1</td>
+            <td data-row="1">A1</td>
+            <td data-row="1">B1</td>
+            <td data-row="1">C1</td>
           </tr>
           <tr>
-            <td data-row="2" contenteditable="true">A2</td>
-            <td data-row="2" contenteditable="true">B2</td>
-            <td data-row="2" contenteditable="true">C2</td>
+            <td data-row="2">A2</td>
+            <td data-row="2">B2</td>
+            <td data-row="2">C2</td>
           </tr>
           <tr>
-            <td data-row="3" contenteditable="true">A3</td>
-            <td data-row="3" contenteditable="true">B3</td>
+            <td data-row="3">A3</td>
+            <td data-row="3">B3</td>
           </tr>
         </tbody>
       </table>
@@ -279,14 +279,14 @@ describe('Table', function() {
     const editor = this.initialize(
       Editor,
       `
-      <table contenteditable="false">
+      <table>
         <tbody>
           <tr>
-            <td data-row="1" contenteditable="true">A1</td>
+            <td data-row="1">A1</td>
           </tr>
           <tr>
-            <td data-row="2" contenteditable="true"><br></td>
-            <td data-row="2" contenteditable="true">B1</td>
+            <td data-row="2"><br></td>
+            <td data-row="2">B1</td>
           </tr>
         </tbody>
       </table>`,
@@ -298,15 +298,15 @@ describe('Table', function() {
         .insert('\n', { table: { row: 2 } }),
     );
     expect(this.container).toEqualHTML(
-      `<table contenteditable="false">
+      `<table>
         <tbody>
           <tr>
-            <td data-row="1" contenteditable="true">A1</td>
-            <td data-row="1" contenteditable="true"><br></td>
+            <td data-row="1">A1</td>
+            <td data-row="1"><br></td>
           </tr>
           <tr>
-            <td data-row="2" contenteditable="true"><br></td>
-            <td data-row="2" contenteditable="true">B1</td>
+            <td data-row="2"><br></td>
+            <td data-row="2">B1</td>
           </tr>
         </tbody>
       </table>`,
