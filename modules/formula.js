@@ -19,6 +19,19 @@ class FormulaBlot extends Embed {
   static value(domNode) {
     return domNode.getAttribute('data-value');
   }
+
+  constructor(node) {
+    super(node);
+    this.text = this.statics.value(node);
+  }
+
+  length() {
+    return this.text.length;
+  }
+
+  value() {
+    return this.text;
+  }
 }
 FormulaBlot.blotName = 'formula';
 FormulaBlot.className = 'ql-formula';
