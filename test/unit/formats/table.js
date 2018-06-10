@@ -251,9 +251,7 @@ describe('Table', function() {
   it('applyDelta', function() {
     const editor = this.initialize(Editor, '<p><br></p>');
     editor.applyDelta(
-      new Delta()
-        .insert('\n\n', { table: 'a' })
-        .insert('\n\n', { table: 'b' }),
+      new Delta().insert('\n\n', { table: 'a' }).insert('\n\n', { table: 'b' }),
     );
     expect(this.container).toEqualHTML(
       `<table>
@@ -322,7 +320,7 @@ describe('Table', function() {
     editor.applyDelta(
       new Delta()
         .retain(3)
-        .retain(1, { table:  '1' })
+        .retain(1, { table: '1' })
         .insert('\n', { table: '2' }),
     );
     expect(this.container).toEqualHTML(

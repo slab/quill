@@ -305,25 +305,19 @@ Keyboard.DEFAULTS = {
       format: ['table'],
       collapsed: true,
       offset: 0,
-      handler() {
-        return;
-      }
+      handler() {},
     },
     'table delete': {
       key: 'Delete',
       format: ['table'],
       collapsed: true,
       suffix: /^$/,
-      handler(range, context) {
-        return;
-      }
+      handler() {},
     },
     'table enter': {
       key: 'Enter',
       format: ['table'],
-      handler() {
-        return;
-      }
+      handler() {},
     },
     'list autofill': {
       key: ' ',

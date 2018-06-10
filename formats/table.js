@@ -45,9 +45,11 @@ class TableRow extends Container {
       const thisTail = this.children.tail.formats();
       const nextHead = this.next.children.head.formats();
       const nextTail = this.next.children.tail.formats();
-      return (thisHead.table === thisTail.table &&
-              thisHead.table === nextHead.table &&
-              thisHead.table === nextTail.table);
+      return (
+        thisHead.table === thisTail.table &&
+        thisHead.table === nextHead.table &&
+        thisHead.table === nextTail.table
+      );
     }
     return false;
   }
@@ -145,9 +147,10 @@ TableRow.allowedChildren = [TableCell];
 TableCell.requiredContainer = TableRow;
 
 function tableId() {
-  return 'row-' + Math.random()
+  const id = Math.random()
     .toString(36)
     .slice(2, 6);
+  return `row-${id}`;
 }
 
 export { TableCell, TableRow, TableBody, TableContainer, tableId };
