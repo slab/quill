@@ -91,7 +91,7 @@ class Table extends Module {
     if (range == null) return;
     const delta = new Array(rows).fill(0).reduce(memo => {
       const text = new Array(columns).fill('\n').join('');
-      return memo.insert(text, { table: { row: tableId() } });
+      return memo.insert(text, { table: tableId() });
     }, new Delta().retain(range.index));
     this.quill.updateContents(delta, Quill.sources.USER);
     this.quill.setSelection(range.index, Quill.sources.SILENT);

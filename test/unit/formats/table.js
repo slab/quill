@@ -3,23 +3,23 @@ import Editor from '../../../core/editor';
 
 const tableDelta = new Delta()
   .insert('A1')
-  .insert('\n', { table: { row: 'a' } })
+  .insert('\n', { table: 'a' })
   .insert('A2')
-  .insert('\n', { table: { row: 'a' } })
+  .insert('\n', { table: 'a' })
   .insert('A3')
-  .insert('\n', { table: { row: 'a' } })
+  .insert('\n', { table: 'a' })
   .insert('B1')
-  .insert('\n', { table: { row: 'b' } })
+  .insert('\n', { table: 'b' })
   .insert('B2')
-  .insert('\n', { table: { row: 'b' } })
+  .insert('\n', { table: 'b' })
   .insert('B3')
-  .insert('\n', { table: { row: 'b' } })
+  .insert('\n', { table: 'b' })
   .insert('C1')
-  .insert('\n', { table: { row: 'c' } })
+  .insert('\n', { table: 'c' })
   .insert('C2')
-  .insert('\n', { table: { row: 'c' } })
+  .insert('\n', { table: 'c' })
   .insert('C3')
-  .insert('\n', { table: { row: 'c' } });
+  .insert('\n', { table: 'c' });
 
 const tableHTML = `
   <table>
@@ -57,7 +57,7 @@ describe('Table', function() {
 
   it('add format plaintext', function() {
     const editor = this.initialize(Editor, '<p>Test</p>');
-    editor.formatLine(0, 5, { table: { row: 'a' } });
+    editor.formatLine(0, 5, { table: 'a' });
     expect(this.container).toEqualHTML(
       '<table><tr><td data-row="a">Test</td></tr></table>',
     );
@@ -65,7 +65,7 @@ describe('Table', function() {
 
   it('add format replace', function() {
     const editor = this.initialize(Editor, '<h1>Test</h1>');
-    editor.formatLine(0, 5, { table: { row: 'a' } });
+    editor.formatLine(0, 5, { table: 'a' });
     expect(this.container).toEqualHTML(
       '<table><tr><td data-row="a">Test</td></tr></table>',
     );
@@ -156,6 +156,34 @@ describe('Table', function() {
     `);
   });
 
+  xit('group and split multiple rows', function() {
+    const editor = this.initialize(
+      Editor,
+      `
+      <table>
+        <tbody>
+          <tr><td data-row="1"><br></td><td data-row="1"><br></td><td data-row="1"><br></td></tr>
+          <tr><td data-row="2"><br></td><td data-row="2"><br></td><td data-row="2"><br></td></tr>
+          <tr><td data-row="3"><br></td><td data-row="3"><br></td></tr>
+          <tr><td data-row="3"><br></td><td data-row="4"><br></td></tr>
+          <tr><td data-row="4"><br></td><td data-row="4"><br></td></tr>
+        </tbody>
+      </table>
+    `,
+    );
+    editor.scroll.children.head.children.head.optimize();
+    expect(this.container).toEqualHTML(`
+      <table>
+        <tbody>
+          <tr><td data-row="1"><br></td><td data-row="1"><br></td><td data-row="1"><br></td></tr>
+          <tr><td data-row="2"><br></td><td data-row="2"><br></td><td data-row="2"><br></td></tr>
+          <tr><td data-row="3"><br></td><td data-row="3"><br></td><td data-row="3"><br></td></tr>
+          <tr><td data-row="4"><br></td><td data-row="4"><br></td><td data-row="4"><br></td></tr>
+        </tbody>
+      </table>
+    `);
+  });
+
   it('balance cells', function() {
     const editor = this.initialize(
       Editor,
@@ -202,8 +230,8 @@ describe('Table', function() {
 
   it('format', function() {
     const editor = this.initialize(Editor, '<p>a</p><p>b</p><p>1</p><p>2</p>');
-    editor.formatLine(0, 4, { table: { row: 'a' } });
-    editor.formatLine(4, 4, { table: { row: 'b' } });
+    editor.formatLine(0, 4, { table: 'a' });
+    editor.formatLine(4, 4, { table: 'b' });
     expect(this.container).toEqualHTML(
       `<table>
         <tbody>
@@ -224,8 +252,8 @@ describe('Table', function() {
     const editor = this.initialize(Editor, '<p><br></p>');
     editor.applyDelta(
       new Delta()
-        .insert('\n\n', { table: { row: 'a' } })
-        .insert('\n\n', { table: { row: 'b' } }),
+        .insert('\n\n', { table: 'a' })
+        .insert('\n\n', { table: 'b' }),
     );
     expect(this.container).toEqualHTML(
       `<table>
@@ -248,9 +276,9 @@ describe('Table', function() {
     const editor = this.initialize(Editor, '<p><br></p>');
     editor.applyDelta(
       new Delta()
-        .insert('A1\nB1\nC1\n', { table: { row: 1 } })
-        .insert('A2\nB2\nC2\n', { table: { row: 2 } })
-        .insert('A3\nB3\n', { table: { row: 3 } }),
+        .insert('A1\nB1\nC1\n', { table: '1' })
+        .insert('A2\nB2\nC2\n', { table: '2' })
+        .insert('A3\nB3\n', { table: '3' }),
     );
     expect(this.container).toEqualHTML(
       `<table>
@@ -294,8 +322,8 @@ describe('Table', function() {
     editor.applyDelta(
       new Delta()
         .retain(3)
-        .retain(1, { table: { row: 1 } })
-        .insert('\n', { table: { row: 2 } }),
+        .retain(1, { table:  '1' })
+        .insert('\n', { table: '2' }),
     );
     expect(this.container).toEqualHTML(
       `<table>

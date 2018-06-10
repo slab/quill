@@ -159,8 +159,8 @@ describe('Clipboard', function() {
       );
       expect(delta).toEqual(
         new Delta()
-          .insert('A1\nA2\nA3\n', { table: { row: 1 } })
-          .insert('B1\nB2\nB3\n', { table: { row: 2 } }),
+          .insert('A1\nA2\nA3\n', { table: 1 })
+          .insert('B1\nB2\nB3\n', { table: 2 }),
       );
     });
 

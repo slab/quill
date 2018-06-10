@@ -4,8 +4,8 @@ import Container from '../blots/container';
 class TableCell extends Block {
   static create(value) {
     const node = super.create();
-    if (value && value.row) {
-      node.setAttribute('data-row', value.row);
+    if (value) {
+      node.setAttribute('data-row', value);
     } else {
       node.setAttribute('data-row', tableId());
     }
@@ -14,11 +14,17 @@ class TableCell extends Block {
 
   static formats(domNode) {
     if (domNode.hasAttribute('data-row')) {
-      return {
-        row: domNode.getAttribute('data-row'),
-      };
+      return domNode.getAttribute('data-row');
     }
     return undefined;
+  }
+
+  format(name, value) {
+    if (name === TableCell.blotName && value) {
+      this.domNode.setAttribute('data-row', value);
+    } else {
+      super.format(name, value);
+    }
   }
 
   table() {
@@ -35,9 +41,13 @@ TableCell.tagName = 'TD';
 class TableRow extends Container {
   checkMerge() {
     if (super.checkMerge()) {
-      const thisCell = this.children.tail.formats();
-      const nextCell = this.next.children.head.formats();
-      return thisCell.table.row === nextCell.table.row;
+      const thisHead = this.children.head.formats();
+      const thisTail = this.children.tail.formats();
+      const nextHead = this.next.children.head.formats();
+      const nextTail = this.next.children.tail.formats();
+      return (thisHead.table === thisTail.table &&
+              thisHead.table === nextHead.table &&
+              thisHead.table === nextTail.table);
     }
     return false;
   }
@@ -48,8 +58,12 @@ class TableRow extends Container {
       if (child.next == null) return;
       const childFormats = child.formats();
       const nextFormats = child.next.formats();
-      if (childFormats.table.row !== nextFormats.table.row) {
-        this.splitAfter(child);
+      if (childFormats.table !== nextFormats.table) {
+        const next = this.splitAfter(child);
+        if (next) {
+          next.optimize();
+        }
+        // We might be able to merge with prev now
         if (this.prev) {
           this.prev.optimize();
         }
@@ -111,7 +125,7 @@ class TableContainer extends Container {
     const id = tableId();
     const row = this.scroll.create(TableRow.blotName);
     body.children.head.children.forEach(() => {
-      const cell = this.scroll.create(TableCell.blotName, { row: id });
+      const cell = this.scroll.create(TableCell.blotName, id);
       row.appendChild(cell);
     });
     const ref = body.children.at(index);
@@ -131,7 +145,7 @@ TableRow.allowedChildren = [TableCell];
 TableCell.requiredContainer = TableRow;
 
 function tableId() {
-  return Math.random()
+  return 'row-' + Math.random()
     .toString(36)
     .slice(2, 6);
 }

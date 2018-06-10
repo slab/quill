@@ -425,7 +425,7 @@ function matchTable(node, delta) {
       : node.parentNode.parentNode;
   const rows = Array.from(table.querySelectorAll('tr'));
   const row = rows.indexOf(node) + 1;
-  return applyFormat(delta, 'table', { row });
+  return applyFormat(delta, 'table', row);
 }
 
 function matchText(node, delta) {
