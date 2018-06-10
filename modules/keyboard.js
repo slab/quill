@@ -322,7 +322,13 @@ Keyboard.DEFAULTS = {
     'list autofill': {
       key: ' ',
       collapsed: true,
-      format: { list: false },
+      format: {
+        list: false,
+        'code-block': false,
+        blockquote: false,
+        header: false,
+        table: false,
+      },
       prefix: /^\s*?(\d+\.|-|\*|\[ ?\]|\[x\])$/,
       handler(range, context) {
         if (this.quill.scroll.query('list') == null) return true;
