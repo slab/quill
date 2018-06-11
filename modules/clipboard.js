@@ -252,6 +252,9 @@ function matchBlot(node, delta) {
     let value = match.value(node);
     if (value != null) {
       embed[match.blotName] = value;
+      if (match.blotName === 'formula') {
+        embed.length = match.value(node).length;
+      }
       delta = new Delta().insert(embed, match.formats(node));
     }
   } else if (typeof match.formats === 'function') {
