@@ -105,7 +105,7 @@ class SnowTooltip extends BaseTooltip {
           let inputpreview = this.root.querySelector('a.ql-preview');
           inputpreview.value = fpreview;
           this.show();
-          this.edit('formula', fpreview);
+          this.edit('formula', fpreview, { create: false });
           this.position(this.quill.getBounds(this.linkRange));
           return;
         }
