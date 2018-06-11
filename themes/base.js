@@ -187,6 +187,9 @@ class BaseTooltip extends Tooltip {
     }
     this.position(this.quill.getBounds(this.quill.selection.savedRange));
     if (options.create) {
+      if (mode === 'formula') {
+        this.textbox.value = '';
+      }
       this.textbox.select();
     }
     this.textbox.setAttribute('placeholder', this.textbox.getAttribute(`data-${mode}`) || '');
