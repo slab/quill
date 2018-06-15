@@ -275,6 +275,19 @@ function isLine(node) {
   ].includes(node.tagName.toLowerCase());
 }
 
+const preNodes = new WeakMap();
+function isPre(node) {
+  if (node == null) return false;
+  if (!preNodes.has(node)) {
+    if (node.tagName === 'PRE') {
+      preNodes.set(node, true);
+    } else {
+      preNodes.set(node, isPre(node.parentNode));
+    }
+  }
+  return preNodes.get(node);
+}
+
 function traverse(scroll, node, elementMatchers, textMatchers, nodeMatches) {
   // Post-order
   if (node.nodeType === node.TEXT_NODE) {
@@ -364,9 +377,9 @@ function matchBreak(node, delta) {
   return delta;
 }
 
-function matchCodeBlock(node) {
+function matchCodeBlock(node, delta) {
   const language = node.getAttribute('data-language') || true;
-  return new Delta().insert(node.innerText, { 'code-block': language });
+  return applyFormat(delta, 'code-block', language);
 }
 
 function matchIgnore() {
@@ -454,23 +467,25 @@ function matchText(node, delta) {
   if (text.trim().length === 0 && node.parentNode == null) {
     return delta;
   }
-  const replacer = (collapse, match) => {
-    const replaced = match.replace(/[^\u00a0]/g, ''); // \u00a0 is nbsp;
-    return replaced.length < 1 && collapse ? ' ' : replaced;
-  };
-  text = text.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
-  text = text.replace(/\s\s+/g, replacer.bind(replacer, true)); // collapse whitespace
-  if (
-    (node.previousSibling == null && isLine(node.parentNode)) ||
-    (node.previousSibling != null && isLine(node.previousSibling))
-  ) {
-    text = text.replace(/^\s+/, replacer.bind(replacer, false));
-  }
-  if (
-    (node.nextSibling == null && isLine(node.parentNode)) ||
-    (node.nextSibling != null && isLine(node.nextSibling))
-  ) {
-    text = text.replace(/\s+$/, replacer.bind(replacer, false));
+  if (!isPre(node)) {
+    const replacer = (collapse, match) => {
+      const replaced = match.replace(/[^\u00a0]/g, ''); // \u00a0 is nbsp;
+      return replaced.length < 1 && collapse ? ' ' : replaced;
+    };
+    text = text.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
+    text = text.replace(/\s\s+/g, replacer.bind(replacer, true)); // collapse whitespace
+    if (
+      (node.previousSibling == null && isLine(node.parentNode)) ||
+      (node.previousSibling != null && isLine(node.previousSibling))
+    ) {
+      text = text.replace(/^\s+/, replacer.bind(replacer, false));
+    }
+    if (
+      (node.nextSibling == null && isLine(node.parentNode)) ||
+      (node.nextSibling != null && isLine(node.nextSibling))
+    ) {
+      text = text.replace(/\s+$/, replacer.bind(replacer, false));
+    }
   }
   return delta.insert(text);
 }

@@ -136,7 +136,7 @@ describe('Clipboard', function() {
       const html = '<pre> 01 \n 23 </pre>';
       const delta = this.clipboard.convert(html);
       expect(delta).toEqual(
-        new Delta().insert(' 01 \n 23 ', { 'code-block': true }),
+        new Delta().insert(' 01 \n 23 \n', { 'code-block': true }),
       );
     });
 

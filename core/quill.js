@@ -109,9 +109,7 @@ class Quill {
         source,
       );
     });
-    const contents = this.clipboard.convert(
-      `<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`,
-    );
+    const contents = this.clipboard.convert(`${html}<p><br></p>`);
     this.setContents(contents);
     this.history.clear();
     if (this.options.placeholder) {
