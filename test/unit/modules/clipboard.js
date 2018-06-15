@@ -10,8 +10,14 @@ describe('Clipboard', function() {
     });
 
     it('paste', function(done) {
-      this.quill.clipboard.container.innerHTML = '<strong>|</strong>';
-      this.quill.clipboard.onCapturePaste({ clipboardData: {} });
+      this.quill.clipboard.onCapturePaste({
+        clipboardData: {
+          getData: () => {
+            return '<strong>|</strong>';
+          },
+        },
+        preventDefault: () => {},
+      });
       setTimeout(() => {
         expect(this.quill.root).toEqualHTML(
           '<p>01<strong>|</strong><em>7</em>8</p>',
@@ -27,8 +33,14 @@ describe('Clipboard', function() {
       };
       spyOn(handler, 'change');
       this.quill.on('selection-change', handler.change);
-      this.quill.clipboard.container.innerHTML = '0';
-      this.quill.clipboard.onCapturePaste({ clipboardData: {} });
+      this.quill.clipboard.onCapturePaste({
+        clipboardData: {
+          getData: () => {
+            return '0';
+          },
+        },
+        preventDefault: () => {},
+      });
       setTimeout(function() {
         expect(handler.change).not.toHaveBeenCalled();
         done();
@@ -121,9 +133,11 @@ describe('Clipboard', function() {
     });
 
     it('pre', function() {
-      const html = '<div style="white-space: pre;"> 01 \n 23 </div>';
+      const html = '<pre> 01 \n 23 </pre>';
       const delta = this.clipboard.convert(html);
-      expect(delta).toEqual(new Delta().insert(' 01 \n 23 '));
+      expect(delta).toEqual(
+        new Delta().insert(' 01 \n 23 ', { 'code-block': true }),
+      );
     });
 
     it('nested list', function() {
@@ -226,6 +240,11 @@ describe('Clipboard', function() {
         .insert(' ')
         .insert('https://quilljs.com', { link: 'https://quilljs.com' });
       expect(delta).toEqual(expected);
+    });
+
+    it('xss', function() {
+      const delta = this.clipboard.convert('<script>alert(2);</script>');
+      expect(delta).toEqual(new Delta().insert('alert(2);'));
     });
   });
 });
