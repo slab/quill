@@ -75,7 +75,15 @@ class Clipboard extends Module {
     this.matchers.push([selector, matcher]);
   }
 
-  convert(html) {
+  convert({ html, text }) {
+    const formats = this.quill.getFormat(this.quill.selection.savedRange.index);
+    if (formats[CodeBlock.blotName]) {
+      return new Delta().insert(text, {
+        [CodeBlock.blotName]: formats[CodeBlock.blotName],
+      });
+    } else if (!html) {
+      return new Delta().insert(text || '');
+    }
     const container = this.quill.root.ownerDocument.createElement('div');
     container.innerHTML = html.replace(/>\r?\n +</g, '><'); // Remove spaces between tags
     const nodeMatches = new WeakMap();
@@ -83,7 +91,7 @@ class Clipboard extends Module {
       container,
       nodeMatches,
     );
-    let delta = traverse(
+    const delta = traverse(
       this.quill.scroll,
       container,
       elementMatchers,
@@ -95,18 +103,18 @@ class Clipboard extends Module {
       deltaEndsWith(delta, '\n') &&
       delta.ops[delta.ops.length - 1].attributes == null
     ) {
-      delta = delta.compose(new Delta().retain(delta.length() - 1).delete(1));
+      return delta.compose(new Delta().retain(delta.length() - 1).delete(1));
     }
-    debug.log('convert', container.innerHTML, delta);
     return delta;
   }
 
   dangerouslyPasteHTML(index, html, source = Quill.sources.API) {
     if (typeof index === 'string') {
-      this.quill.setContents(this.convert(index), html);
+      const delta = this.convert({ html: index });
+      this.quill.setContents(delta, html);
       this.quill.setSelection(0, Quill.sources.SILENT);
     } else {
-      const paste = this.convert(html);
+      const paste = this.convert({ html });
       this.quill.updateContents(
         new Delta().retain(index).concat(paste),
         source,
@@ -149,21 +157,14 @@ class Clipboard extends Module {
   }
 
   onPaste(e, range) {
-    const formats = this.quill.getFormat(this.quill.selection.savedRange.index);
     const html = e.clipboardData.getData('text/html');
     const text = e.clipboardData.getData('text/plain');
-    let delta = new Delta().retain(range.index);
-    if (formats[CodeBlock.blotName]) {
-      delta.insert(text, {
-        [CodeBlock.blotName]: formats[CodeBlock.blotName],
-      });
-    } else if (!html) {
-      delta.insert(text);
-    } else {
-      const pasteDelta = this.convert(html);
-      delta = delta.concat(pasteDelta);
-    }
-    delta.delete(range.length);
+    const pastedDelta = this.convert({ text, html });
+    debug.log('onPaste', pastedDelta, { text, html });
+    const delta = new Delta()
+      .retain(range.index)
+      .delete(range.length)
+      .concat(pastedDelta);
     this.quill.updateContents(delta, Quill.sources.USER);
     // range.length contributes to delta.length()
     this.quill.setSelection(
