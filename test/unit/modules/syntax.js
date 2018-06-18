@@ -64,8 +64,8 @@ describe('Syntax', function() {
               <option value="javascript">Javascript</option>
               <option value="ruby">Ruby</option>
             </select>
-            <div class="ql-code-block" data-language="javascript"><span class="hljs-keyword ql-token">var</span> test = <span class="hljs-number ql-token">1</span>;</div>
-            <div class="ql-code-block" data-language="javascript"><span class="hljs-keyword ql-token">var</span> bugz = <span class="hljs-number ql-token">0</span>;</div>
+            <div class="ql-code-block" data-language="javascript"><span class="ql-token hljs-keyword">var</span> test = <span class="ql-token hljs-number">1</span>;</div>
+            <div class="ql-code-block" data-language="javascript"><span class="ql-token hljs-keyword">var</span> bugz = <span class="ql-token hljs-number">0</span>;</div>
           </div>
           <p><br></p>`,
         );
@@ -90,7 +90,7 @@ describe('Syntax', function() {
               <option value="javascript">Javascript</option>
               <option value="ruby">Ruby</option>
             </select>
-            <div class="ql-code-block" data-language="javascript"><span class="hljs-keyword ql-token">var</span> test = <span class="hljs-number ql-token">1</span>;</div>
+            <div class="ql-code-block" data-language="javascript"><span class="ql-token hljs-keyword">var</span> test = <span class="ql-token hljs-number">1</span>;</div>
           </div>
           <p>var bugz</p>`);
         expect(this.quill.getContents()).toEqual(
@@ -112,8 +112,8 @@ describe('Syntax', function() {
               <option value="javascript">Javascript</option>
               <option value="ruby">Ruby</option>
             </select>
-            <div class="ql-code-block" data-language="ruby">var test = <span class="hljs-number ql-token">1</span>;</div>
-            <div class="ql-code-block" data-language="ruby">var bugz = <span class="hljs-number ql-token">0</span>;</div>
+            <div class="ql-code-block" data-language="ruby">var test = <span class="ql-token hljs-number">1</span>;</div>
+            <div class="ql-code-block" data-language="ruby">var bugz = <span class="ql-token hljs-number">0</span>;</div>
           </div>
           <p><br></p>`);
         expect(this.quill.getContents()).toEqual(
@@ -138,7 +138,7 @@ describe('Syntax', function() {
               <option value="javascript">Javascript</option>
               <option value="ruby">Ruby</option>
             </select>
-            <div class="ql-code-block" data-language="javascript"><span class="hljs-keyword ql-token">var</span> bugz = <span class="hljs-number ql-token">0</span>;</div>
+            <div class="ql-code-block" data-language="javascript"><span class="ql-token hljs-keyword">var</span> bugz = <span class="ql-token hljs-number">0</span>;</div>
           </div>
           <p><br></p>`);
         expect(this.quill.getContents()).toEqual(
@@ -160,7 +160,7 @@ describe('Syntax', function() {
               <option value="javascript">Javascript</option>
               <option value="ruby">Ruby</option>
             </select>
-            <div class="ql-code-block" data-language="javascript"><span class="hljs-keyword ql-token">var</span> test = <span class="hljs-number ql-token">1</span>;</div>
+            <div class="ql-code-block" data-language="javascript"><span class="ql-token hljs-keyword">var</span> test = <span class="ql-token hljs-number">1</span>;</div>
           </div>
           <p><br></p>
           <div class="ql-code-block-container" spellcheck="false">
@@ -168,7 +168,7 @@ describe('Syntax', function() {
               <option value="javascript">Javascript</option>
               <option value="ruby">Ruby</option>
             </select>
-            <div class="ql-code-block" data-language="javascript"><span class="hljs-keyword ql-token">var</span> bugz = <span class="hljs-number ql-token">0</span>;</div>
+            <div class="ql-code-block" data-language="javascript"><span class="ql-token hljs-keyword">var</span> bugz = <span class="ql-token hljs-number">0</span>;</div>
           </div>
           <p><br></p>`);
         expect(this.quill.getContents()).toEqual(
@@ -194,8 +194,8 @@ describe('Syntax', function() {
                 <option value="javascript">Javascript</option>
                 <option value="ruby">Ruby</option>
               </select>
-              <div class="ql-code-block" data-language="javascript"><span class="hljs-keyword ql-token">var</span> test = <span class="hljs-number ql-token">1</span>;</div>
-              <div class="ql-code-block" data-language="javascript"><span class="hljs-keyword ql-token">var</span> bugz = <span class="hljs-number ql-token">0</span>;</div>
+              <div class="ql-code-block" data-language="javascript"><span class="ql-token hljs-keyword">var</span> test = <span class="ql-token hljs-number">1</span>;</div>
+              <div class="ql-code-block" data-language="javascript"><span class="ql-token hljs-keyword">var</span> bugz = <span class="ql-token hljs-number">0</span>;</div>
             </div>
             <p><br></p>`);
           expect(this.quill.getContents()).toEqual(

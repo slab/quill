@@ -502,4 +502,5 @@ export {
   matchBlot,
   matchNewline,
   matchText,
+  traverse,
 };
