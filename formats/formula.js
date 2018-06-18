@@ -19,6 +19,11 @@ class Formula extends Embed {
   static value(domNode) {
     return domNode.getAttribute('data-value');
   }
+
+  html() {
+    const { formula } = this.value();
+    return `<span>${formula}</span>`;
+  }
 }
 Formula.blotName = 'formula';
 Formula.className = 'ql-formula';

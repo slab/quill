@@ -7,6 +7,8 @@ import { LeafBlot } from 'parchment';
 import CursorBlot from '../blots/cursor';
 import Block, { bubbleFormats } from '../blots/block';
 import Break from '../blots/break';
+import ScrollBlot from '../blots/scroll';
+import TextBlot from '../blots/text';
 
 const ASCII = /^[ -~]*$/;
 
@@ -131,6 +133,10 @@ class Editor {
     return extend.apply(extend, formatsArr);
   }
 
+  getHTML(index, length) {
+    return convertHTML(this.scroll, index, length);
+  }
+
   getText(index, length) {
     return this.getContents(index, length)
       .filter(op => typeof op.insert === 'string')
@@ -212,6 +218,71 @@ class Editor {
     }
     return change;
   }
+}
+
+function convertListHTML(items, lastIndent) {
+  if (items.length === 0) {
+    if (lastIndent <= 0) {
+      return '</li></ol>';
+    }
+    return `</li></ol>${convertListHTML([], lastIndent - 1)}`;
+  }
+  const [{ child, offset, length, indent }, ...rest] = items;
+  if (indent > lastIndent) {
+    return `<ol><li>${convertHTML(child, offset, length)}${convertListHTML(
+      rest,
+      indent,
+    )}`;
+  } else if (indent === lastIndent) {
+    return `</li><li>${convertHTML(child, offset, length)}${convertListHTML(
+      rest,
+      indent,
+    )}`;
+  } else if (indent === lastIndent - 1) {
+    return `</li></ol></li><li>${convertHTML(
+      child,
+      offset,
+      length,
+    )}${convertListHTML(rest, indent)}`;
+  }
+  return `</li></ol>${convertListHTML(items, lastIndent - 1)}`;
+}
+
+function convertHTML(blot, index, length) {
+  if (typeof blot.html === 'function') {
+    return blot.html(index, length);
+  } else if (blot instanceof TextBlot) {
+    return blot.value().slice(index, index + length);
+  } else if (blot.children) {
+    // TODO fix API
+    if (blot.statics.blotName === 'list-container') {
+      const items = [];
+      blot.children.forEachAt(index, length, (child, offset, childLength) => {
+        const formats = child.formats();
+        items.push({
+          child,
+          offset,
+          length: childLength,
+          indent: formats.indent || 0,
+        });
+      });
+      return convertListHTML(items, -1);
+    }
+    const parts = [];
+    const { outerHTML, innerHTML } = blot.domNode;
+    const strIndex = outerHTML.lastIndexOf(innerHTML);
+    let startTag = outerHTML.slice(0, strIndex);
+    let endTag = outerHTML.slice(strIndex + innerHTML.length);
+    if (blot instanceof ScrollBlot || blot.statics.blotName === 'list') {
+      startTag = '';
+      endTag = '';
+    }
+    blot.children.forEachAt(index, length, (child, offset, childLength) => {
+      parts.push(convertHTML(child, offset, childLength));
+    });
+    return `${startTag}${parts.join('')}${endTag}`;
+  }
+  return blot.domNode.outerHTML;
 }
 
 function combineFormats(formats, combined) {

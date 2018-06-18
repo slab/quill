@@ -13,6 +13,11 @@ class CodeBlockContainer extends Container {
     domNode.setAttribute('spellcheck', false);
     return domNode;
   }
+
+  html(index, length) {
+    const html = this.domNode.innerText.slice(index, index + length);
+    return `<pre>${html}</pre>`;
+  }
 }
 
 class CodeBlock extends Block {

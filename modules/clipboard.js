@@ -126,8 +126,8 @@ class Clipboard extends Module {
   onCaptureCopy(e) {
     if (e.defaultPrevented) return;
     this.quill.update();
-    const [range, native] = this.quill.selection.getRange();
-    this.onCopy(e, range, native);
+    const [range] = this.quill.selection.getRange();
+    this.onCopy(e, range);
     e.preventDefault();
   }
 
@@ -143,17 +143,11 @@ class Clipboard extends Module {
     e.preventDefault();
   }
 
-  onCopy(e, range, nativeRange) {
+  onCopy(e, range) {
     const text = this.quill.getText(range);
-    const fragment = nativeRange.native.cloneContents();
-    Array.from(fragment.querySelectorAll('select')).forEach(select => {
-      select.parentNode.removeChild(select);
-    });
-    const div = this.quill.root.ownerDocument.createElement('div');
-    div.style.whiteSpace = 'pre-wrap';
-    div.appendChild(fragment);
+    const html = this.quill.getSemanticHTML(range);
     e.clipboardData.setData('text/plain', text);
-    e.clipboardData.setData('text/html', div.outerHTML);
+    e.clipboardData.setData('text/html', html);
   }
 
   onPaste(e, range) {
