@@ -531,4 +531,58 @@ describe('Editor', function() {
       });
     });
   });
+
+  describe('getHTML', function() {
+    it('inline', function() {
+      const editor = this.initialize(Editor, '<blockquote>Test</blockquote>');
+      expect(editor.getHTML(1, 2)).toEqual('es');
+    });
+
+    it('across lines', function() {
+      const editor = this.initialize(
+        Editor,
+        '<h1 class="ql-align-center">Header</h1><p>Text</p><blockquote>Quote</blockquote>',
+      );
+      expect(editor.getHTML(1, 14)).toEqual(
+        '<h1 class="ql-align-center">eader</h1><p>Text</p><blockquote>Quo</blockquote>',
+      );
+    });
+
+    it('nested list', function() {
+      const editor = this.initialize(
+        Editor,
+        `
+          <ol>
+            <li>One</li>
+            <li>Two</li>
+            <li class="ql-indent-1">Alpha</li>
+            <li class="ql-indent-2">I</li>
+            <li class="ql-indent-2">II</li>
+            <li>Three</li>
+          </ol>
+        `,
+      );
+      expect(editor.getHTML(2, 20)).toEqualHTML(`
+        <ol>
+          <li>e</li>
+          <li>Two
+            <ol>
+              <li>Alpha
+                <ol>
+                  <li>I</li>
+                  <li>II</li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+          <li>Thr</li>
+        </ol>
+      `);
+    });
+
+    it('text within tag', function() {
+      const editor = this.initialize(Editor, '<p><a>a</a></p>');
+      expect(editor.getHTML(0, 1)).toEqual('<a>a</a>');
+    });
+  });
 });

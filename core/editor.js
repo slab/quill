@@ -134,12 +134,11 @@ class Editor {
   }
 
   getHTML(index, length) {
-    const [line, offset] = this.scroll.line(index);
-    const [last] = this.scroll.line(index + length);
-    if (line === last) {
-      return convertHTML(line, offset, length);
+    const [line, lineOffset] = this.scroll.line(index);
+    if (line.length() >= lineOffset + length) {
+      return convertHTML(line, lineOffset, length, true);
     }
-    return convertHTML(this.scroll, index, length);
+    return convertHTML(this.scroll, index, length, true);
   }
 
   getText(index, length) {
@@ -253,7 +252,7 @@ function convertListHTML(items, lastIndent) {
   return `</li></ol>${convertListHTML(items, lastIndent - 1)}`;
 }
 
-function convertHTML(blot, index, length) {
+function convertHTML(blot, index, length, isRoot = false) {
   if (typeof blot.html === 'function') {
     return blot.html(index, length);
   } else if (blot instanceof TextBlot) {
@@ -277,7 +276,7 @@ function convertHTML(blot, index, length) {
     blot.children.forEachAt(index, length, (child, offset, childLength) => {
       parts.push(convertHTML(child, offset, childLength));
     });
-    if (blot instanceof ScrollBlot || blot.statics.blotName === 'list') {
+    if (isRoot || blot.statics.blotName === 'list') {
       return parts.join('');
     }
     const { outerHTML, innerHTML } = blot.domNode;
