@@ -269,18 +269,15 @@ function convertHTML(blot, index, length) {
       return convertListHTML(items, -1);
     }
     const parts = [];
-    const { outerHTML, innerHTML } = blot.domNode;
-    const strIndex = outerHTML.lastIndexOf(innerHTML);
-    let startTag = outerHTML.slice(0, strIndex);
-    let endTag = outerHTML.slice(strIndex + innerHTML.length);
-    if (blot instanceof ScrollBlot || blot.statics.blotName === 'list') {
-      startTag = '';
-      endTag = '';
-    }
     blot.children.forEachAt(index, length, (child, offset, childLength) => {
       parts.push(convertHTML(child, offset, childLength));
     });
-    return `${startTag}${parts.join('')}${endTag}`;
+    if (blot instanceof ScrollBlot || blot.statics.blotName === 'list') {
+      return parts.join('');
+    }
+    const { outerHTML, innerHTML } = blot.domNode;
+    const [start, end] = outerHTML.split(`>${innerHTML}<`);
+    return `${start}>${parts.join('')}<${end}`;
   }
   return blot.domNode.outerHTML;
 }
