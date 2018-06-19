@@ -134,6 +134,11 @@ class Editor {
   }
 
   getHTML(index, length) {
+    const [line, offset] = this.scroll.line(index);
+    const [last] = this.scroll.line(index + length);
+    if (line === last) {
+      return convertHTML(line, offset, length);
+    }
     return convertHTML(this.scroll, index, length);
   }
 
