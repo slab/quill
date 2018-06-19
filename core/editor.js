@@ -7,7 +7,6 @@ import { LeafBlot } from 'parchment';
 import CursorBlot from '../blots/cursor';
 import Block, { bubbleFormats } from '../blots/block';
 import Break from '../blots/break';
-import ScrollBlot from '../blots/scroll';
 import TextBlot from '../blots/text';
 
 const ASCII = /^[ -~]*$/;
