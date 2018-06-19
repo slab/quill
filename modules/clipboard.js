@@ -62,6 +62,7 @@ class Clipboard extends Module {
   constructor(quill, options) {
     super(quill, options);
     this.quill.root.addEventListener('copy', this.onCaptureCopy.bind(this));
+    this.quill.root.addEventListener('cut', this.onCaptureCut.bind(this));
     this.quill.root.addEventListener('paste', this.onCapturePaste.bind(this));
     this.matchers = [];
     CLIPBOARD_CONFIG.concat(this.options.matchers).forEach(
@@ -128,6 +129,15 @@ class Clipboard extends Module {
     this.quill.update();
     const [range] = this.quill.selection.getRange();
     this.onCopy(e, range);
+    e.preventDefault();
+  }
+
+  onCaptureCut(e) {
+    if (e.defaultPrevented) return;
+    this.quill.update();
+    const [range] = this.quill.selection.getRange();
+    this.onCopy(e, range);
+    this.quill.deleteText(range, Quill.sources.USER);
     e.preventDefault();
   }
 
