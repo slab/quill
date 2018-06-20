@@ -553,12 +553,12 @@ describe('Editor', function() {
         Editor,
         `
           <ol>
-            <li>One</li>
-            <li>Two</li>
-            <li class="ql-indent-1">Alpha</li>
-            <li class="ql-indent-2">I</li>
-            <li class="ql-indent-2">II</li>
-            <li>Three</li>
+            <li data-list="ordered">One</li>
+            <li data-list="ordered">Two</li>
+            <li data-list="bullet" class="ql-indent-1">Alpha</li>
+            <li data-list="ordered" class="ql-indent-2">I</li>
+            <li data-list="ordered" class="ql-indent-2">II</li>
+            <li data-list="ordered">Three</li>
           </ol>
         `,
       );
@@ -566,14 +566,14 @@ describe('Editor', function() {
         <ol>
           <li>e</li>
           <li>Two
-            <ol>
+            <ul>
               <li>Alpha
                 <ol>
                   <li>I</li>
                   <li>II</li>
                 </ol>
               </li>
-            </ol>
+            </ul>
           </li>
           <li>Thr</li>
         </ol>

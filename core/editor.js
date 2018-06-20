@@ -223,32 +223,38 @@ class Editor {
   }
 }
 
-function convertListHTML(items, lastIndent) {
+function convertListHTML(items, lastIndent, tags) {
   if (items.length === 0) {
+    const endTag = tags.pop();
     if (lastIndent <= 0) {
-      return '</li></ol>';
+      return `</li></${endTag}>`;
     }
-    return `</li></ol>${convertListHTML([], lastIndent - 1)}`;
+    return `</li></${endTag}>${convertListHTML([], lastIndent - 1, tags)}`;
   }
-  const [{ child, offset, length, indent }, ...rest] = items;
+  const [{ child, offset, length, indent, tag }, ...rest] = items;
   if (indent > lastIndent) {
-    return `<ol><li>${convertHTML(child, offset, length)}${convertListHTML(
+    tags.push(tag);
+    return `<${tag}><li>${convertHTML(child, offset, length)}${convertListHTML(
       rest,
       indent,
+      tags,
     )}`;
   } else if (indent === lastIndent) {
     return `</li><li>${convertHTML(child, offset, length)}${convertListHTML(
       rest,
       indent,
+      tags,
     )}`;
   } else if (indent === lastIndent - 1) {
-    return `</li></ol></li><li>${convertHTML(
+    const endTag = tags.pop();
+    return `</li></${endTag}></li><li>${convertHTML(
       child,
       offset,
       length,
-    )}${convertListHTML(rest, indent)}`;
+    )}${convertListHTML(rest, indent, tags)}`;
   }
-  return `</li></ol>${convertListHTML(items, lastIndent - 1)}`;
+  const endTag = tags.pop();
+  return `</li></${endTag}>${convertListHTML(items, lastIndent - 1, tags)}`;
 }
 
 function convertHTML(blot, index, length, isRoot = false) {
@@ -267,9 +273,10 @@ function convertHTML(blot, index, length, isRoot = false) {
           offset,
           length: childLength,
           indent: formats.indent || 0,
+          tag: formats.list === 'ordered' ? 'ol' : 'ul',
         });
       });
-      return convertListHTML(items, -1);
+      return convertListHTML(items, -1, []);
     }
     const parts = [];
     blot.children.forEachAt(index, length, (child, offset, childLength) => {
