@@ -168,6 +168,19 @@ describe('Clipboard', function() {
       );
     });
 
+    it('html nested bullet', function() {
+      const delta = this.clipboard.convert({
+        html: '<ul><li>One<ul><li>Alpha</li><li>Beta</li></ul></li></ul>',
+      });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('One\nAlpha', { list: 'bullet' })
+          .insert('\n', { list: 'bullet', indent: 1 })
+          .insert('Beta', { list: 'bullet' })
+          .insert('\n', { list: 'bullet', indent: 1 }),
+      );
+    });
+
     it('html table', function() {
       const delta = this.clipboard.convert({
         html:

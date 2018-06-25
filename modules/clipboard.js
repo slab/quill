@@ -404,7 +404,7 @@ function matchIndent(node, delta, scroll) {
   let indent = -1;
   let parent = node.parentNode;
   while (parent != null) {
-    if ((scroll.query(parent) || {}).blotName === 'list-container') {
+    if (['OL', 'UL'].includes(parent.tagName)) {
       indent += 1;
     }
     parent = parent.parentNode;
