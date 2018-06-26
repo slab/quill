@@ -29,7 +29,7 @@ class Selection {
     this.handleDragging();
     this.emitter.listenDOM('selectionchange', document, () => {
       if (!this.mouseDown) {
-        setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
+        this.update.bind(this, Emitter.sources.USER);
       }
     });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
