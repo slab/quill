@@ -1,4 +1,3 @@
-import Delta from 'quill-delta';
 import Block from '../blots/block';
 import Break from '../blots/break';
 import Cursor from '../blots/cursor';
@@ -23,15 +22,6 @@ class CodeBlockContainer extends Container {
 class CodeBlock extends Block {
   static register() {
     Quill.register(CodeBlockContainer);
-  }
-
-  delta() {
-    if (this.cache.delta == null) {
-      this.cache.delta = new Delta()
-        .insert(this.domNode.textContent)
-        .insert('\n', this.formats());
-    }
-    return this.cache.delta;
   }
 }
 

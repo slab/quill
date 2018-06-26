@@ -10,44 +10,13 @@ import TextBlot from '../blots/text';
 import CodeBlock, { CodeBlockContainer } from '../formats/code';
 import { traverse } from '../modules/clipboard';
 
-class SyntaxCodeBlock extends CodeBlock {
-  static create(value) {
-    const domNode = super.create(value);
-    if (typeof value === 'string') {
-      domNode.setAttribute('data-language', value);
-    }
-    return domNode;
-  }
-
-  static formats(domNode) {
-    return domNode.getAttribute('data-language') || 'plain';
-  }
-
-  static register() {} // Syntax module will register
-
-  format(name, value) {
-    if (name !== this.statics.blotName) return;
-    if (value) {
-      this.domNode.setAttribute('data-language', value);
-    } else {
-      super.format(name, value);
-    }
-  }
-
-  replaceWith(block) {
-    this.domNode.textContent = this.domNode.textContent; // Get rid of code tokens
-    this.attach();
-    super.replaceWith(block);
-  }
-}
-
 const TokenAttributor = new ClassAttributor('code-token', 'hljs', {
   scope: Scope.INLINE,
 });
 class CodeToken extends Inline {
   static formats(node, scroll) {
     while (node != null && node !== scroll.domNode) {
-      if (node.classList.contains(SyntaxCodeBlock.className)) {
+      if (node.classList.contains(CodeBlock.className)) {
         return super.formats(node, scroll);
       }
       node = node.parentNode;
@@ -67,6 +36,7 @@ class CodeToken extends Inline {
       TokenAttributor.add(this.domNode, value);
     } else {
       TokenAttributor.remove(this.domNode);
+      this.domNode.classList.remove(this.statics.className);
     }
   }
 
@@ -79,6 +49,48 @@ class CodeToken extends Inline {
 }
 CodeToken.blotName = 'code-token';
 CodeToken.className = 'ql-token';
+
+class SyntaxCodeBlock extends CodeBlock {
+  static create(value) {
+    const domNode = super.create(value);
+    if (typeof value === 'string') {
+      domNode.setAttribute('data-language', value);
+    }
+    return domNode;
+  }
+
+  static formats(domNode) {
+    return domNode.getAttribute('data-language') || 'plain';
+  }
+
+  static register() {} // Syntax module will register
+
+  delta() {
+    if (this.cache.delta == null) {
+      const delta = super.delta();
+      this.cache.delta = delta.compose(
+        new Delta().retain(delta.length(), {
+          [CodeToken.blotName]: null,
+        }),
+      );
+    }
+    return this.cache.delta;
+  }
+
+  format(name, value) {
+    if (name !== this.statics.blotName) return;
+    if (value) {
+      this.domNode.setAttribute('data-language', value);
+    } else {
+      super.format(name, value);
+    }
+  }
+
+  replaceWith(block) {
+    this.formatAt(0, this.length(), CodeToken.blotName, false);
+    super.replaceWith(block);
+  }
+}
 
 class SyntaxCodeBlockContainer extends CodeBlockContainer {
   attach() {
@@ -121,7 +133,11 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
           if (!retain) return index;
           if (attributes) {
             Object.keys(attributes).forEach(format => {
-              this.formatAt(index, retain, format, attributes[format]);
+              if (
+                [SyntaxCodeBlock.blotName, CodeToken.blotName].includes(format)
+              ) {
+                this.formatAt(index, retain, format, attributes[format]);
+              }
             });
           }
           return index + retain;
