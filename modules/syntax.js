@@ -78,17 +78,16 @@ class SyntaxCodeBlock extends CodeBlock {
   }
 
   format(name, value) {
-    if (name !== this.statics.blotName) return;
-    if (value) {
+    if (name === this.statics.blotName && value) {
       this.domNode.setAttribute('data-language', value);
     } else {
       super.format(name, value);
     }
   }
 
-  replaceWith(block) {
+  replaceWith(name, value) {
     this.formatAt(0, this.length(), CodeToken.blotName, false);
-    super.replaceWith(block);
+    return super.replaceWith(name, value);
   }
 }
 
