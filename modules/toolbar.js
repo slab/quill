@@ -108,6 +108,7 @@ class Toolbar extends Module {
 
   update(range) {
     let formats = range == null ? {} : this.quill.getFormat(range);
+    const unsetVal = this.options.unsetSelectValue;
     this.controls.forEach(function(pair) {
       let [format, input] = pair;
       if (input.tagName === 'SELECT') {
@@ -123,8 +124,11 @@ class Toolbar extends Module {
           }
           option = input.querySelector(`option[value="${value}"]`);
         }
+        if (option == null && unsetVal) {
+          option = input.querySelector(`option[value="${unsetVal}"]`);
+        }
         if (option == null) {
-          input.value = '';   // TODO make configurable?
+          input.value = '';
           input.selectedIndex = -1;
         } else {
           option.selected = true;
@@ -199,6 +203,7 @@ function addSelect(container, format, values) {
 }
 
 Toolbar.DEFAULTS = {
+  unsetValue: null,
   container: null,
   handlers: {
     clean: function() {

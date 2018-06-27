@@ -22,6 +22,7 @@ It can be configured with a custom container and handlers.
 var quill = new Quill('#editor', {
   modules: {
     toolbar: {
+      unsetSelectValue: 'normal',   // Optional string representing a custom option value
       container: '#toolbar',  // Selector for toolbar container
       handlers: {
         'formula': customFormulaHandler
@@ -215,3 +216,18 @@ toolbar.addHandler('image', showImageUI);
   });
 </script>
 <!-- script -->
+
+## unsetSelectValue option
+
+When using a custom toolbar with and custom quill theme, the `unsetSelectValue` option can optionally be set to a string of your custom select option's value used in the case where the format is unset or false. e.g:
+
+```html
+<option value='normal'>Normal</option>
+```
+
+Note: this is only necessary when using a custom theme (e.g. setting the `theme: null` option). For other cases just add the recommended falsy option and omit the unsetSelectValue option:
+
+```html
+  <!-- Note a missing, thus falsy value, is used to reset to default -->
+  <option selected></option>
+```
