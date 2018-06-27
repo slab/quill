@@ -223,38 +223,39 @@ class Editor {
   }
 }
 
-function convertListHTML(items, lastIndent, tags) {
+function convertListHTML(items, lastIndent, types) {
   if (items.length === 0) {
-    const endTag = tags.pop();
+    const [endTag] = getListType(types.pop());
     if (lastIndent <= 0) {
       return `</li></${endTag}>`;
     }
-    return `</li></${endTag}>${convertListHTML([], lastIndent - 1, tags)}`;
+    return `</li></${endTag}>${convertListHTML([], lastIndent - 1, types)}`;
   }
-  const [{ child, offset, length, indent, tag }, ...rest] = items;
+  const [{ child, offset, length, indent, type }, ...rest] = items;
+  const [tag, attribute] = getListType(type);
   if (indent > lastIndent) {
-    tags.push(tag);
-    return `<${tag}><li>${convertHTML(child, offset, length)}${convertListHTML(
-      rest,
-      indent,
-      tags,
-    )}`;
-  } else if (indent === lastIndent) {
-    return `</li><li>${convertHTML(child, offset, length)}${convertListHTML(
-      rest,
-      indent,
-      tags,
-    )}`;
-  } else if (indent === lastIndent - 1) {
-    const endTag = tags.pop();
-    return `</li></${endTag}></li><li>${convertHTML(
+    types.push(tag);
+    return `<${tag}><li${attribute}>${convertHTML(
       child,
       offset,
       length,
-    )}${convertListHTML(rest, indent, tags)}`;
+    )}${convertListHTML(rest, indent, types)}`;
+  } else if (indent === lastIndent) {
+    return `</li><li${attribute}>${convertHTML(
+      child,
+      offset,
+      length,
+    )}${convertListHTML(rest, indent, types)}`;
+  } else if (indent === lastIndent - 1) {
+    const [endTag] = getListType(types.pop());
+    return `</li></${endTag}></li><li${attribute}>${convertHTML(
+      child,
+      offset,
+      length,
+    )}${convertListHTML(rest, indent, types)}`;
   }
-  const endTag = tags.pop();
-  return `</li></${endTag}>${convertListHTML(items, lastIndent - 1, tags)}`;
+  const [endTag] = getListType(types.pop());
+  return `</li></${endTag}>${convertListHTML(items, lastIndent - 1, types)}`;
 }
 
 function convertHTML(blot, index, length, isRoot = false) {
@@ -273,7 +274,7 @@ function convertHTML(blot, index, length, isRoot = false) {
           offset,
           length: childLength,
           indent: formats.indent || 0,
-          tag: formats.list === 'ordered' ? 'ol' : 'ul',
+          type: formats.list,
         });
       });
       return convertListHTML(items, -1, []);
@@ -306,6 +307,18 @@ function combineFormats(formats, combined) {
     }
     return merged;
   }, {});
+}
+
+function getListType(type) {
+  const tag = type === 'ordered' ? 'ol' : 'ul';
+  switch (type) {
+    case 'checked':
+      return [tag, ' data-list="checked"'];
+    case 'unchecked':
+      return [tag, ' data-list="unchecked"'];
+    default:
+      return [tag, ''];
+  }
 }
 
 function normalizeDelta(delta) {

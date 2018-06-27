@@ -580,6 +580,38 @@ describe('Editor', function() {
       `);
     });
 
+    it('nested checklist', function() {
+      const editor = this.initialize(
+        Editor,
+        `
+          <ol>
+            <li data-list="checked">One</li>
+            <li data-list="checked">Two</li>
+            <li data-list="unchecked" class="ql-indent-1">Alpha</li>
+            <li data-list="checked" class="ql-indent-2">I</li>
+            <li data-list="checked" class="ql-indent-2">II</li>
+            <li data-list="checked">Three</li>
+          </ol>
+        `,
+      );
+      expect(editor.getHTML(2, 20)).toEqualHTML(`
+        <ul>
+          <li data-list="checked">e</li>
+          <li data-list="checked">Two
+            <ul>
+              <li data-list="unchecked">Alpha
+                <ul>
+                  <li data-list="checked">I</li>
+                  <li data-list="checked">II</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li data-list="checked">Thr</li>
+        </ul>
+      `);
+    });
+
     it('text within tag', function() {
       const editor = this.initialize(Editor, '<p><a>a</a></p>');
       expect(editor.getHTML(0, 1)).toEqual('<a>a</a>');
