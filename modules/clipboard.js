@@ -128,17 +128,21 @@ class Clipboard extends Module {
     if (e.defaultPrevented) return;
     this.quill.update();
     const [range] = this.quill.selection.getRange();
-    this.onCopy(e, range);
-    e.preventDefault();
+    if (range) {
+      this.onCopy(e, range);
+      e.preventDefault();
+    }
   }
 
   onCaptureCut(e) {
     if (e.defaultPrevented) return;
     this.quill.update();
     const [range] = this.quill.selection.getRange();
-    this.onCopy(e, range);
-    this.quill.deleteText(range, Quill.sources.USER);
-    e.preventDefault();
+    if (range) {
+      this.onCopy(e, range);
+      this.quill.deleteText(range, Quill.sources.USER);
+      e.preventDefault();
+    }
   }
 
   onCapturePaste(e) {
