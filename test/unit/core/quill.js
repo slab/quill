@@ -429,6 +429,7 @@ describe('Quill', function() {
         }
       });
       expect(config.modules.toolbar).toEqual({
+        unsetValue: null,
         container: '#test-container',
         handlers: Toolbar.DEFAULTS.handlers
       });
@@ -441,6 +442,7 @@ describe('Quill', function() {
         }
       });
       expect(config.modules.toolbar).toEqual({
+        unsetValue: null,
         container: document.querySelector('#test-container'),
         handlers: Toolbar.DEFAULTS.handlers
       });
@@ -453,6 +455,7 @@ describe('Quill', function() {
         }
       });
       expect(config.modules.toolbar).toEqual({
+        unsetValue: null,
         container: ['bold'],
         handlers: Toolbar.DEFAULTS.handlers
       });
