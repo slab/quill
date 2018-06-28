@@ -19,7 +19,7 @@ You will need to add Webpack and appropriate loaders as development dependencies
 - Parchment source code - [`ts-loader`](https://www.npmjs.com/package/ts-loader), [`typescript`](https://www.npmjs.com/package/typescript)
 - SVG icons - [`html-loader`](https://www.npmjs.com/package/html-loader)
 
-You Webpack configuration file will also need to alias Quill and Parchment to point to their respective entry source files. Without this, Webpack will use the pre-built files included in NPM, instead of building from source.
+Your Webpack configuration file will also need to alias Quill and Parchment to point to their respective entry source files. Without this, Webpack will use the pre-built files included in NPM, instead of building from source.
 
 
 ### Entry
