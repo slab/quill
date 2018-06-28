@@ -67,7 +67,7 @@ var content = [{
     a: true,
     b: true
   }
-];
+}];
 ```
 
 It is up to the implementer to pick appropriate names:
@@ -79,7 +79,7 @@ var content = [{
     italic: true,
     bold: true
   }
-];
+}];
 ```
 
 This canonicalization applies to both keys and values, `text` and `attributes`. For example, Quill by default:
