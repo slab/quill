@@ -28,7 +28,6 @@ class Table extends Module {
     const column = row.children.indexOf(cell);
     table.deleteColumn(column);
     this.quill.update(Quill.sources.USER);
-    // TODO Restore selection
   }
 
   deleteRow() {
@@ -57,11 +56,21 @@ class Table extends Module {
   }
 
   insertColumn(offset) {
-    const [table, row, cell] = this.getTable();
+    const range = this.quill.getSelection();
+    const [table, row, cell] = this.getTable(range);
     if (cell == null) return;
     const column = row.children.offset(cell);
     table.insertColumn(column + offset);
     this.quill.update(Quill.sources.USER);
+    let shift = row.parent.children.indexOf(row);
+    if (offset === 0) {
+      shift += 1;
+    }
+    this.quill.setSelection(
+      range.index + shift,
+      range.length,
+      Quill.sources.SILENT,
+    );
   }
 
   insertColumnLeft() {
@@ -73,11 +82,21 @@ class Table extends Module {
   }
 
   insertRow(offset) {
-    const [table, row, cell] = this.getTable();
+    const range = this.quill.getSelection();
+    const [table, row, cell] = this.getTable(range);
     if (cell == null) return;
     const index = row.parent.children.indexOf(row);
     table.insertRow(index + offset);
     this.quill.update(Quill.sources.USER);
+    if (offset > 0) {
+      this.quill.setSelection(range, Quill.sources.SILENT);
+    } else {
+      this.quill.setSelection(
+        range.index + row.children.length,
+        range.length,
+        Quill.sources.SILENT,
+      );
+    }
   }
 
   insertRowAbove() {
