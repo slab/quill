@@ -40,8 +40,10 @@ class Table extends Module {
   deleteTable() {
     const [table] = this.getTable();
     if (table == null) return;
+    const offset = table.offset();
     table.remove();
     this.quill.update(Quill.sources.USER);
+    this.quill.setSelection(offset, Quill.sources.SILENT);
   }
 
   getTable(range = this.quill.getSelection()) {
