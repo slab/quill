@@ -1,3 +1,4 @@
+import Delta from 'quill-delta';
 import Quill from '../../../core/quill';
 
 describe('Table Module', function() {
@@ -137,6 +138,32 @@ describe('Table Module', function() {
             <tr><td>b2</td><td>b3</td></tr>
           </tbody>
         </table>
+      `);
+    });
+
+    it('insertText before', function() {
+      this.quill.updateContents(new Delta().insert('\n'));
+      expect(this.quill.root).toEqualHTML(`
+        <p><br></p>
+        <table>
+          <tbody>
+            <tr><td>a1</td><td>a2</td><td>a3</td></tr>
+            <tr><td>b1</td><td>b2</td><td>b3</td></tr>
+          </tbody>
+        </table>
+      `);
+    });
+
+    it('insertText after', function() {
+      this.quill.updateContents(new Delta().retain(18).insert('\n'));
+      expect(this.quill.root).toEqualHTML(`
+        <table>
+          <tbody>
+            <tr><td>a1</td><td>a2</td><td>a3</td></tr>
+            <tr><td>b1</td><td>b2</td><td>b3</td></tr>
+          </tbody>
+        </table>
+        <p><br></p>
       `);
     });
   });

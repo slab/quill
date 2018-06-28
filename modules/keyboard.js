@@ -317,7 +317,29 @@ Keyboard.DEFAULTS = {
     'table enter': {
       key: 'Enter',
       format: ['table'],
-      handler() {},
+      handler(range) {
+        const module = this.quill.getModule('table');
+        if (module) {
+          const [table, row, cell, offset] = module.getTable(range);
+          const shift = tableSide(table, row, cell, offset);
+          if (shift == null) return;
+          let index = table.offset();
+          if (shift < 0) {
+            const delta = new Delta().retain(index).insert('\n');
+            this.quill.updateContents(delta, Quill.sources.USER);
+            this.quill.setSelection(
+              range.index + 1,
+              range.length,
+              Quill.sources.SILENT,
+            );
+          } else if (shift > 0) {
+            index += table.length();
+            const delta = new Delta().retain(index).insert('\n');
+            this.quill.updateContents(delta, Quill.sources.USER);
+            this.quill.setSelection(index, Quill.sources.USER);
+          }
+        }
+      },
     },
     'list autofill': {
       key: ' ',
@@ -645,6 +667,20 @@ function normalize(binding) {
     delete binding.shortKey;
   }
   return binding;
+}
+
+function tableSide(table, row, cell, offset) {
+  if (row.prev == null && row.next == null) {
+    if (cell.prev == null && cell.next == null) {
+      return offset === 0 ? -1 : 1;
+    }
+    return cell.prev == null ? -1 : 1;
+  } else if (row.prev == null) {
+    return -1;
+  } else if (row.next == null) {
+    return 1;
+  }
+  return null;
 }
 
 export { Keyboard as default, SHORTKEY, normalize };
