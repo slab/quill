@@ -432,10 +432,15 @@ function handleBackspace(range, context) {
   let formats = {};
   if (context.offset === 0) {
     const [prev] = this.quill.getLine(range.index - 1);
-    if (prev != null && prev.length() > 1) {
-      const curFormats = line.formats();
-      const prevFormats = this.quill.getFormat(range.index - 1, 1);
-      formats = DeltaOp.attributes.diff(curFormats, prevFormats) || {};
+    if (prev != null) {
+      if (prev.statics.blotName === 'table') {
+        this.quill.setSelection(range.index - 1, Quill.sources.USER);
+        return;
+      } else if (prev.length() > 1) {
+        const curFormats = line.formats();
+        const prevFormats = this.quill.getFormat(range.index - 1, 1);
+        formats = DeltaOp.attributes.diff(curFormats, prevFormats) || {};
+      }
     }
   }
   // Check for astral symbols
@@ -462,6 +467,10 @@ function handleDelete(range, context) {
   if (context.offset >= line.length() - 1) {
     const [next] = this.quill.getLine(range.index + 1);
     if (next) {
+      if (next.statics.blotName === 'table') {
+        this.quill.setSelection(range.index + 1, Quill.sources.USER);
+        return;
+      }
       const curFormats = line.formats();
       const nextFormats = this.quill.getFormat(range.index, 1);
       formats = DeltaOp.attributes.diff(curFormats, nextFormats) || {};
