@@ -48,7 +48,9 @@ class Table extends Module {
   getTable(range = this.quill.getSelection()) {
     if (range == null) return [null, null, null, -1];
     const [cell, offset] = this.quill.getLine(range.index);
-    if (cell == null) return [null, null, null, -1];
+    if (cell == null || cell.statics.blotName !== TableCell.blotName) {
+      return [null, null, null, -1];
+    }
     const row = cell.parent;
     const table = row.parent.parent;
     return [table, row, cell, offset];
