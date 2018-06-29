@@ -29,7 +29,7 @@ class Selection {
     this.handleDragging();
     this.emitter.listenDOM('selectionchange', document, () => {
       if (!this.mouseDown) {
-        this.update.bind(this, Emitter.sources.USER);
+        setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
       } else if (this.lastRange != null && (this.lastRange.index > 0 || this.lastRange.length > 0)) {
         this.focus();
       }
