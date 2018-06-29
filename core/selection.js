@@ -30,6 +30,8 @@ class Selection {
     this.emitter.listenDOM('selectionchange', document, () => {
       if (!this.mouseDown) {
         this.update.bind(this, Emitter.sources.USER);
+      } else if (this.lastRange != null && (this.lastRange.index > 0 || this.lastRange.length > 0)) {
+        this.focus();
       }
     });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
