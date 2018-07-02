@@ -1,3 +1,5 @@
+Note: This branch and README covers the upcoming 2.0 release. View [1.x docs here](https://github.com/quilljs/quill/tree/1.3.6).
+
 <h1 align="center">
   <a href="https://quilljs.com/" title="Quill">Quill Rich Text Editor</a>
 </h1>
