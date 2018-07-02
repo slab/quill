@@ -40,7 +40,7 @@ TableCell.tagName = 'TD';
 
 class TableRow extends Container {
   checkMerge() {
-    if (super.checkMerge()) {
+    if (super.checkMerge() && this.next.children.head != null) {
       const thisHead = this.children.head.formats();
       const thisTail = this.children.tail.formats();
       const nextHead = this.next.children.head.formats();
