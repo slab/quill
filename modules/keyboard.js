@@ -316,6 +316,7 @@ Keyboard.DEFAULTS = {
     },
     'table enter': {
       key: 'Enter',
+      shiftKey: null,
       format: ['table'],
       handler(range) {
         const module = this.quill.getModule('table');
