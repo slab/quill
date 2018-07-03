@@ -342,6 +342,20 @@ Keyboard.DEFAULTS = {
         }
       },
     },
+    'table tab': {
+      key: 'Tab',
+      shiftKey: null,
+      format: ['table'],
+      handler(range, context) {
+        const { event, line: cell } = context;
+        const offset = cell.offset(this.quill.scroll);
+        if (event.shiftKey) {
+          this.quill.setSelection(Math.max(0, offset - 1), Quill.sources.USER);
+        } else {
+          this.quill.setSelection(offset + cell.length(), Quill.sources.USER);
+        }
+      },
+    },
     'list autofill': {
       key: ' ',
       collapsed: true,
