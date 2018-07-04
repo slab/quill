@@ -350,7 +350,7 @@ Keyboard.DEFAULTS = {
         const { event, line: cell } = context;
         const offset = cell.offset(this.quill.scroll);
         if (event.shiftKey) {
-          this.quill.setSelection(Math.max(0, offset - 1), Quill.sources.USER);
+          this.quill.setSelection(offset - 1, Quill.sources.USER);
         } else {
           this.quill.setSelection(offset + cell.length(), Quill.sources.USER);
         }
