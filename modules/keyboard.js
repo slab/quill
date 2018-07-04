@@ -448,10 +448,7 @@ function handleBackspace(range, context) {
   if (context.offset === 0) {
     const [prev] = this.quill.getLine(range.index - 1);
     if (prev != null) {
-      if (prev.statics.blotName === 'table') {
-        this.quill.setSelection(range.index - 1, Quill.sources.USER);
-        return;
-      } else if (prev.length() > 1) {
+      if (prev.length() > 1 || prev.statics.blotName === 'table') {
         const curFormats = line.formats();
         const prevFormats = this.quill.getFormat(range.index - 1, 1);
         formats = DeltaOp.attributes.diff(curFormats, prevFormats) || {};
@@ -482,10 +479,6 @@ function handleDelete(range, context) {
   if (context.offset >= line.length() - 1) {
     const [next] = this.quill.getLine(range.index + 1);
     if (next) {
-      if (next.statics.blotName === 'table') {
-        this.quill.setSelection(range.index + 1, Quill.sources.USER);
-        return;
-      }
       const curFormats = line.formats();
       const nextFormats = this.quill.getFormat(range.index, 1);
       formats = DeltaOp.attributes.diff(curFormats, nextFormats) || {};
