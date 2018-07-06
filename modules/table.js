@@ -22,6 +22,12 @@ class Table extends Module {
     this.listenBalanceCells();
   }
 
+  balanceTables() {
+    this.quill.scroll.descendants(TableContainer).forEach(table => {
+      table.balanceCells();
+    });
+  }
+
   deleteColumn() {
     const [table, row, cell] = this.getTable();
     if (cell == null) return;
@@ -118,6 +124,7 @@ class Table extends Module {
     }, new Delta().retain(range.index));
     this.quill.updateContents(delta, Quill.sources.USER);
     this.quill.setSelection(range.index, Quill.sources.SILENT);
+    this.balanceTables();
   }
 
   listenBalanceCells() {
@@ -126,9 +133,7 @@ class Table extends Module {
         if (mutation.target.tagName === 'TABLE') {
           this.quill.once(Quill.events.TEXT_CHANGE, (delta, old, source) => {
             if (source !== Quill.sources.USER) return;
-            this.quill.scroll.descendants(TableContainer).forEach(table => {
-              table.balanceCells();
-            });
+            this.balanceTables();
           });
           return true;
         }
