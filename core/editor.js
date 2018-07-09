@@ -246,13 +246,6 @@ function convertListHTML(items, lastIndent, types) {
       offset,
       length,
     )}${convertListHTML(rest, indent, types)}`;
-  } else if (indent === lastIndent - 1) {
-    const [endTag] = getListType(types.pop());
-    return `</li></${endTag}></li><li${attribute}>${convertHTML(
-      child,
-      offset,
-      length,
-    )}${convertListHTML(rest, indent, types)}`;
   }
   const [endTag] = getListType(types.pop());
   return `</li></${endTag}>${convertListHTML(items, lastIndent - 1, types)}`;
