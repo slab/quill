@@ -38,12 +38,17 @@ class Selection {
       if (native.start.node === this.cursor.textNode) return; // cursor.restore() will handle
       this.emitter.once(Emitter.events.SCROLL_UPDATE, () => {
         try {
-          this.setNativeRange(
-            native.start.node,
-            native.start.offset,
-            native.end.node,
-            native.end.offset,
-          );
+          if (
+            this.root.contains(native.start.node) &&
+            this.root.contains(native.end.node)
+          ) {
+            this.setNativeRange(
+              native.start.node,
+              native.start.offset,
+              native.end.node,
+              native.end.offset,
+            );
+          }
           this.update(Emitter.sources.SILENT);
         } catch (ignored) {
           // ignore
