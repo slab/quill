@@ -29,10 +29,9 @@ class Table extends Module {
   }
 
   deleteColumn() {
-    const [table, row, cell] = this.getTable();
+    const [table, , cell] = this.getTable();
     if (cell == null) return;
-    const column = row.children.indexOf(cell);
-    table.deleteColumn(column);
+    table.deleteColumn(cell.cellOffset());
     this.quill.update(Quill.sources.USER);
   }
 
@@ -67,10 +66,10 @@ class Table extends Module {
     const range = this.quill.getSelection();
     const [table, row, cell] = this.getTable(range);
     if (cell == null) return;
-    const column = row.children.offset(cell);
+    const column = cell.cellOffset();
     table.insertColumn(column + offset);
     this.quill.update(Quill.sources.USER);
-    let shift = row.parent.children.indexOf(row);
+    let shift = row.rowOffset();
     if (offset === 0) {
       shift += 1;
     }
@@ -93,7 +92,7 @@ class Table extends Module {
     const range = this.quill.getSelection();
     const [table, row, cell] = this.getTable(range);
     if (cell == null) return;
-    const index = row.parent.children.indexOf(row);
+    const index = row.rowOffset();
     table.insertRow(index + offset);
     this.quill.update(Quill.sources.USER);
     if (offset > 0) {
