@@ -6,4 +6,3 @@
 /src
 *.d.ts
 *.log
-package-lock.json
