@@ -12,6 +12,7 @@ import Theme from './theme';
 const debug = logger('quill');
 
 const globalRegistry = new Parchment.Registry();
+Parchment.ParentBlot.uiClass = 'ql-ui';
 
 class Quill {
   static debug(limit) {

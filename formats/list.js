@@ -23,8 +23,8 @@ class ListItem extends Block {
 
   constructor(scroll, domNode) {
     super(scroll, domNode);
-    const listEventHandler = e => {
-      if (e.target !== domNode) return;
+    const ui = domNode.ownerDocument.createElement('span');
+    const listEventHandler = () => {
       const format = this.statics.formats(domNode, scroll);
       if (format === 'checked') {
         this.format('list', 'unchecked');
@@ -32,8 +32,9 @@ class ListItem extends Block {
         this.format('list', 'checked');
       }
     };
-    domNode.addEventListener('touchstart', listEventHandler);
-    domNode.addEventListener('mousedown', listEventHandler);
+    ui.addEventListener('mousedown', listEventHandler);
+    ui.addEventListener('touchstart', listEventHandler);
+    this.attachUI(ui);
   }
 
   format(name, value) {

@@ -66,7 +66,7 @@ resets(arr)
   li
     list-style-type: none
     padding-left: LIST_STYLE_OUTER_WIDTH
-    &:before
+    > .ql-ui:before
       display: inline-block
       margin-left: -1*LIST_STYLE_OUTER_WIDTH
       margin-right: LIST_STYLE_MARGIN
@@ -76,30 +76,27 @@ resets(arr)
 
   li[data-list=checked],
   li[data-list=unchecked]
-    pointer-events: none
-    *
-      pointer-events: all
-    &:before
+    > .ql-ui
       color: #777
       cursor: pointer
       pointer-events: all
 
-  li[data-list=bullet]:before
+  li[data-list=bullet] > .ql-ui:before
     content: '\2022'
-  li[data-list=checked]:before
+  li[data-list=checked] > .ql-ui:before
     content: '\2611'
-  li[data-list=unchecked]:before
+  li[data-list=unchecked] > .ql-ui:before
     content: '\2610'
 
   li[data-list=ordered]
     counter-reset: resets(1..MAX_INDENT)
     counter-increment: list-0
-    &:before
+    > .ql-ui:before
       content: unquote('counter(list-0, ' + LIST_STYLE[0] + ')') '. '
   for num in (1..MAX_INDENT)
     li[data-list=ordered].ql-indent-{num}
       counter-increment: unquote('list-' + num)
-      &:before
+      > .ql-ui:before
         content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
     if (num < MAX_INDENT)
       li[data-list=ordered].ql-indent-{num}
@@ -117,7 +114,7 @@ resets(arr)
 
   li.ql-direction-rtl
     padding-right: LIST_STYLE_OUTER_WIDTH
-    &:before
+    > .ql-ui:before
       margin-left: LIST_STYLE_MARGIN
       margin-right: -1*LIST_STYLE_OUTER_WIDTH
       text-align: left
@@ -191,6 +188,9 @@ resets(arr)
     text-align: justify
   .ql-align-right
     text-align: right
+
+  .ql-ui
+    position: absolute
 
 .ql-editor.ql-blank::before
   color: rgba(0,0,0,0.6)

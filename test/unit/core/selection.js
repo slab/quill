@@ -109,7 +109,31 @@ describe('Selection', function() {
       expect(range.length).toEqual(3);
     });
 
-    it('between embed', function() {
+    it('between embed across lines', function() {
+      const selection = this.initialize(
+        Selection,
+        `
+        <p>
+          <img src="/assets/favicon.png">
+          <img src="/assets/favicon.png">
+        </p>
+        <p>
+          <img src="/assets/favicon.png">
+          <img src="/assets/favicon.png">
+        </p>`,
+      );
+      selection.setNativeRange(
+        this.container.firstChild,
+        1,
+        this.container.lastChild,
+        1,
+      );
+      const [range] = selection.getRange();
+      expect(range.index).toEqual(1);
+      expect(range.length).toEqual(3);
+    });
+
+    it('between embed across list', function() {
       const selection = this.initialize(
         Selection,
         `
@@ -127,8 +151,8 @@ describe('Selection', function() {
       selection.setNativeRange(
         this.container.firstChild,
         1,
-        this.container.lastChild.lastChild,
-        1,
+        this.container.lastChild.firstChild,
+        2,
       );
       const [range] = selection.getRange();
       expect(range.index).toEqual(1);
