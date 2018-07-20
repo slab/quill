@@ -36,13 +36,18 @@ function compareApproximately(actual, expected, tolerance) {
   };
 }
 
-function compareHTML(actual, expected, ignoreClassId) {
+function compareHTML(actual, expected, ignoreClassId, ignoreUI = true) {
   const [div1, div2] = [actual, expected].map(function(html) {
     if (html instanceof HTMLElement) {
       html = html.innerHTML;
     }
     const container = document.createElement('div');
     container.innerHTML = html.replace(/\n\s*/g, '');
+    if (ignoreUI) {
+      Array.from(container.querySelectorAll('.ql-ui')).forEach(node => {
+        node.remove();
+      });
+    }
     return container;
   });
   let ignoredAttributes = ['width', 'height', 'data-row', 'contenteditable'];

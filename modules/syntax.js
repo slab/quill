@@ -188,6 +188,7 @@ class Syntax extends Module {
     this.quill.on(Quill.events.SCROLL_BLOT_MOUNT, blot => {
       if (!(blot instanceof SyntaxCodeBlockContainer)) return;
       const select = this.quill.root.ownerDocument.createElement('select');
+      select.classList.add('ql-ui');
       this.options.languages.forEach(({ key, label }) => {
         const option = select.ownerDocument.createElement('option');
         option.textContent = label;
