@@ -61,8 +61,8 @@ const STYLE_ATTRIBUTORS = [
 class Clipboard extends Module {
   constructor(quill, options) {
     super(quill, options);
-    this.quill.root.addEventListener('copy', this.onCaptureCopy.bind(this));
-    this.quill.root.addEventListener('cut', this.onCaptureCut.bind(this));
+    this.quill.root.addEventListener('copy', e => this.onCopy(e, false));
+    this.quill.root.addEventListener('cut', e => this.onCopy(e, true));
     this.quill.root.addEventListener('paste', this.onCapturePaste.bind(this));
     this.matchers = [];
     CLIPBOARD_CONFIG.concat(this.options.matchers).forEach(
@@ -124,46 +124,38 @@ class Clipboard extends Module {
     }
   }
 
-  onCaptureCopy(e) {
-    if (e.defaultPrevented) return;
-    this.quill.update();
-    const [range] = this.quill.selection.getRange();
-    if (range) {
-      this.onCopy(e, range);
-      e.preventDefault();
-    }
-  }
-
-  onCaptureCut(e) {
-    if (e.defaultPrevented) return;
-    this.quill.update();
-    const [range] = this.quill.selection.getRange();
-    if (range) {
-      this.onCopy(e, range);
-      this.quill.deleteText(range, Quill.sources.USER);
-      e.preventDefault();
-    }
+  onCaptureCopy(range) {
+    const text = this.quill.getText(range);
+    const delta = this.quill.getContents(range);
+    const html = this.quill.getSemanticHTML(range);
+    return { delta, html, text };
   }
 
   onCapturePaste(e) {
     if (e.defaultPrevented || !this.quill.isEnabled()) return;
+    e.preventDefault();
     const range = this.quill.getSelection(true);
+    if (range == null) return;
     const files = Array.from(e.clipboardData.files || []);
     if (files.length > 0) {
       this.quill.uploader.upload(range, files);
     } else {
       this.onPaste(e, range);
     }
-    e.preventDefault();
   }
 
-  onCopy(e, range) {
-    const text = this.quill.getText(range);
-    const delta = this.quill.getContents(range);
-    const html = this.quill.getSemanticHTML(range);
+  onCopy(e, isCut = false) {
+    if (e.defaultPrevented) return;
+    e.preventDefault();
+    const [range] = this.quill.selection.getRange();
+    if (range == null) return;
+    const { delta, html, text } = this.onCaptureCopy(range, isCut);
     e.clipboardData.setData('text/plain', text);
     e.clipboardData.setData('text/html', html);
     e.clipboardData.setData('text/delta', JSON.stringify(delta));
+    if (isCut) {
+      this.quill.deleteText(range, Quill.sources.USER);
+    }
   }
 
   onPaste(e, range) {
