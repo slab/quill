@@ -12,8 +12,8 @@ describe('Clipboard', function() {
     it('paste', function(done) {
       this.quill.clipboard.onCapturePaste({
         clipboardData: {
-          getData: () => {
-            return '<strong>|</strong>';
+          getData: type => {
+            return type === 'text/html' ? '<strong>|</strong>' : '';
           },
         },
         preventDefault: () => {},

@@ -159,20 +159,27 @@ class Clipboard extends Module {
 
   onCopy(e, range) {
     const text = this.quill.getText(range);
+    const delta = this.quill.getContents(range);
     const html = this.quill.getSemanticHTML(range);
     e.clipboardData.setData('text/plain', text);
     e.clipboardData.setData('text/html', html);
+    e.clipboardData.setData('text/delta', JSON.stringify(delta));
   }
 
   onPaste(e, range) {
-    const html = e.clipboardData.getData('text/html');
-    const text = e.clipboardData.getData('text/plain');
-    const pastedDelta = this.convert({ text, html });
-    debug.log('onPaste', pastedDelta, { text, html });
-    const delta = new Delta()
-      .retain(range.index)
-      .delete(range.length)
-      .concat(pastedDelta);
+    const json = e.clipboardData.getData('text/delta');
+    let delta = new Delta().retain(range.index).delete(range.length);
+    if (json) {
+      const directDelta = new Delta(JSON.parse(json));
+      debug.log('onPaste direct', directDelta);
+      delta = delta.concat(directDelta);
+    } else {
+      const html = e.clipboardData.getData('text/html');
+      const text = e.clipboardData.getData('text/plain');
+      const pastedDelta = this.convert({ text, html });
+      debug.log('onPaste converted', pastedDelta, { text, html });
+      delta = delta.concat(pastedDelta);
+    }
     this.quill.updateContents(delta, Quill.sources.USER);
     // range.length contributes to delta.length()
     this.quill.setSelection(
