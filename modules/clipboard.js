@@ -76,8 +76,7 @@ class Clipboard extends Module {
     this.matchers.push([selector, matcher]);
   }
 
-  convert({ html, text }) {
-    const formats = this.quill.getFormat(this.quill.selection.savedRange.index);
+  convert({ html, text }, formats = {}) {
     if (formats[CodeBlock.blotName]) {
       return new Delta().insert(text, {
         [CodeBlock.blotName]: formats[CodeBlock.blotName],
@@ -100,10 +99,8 @@ class Clipboard extends Module {
       nodeMatches,
     );
     // Remove trailing newline
-    if (
-      deltaEndsWith(delta, '\n') &&
-      delta.ops[delta.ops.length - 1].attributes == null
-    ) {
+    const { attributes } = delta.ops[delta.ops.length - 1];
+    if (deltaEndsWith(delta, '\n') && (attributes == null || formats.table)) {
       return delta.compose(new Delta().retain(delta.length() - 1).delete(1));
     }
     return delta;
@@ -168,7 +165,8 @@ class Clipboard extends Module {
     } else {
       const html = e.clipboardData.getData('text/html');
       const text = e.clipboardData.getData('text/plain');
-      const pastedDelta = this.convert({ text, html });
+      const formats = this.quill.getFormat(range.index);
+      const pastedDelta = this.convert({ text, html }, formats);
       debug.log('onPaste converted', pastedDelta, { text, html });
       delta = delta.concat(pastedDelta);
     }
