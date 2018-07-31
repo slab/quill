@@ -123,9 +123,8 @@ class Clipboard extends Module {
 
   onCaptureCopy(range) {
     const text = this.quill.getText(range);
-    const delta = this.quill.getContents(range);
     const html = this.quill.getSemanticHTML(range);
-    return { delta, html, text };
+    return { html, text };
   }
 
   onCapturePaste(e) {
@@ -146,30 +145,24 @@ class Clipboard extends Module {
     e.preventDefault();
     const [range] = this.quill.selection.getRange();
     if (range == null) return;
-    const { delta, html, text } = this.onCaptureCopy(range, isCut);
+    const { html, text } = this.onCaptureCopy(range, isCut);
     e.clipboardData.setData('text/plain', text);
     e.clipboardData.setData('text/html', html);
-    e.clipboardData.setData('text/delta', JSON.stringify(delta));
     if (isCut) {
       this.quill.deleteText(range, Quill.sources.USER);
     }
   }
 
   onPaste(e, range) {
-    const json = e.clipboardData.getData('text/delta');
-    let delta = new Delta().retain(range.index).delete(range.length);
-    if (json) {
-      const directDelta = new Delta(JSON.parse(json));
-      debug.log('onPaste direct', directDelta);
-      delta = delta.concat(directDelta);
-    } else {
-      const html = e.clipboardData.getData('text/html');
-      const text = e.clipboardData.getData('text/plain');
-      const formats = this.quill.getFormat(range.index);
-      const pastedDelta = this.convert({ text, html }, formats);
-      debug.log('onPaste converted', pastedDelta, { text, html });
-      delta = delta.concat(pastedDelta);
-    }
+    const html = e.clipboardData.getData('text/html');
+    const text = e.clipboardData.getData('text/plain');
+    const formats = this.quill.getFormat(range.index);
+    const pastedDelta = this.convert({ text, html }, formats);
+    debug.log('onPaste', pastedDelta, { text, html });
+    const delta = new Delta()
+      .retain(range.index)
+      .delete(range.length)
+      .concat(pastedDelta);
     this.quill.updateContents(delta, Quill.sources.USER);
     // range.length contributes to delta.length()
     this.quill.setSelection(
