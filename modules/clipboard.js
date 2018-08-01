@@ -99,8 +99,10 @@ class Clipboard extends Module {
       nodeMatches,
     );
     // Remove trailing newline
-    const { attributes } = delta.ops[delta.ops.length - 1];
-    if (deltaEndsWith(delta, '\n') && (attributes == null || formats.table)) {
+    if (
+      deltaEndsWith(delta, '\n') &&
+      (delta.ops[delta.ops.length - 1].attributes == null || formats.table)
+    ) {
       return delta.compose(new Delta().retain(delta.length() - 1).delete(1));
     }
     return delta;
