@@ -25,7 +25,7 @@ Although different between them, CKEditor and TinyMCE are compared together beca
 
 Draft is often compared with Quill, but Draft, by its own description, is a "Rich Text Editor Framework for React." It provides the building blocks to create an editor, but is not one ready to use by itself. It is still worthwhile to compare Quill's internals with Draft however:
 
-- Prior to Quill 1.0, Quill allowed more customization over its content and document model, but this is no longer the case. Quill now exposes its document model, called [Parchment](https://github.com/quilljs/parchment), and allows customization to an even deeper level than Draft at this point. [Cloning Medium with Parchment](/guides/cloning-medium-with-parchment/) is a great demonstration of what is possible with Parchment.
+- Prior to Quill 1.0, Draft allowed more customization over its content and document model, but this is no longer the case. Quill now exposes its document model, called [Parchment](https://github.com/quilljs/parchment), and allows customization to an even deeper level than Draft at this point. [Cloning Medium with Parchment](/guides/cloning-medium-with-parchment/) is a great demonstration of what is possible with Parchment.
 
 - Draft organizes nodes into two levels: block and inline. Parchment also has a block and inline layer, but inline nodes can be nested, allowing semantic output such as `<strong><em>Stronger</em></strong>` whereas the equivalent in Draft must use just one inline format node and utilizes inline styles:
 
