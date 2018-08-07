@@ -41,6 +41,6 @@ By default all formats are enabled and allowed to exist within a Quill editor an
 
 #### Embeds
 
-  - Formula - `formula` (requires [KaTex]((https://khan.github.io/KaTeX/)))
+  - Formula - `formula` (requires [KaTex](https://khan.github.io/KaTeX/))
   - Image - `image`
   - Video - `video`
