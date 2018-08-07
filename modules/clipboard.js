@@ -134,8 +134,11 @@ class Clipboard extends Module {
     e.preventDefault();
     const range = this.quill.getSelection(true);
     if (range == null) return;
+    const hasRichText =
+      e.clipboardData.getData('text/html') &&
+      e.clipboardData.getData('text/plain');
     const files = Array.from(e.clipboardData.files || []);
-    if (files.length > 0) {
+    if (!hasRichText && files.length > 0) {
       this.quill.uploader.upload(range, files);
     } else {
       this.onPaste(e, range);
