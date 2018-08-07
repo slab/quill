@@ -262,11 +262,20 @@ describe('Clipboard', function() {
       expect(delta).toEqual(expected);
     });
 
+    it('does not execute javascript', function() {
+      window.unsafeFunction = jasmine.createSpy('unsafeFunction');
+      const html =
+        "<img src='/assets/favicon.png' onload='window.unsafeFunction()'/>";
+      this.clipboard.convert({ html });
+      expect(window.unsafeFunction).not.toHaveBeenCalled();
+      delete window.unsafeFunction;
+    });
+
     it('xss', function() {
       const delta = this.clipboard.convert({
         html: '<script>alert(2);</script>',
       });
-      expect(delta).toEqual(new Delta().insert('alert(2);'));
+      expect(delta).toEqual(new Delta().insert(''));
     });
   });
 });
