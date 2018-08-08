@@ -91,6 +91,10 @@ class Scroll extends ScrollBlot {
     }
   }
 
+  isEnabled() {
+    return this.domNode.getAttribute('contenteditable') === 'true';
+  }
+
   leaf(index) {
     return this.path(index).pop() || [null, -1];
   }

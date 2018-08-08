@@ -340,7 +340,7 @@ class Quill {
   }
 
   isEnabled() {
-    return !this.container.classList.contains('ql-disabled');
+    return this.scroll.isEnabled();
   }
 
   off(...args) {

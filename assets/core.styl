@@ -20,10 +20,12 @@ resets(arr)
 .ql-container.ql-disabled
   .ql-tooltip
     visibility: hidden
-  .ql-editor
-    li[data-list="checked"]:before,
-    li[data-list="unchecked"]:before
-      pointer-events: none
+
+.ql-container:not(.ql-disabled)
+  li[data-list=checked],
+  li[data-list=unchecked]
+    > .ql-ui
+      cursor: pointer
 
 .ql-clipboard
   left: -100000px
@@ -78,8 +80,6 @@ resets(arr)
   li[data-list=unchecked]
     > .ql-ui
       color: #777
-      cursor: pointer
-      pointer-events: all
 
   li[data-list=bullet] > .ql-ui:before
     content: '\2022'
