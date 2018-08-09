@@ -11,21 +11,17 @@ describe('Clipboard', function() {
 
     describe('paste', function() {
       beforeAll(function() {
-        this.createClipboardData = overrides => ({
-          clipboardData: Object.assign(
-            {
-              getData: type => {
-                return type === 'text/html' ? '<strong>|</strong>' : '|';
-              },
-            },
-            overrides,
-          ),
+        this.clipboardEvent = {
+          clipboardData: {
+            getData: type =>
+              type === 'text/html' ? '<strong>|</strong>' : '|',
+          },
           preventDefault: () => {},
-        });
+        };
       });
 
       it('pastes html data', function(done) {
-        this.quill.clipboard.onCapturePaste(this.createClipboardData());
+        this.quill.clipboard.onCapturePaste(this.clipboardEvent);
         setTimeout(() => {
           expect(this.quill.root).toEqualHTML(
             '<p>01<strong>|</strong><em>7</em>8</p>',
@@ -38,9 +34,7 @@ describe('Clipboard', function() {
       it('pastes html data if present with file', function(done) {
         const upload = spyOn(this.quill.uploader, 'upload');
         this.quill.clipboard.onCapturePaste(
-          this.createClipboardData({
-            files: ['file'],
-          }),
+          Object.assign({}, this.clipboardEvent, { files: ['file '] }),
         );
         setTimeout(() => {
           expect(upload).not.toHaveBeenCalled();
@@ -55,7 +49,7 @@ describe('Clipboard', function() {
       it('does not fire selection-change', function(done) {
         const change = jasmine.createSpy('change');
         this.quill.on('selection-change', change);
-        this.quill.clipboard.onCapturePaste(this.createClipboardData());
+        this.quill.clipboard.onCapturePaste(this.clipboardEvent);
         setTimeout(function() {
           expect(change).not.toHaveBeenCalled();
           done();
