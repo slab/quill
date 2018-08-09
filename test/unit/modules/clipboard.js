@@ -9,42 +9,58 @@ describe('Clipboard', function() {
       this.quill.setSelection(2, 5);
     });
 
-    it('paste', function(done) {
-      this.quill.clipboard.onCapturePaste({
-        clipboardData: {
-          getData: type => {
-            return type === 'text/html' ? '<strong>|</strong>' : '';
-          },
-        },
-        preventDefault: () => {},
+    describe('paste', function() {
+      beforeAll(function() {
+        this.createClipboardData = overrides => ({
+          clipboardData: Object.assign(
+            {
+              getData: type => {
+                return type === 'text/html' ? '<strong>|</strong>' : '|';
+              },
+            },
+            overrides,
+          ),
+          preventDefault: () => {},
+        });
       });
-      setTimeout(() => {
-        expect(this.quill.root).toEqualHTML(
-          '<p>01<strong>|</strong><em>7</em>8</p>',
-        );
-        expect(this.quill.getSelection()).toEqual(new Range(3));
-        done();
-      }, 2);
-    });
 
-    it('selection-change', function(done) {
-      const handler = {
-        change() {},
-      };
-      spyOn(handler, 'change');
-      this.quill.on('selection-change', handler.change);
-      this.quill.clipboard.onCapturePaste({
-        clipboardData: {
-          getData: () => {
-            return '0';
-          },
-        },
-        preventDefault: () => {},
+      it('pastes html data', function(done) {
+        this.quill.clipboard.onCapturePaste(this.createClipboardData());
+        setTimeout(() => {
+          expect(this.quill.root).toEqualHTML(
+            '<p>01<strong>|</strong><em>7</em>8</p>',
+          );
+          expect(this.quill.getSelection()).toEqual(new Range(3));
+          done();
+        }, 2);
       });
-      setTimeout(function() {
-        expect(handler.change).not.toHaveBeenCalled();
-        done();
-      }, 2);
+
+      it('pastes html data if present with file', function(done) {
+        const upload = spyOn(this.quill.uploader, 'upload');
+        this.quill.clipboard.onCapturePaste(
+          this.createClipboardData({
+            files: ['file'],
+          }),
+        );
+        setTimeout(() => {
+          expect(upload).not.toHaveBeenCalled();
+          expect(this.quill.root).toEqualHTML(
+            '<p>01<strong>|</strong><em>7</em>8</p>',
+          );
+          expect(this.quill.getSelection()).toEqual(new Range(3));
+          done();
+        }, 2);
+      });
+
+      it('does not fire selection-change', function(done) {
+        const change = jasmine.createSpy('change');
+        this.quill.on('selection-change', change);
+        this.quill.clipboard.onCapturePaste(this.createClipboardData());
+        setTimeout(function() {
+          expect(change).not.toHaveBeenCalled();
+          done();
+        }, 2);
+      });
     });
 
     it('dangerouslyPasteHTML(html)', function() {
