@@ -84,8 +84,11 @@ class Clipboard extends Module {
     } else if (!html) {
       return new Delta().insert(text || '');
     }
-    const container = this.quill.root.ownerDocument.createElement('div');
-    container.innerHTML = html.replace(/>\r?\n +</g, '><'); // Remove spaces between tags
+    const doc = new DOMParser().parseFromString(
+      html.replace(/>\r?\n +</g, '><'), // Remove spaces between tags
+      'text/html',
+    );
+    const container = doc.body;
     const nodeMatches = new WeakMap();
     const [elementMatchers, textMatchers] = this.prepareMatching(
       container,
