@@ -622,5 +622,11 @@ describe('Editor', function() {
       editor.insertText(0, '<b>Test</b>');
       expect(editor.getHTML(0, 11)).toEqual('&lt;b&gt;Test&lt;/b&gt;');
     });
+
+    it('multiline code', function() {
+      const editor = this.initialize(Editor, '<p>0123</p><p>4567</p>');
+      editor.formatLine(0, 9, { 'code-block': 'javascript' });
+      expect(editor.getHTML(0, 9)).toEqual('<pre>0123\n4567</pre>');
+    });
   });
 });

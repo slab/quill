@@ -2,7 +2,7 @@ import Block from '../blots/block';
 import Break from '../blots/break';
 import Cursor from '../blots/cursor';
 import Inline from '../blots/inline';
-import TextBlot from '../blots/text';
+import TextBlot, { escapeText } from '../blots/text';
 import Container from '../blots/container';
 import Quill from '../core/quill';
 
@@ -14,8 +14,13 @@ class CodeBlockContainer extends Container {
   }
 
   html(index, length) {
-    const html = this.domNode.innerText.slice(index, index + length);
-    return `<pre>${html}</pre>`;
+    let text = this.domNode.innerText;
+    // TODO find more robust solution for <select> turning into \n
+    if (text.startsWith('\n')) {
+      text = text.slice(1);
+    }
+    text = text.slice(index, index + length);
+    return `<pre>${escapeText(text)}</pre>`;
   }
 }
 
