@@ -156,6 +156,13 @@ class Quill {
     this.enable(false);
   }
 
+  editReadOnly(modifier) {
+    this.allowReadOnlyEdits = true;
+    const value = modifier();
+    this.allowReadOnlyEdits = false;
+    return value;
+  }
+
   enable(enabled = true) {
     this.scroll.enable(enabled);
     this.container.classList.toggle('ql-disabled', !enabled);
@@ -354,13 +361,6 @@ class Quill {
 
   once(...args) {
     return this.emitter.once(...args);
-  }
-
-  readOnlyEdit(modifier) {
-    this.allowReadOnlyEdits = true;
-    const value = modifier();
-    this.allowReadOnlyEdits = false;
-    return value;
   }
 
   removeFormat(index, length, source) {
