@@ -122,6 +122,7 @@ class Quill {
     if (this.options.readOnly) {
       this.disable();
     }
+    this.allowReadOnlyEdits = false;
   }
 
   addContainer(container, refNode = null) {
@@ -355,6 +356,13 @@ class Quill {
     return this.emitter.once(...args);
   }
 
+  readOnlyEdit(modifier) {
+    this.allowReadOnlyEdits = true;
+    const value = modifier();
+    this.allowReadOnlyEdits = false;
+    return value;
+  }
+
   removeFormat(index, length, source) {
     [index, length, , source] = overload(index, length, source);
     return modify.call(
@@ -536,7 +544,11 @@ function expandConfig(container, userConfig) {
 // Handle selection preservation and TEXT_CHANGE emission
 // common to modification APIs
 function modify(modifier, source, index, shift) {
-  if (!this.isEnabled() && source === Emitter.sources.USER) {
+  if (
+    !this.isEnabled() &&
+    source === Emitter.sources.USER &&
+    !this.allowReadOnlyEdits
+  ) {
     return new Delta();
   }
   let range = index == null ? null : this.getSelection();
