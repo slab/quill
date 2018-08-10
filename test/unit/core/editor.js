@@ -616,5 +616,11 @@ describe('Editor', function() {
       const editor = this.initialize(Editor, '<p><a>a</a></p>');
       expect(editor.getHTML(0, 1)).toEqual('<a>a</a>');
     });
+
+    it('escape html', function() {
+      const editor = this.initialize(Editor, '<p><br></p>');
+      editor.insertText(0, '<b>Test</b>');
+      expect(editor.getHTML(0, 11)).toEqual('&lt;b&gt;Test&lt;/b&gt;');
+    });
   });
 });

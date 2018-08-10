@@ -6,7 +6,7 @@ import Module from '../core/module';
 import { blockDelta } from '../blots/block';
 import BreakBlot from '../blots/break';
 import CursorBlot from '../blots/cursor';
-import TextBlot from '../blots/text';
+import TextBlot, { escapeText } from '../blots/text';
 import CodeBlock, { CodeBlockContainer } from '../formats/code';
 import { traverse } from '../modules/clipboard';
 
@@ -238,18 +238,7 @@ class Syntax extends Module {
 
   highlightBlot(text, language = 'plain') {
     if (language === 'plain') {
-      return text
-        .replace(/[&<>"']/g, s => {
-          // https://lodash.com/docs#escape
-          const entityMap = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;',
-          };
-          return entityMap[s];
-        })
+      return escapeText(text)
         .split('\n')
         .reduce((delta, line, i) => {
           if (i !== 0) {

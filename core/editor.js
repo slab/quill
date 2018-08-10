@@ -7,7 +7,7 @@ import { LeafBlot } from 'parchment';
 import CursorBlot from '../blots/cursor';
 import Block, { bubbleFormats } from '../blots/block';
 import Break from '../blots/break';
-import TextBlot from '../blots/text';
+import TextBlot, { escapeText } from '../blots/text';
 
 const ASCII = /^[ -~]*$/;
 
@@ -255,7 +255,7 @@ function convertHTML(blot, index, length, isRoot = false) {
   if (typeof blot.html === 'function') {
     return blot.html(index, length);
   } else if (blot instanceof TextBlot) {
-    return blot.value().slice(index, index + length);
+    return escapeText(blot.value().slice(index, index + length));
   } else if (blot.children) {
     // TODO fix API
     if (blot.statics.blotName === 'list-container') {
