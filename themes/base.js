@@ -162,18 +162,30 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
             'input.ql-image[type=file]',
           );
           if (fileInput == null) {
+            const accept = this.quill.uploader.options.mimetypes.join(', ');
             fileInput = document.createElement('input');
             fileInput.setAttribute('type', 'file');
-            fileInput.setAttribute(
-              'accept',
-              this.quill.uploader.options.mimetypes.join(', '),
-            );
+            fileInput.setAttribute('accept', accept);
             fileInput.classList.add('ql-image');
-            fileInput.addEventListener('change', () => {
-              const range = this.quill.getSelection(true);
-              this.quill.uploader.upload(range, fileInput.files);
-              fileInput.value = '';
-            });
+            if (
+              typeof window.cordova === 'object' &&
+              typeof window.chooser === 'object' &&
+              typeof window.chooser.getFile === 'function'
+            ) {
+              fileInput.addEventListener('click', e => {
+                e.preventDefault();
+                const range = this.quill.getSelection(true);
+                window.chooser.getFile(accept).then(file => {
+                  this.quill.uploader.upload(range, [file]);
+                });
+              });
+            } else {
+              fileInput.addEventListener('change', () => {
+                const range = this.quill.getSelection(true);
+                this.quill.uploader.upload(range, fileInput.files);
+                fileInput.value = '';
+              });
+            }
             this.container.appendChild(fileInput);
           }
           fileInput.click();
