@@ -37,30 +37,62 @@ function compareApproximately(actual, expected, tolerance) {
 }
 
 function compareHTML(actual, expected, ignoreClassId, ignoreUI = true) {
-  const [div1, div2] = [actual, expected].map(function(html) {
-    if (html instanceof HTMLElement) {
-      html = html.innerHTML;
-    }
-    const container = document.createElement('div');
-    container.innerHTML = html.replace(/\n\s*/g, '');
-    if (ignoreUI) {
-      Array.from(container.querySelectorAll('.ql-ui')).forEach(node => {
-        node.remove();
-      });
-    }
-    return container;
-  });
   let ignoredAttributes = ['width', 'height', 'data-row', 'contenteditable'];
   if (ignoreClassId) {
     ignoredAttributes = ignoredAttributes.concat(['class', 'id']);
   }
-  const message = compareNodes(div1, div2, ignoredAttributes);
+
+  [actual, expected] = [actual, expected].map(html => {
+    return html instanceof HTMLElement ? html.innerHTML : html;
+  });
+
+  const [html1, html2] = [actual, expected].map(html => {
+    return getSanitizedRawHtml(html, ignoreUI);
+  });
+
+  if (html1 !== html2) {
+    console.error(html1); // eslint-disable-line no-console
+    console.error(html2); // eslint-disable-line no-console
+    return { pass: false, message: 'expected raw HTML to match' };
+  }
+
+  const [node1, node2] = [actual, expected].map(html => {
+    return getSanitizedNodes(html, ignoreUI);
+  });
+
+  const message = compareNodes(node1, node2, ignoredAttributes);
+
   if (message != null) {
-    console.error(div1.innerHTML); // eslint-disable-line no-console
-    console.error(div2.innerHTML); // eslint-disable-line no-console
+    console.error(node1.innerHTML); // eslint-disable-line no-console
+    console.error(node2.innerHTML); // eslint-disable-line no-console
     return { pass: false, message };
   }
+
   return { pass: true, message: 'HTMLs equal' };
+}
+
+function getSanitizedRawHtml(html, ignoreUI = true) {
+  // cleanup whitespace
+  html = html
+    .trim()
+    .replace(/\n+/g, '')
+    .replace(/>([^<]+)(?=<)/g, match => `>${match.slice(1).trim()}`);
+
+  // remove ql-ui tags
+  if (ignoreUI) {
+    html = html.replace(/<([a-z]+)[^>]+class="ql-ui"[^>]*>(.*?)<\/\1>/g, '');
+  }
+  // remove rest of the attributes
+  return html.replace(/\s[a-z-]+=["'][^"']+["']/g, '');
+}
+
+function getSanitizedNodes(html, ignoreUI = true) {
+  const container = document.createElement('div');
+  container.innerHTML = html.replace(/\n\s*/g, '');
+  if (ignoreUI) {
+    container.querySelectorAll('.ql-ui').forEach(node => node.remove());
+  }
+  return container;
 }
 
 function compareNodes(node1, node2, ignoredAttributes = []) {

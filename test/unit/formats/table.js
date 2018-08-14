@@ -59,7 +59,7 @@ describe('Table', function() {
     const editor = this.initialize(Editor, '<p>Test</p>');
     editor.formatLine(0, 5, { table: 'a' });
     expect(this.container).toEqualHTML(
-      '<table><tr><td data-row="a">Test</td></tr></table>',
+      '<table><tbody><tr><td data-row="a">Test</td></tr></tbody></table>',
     );
   });
 
@@ -67,7 +67,7 @@ describe('Table', function() {
     const editor = this.initialize(Editor, '<h1>Test</h1>');
     editor.formatLine(0, 5, { table: 'a' });
     expect(this.container).toEqualHTML(
-      '<table><tr><td data-row="a">Test</td></tr></table>',
+      '<table><tbody><tr><td data-row="a">Test</td></tr></tbody></table>',
     );
   });
 
