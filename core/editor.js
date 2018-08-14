@@ -234,7 +234,7 @@ function convertListHTML(items, lastIndent, types) {
   const [{ child, offset, length, indent, type }, ...rest] = items;
   const [tag, attribute] = getListType(type);
   if (indent > lastIndent) {
-    types.push(tag);
+    types.push(type);
     return `<${tag}><li${attribute}>${convertHTML(
       child,
       offset,
