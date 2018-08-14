@@ -44,6 +44,10 @@ module.exports = config => {
         'record-screenshots': false,
       },
       build: sauce.build,
+      // There is no way to securely allow community PRs to be built and tested
+      // by Travis and SauceLabs. Please do not abuse.
+      username: 'quill',
+      accessKey: 'ced60aed-80ad-436b-9ba8-690ed1205180',
       tunnelIdentifier: sauce.tunnel,
     },
     customLaunchers: browsers,
@@ -51,7 +55,6 @@ module.exports = config => {
 
   /* eslint-disable no-param-reassign */
   if (process.env.TRAVIS) {
-    config.sauceLabs.startConnect = false;
     config.transports = ['polling'];
     config.browsers = [process.env.BROWSER];
     config.browserDisconnectTimeout = 10000;

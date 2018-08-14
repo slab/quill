@@ -8,12 +8,6 @@ dist: trusty
 cache:
   directories:
     - node_modules
-addons:
-  sauce_connect:
-    username: "quill"
-    # There is no way to securely allow community PRs to be built and tested
-    # by Travis and SauceLabs. Please do not abuse.
-    access_key: "ced60aed-80ad-436b-9ba8-690ed1205180"
 env:
   matrix:
     - BROWSER=mac-chrome-latest
