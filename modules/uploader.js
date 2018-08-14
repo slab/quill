@@ -27,7 +27,10 @@ class Uploader extends Module {
   upload(range, files) {
     const uploads = [];
     Array.from(files).forEach(file => {
-      if (file && this.options.mimetypes.includes(file.type)) {
+      if (
+        file &&
+        this.options.mimetypes.includes(file.type || file.mediaType)
+      ) {
         uploads.push(file);
       }
     });
@@ -41,6 +44,9 @@ Uploader.DEFAULTS = {
   mimetypes: ['image/png', 'image/jpeg'],
   handler(range, files) {
     const promises = files.map(file => {
+      if (typeof file.dataURI === 'string') {
+        return Promise.resolve(file.dataURI);
+      }
       return new Promise(resolve => {
         const reader = new FileReader();
         reader.onload = e => {
