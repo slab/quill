@@ -78,3 +78,21 @@ var quill = new Quill('#editor', {
   }
 });
 ```
+
+### normalizePasteData
+
+A function allowing you to provide custom html normalization or sanitization of pasted text and/or html data.
+
+```javascript
+var quill = new Quill('#editor', {
+  modules: {
+    clipboard: {
+      normalizePasteData(clipboardData) {
+        const pastedHTML = clipboardData.get('text/html')
+        const normalizedHTMLString = myNormalizationFn(pastedHTML)
+        return normalizedHTMLString // or return null to fallback to default implementation
+      }
+    }
+  }
+}
+```

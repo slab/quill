@@ -5,16 +5,19 @@ import Quill from '../../../core';
 describe('Clipboard', function() {
   describe('events', function() {
     beforeEach(function() {
-      this.quill = this.initialize(Quill, '<h1>0123</h1><p>5<em>67</em>8</p>');
+      this.baseHTML = '<h1>0123</h1><p>5<em>67</em>8</p>';
+      this.quill = this.initialize(Quill, this.baseHTML);
       this.quill.setSelection(2, 5);
     });
 
     describe('paste', function() {
       beforeAll(function() {
+        this.pastedHTML = '<strong>|</strong>';
+        this.pastedText = '|';
         this.clipboardEvent = {
           clipboardData: {
             getData: type =>
-              type === 'text/html' ? '<strong>|</strong>' : '|',
+              type === 'text/html' ? this.pastedHTML : this.pastedText,
           },
           preventDefault: () => {},
         };
@@ -54,6 +57,55 @@ describe('Clipboard', function() {
           expect(change).not.toHaveBeenCalled();
           done();
         }, 2);
+      });
+
+      describe('options.normalizePasteData', function() {
+        beforeEach(function() {
+          this.capturePasteWithNormalizeHandler = handler => {
+            this.quill = this.initialize(Quill, this.baseHTML, this.container, {
+              modules: {
+                clipboard: {
+                  normalizePasteData: handler,
+                },
+              },
+            });
+            this.clipboard = this.quill.clipboard;
+            spyOn(this.clipboard, 'convert').and.callThrough();
+            this.clipboard.onCapturePaste(this.clipboardEvent);
+          };
+        });
+
+        it('uses the returned html if return value is present', function() {
+          const normalizedHTML = '<div>foo</div>';
+          const normalizePasteData = jasmine
+            .createSpy('normalizePasteData')
+            .and.returnValue(normalizedHTML);
+          this.capturePasteWithNormalizeHandler(normalizePasteData);
+          expect(normalizePasteData).toHaveBeenCalledWith(
+            this.clipboardEvent.clipboardData,
+          );
+          expect(this.clipboard.convert).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+              html: normalizedHTML,
+              text: this.pastedText,
+            }),
+            jasmine.any(Object), // format values not relevant for this test
+          );
+        });
+
+        it('falls back to default values if return value is null', function() {
+          const normalizePasteData = jasmine
+            .createSpy('normalizePasteData')
+            .and.returnValue(null);
+          this.capturePasteWithNormalizeHandler(normalizePasteData);
+          expect(this.clipboard.convert).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+              html: this.pastedHTML,
+              text: this.pastedText,
+            }),
+            jasmine.any(Object), // format values not relevant for this test
+          );
+        });
       });
     });
 
