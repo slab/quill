@@ -353,7 +353,7 @@ describe('Editor', function() {
         new Delta().insert({ image: '/assets/favicon.png' }, { italic: true }),
       );
       expect(this.container).toEqualHTML(
-        '<p><em><img src="/assets/favicon.png"></em>',
+        '<p><em><img src="/assets/favicon.png"></em></p>',
       );
     });
 

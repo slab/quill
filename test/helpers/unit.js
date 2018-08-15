@@ -43,6 +43,14 @@ function compareHTML(actual, expected, ignoreClassId, ignoreUI = true) {
     }
     const container = document.createElement('div');
     container.innerHTML = html.replace(/\n\s*/g, '');
+    // Heuristic for if DOM 'fixed' our input HTML
+    if (
+      container.innerHTML.replace(/\s/g, '').length !==
+      html.replace(/\s/g, '').length
+    ) {
+      console.error('Invalid markup', html); // eslint-disable-line no-console
+      throw new Error('Invalid markup passed to compareHTML');
+    }
     if (ignoreUI) {
       Array.from(container.querySelectorAll('.ql-ui')).forEach(node => {
         node.remove();
