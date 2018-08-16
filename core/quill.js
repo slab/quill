@@ -102,11 +102,12 @@ class Quill {
       }
     });
     this.emitter.on(Emitter.events.SCROLL_UPDATE, (source, mutations) => {
-      const range = this.selection.lastRange;
-      const index = range && range.length === 0 ? range.index : undefined;
+      const oldRange = this.selection.lastRange;
+      const [newRange] = this.selection.getRange();
+      const selectionInfo = (oldRange && newRange) ? [oldRange, newRange] : undefined;
       modify.call(
         this,
-        () => this.editor.update(null, mutations, index),
+        () => this.editor.update(null, mutations, selectionInfo),
         source,
       );
     });

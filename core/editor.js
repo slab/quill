@@ -188,7 +188,7 @@ class Editor {
     return this.applyDelta(delta);
   }
 
-  update(change, mutations = [], cursorIndex = undefined) {
+  update(change, mutations = [], selectionInfo = undefined) {
     const oldDelta = this.delta;
     if (
       mutations.length === 1 &&
@@ -203,9 +203,13 @@ class Editor {
       const oldValue = mutations[0].oldValue.replace(CursorBlot.CONTENTS, '');
       const oldText = new Delta().insert(oldValue);
       const newText = new Delta().insert(textBlot.value());
+      const relativeSelectionInfo = selectionInfo && [
+        { index: selectionInfo[0].index - index, length: selectionInfo[0].length },
+        { index: selectionInfo[1].index - index, length: selectionInfo[1].length },
+      ];
       const diffDelta = new Delta()
         .retain(index)
-        .concat(oldText.diff(newText, cursorIndex));
+        .concat(diffDeltas(oldText, newText, relativeSelectionInfo));
       change = diffDelta.reduce((delta, op) => {
         if (op.insert) {
           return delta.insert(op.insert, formats);
@@ -216,7 +220,7 @@ class Editor {
     } else {
       this.delta = this.getDelta();
       if (!change || !equal(oldDelta.compose(change), this.delta)) {
-        change = oldDelta.diff(this.delta, cursorIndex);
+        change = diffDeltas(oldDelta, this.delta, selectionInfo);
       }
     }
     return change;
@@ -326,6 +330,63 @@ function normalizeDelta(delta) {
     }
     return normalizedDelta.push(op);
   }, new Delta());
+}
+
+function splitDelta(delta, index) {
+  return [delta.slice(0, index), delta.slice(index)];
+}
+
+function diffDeltas(oldDelta, newDelta, selectionInfo = undefined) {
+
+  if (selectionInfo) {
+    // generate better diffs than Delta#diff by taking into account the
+    // old and new selection.  for example, a text change from "xxx" to "xx"
+    // could be a delete or forwards-delete of any one of the x's, or the
+    // result of selecting two of the x's and typing "x".
+    const [oldSelection, newSelection] = selectionInfo;
+    const oldDeltaLength = oldDelta.length();
+    const newDeltaLength = newDelta.length();
+    if (oldSelection.length === 0 && newSelection.length === 0) {
+      const oldCursor = oldSelection.index;
+      const newCursor = newSelection.index;
+      const [oldBefore, oldAfter] = splitDelta(oldDelta, oldCursor);
+      const [newBefore, newAfter] = splitDelta(newDelta, newCursor);
+      if (equal(oldAfter, newAfter)) {
+        const prefixLength = Math.min(oldCursor, newCursor);
+        const [oldPrefix, oldMiddle] = splitDelta(oldBefore, prefixLength);
+        const [newPrefix, newMiddle] = splitDelta(newBefore, prefixLength);
+        if (equal(oldPrefix, newPrefix)) {
+          // insert or delete right before cursor
+          return new Delta().retain(prefixLength).concat(oldMiddle.diff(newMiddle));
+        }
+      } else if (equal(oldBefore, newBefore)) {
+        const suffixLength = Math.min(oldDeltaLength - oldCursor, newDeltaLength - newCursor);
+        const [oldMiddle, oldSuffix] = splitDelta(oldAfter, oldDeltaLength - oldCursor - suffixLength);
+        const [newMiddle, newSuffix] = splitDelta(newAfter, newDeltaLength - newCursor - suffixLength);
+        if (equal(oldSuffix, newSuffix)) {
+          // insert or delete right after cursor
+          return new Delta().retain(oldCursor).concat(oldMiddle.diff(newMiddle));
+        }
+      }
+    } else if (oldSelection.length > 0 && newSelection.length === 0) {
+      // see if diff could be a splice of the old selection range
+      const oldPrefix = oldDelta.slice(0, oldSelection.index);
+      const oldSuffix = oldDelta.slice(oldSelection.index + oldSelection.length);
+      const prefixLength = oldPrefix.length();
+      const suffixLength = oldSuffix.length();
+      if (newDeltaLength >= prefixLength + suffixLength) {
+        const newPrefix = newDelta.slice(0, prefixLength);
+        const newSuffix = newDelta.slice(newDeltaLength - suffixLength);
+        if (equal(oldPrefix, newPrefix) && equal(oldSuffix, newSuffix)) {
+          const oldMiddle = oldDelta.slice(prefixLength, oldDeltaLength - suffixLength);
+          const newMiddle = newDelta.slice(prefixLength, newDeltaLength - suffixLength);
+          return new Delta().retain(prefixLength).concat(newMiddle).delete(oldMiddle.length());
+        }
+      }
+    }
+  }
+
+  return oldDelta.diff(newDelta);
 }
 
 export default Editor;
