@@ -243,7 +243,7 @@ describe('Quill', function() {
     ) {
       return function(done) {
         this.quill.setText(`${oldText}\n`);
-        this.quill.setSelection(oldSelection); // number or {index, length}
+        this.quill.setSelection(oldSelection); // number or Range
         this.quill.update();
         const oldContents = this.quill.getContents();
         const textNode = this.container.firstChild.firstChild.firstChild;
@@ -345,7 +345,7 @@ describe('Quill', function() {
       'replace yay with y',
       editTest(
         'yay',
-        { index: 0, length: 3 },
+        new Range(0, 3),
         'y',
         1,
         new Delta().insert('y').delete(3),
