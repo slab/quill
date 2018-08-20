@@ -65,18 +65,6 @@ class SyntaxCodeBlock extends CodeBlock {
 
   static register() {} // Syntax module will register
 
-  delta() {
-    if (this.cache.delta == null) {
-      const delta = super.delta();
-      this.cache.delta = delta.compose(
-        new Delta().retain(delta.length(), {
-          [CodeToken.blotName]: null,
-        }),
-      );
-    }
-    return this.cache.delta;
-  }
-
   format(name, value) {
     if (name === this.statics.blotName && value) {
       this.domNode.setAttribute('data-language', value);

@@ -178,12 +178,15 @@ function blockDelta(blot) {
 
 function bubbleFormats(blot, formats = {}) {
   if (blot == null) return formats;
-  if (typeof blot.formats === 'function') {
+  if (
+    typeof blot.formats === 'function' &&
+    blot.statics.blotName !== 'code-token'
+  ) {
     formats = extend(formats, blot.formats());
   }
   if (
     blot.parent == null ||
-    blot.parent.blotName === 'scroll' ||
+    blot.parent.statics.blotName === 'scroll' ||
     blot.parent.statics.scope !== blot.statics.scope
   ) {
     return formats;
