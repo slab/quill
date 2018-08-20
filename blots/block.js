@@ -178,11 +178,10 @@ function blockDelta(blot) {
 
 function bubbleFormats(blot, formats = {}) {
   if (blot == null) return formats;
-  if (
-    typeof blot.formats === 'function' &&
-    blot.statics.blotName !== 'code-token'
-  ) {
+  if (typeof blot.formats === 'function') {
     formats = extend(formats, blot.formats());
+    // exclude syntax highlighting from deltas and getFormat()
+    delete formats['code-token'];
   }
   if (
     blot.parent == null ||
