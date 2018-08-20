@@ -234,28 +234,123 @@ describe('Quill', function() {
       }, 1);
     });
 
-    it('insert same character', function(done) {
-      this.quill.setText('aaaa\n');
-      this.quill.setSelection(2);
-      this.quill.update();
-      const old = this.quill.getContents();
-      const textNode = this.container.firstChild.firstChild.firstChild;
-      textNode.data = 'aaaaa';
-      this.quill.selection.setNativeRange(textNode.data, 3);
-      const delta = new Delta().retain(2).insert('a');
-      setTimeout(() => {
-        const calls = this.quill.emitter.emit.calls.all();
-        calls.pop();
-        const { args } = calls.pop();
-        expect(args).toEqual([
-          Emitter.events.TEXT_CHANGE,
-          delta,
-          old,
-          Emitter.sources.USER,
-        ]);
-        done();
-      }, 1);
+    function editTest(
+      oldText,
+      oldSelection,
+      newText,
+      newSelection,
+      expectedDelta,
+    ) {
+      return function(done) {
+        this.quill.setText(`${oldText}\n`);
+        this.quill.setSelection(oldSelection); // number or Range
+        this.quill.update();
+        const oldContents = this.quill.getContents();
+        const textNode = this.container.firstChild.firstChild.firstChild;
+        textNode.data = newText;
+        if (typeof newSelection === 'number') {
+          this.quill.selection.setNativeRange(textNode, newSelection);
+        } else {
+          this.quill.selection.setNativeRange(
+            textNode,
+            newSelection.index,
+            textNode,
+            newSelection.index + newSelection.length,
+          );
+        }
+        setTimeout(() => {
+          const calls = this.quill.emitter.emit.calls.all();
+          if (
+            calls[calls.length - 1].args[1] === Emitter.events.SELECTION_CHANGE
+          ) {
+            calls.pop();
+          }
+          const { args } = calls.pop();
+          expect(args).toEqual([
+            Emitter.events.TEXT_CHANGE,
+            expectedDelta,
+            oldContents,
+            Emitter.sources.USER,
+          ]);
+          done();
+        }, 1);
+      };
+    }
+
+    describe('insert a in aaaa', function() {
+      it(
+        'at index 0',
+        editTest('aaaa', 0, 'aaaaa', 1, new Delta().insert('a')),
+      );
+      it(
+        'at index 1',
+        editTest('aaaa', 1, 'aaaaa', 2, new Delta().retain(1).insert('a')),
+      );
+      it(
+        'at index 2',
+        editTest('aaaa', 2, 'aaaaa', 3, new Delta().retain(2).insert('a')),
+      );
+      it(
+        'at index 3',
+        editTest('aaaa', 3, 'aaaaa', 4, new Delta().retain(3).insert('a')),
+      );
     });
+
+    describe('insert a in xaa', function() {
+      it(
+        'at index 1',
+        editTest('xaa', 1, 'xaaa', 2, new Delta().retain(1).insert('a')),
+      );
+      it(
+        'at index 2',
+        editTest('xaa', 2, 'xaaa', 3, new Delta().retain(2).insert('a')),
+      );
+      it(
+        'at index 3',
+        editTest('xaa', 3, 'xaaa', 4, new Delta().retain(3).insert('a')),
+      );
+    });
+
+    describe('insert aa in ax', function() {
+      it('at index 0', editTest('ax', 0, 'aaax', 2, new Delta().insert('aa')));
+      it(
+        'at index 1',
+        editTest('ax', 1, 'aaax', 3, new Delta().retain(1).insert('aa')),
+      );
+    });
+
+    describe('delete a in xaa', function() {
+      it(
+        'at index 1',
+        editTest('xaa', 2, 'xa', 1, new Delta().retain(1).delete(1)),
+      );
+      it(
+        'at index 2',
+        editTest('xaa', 3, 'xa', 2, new Delta().retain(2).delete(1)),
+      );
+    });
+
+    describe('forward-delete a in xaa', function() {
+      it(
+        'at index 1',
+        editTest('xaa', 1, 'xa', 1, new Delta().retain(1).delete(1)),
+      );
+      it(
+        'at index 2',
+        editTest('xaa', 2, 'xa', 2, new Delta().retain(2).delete(1)),
+      );
+    });
+
+    it(
+      'replace yay with y',
+      editTest(
+        'yay',
+        new Range(0, 3),
+        'y',
+        1,
+        new Delta().insert('y').delete(3),
+      ),
+    );
   });
 
   describe('setContents()', function() {
