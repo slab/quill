@@ -6,7 +6,7 @@ import DeltaOp from 'quill-delta/lib/op';
 import { LeafBlot } from 'parchment';
 import { Range } from './selection';
 import CursorBlot from '../blots/cursor';
-import Block, { bubbleFormats } from '../blots/block';
+import Block, { BlockEmbed, bubbleFormats } from '../blots/block';
 import Break from '../blots/break';
 import TextBlot, { escapeText } from '../blots/text';
 
@@ -34,7 +34,11 @@ class Editor {
             consumeNextNewline = false;
             text = text.slice(0, -1);
           }
-          if (index >= scrollLength && !text.endsWith('\n')) {
+          if (
+            (index >= scrollLength ||
+              this.scroll.descendant(BlockEmbed, index)[0]) &&
+            !text.endsWith('\n')
+          ) {
             consumeNextNewline = true;
           }
           this.scroll.insertAt(index, text);
