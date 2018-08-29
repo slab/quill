@@ -260,10 +260,16 @@ Keyboard.DEFAULTS = {
       format: ['list'],
       empty: true,
       handler(range, context) {
-        this.quill.format('list', false, Quill.sources.USER);
+        const formats = { list: false };
         if (context.format.indent) {
-          this.quill.format('indent', false, Quill.sources.USER);
+          formats.indent = false;
         }
+        this.quill.formatLine(
+          range.index,
+          range.length,
+          formats,
+          Quill.sources.USER,
+        );
       },
     },
     'checklist enter': {
