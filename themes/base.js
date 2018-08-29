@@ -115,7 +115,8 @@ class BaseTheme extends Theme {
           fillSelect(select, ALIGNS);
         }
         return new IconPicker(select, icons.align);
-      } else if (
+      }
+      if (
         select.classList.contains('ql-background') ||
         select.classList.contains('ql-color')
       ) {

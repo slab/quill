@@ -4,7 +4,8 @@ class Script extends Inline {
   static create(value) {
     if (value === 'super') {
       return document.createElement('sup');
-    } else if (value === 'sub') {
+    }
+    if (value === 'sub') {
       return document.createElement('sub');
     }
     return super.create(value);

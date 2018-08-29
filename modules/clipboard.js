@@ -81,7 +81,8 @@ class Clipboard extends Module {
       return new Delta().insert(text, {
         [CodeBlock.blotName]: formats[CodeBlock.blotName],
       });
-    } else if (!html) {
+    }
+    if (!html) {
       return new Delta().insert(text || '');
     }
     const doc = new DOMParser().parseFromString(
@@ -298,7 +299,8 @@ function traverse(scroll, node, elementMatchers, textMatchers, nodeMatches) {
     return textMatchers.reduce((delta, matcher) => {
       return matcher(node, delta, scroll);
     }, new Delta());
-  } else if (node.nodeType === node.ELEMENT_NODE) {
+  }
+  if (node.nodeType === node.ELEMENT_NODE) {
     return Array.from(node.childNodes || []).reduce((delta, childNode) => {
       let childrenDelta = traverse(
         scroll,

@@ -207,7 +207,8 @@ class Selection {
       const index = blot.offset(this.scroll);
       if (offset === 0) {
         return index;
-      } else if (blot instanceof ContainerBlot) {
+      }
+      if (blot instanceof ContainerBlot) {
         return index + blot.length();
       }
       return index + blot.index(node, offset);

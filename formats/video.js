@@ -1,5 +1,5 @@
 import { BlockEmbed } from '../blots/block';
-import Link from '../formats/link';
+import Link from './link';
 
 const ATTRIBUTES = ['height', 'width'];
 

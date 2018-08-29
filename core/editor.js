@@ -245,7 +245,8 @@ function convertListHTML(items, lastIndent, types) {
       offset,
       length,
     )}${convertListHTML(rest, indent, types)}`;
-  } else if (indent === lastIndent) {
+  }
+  if (indent === lastIndent) {
     return `</li><li${attribute}>${convertHTML(
       child,
       offset,
@@ -259,9 +260,11 @@ function convertListHTML(items, lastIndent, types) {
 function convertHTML(blot, index, length, isRoot = false) {
   if (typeof blot.html === 'function') {
     return blot.html(index, length);
-  } else if (blot instanceof TextBlot) {
+  }
+  if (blot instanceof TextBlot) {
     return escapeText(blot.value().slice(index, index + length));
-  } else if (blot.children) {
+  }
+  if (blot.children) {
     // TODO fix API
     if (blot.statics.blotName === 'list-container') {
       const items = [];

@@ -8,7 +8,7 @@ import BreakBlot from '../blots/break';
 import CursorBlot from '../blots/cursor';
 import TextBlot, { escapeText } from '../blots/text';
 import CodeBlock, { CodeBlockContainer } from '../formats/code';
-import { traverse } from '../modules/clipboard';
+import { traverse } from './clipboard';
 
 const TokenAttributor = new ClassAttributor('code-token', 'hljs', {
   scope: Scope.INLINE,

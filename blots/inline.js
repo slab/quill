@@ -8,9 +8,11 @@ class Inline extends InlineBlot {
     const otherIndex = Inline.order.indexOf(other);
     if (selfIndex >= 0 || otherIndex >= 0) {
       return selfIndex - otherIndex;
-    } else if (self === other) {
+    }
+    if (self === other) {
       return 0;
-    } else if (self < other) {
+    }
+    if (self < other) {
       return -1;
     }
     return 1;

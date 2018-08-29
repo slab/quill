@@ -183,9 +183,8 @@ class Quill {
       () => {
         const range = this.getSelection(true);
         let change = new Delta();
-        if (range == null) {
-          return change;
-        } else if (this.scroll.query(name, Parchment.Scope.BLOCK)) {
+        if (range == null) return change;
+        if (this.scroll.query(name, Parchment.Scope.BLOCK)) {
           change = this.editor.formatLine(range.index, range.length, {
             [name]: value,
           });

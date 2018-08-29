@@ -692,9 +692,11 @@ function tableSide(table, row, cell, offset) {
       return offset === 0 ? -1 : 1;
     }
     return cell.prev == null ? -1 : 1;
-  } else if (row.prev == null) {
+  }
+  if (row.prev == null) {
     return -1;
-  } else if (row.next == null) {
+  }
+  if (row.next == null) {
     return 1;
   }
   return null;
