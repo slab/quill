@@ -85,10 +85,7 @@ class Clipboard extends Module {
     if (!html) {
       return new Delta().insert(text || '');
     }
-    const doc = new DOMParser().parseFromString(
-      html.replace(/>\r?\n +</g, '><'), // Remove spaces between tags
-      'text/html',
-    );
+    const doc = new DOMParser().parseFromString(html, 'text/html');
     const container = doc.body;
     const nodeMatches = new WeakMap();
     const [elementMatchers, textMatchers] = this.prepareMatching(
@@ -471,7 +468,7 @@ function matchText(node, delta) {
   if (node.parentNode.tagName === 'O:P') {
     return delta.insert(text.trim());
   }
-  if (text.trim().length === 0 && node.parentNode == null) {
+  if (text.trim().length === 0) {
     return delta;
   }
   if (!isPre(node)) {
