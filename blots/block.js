@@ -51,6 +51,7 @@ class Block extends BlockBlot {
   insertAt(index, value, def) {
     if (def != null) {
       super.insertAt(index, value, def);
+      this.cache = {};
       return;
     }
     if (value.length === 0) return;
