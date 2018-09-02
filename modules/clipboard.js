@@ -6,6 +6,7 @@ import {
   EmbedBlot,
   Scope,
   StyleAttributor,
+  BlockBlot,
 } from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
@@ -367,8 +368,13 @@ function matchBlot(node, delta, scroll) {
       embed[match.blotName] = value;
       return new Delta().insert(embed, match.formats(node, scroll));
     }
-  } else if (typeof match.formats === 'function') {
-    return applyFormat(delta, match.blotName, match.formats(node, scroll));
+  } else {
+    if (match.prototype instanceof BlockBlot && !deltaEndsWith(delta, '\n')) {
+      delta.insert('\n');
+    }
+    if (typeof match.formats === 'function') {
+      return applyFormat(delta, match.blotName, match.formats(node, scroll));
+    }
   }
   return delta;
 }

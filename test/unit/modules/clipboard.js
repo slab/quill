@@ -128,6 +128,17 @@ describe('Clipboard', function() {
       expect(delta).toEqual(new Delta().insert('0\n1\n2\n3\n\n4\n\n5'));
     });
 
+    it('empty block', function() {
+      const html = '<h1>Test</h1><h2></h2><p>Body</p>';
+      const delta = this.clipboard.convert({ html });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('Test\n', { header: 1 })
+          .insert('\n', { header: 2 })
+          .insert('Body'),
+      );
+    });
+
     it('mixed inline and block', function() {
       const delta = this.clipboard.convert({
         html: '<div>One<div>Two</div></div>',
@@ -196,13 +207,13 @@ describe('Clipboard', function() {
         html:
           '<table>' +
           '<thead><tr><td>A1</td><td>A2</td><td>A3</td></tr></thead>' +
-          '<tbody><tr><td>B1</td><td>B2</td><td>B3</td></tr></tbody>' +
+          '<tbody><tr><td>B1</td><td></td><td>B3</td></tr></tbody>' +
           '</table>',
       });
       expect(delta).toEqual(
         new Delta()
           .insert('A1\nA2\nA3\n', { table: 1 })
-          .insert('B1\nB2\nB3\n', { table: 2 }),
+          .insert('B1\n\nB3\n', { table: 2 }),
       );
     });
 
