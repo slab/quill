@@ -129,7 +129,7 @@ class Table extends Module {
   listenBalanceCells() {
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, mutations => {
       mutations.some(mutation => {
-        if (mutation.target.tagName === 'TABLE') {
+        if (['TD', 'TR', 'TBODY', 'TABLE'].includes(mutation.target.tagName)) {
           this.quill.once(Quill.events.TEXT_CHANGE, (delta, old, source) => {
             if (source !== Quill.sources.USER) return;
             this.balanceTables();
