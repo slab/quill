@@ -364,6 +364,7 @@ Keyboard.DEFAULTS = {
     },
     'list autofill': {
       key: ' ',
+      shiftKey: null,
       collapsed: true,
       format: {
         list: false,
