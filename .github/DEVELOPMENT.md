@@ -2,7 +2,7 @@
 
 Quill's source is in [ES6](http://www.ecma-international.org/ecma-262/6.0/index.html) and utilizes [Webpack](https://webpack.github.io/) to organize its files. The documentation site (hosted at [quilljs.com](https://quilljs.com/)) is built with [Jekyll](http://jekyllrb.com/). [Karma](https://karma-runner.github.io/) and [Protractor](https://angular.github.io/protractor/) are used for testing.
 
-To develop Quill locally, you will want a copy of Quill's codebase, with the build pipeline and documentation site running locally. The documentation site lives in `doc/` but will use your local build instead of the CDN that the public site uses. This allows you to test changes on a local copy of all of the quilljs.com demos, such as the [standalone examples](https://github.com/quilljs/quill/docs/docs/standalone).
+To develop Quill locally, you will want a copy of Quill's codebase, with the build pipeline and documentation site running locally. The documentation site lives in `doc/` but will use your local build instead of the CDN that the public site uses. This allows you to test changes on a local copy of all of the quilljs.com demos, such as the [standalone examples](https://github.com/quilljs/quill/blob/develop/docs/docs/standalone).
 
 
 ### Setup
