@@ -153,7 +153,7 @@ class Clipboard extends Module {
   }
 
   onPaste(e, range) {
-    const html = e.clipboardData.getData('text/html');
+    let html = e.clipboardData.getData('text/html');
     const text = e.clipboardData.getData('text/plain');
     const files = Array.from(e.clipboardData.files || []);
     if (!html && files.length > 0) {
@@ -161,6 +161,12 @@ class Clipboard extends Module {
       return;
     }
     const formats = this.quill.getFormat(range.index);
+    if (this.options.normalizePasteData) {
+      const normalized = this.options.normalizePasteData(e.clipboardData);
+      if (typeof normalized === 'string') {
+        html = normalized;
+      }
+    }
     const pastedDelta = this.convert({ text, html }, formats);
     debug.log('onPaste', pastedDelta, { text, html });
     const delta = new Delta()
