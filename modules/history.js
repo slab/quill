@@ -1,6 +1,5 @@
 import { Scope } from 'parchment';
-import Delta from 'quill-delta';
-import DeltaOp from 'quill-delta/lib/op';
+import Delta, { Op } from 'quill-delta';
 import Quill from '../core/quill';
 import Module from '../core/module';
 
@@ -139,7 +138,7 @@ function guessUndoDelta(delta) {
   let failed = false;
   delta.forEach(op => {
     if (op.insert) {
-      undoDelta.delete(DeltaOp.length(op));
+      undoDelta.delete(Op.length(op));
     } else if (op.retain && op.attributes == null) {
       undoDelta.retain(op.retain);
     } else {
