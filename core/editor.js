@@ -1,8 +1,7 @@
 import clone from 'clone';
 import equal from 'deep-equal';
 import extend from 'extend';
-import Delta from 'quill-delta';
-import DeltaOp from 'quill-delta/lib/op';
+import Delta, { AttributeMap } from 'quill-delta';
 import { LeafBlot } from 'parchment';
 import { Range } from './selection';
 import CursorBlot from '../blots/cursor';
@@ -48,7 +47,7 @@ class Editor {
             const [leaf] = line.descendant(LeafBlot, offset);
             formats = extend(formats, bubbleFormats(leaf));
           }
-          attributes = DeltaOp.attributes.diff(formats, attributes) || {};
+          attributes = AttributeMap.diff(formats, attributes) || {};
         } else if (typeof op.insert === 'object') {
           const key = Object.keys(op.insert)[0]; // There should only be one key
           if (key == null) return index;
