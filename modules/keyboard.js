@@ -77,7 +77,7 @@ class Keyboard extends Module {
     this.listen();
   }
 
-  addBinding(keyBinding, context = {}, handler = {}) {
+  addBinding(keyBinding, context = {}, handler = {}, prepend = false) {
     const binding = normalize(keyBinding);
     if (binding == null) {
       debug.warn('Attempted to add invalid keyboard binding', binding);
@@ -93,7 +93,11 @@ class Keyboard extends Module {
     keys.forEach(key => {
       const singleBinding = extend({}, binding, { key }, context, handler);
       this.bindings[singleBinding.key] = this.bindings[singleBinding.key] || [];
-      this.bindings[singleBinding.key].push(singleBinding);
+      if (prepend) {
+        this.bindings[singleBinding.key].unshift(singleBinding);
+      } else {
+        this.bindings[singleBinding.key].push(singleBinding);
+      }
     });
   }
 
