@@ -62,8 +62,8 @@ const STYLE_ATTRIBUTORS = [
 class Clipboard extends Module {
   constructor(quill, options) {
     super(quill, options);
-    this.quill.root.addEventListener('copy', e => this.onCopy(e, false));
-    this.quill.root.addEventListener('cut', e => this.onCopy(e, true));
+    this.quill.root.addEventListener('copy', e => this.onCaptureCopy(e, false));
+    this.quill.root.addEventListener('cut', e => this.onCaptureCopy(e, true));
     this.quill.root.addEventListener('paste', this.onCapturePaste.bind(this));
     this.matchers = [];
     CLIPBOARD_CONFIG.concat(this.options.matchers).forEach(
@@ -125,26 +125,12 @@ class Clipboard extends Module {
     }
   }
 
-  onCaptureCopy(range) {
-    const text = this.quill.getText(range);
-    const html = this.quill.getSemanticHTML(range);
-    return { html, text };
-  }
-
-  onCapturePaste(e) {
-    if (e.defaultPrevented || !this.quill.isEnabled()) return;
-    e.preventDefault();
-    const range = this.quill.getSelection(true);
-    if (range == null) return;
-    this.onPaste(e, range);
-  }
-
-  onCopy(e, isCut = false) {
+  onCaptureCopy(e, isCut = false) {
     if (e.defaultPrevented) return;
     e.preventDefault();
     const [range] = this.quill.selection.getRange();
     if (range == null) return;
-    const { html, text } = this.onCaptureCopy(range, isCut);
+    const { html, text } = this.onCopy(range, isCut);
     e.clipboardData.setData('text/plain', text);
     e.clipboardData.setData('text/html', html);
     if (isCut) {
@@ -152,14 +138,28 @@ class Clipboard extends Module {
     }
   }
 
-  onPaste(e, range) {
+  onCapturePaste(e) {
+    if (e.defaultPrevented || !this.quill.isEnabled()) return;
+    e.preventDefault();
+    const range = this.quill.getSelection(true);
+    if (range == null) return;
     const html = e.clipboardData.getData('text/html');
     const text = e.clipboardData.getData('text/plain');
     const files = Array.from(e.clipboardData.files || []);
     if (!html && files.length > 0) {
       this.quill.uploader.upload(range, files);
-      return;
+    } else {
+      this.onPaste(range, { html, text });
     }
+  }
+
+  onCopy(range) {
+    const text = this.quill.getText(range);
+    const html = this.quill.getSemanticHTML(range);
+    return { html, text };
+  }
+
+  onPaste(range, { text, html }) {
     const formats = this.quill.getFormat(range.index);
     const pastedDelta = this.convert({ text, html }, formats);
     debug.log('onPaste', pastedDelta, { text, html });
