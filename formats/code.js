@@ -14,12 +14,10 @@ class CodeBlockContainer extends Container {
   }
 
   html(index, length) {
-    let text = this.domNode.innerText;
-    // TODO find more robust solution for <select> turning into \n
-    if (text.startsWith('\n')) {
-      text = text.slice(1);
-    }
-    text = text.slice(index, index + length);
+    const text = this.children
+      .map(child => child.domNode.innerText)
+      .join('\n')
+      .slice(index, index + length);
     return `<pre>${escapeText(text)}</pre>`;
   }
 }
