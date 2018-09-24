@@ -83,6 +83,7 @@ class Cursor extends EmbedBlot {
         this.domNode,
       );
     }
+    const { parentNode } = this.domNode;
     if (this.textNode.data !== Cursor.CONTENTS) {
       const text = this.textNode.data.split(Cursor.CONTENTS).join('');
       if (this.next instanceof TextBlot) {
@@ -97,6 +98,7 @@ class Cursor extends EmbedBlot {
       }
     }
     this.remove();
+    parentNode.normalize();
     if (start != null) {
       [start, end] = [start, end].map(offset => {
         return Math.max(0, Math.min(restoreText.data.length, offset - 1));

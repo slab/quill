@@ -1,5 +1,6 @@
 import Selection, { Range } from '../../../core/selection';
 import Cursor from '../../../blots/cursor';
+import Emitter from '../../../core/emitter';
 
 describe('Selection', function() {
   beforeEach(function() {
@@ -307,6 +308,19 @@ describe('Selection', function() {
       [range] = selection.getRange();
       expect(range).toEqual(null);
       expect(selection.hasFocus()).toBe(false);
+    });
+
+    it('after format', function(done) {
+      const selection = this.initialize(Selection, '<p>0123 567 9012</p>');
+      selection.setRange(new Range(5));
+      selection.format('bold', true);
+      selection.format('bold', false);
+      selection.setRange(new Range(8));
+      selection.emitter.once(Emitter.events.SCROLL_OPTIMIZE, () => {
+        const [range] = selection.getRange();
+        expect(range.index).toEqual(8);
+        done();
+      });
     });
   });
 
