@@ -4,8 +4,8 @@ import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
 
+const supportsRootNode = ('getRootNode' in document);
 let debug = logger('quill:toolbar');
-
 
 class Toolbar extends Module {
   constructor(quill, options) {
@@ -16,7 +16,8 @@ class Toolbar extends Module {
       quill.container.parentNode.insertBefore(container, quill.container);
       this.container = container;
     } else if (typeof this.options.container === 'string') {
-      this.container = document.querySelector(this.options.container);
+      const rootDocument = (supportsRootNode ? quill.container.getRootNode() : document);
+      this.container = rootDocument.querySelector(this.options.container);
     } else {
       this.container = this.options.container;
     }
