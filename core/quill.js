@@ -105,7 +105,7 @@ class Quill {
       const oldRange = this.selection.lastRange;
       const [newRange] = this.selection.getRange();
       const selectionInfo =
-        oldRange && newRange ? [oldRange, newRange] : undefined;
+        oldRange && newRange ? { oldRange, newRange } : undefined;
       modify.call(
         this,
         () => this.editor.update(null, mutations, selectionInfo),
