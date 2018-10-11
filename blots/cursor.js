@@ -83,25 +83,42 @@ class Cursor extends EmbedBlot {
         this.domNode,
       );
     }
-    const { parentNode } = this.domNode;
     if (this.textNode.data !== Cursor.CONTENTS) {
       const text = this.textNode.data.split(Cursor.CONTENTS).join('');
-      if (this.next instanceof TextBlot) {
-        restoreText = this.next.domNode;
-        this.next.insertAt(0, text);
-        this.textNode.data = Cursor.CONTENTS;
+      // Take text out of the cursor blot and add it to parchment and the DOM
+      // before removing the cursor blot (which will be reused in the future).
+      // Selection preservation note:  After we return the selection range we
+      // want from this function, and before it is applied, TextBlots are
+      // optimized, with any TextBlot that follows another TextBlot being
+      // removed and its contents inserted into the previous one, and same with
+      // the underlying text nodes.  Therefore, restoreText should not be a text
+      // node that will be optimized away.  Another consideration here is that
+      // we don't want the optimization in editor.update to run, because it
+      // won't be able to figure out this change based on looking at the value
+      // of the mutated text node. Therefore, we don't insert this.textNode into
+      // the document, we keep it in the blot which is removed.
+      if (this.prev instanceof TextBlot) {
+        this.prev.insertAt(this.prev.length(), text);
+        if (restoreText) {
+          restoreText = this.prev.domNode;
+          start += this.prev.length();
+          end += this.prev.length();
+        }
       } else {
-        this.textNode.data = text;
-        this.parent.insertBefore(this.scroll.create(this.textNode), this);
-        this.textNode = document.createTextNode(Cursor.CONTENTS);
-        this.domNode.appendChild(this.textNode);
+        const newTextNode = document.createTextNode(text);
+        this.parent.insertBefore(this.scroll.create(newTextNode), this);
+        if (restoreText) {
+          restoreText = newTextNode;
+          start -= 1;
+          end -= 1;
+        }
       }
+      this.textNode.data = Cursor.CONTENTS;
     }
     this.remove();
-    parentNode.normalize();
-    if (start != null) {
+    if (restoreText) {
       [start, end] = [start, end].map(offset => {
-        return Math.max(0, Math.min(restoreText.data.length, offset - 1));
+        return Math.max(0, Math.min(restoreText.data.length, offset));
       });
       return {
         startNode: restoreText,
