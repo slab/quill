@@ -210,7 +210,49 @@ describe('quill', function() {
     const header = await page.$('.ql-toolbar .ql-header.ql-active[value="1"]');
     expect(header).not.toBe(null);
 
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('ArrowUp');
+    await page.type('.ql-editor', 'AA');
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.down(SHORTKEY);
+    await page.keyboard.press('b');
+    await page.keyboard.press('b');
+    await page.keyboard.up(SHORTKEY);
+    await page.type('.ql-editor', 'B');
+    html = await page.$$eval('.ql-editor p', paras => paras[2].innerHTML);
+    expect(html).toBe('ABA');
+    await page.keyboard.down(SHORTKEY);
+    await page.keyboard.press('b');
+    await page.keyboard.up(SHORTKEY);
+    await page.type('.ql-editor', 'C');
+    await page.keyboard.down(SHORTKEY);
+    await page.keyboard.press('b');
+    await page.keyboard.up(SHORTKEY);
+    await page.type('.ql-editor', 'D');
+    html = await page.$$eval('.ql-editor p', paras => paras[2].innerHTML);
+    expect(html).toBe('AB<strong>C</strong>DA');
+    const selection = await page.evaluate(getSelectionInTextNode);
+    expect(selection).toBe('["DA",1,"DA",1]');
+
     // await page.waitFor(1000000);
     await browser.close();
   });
 });
+
+function getSelectionInTextNode() {
+  const {
+    anchorNode,
+    anchorOffset,
+    focusNode,
+    focusOffset,
+  } = document.getSelection();
+  return JSON.stringify([
+    anchorNode.data,
+    anchorOffset,
+    focusNode.data,
+    focusOffset,
+  ]);
+}

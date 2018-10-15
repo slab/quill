@@ -380,7 +380,15 @@ class Selection {
         nativeRange.native.collapsed &&
         nativeRange.start.node !== this.cursor.textNode
       ) {
-        this.cursor.restore();
+        const range = this.cursor.restore();
+        if (range) {
+          this.setNativeRange(
+            range.startNode,
+            range.startOffset,
+            range.endNode,
+            range.endOffset,
+          );
+        }
       }
       const args = [
         Emitter.events.SELECTION_CHANGE,
