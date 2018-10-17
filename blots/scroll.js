@@ -12,19 +12,21 @@ class Scroll extends ScrollBlot {
   constructor(registry, domNode, { emitter }) {
     super(registry, domNode);
     this.emitter = emitter;
-    // Some reason fixes composition issues with character languages in Windows/Chrome, Safari
-    this.domNode.addEventListener('DOMNodeInserted', () => {});
+    this.batch = false;
     this.optimize();
     this.enable();
   }
 
   batchStart() {
-    this.batch = true;
+    if (!Array.isArray(this.batch)) {
+      this.batch = [];
+    }
   }
 
   batchEnd() {
+    const mutations = this.batch;
     this.batch = false;
-    this.optimize();
+    this.update(mutations);
   }
 
   emitMount(blot) {
@@ -128,7 +130,7 @@ class Scroll extends ScrollBlot {
   }
 
   optimize(mutations = [], context = {}) {
-    if (this.batch === true) return;
+    if (this.batch) return;
     super.optimize(mutations, context);
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_OPTIMIZE, mutations, context);
@@ -144,7 +146,12 @@ class Scroll extends ScrollBlot {
   }
 
   update(mutations) {
-    if (this.batch === true) return;
+    if (this.batch) {
+      if (Array.isArray(mutations)) {
+        this.batch = this.batch.concat(mutations);
+      }
+      return;
+    }
     let source = Emitter.sources.USER;
     if (typeof mutations === 'string') {
       source = mutations;
