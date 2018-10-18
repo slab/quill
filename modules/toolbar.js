@@ -23,9 +23,10 @@ class Toolbar extends Module {
       this.container = container;
     }
     if (Array.isArray(this.options.items)) {
-      items = this.options.items;
+      addControls(this.container, this.options.items);
+    } else {
+      addControls(this.container, items);
     }
-    addControls(this.container, items);
     this.container.classList.add('ql-toolbar');
     this.controls = [];
     this.handlers = {};
