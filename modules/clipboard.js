@@ -474,7 +474,7 @@ function matchText(node, delta) {
   if (node.parentNode.tagName === 'O:P') {
     return delta.insert(text.trim());
   }
-  if (text.trim().length === 0) {
+  if (text.trim().length === 0 && text.includes('\n')) {
     return delta;
   }
   if (!isPre(node)) {
