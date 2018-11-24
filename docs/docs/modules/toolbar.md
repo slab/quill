@@ -113,6 +113,33 @@ var quill = new Quill('#editor', {
 });
 ```
 
+For example, the fool editor below
+
+{% include standalone/full.html %}
+
+can be configured with the following toolbar options.
+
+```javascript
+var quill = new Quill('#editor', {
+  modules: {
+    toolbar: [
+      [{ 'font': ['Sans Serif', 'serif', 'monospace'] }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      ['color', 'background'],
+      [{ 'script': 'sub' }, { 'script': 'super' }],
+      [{ 'header': 1 }, { 'header': 2 }, 'blockquote', 'code-block'],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+      [{ 'direction': 'rtl' }, { 'align': ['', 'center', 'right', 'justify'] }],
+      ['link', 'image', 'video', 'formula'],
+      ['clean']
+    ]
+  },
+  placeholder: 'Compose an epic...',
+  theme: 'snow'  // or 'bubble'
+});
+```
+
 For use cases requiring even more customization, you can manually create a toolbar in HTML, and pass the DOM element or selector into Quill. The `ql-toolbar` class will be added to the toolbar container and Quill attach appropriate handlers to `<button>` and `<select>` elements with a class name in the form `ql-${format}`. Buttons element may optionally have a custom `value` attribute.
 
 ```html
