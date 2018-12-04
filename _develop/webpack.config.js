@@ -39,7 +39,7 @@ const jsRules = {
       options: {
         presets: [
           [
-            'env',
+            '@babel/env',
             {
               targets: {
                 browsers: [
@@ -97,7 +97,7 @@ const tsRules = {
 };
 
 const baseConfig = {
-  mode: 'development',
+  mode: 'none',
   context: path.resolve(__dirname, '..'),
   entry: {
     'quill.js': ['./quill.js'],
