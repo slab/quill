@@ -1,0 +1,11 @@
+* text=auto
+
+*.css text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf linguist-language=JavaScript
+*.tsx text eol=lf linguist-language=JavaScript
+*.json text eol=lf
+*.html text eol=lf
+*.md text eol=lf
+.gitattributes text eol=lf
