@@ -3,19 +3,22 @@ import Delta, { Op } from 'quill-delta';
 import Quill from '../core/quill';
 import Module from '../core/module';
 
+const UNDO_CHANGE = 'undo';
+const REDO_CHANGE = 'redo';
+
 class History extends Module {
   constructor(quill, options) {
     super(quill, options);
     this.lastRecorded = 0;
-    this.ignoreChange = false;
+    this.changeType = false;
     this.clear();
     this.quill.on(
       Quill.events.EDITOR_CHANGE,
       (eventName, delta, oldDelta, source) => {
-        if (eventName !== Quill.events.TEXT_CHANGE || this.ignoreChange) return;
+        if (eventName !== Quill.events.TEXT_CHANGE) return;
         if (!this.options.userOnly || source === Quill.sources.USER) {
           this.record(delta, oldDelta);
-        } else {
+        } else if (!this.changeType) {
           this.transform(delta);
         }
       },
@@ -36,15 +39,13 @@ class History extends Module {
     }
   }
 
-  change(source, dest) {
+  change(source) {
     if (this.stack[source].length === 0) return;
     const delta = this.stack[source].pop();
-    this.stack[dest].push(delta);
-    this.lastRecorded = 0;
-    this.ignoreChange = true;
-    this.quill.updateContents(delta[source], Quill.sources.USER);
-    this.ignoreChange = false;
-    const index = getLastChangeIndex(this.quill.scroll, delta[source]);
+    this.changeType = source;
+    this.quill.updateContents(delta, Quill.sources.USER);
+    this.changeType = false;
+    const index = getLastChangeIndex(this.quill.scroll, delta);
     this.quill.setSelection(index);
   }
 
@@ -58,10 +59,17 @@ class History extends Module {
 
   record(changeDelta, oldDelta) {
     if (changeDelta.ops.length === 0) return;
-    this.stack.redo = [];
+    if (!this.changeType) {
+      this.stack.redo = [];
+    }
     let undoDelta = guessUndoDelta(changeDelta);
     if (undoDelta == null) {
       undoDelta = this.quill.getContents().diff(oldDelta);
+    }
+    if (this.changeType) {
+      this.stack[oppositeChange(this.changeType)].push(undoDelta);
+      this.lastRecorded = 0;
+      return;
     }
     const timestamp = Date.now();
     if (
@@ -69,37 +77,41 @@ class History extends Module {
       this.stack.undo.length > 0
     ) {
       const delta = this.stack.undo.pop();
-      undoDelta = undoDelta.compose(delta.undo);
-      changeDelta = delta.redo.compose(changeDelta);
+      undoDelta = undoDelta.compose(delta);
     } else {
       this.lastRecorded = timestamp;
     }
-    this.stack.undo.push({
-      redo: changeDelta,
-      undo: undoDelta,
-    });
+    this.stack.undo.push(undoDelta);
     if (this.stack.undo.length > this.options.maxStack) {
       this.stack.undo.shift();
     }
   }
 
   redo() {
-    this.change('redo', 'undo');
+    this.change(REDO_CHANGE);
   }
 
   transform(delta) {
-    this.stack.undo.forEach(change => {
-      change.undo = delta.transform(change.undo, true);
-      change.redo = delta.transform(change.redo, true);
-    });
-    this.stack.redo.forEach(change => {
-      change.undo = delta.transform(change.undo, true);
-      change.redo = delta.transform(change.redo, true);
-    });
+    let stackedUndoDelta = delta;
+    let stackedRedoDelta = delta;
+
+    for (let i = this.stack.undo.length; i; i -= 1) {
+      const change = this.stack.undo[i - 1];
+      this.stack.undo[i - 1] = stackedUndoDelta.transform(change, true);
+      stackedUndoDelta = change.transform(stackedUndoDelta);
+    }
+    for (let i = this.stack.redo.length; i; i -= 1) {
+      const change = this.stack.redo[i - 1];
+      this.stack.redo[i - 1] = stackedRedoDelta.transform(change, true);
+      stackedRedoDelta = change.transform(stackedRedoDelta);
+    }
+    // clear any undo/redos no longer available (i.e. other user deletes the inserted character)
+    this.stack.undo = this.stack.undo.filter(opNotEmpty);
+    this.stack.redo = this.stack.redo.filter(opNotEmpty);
   }
 
   undo() {
-    this.change('undo', 'redo');
+    this.change(UNDO_CHANGE);
   }
 }
 History.DEFAULTS = {
@@ -107,6 +119,10 @@ History.DEFAULTS = {
   maxStack: 100,
   userOnly: false,
 };
+
+function oppositeChange(change) {
+  return change === UNDO_CHANGE ? REDO_CHANGE : UNDO_CHANGE;
+}
 
 function endsWithNewlineChange(scroll, delta) {
   const lastOp = delta.ops[delta.ops.length - 1];
@@ -120,6 +136,10 @@ function endsWithNewlineChange(scroll, delta) {
     });
   }
   return false;
+}
+
+function opNotEmpty(op) {
+  return !!op.ops.length;
 }
 
 function getLastChangeIndex(scroll, delta) {
