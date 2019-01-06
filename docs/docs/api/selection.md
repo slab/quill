@@ -52,8 +52,8 @@ Sets user selection to given range, which will also focus the editor. Providing 
 
 ```javascript
 setSelection(index: Number, length: Number = 0, source: String = 'api')
-setSelection(range: { index: Number, length: Number = 0 },
-             souce: String = 'api')
+setSelection(range: { index: Number, length: Number },
+             source: String = 'api')
 ```
 
 **Examples**
