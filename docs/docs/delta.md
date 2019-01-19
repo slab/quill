@@ -14,7 +14,11 @@ Don't be confused by its name Delta&mdash;Deltas represents both documents and c
 
 Deltas are implemented as a separate [standalone library](https://github.com/quilljs/delta/), allowing its use outside of Quill. It is suitable for [Operational Transform](https://en.wikipedia.org/wiki/Operational_transformation) and can be used in realtime, Google Docs like applications. For a more in depth explanation behind Deltas, see [Designing the Delta Format](/guides/designing-the-delta-format/).
 
-**Note:** It is not recommended to construct Deltas by hand&mdash;rather use the chainable [`insert()`](https://github.com/quilljs/delta#insert), [`delete()`](https://github.com/quilljs/delta#delete), and [`retain()`](https://github.com/quilljs/delta#retain) methods to create new Deltas.
+**Note:** It is not recommended to construct Deltas by hand&mdash;rather use the chainable [`insert()`](https://github.com/quilljs/delta#insert), [`delete()`](https://github.com/quilljs/delta#delete), and [`retain()`](https://github.com/quilljs/delta#retain) methods to create new Deltas.  Use [`Quill.import()`](https://quilljs.com/docs/api/#import) to access the Delta library:
+
+```javascript
+var Delta = Quill.import('delta');
+```
 
 
 ## Document
