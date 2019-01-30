@@ -8,13 +8,13 @@ redirect_from:
   - /guides/working-with-deltas/
 ---
 
-Deltas are a simple, yet expressive format that can be used to describe Quill's contents and changes. The format is essentially JSON, and is human readable, yet easily parsible by machines. Deltas can describe any Quill document, includes all text and formatting information, without the ambiguity and complexity of HTML.
+Deltas are a simple, yet expressive format that can be used to describe Quill's contents and changes. The format is a strict subset of JSON, is human readable, and easily parsible by machines. Deltas can describe any Quill document, includes all text and formatting information, without the ambiguity and complexity of HTML.
 
 Don't be confused by its name Delta&mdash;Deltas represents both documents and changes to documents. If you think of Deltas as the instructions from going from one document to another, the way Deltas represent a document is by expressing the instructions starting from an empty document.
 
 Deltas are implemented as a separate [standalone library](https://github.com/quilljs/delta/), allowing its use outside of Quill. It is suitable for [Operational Transform](https://en.wikipedia.org/wiki/Operational_transformation) and can be used in realtime, Google Docs like applications. For a more in depth explanation behind Deltas, see [Designing the Delta Format](/guides/designing-the-delta-format/).
 
-**Note:** It is not recommended to construct Deltas by hand&mdash;rather use the chainable [`insert()`](https://github.com/quilljs/delta#insert), [`delete()`](https://github.com/quilljs/delta#delete), and [`retain()`](https://github.com/quilljs/delta#retain) methods to create new Deltas.
+**Note:** It is not recommended to construct Deltas by hand&mdash;rather use the chainable [`insert()`](https://github.com/quilljs/delta#insert), [`delete()`](https://github.com/quilljs/delta#delete), and [`retain()`](https://github.com/quilljs/delta#retain) methods to create new Deltas. You can use [`import()`](/docs/api/#import) to access Delta from Quill.
 
 
 ## Document
