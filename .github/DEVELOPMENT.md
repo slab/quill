@@ -32,6 +32,7 @@ Once the terminal settles (with messages indicating success from `jekyll`, `karm
 | Service                      | URL                                                                          |
 | :--------------------------- | :--------------------------------------------------------------------------- |
 | Jekyll Documentation Site    | [localhost:9000](http://localhost:9000)                                      |
+| Standalone Editor (Full)     | [localhost:9000/standalone/full](http://localhost:9000/standalone/full/)     |
 | Standalone Editor (Snow)     | [localhost:9000/standalone/snow](http://localhost:9000/standalone/snow/)     |
 | Standalone Editor (Bubble)   | [localhost:9000/standalone/bubble](http://localhost:9000/standalone/bubble/) |
 | Karma Test Runner            | [localhost:9000/karma](http://localhost:9000/karma)                          |
