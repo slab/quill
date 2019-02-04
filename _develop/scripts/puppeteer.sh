@@ -2,7 +2,7 @@
 
 npm start &
 sleep 20s
-./node_modules/.bin/jasmine test/functional/epic.js
+./node_modules/.bin/jasmine test/functional/error.js
 EXIT_CODE=$?
 
 FOREMAN_PID=$(pgrep foreman)
