@@ -39,13 +39,13 @@ class History extends Module {
   change(source, dest) {
     if (this.stack[source].length === 0) return;
     const delta = this.stack[source].pop();
-    this.stack[dest].push(delta);
-    delta[dest] = invertDelta(delta[source], this.quill.getContents());
+    const inverseDelta = invertDelta(delta, this.quill.getContents());
+    this.stack[dest].push(inverseDelta);
     this.lastRecorded = 0;
     this.ignoreChange = true;
-    this.quill.updateContents(delta[source], Quill.sources.USER);
+    this.quill.updateContents(delta, Quill.sources.USER);
     this.ignoreChange = false;
-    const index = getLastChangeIndex(this.quill.scroll, delta[source]);
+    const index = getLastChangeIndex(this.quill.scroll, delta);
     this.quill.setSelection(index);
   }
 
@@ -67,15 +67,11 @@ class History extends Module {
       this.stack.undo.length > 0
     ) {
       const delta = this.stack.undo.pop();
-      undoDelta = undoDelta.compose(delta.undo);
-      changeDelta = delta.redo.compose(changeDelta);
+      undoDelta = undoDelta.compose(delta);
     } else {
       this.lastRecorded = timestamp;
     }
-    this.stack.undo.push({
-      redo: changeDelta,
-      undo: undoDelta,
-    });
+    this.stack.undo.push(undoDelta);
     if (this.stack.undo.length > this.options.maxStack) {
       this.stack.undo.shift();
     }
@@ -86,9 +82,8 @@ class History extends Module {
   }
 
   transform(delta) {
-    if (this.debug) debugger; // eslint-disable-line no-debugger
-    transformStack(delta, this.stack, 'undo', 'redo');
-    transformStack(delta, this.stack, 'redo', 'undo');
+    transformStack(delta, this.stack.undo);
+    transformStack(delta, this.stack.redo);
   }
 
   undo() {
@@ -101,15 +96,14 @@ History.DEFAULTS = {
   userOnly: false,
 };
 
-function transformStack(delta, stack, which, other) {
+function transformStack(delta, stack) {
   let remoteDelta = delta;
-  for (let i = stack[which].length - 1; i >= 0; i -= 1) {
-    const frame = stack[which][i];
-    frame[which] = remoteDelta.transform(frame[which], true);
-    remoteDelta = frame[which].transform(remoteDelta);
-    frame[other] = remoteDelta.transform(frame[other], true);
-    if (frame[which].length() === 0) {
-      stack[which].splice(i, 1);
+  for (let i = stack.length - 1; i >= 0; i -= 1) {
+    const oldDelta = stack[i];
+    stack[i] = remoteDelta.transform(oldDelta, true);
+    remoteDelta = oldDelta.transform(remoteDelta);
+    if (stack[i].length() === 0) {
+      stack.splice(i, 1);
     }
   }
 }
