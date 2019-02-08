@@ -200,6 +200,7 @@ describe('History', function() {
       this.quill.history.options.delay = 0;
       this.quill.history.options.userOnly = true;
       this.quill.setText('\n');
+      this.quill.history.debug = true;
       this.quill.insertText(0, 'a', Quill.sources.USER);
       this.quill.insertText(1, 'b', Quill.sources.API);
       this.quill.insertText(2, 'c', Quill.sources.USER);
@@ -211,6 +212,25 @@ describe('History', function() {
       expect(this.quill.getText()).toEqual('bd\n');
       this.quill.history.redo();
       expect(this.quill.getText()).toEqual('abd\n');
+      this.quill.history.redo();
+      expect(this.quill.getText()).toEqual('abcd\n');
+      this.quill.history.debug = false;
+    });
+
+    it('correctly transform against remote changes', function() {
+      this.quill.history.options.delay = 0;
+      this.quill.history.options.userOnly = true;
+      this.quill.setText('b\n');
+      this.quill.insertText(1, 'd', Quill.sources.USER);
+      this.quill.insertText(0, 'a', Quill.sources.USER);
+      this.quill.insertText(2, 'c', Quill.sources.API);
+      expect(this.quill.getText()).toEqual('abcd\n');
+      this.quill.history.undo();
+      expect(this.quill.getText()).toEqual('bcd\n');
+      this.quill.history.undo();
+      expect(this.quill.getText()).toEqual('bc\n');
+      this.quill.history.redo();
+      expect(this.quill.getText()).toEqual('bcd\n');
       this.quill.history.redo();
       expect(this.quill.getText()).toEqual('abcd\n');
     });

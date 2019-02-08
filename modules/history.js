@@ -40,6 +40,7 @@ class History extends Module {
     if (this.stack[source].length === 0) return;
     const delta = this.stack[source].pop();
     this.stack[dest].push(delta);
+    delta[dest] = invertDelta(delta[source], this.quill.getContents());
     this.lastRecorded = 0;
     this.ignoreChange = true;
     this.quill.updateContents(delta[source], Quill.sources.USER);
@@ -59,10 +60,7 @@ class History extends Module {
   record(changeDelta, oldDelta) {
     if (changeDelta.ops.length === 0) return;
     this.stack.redo = [];
-    let undoDelta = guessUndoDelta(changeDelta);
-    if (undoDelta == null) {
-      undoDelta = this.quill.getContents().diff(oldDelta);
-    }
+    let undoDelta = invertDelta(changeDelta, oldDelta);
     const timestamp = Date.now();
     if (
       this.lastRecorded + this.options.delay > timestamp &&
@@ -88,14 +86,9 @@ class History extends Module {
   }
 
   transform(delta) {
-    this.stack.undo.forEach(change => {
-      change.undo = delta.transform(change.undo, true);
-      change.redo = delta.transform(change.redo, true);
-    });
-    this.stack.redo.forEach(change => {
-      change.undo = delta.transform(change.undo, true);
-      change.redo = delta.transform(change.redo, true);
-    });
+    if (this.debug) debugger; // eslint-disable-line no-debugger
+    transformStack(delta, this.stack, 'undo', 'redo');
+    transformStack(delta, this.stack, 'redo', 'undo');
   }
 
   undo() {
@@ -107,6 +100,19 @@ History.DEFAULTS = {
   maxStack: 100,
   userOnly: false,
 };
+
+function transformStack(delta, stack, which, other) {
+  let remoteDelta = delta;
+  for (let i = stack[which].length - 1; i >= 0; i -= 1) {
+    const frame = stack[which][i];
+    frame[which] = remoteDelta.transform(frame[which], true);
+    remoteDelta = frame[which].transform(remoteDelta);
+    frame[other] = remoteDelta.transform(frame[other], true);
+    if (frame[which].length() === 0) {
+      stack[which].splice(i, 1);
+    }
+  }
+}
 
 function endsWithNewlineChange(scroll, delta) {
   const lastOp = delta.ops[delta.ops.length - 1];
@@ -133,21 +139,23 @@ function getLastChangeIndex(scroll, delta) {
   return changeIndex;
 }
 
-function guessUndoDelta(delta) {
+function invertDelta(delta, base) {
   const undoDelta = new Delta();
-  let failed = false;
+  let baseIndex = 0;
   delta.forEach(op => {
     if (op.insert) {
       undoDelta.delete(Op.length(op));
     } else if (op.retain && op.attributes == null) {
       undoDelta.retain(op.retain);
-    } else {
-      failed = true;
-      return false;
+      baseIndex += op.retain;
+    } else if (op.delete) {
+      base
+        .slice(baseIndex, baseIndex + op.delete)
+        .forEach(o => undoDelta.push(o));
+      baseIndex += op.delete;
     }
-    return true;
   });
-  return failed ? null : undoDelta;
+  return undoDelta;
 }
 
 export { History as default, getLastChangeIndex };
