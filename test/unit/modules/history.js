@@ -234,5 +234,25 @@ describe('History', function() {
       this.quill.history.redo();
       expect(this.quill.getText()).toEqual('abcd\n');
     });
+
+    it('correctly transform against remote changes breaking up an insert', function() {
+      this.quill.history.options.delay = 0;
+      this.quill.history.options.userOnly = true;
+      this.quill.setText('\n');
+      this.quill.insertText(0, 'ABC', Quill.sources.USER);
+      this.quill.insertText(3, '4', Quill.sources.API);
+      this.quill.insertText(2, '3', Quill.sources.API);
+      this.quill.insertText(1, '2', Quill.sources.API);
+      this.quill.insertText(0, '1', Quill.sources.API);
+      expect(this.quill.getText()).toEqual('1A2B3C4\n');
+      this.quill.history.undo();
+      expect(this.quill.getText()).toEqual('1234\n');
+      this.quill.history.redo();
+      expect(this.quill.getText()).toEqual('1A2B3C4\n');
+      this.quill.history.undo();
+      expect(this.quill.getText()).toEqual('1234\n');
+      this.quill.history.redo();
+      expect(this.quill.getText()).toEqual('1A2B3C4\n');
+    });
   });
 });
