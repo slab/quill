@@ -71,6 +71,7 @@ class History extends Module {
     } else {
       this.lastRecorded = timestamp;
     }
+    if (undoDelta.length() === 0) return;
     this.stack.undo.push(undoDelta);
     if (this.stack.undo.length > this.options.maxStack) {
       this.stack.undo.shift();
@@ -82,8 +83,8 @@ class History extends Module {
   }
 
   transform(delta) {
-    transformStack(delta, this.stack.undo);
-    transformStack(delta, this.stack.redo);
+    transformStack(this.stack.undo, delta);
+    transformStack(this.stack.redo, delta);
   }
 
   undo() {
@@ -96,7 +97,7 @@ History.DEFAULTS = {
   userOnly: false,
 };
 
-function transformStack(delta, stack) {
+function transformStack(stack, delta) {
   let remoteDelta = delta;
   for (let i = stack.length - 1; i >= 0; i -= 1) {
     const oldDelta = stack[i];
