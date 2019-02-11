@@ -27,6 +27,17 @@ All four services can be run with a single command thanks to [foreman](http://dd
 
     npm start
 
+Once the terminal settles (with messages indicating success from `jekyll`, `karma`, `proxy`, and `webpack`), you may access the different services as follows:
+
+| Service                      | URL                                                                          |
+| :--------------------------- | :--------------------------------------------------------------------------- |
+| Jekyll Documentation Site    | [localhost:9000](http://localhost:9000)                                      |
+| Standalone Editor (Full)     | [localhost:9000/standalone/full](http://localhost:9000/standalone/full/)     |
+| Standalone Editor (Snow)     | [localhost:9000/standalone/snow](http://localhost:9000/standalone/snow/)     |
+| Standalone Editor (Bubble)   | [localhost:9000/standalone/bubble](http://localhost:9000/standalone/bubble/) |
+| Karma Test Runner            | [localhost:9000/karma](http://localhost:9000/karma)                          |
+| Webpack Locally Hosted Build | [localhost:9080](http://localhost:9080)                                      |
+
 
 ### Testing
 
