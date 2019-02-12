@@ -1,5 +1,4 @@
 import { Scope } from 'parchment';
-import Delta, { Op } from 'quill-delta';
 import Quill from '../core/quill';
 import Module from '../core/module';
 
@@ -39,7 +38,8 @@ class History extends Module {
   change(source, dest) {
     if (this.stack[source].length === 0) return;
     const delta = this.stack[source].pop();
-    const inverseDelta = invertDelta(delta, this.quill.getContents());
+    const base = this.quill.getContents();
+    const inverseDelta = delta.invert(base);
     this.stack[dest].push(inverseDelta);
     this.lastRecorded = 0;
     this.ignoreChange = true;
@@ -60,7 +60,7 @@ class History extends Module {
   record(changeDelta, oldDelta) {
     if (changeDelta.ops.length === 0) return;
     this.stack.redo = [];
-    let undoDelta = invertDelta(changeDelta, oldDelta);
+    let undoDelta = changeDelta.invert(oldDelta);
     const timestamp = Date.now();
     if (
       this.lastRecorded + this.options.delay > timestamp &&
@@ -132,25 +132,6 @@ function getLastChangeIndex(scroll, delta) {
     changeIndex -= 1;
   }
   return changeIndex;
-}
-
-function invertDelta(delta, base) {
-  const undoDelta = new Delta();
-  let baseIndex = 0;
-  delta.forEach(op => {
-    if (op.insert) {
-      undoDelta.delete(Op.length(op));
-    } else if (op.retain && op.attributes == null) {
-      undoDelta.retain(op.retain);
-      baseIndex += op.retain;
-    } else if (op.delete) {
-      base
-        .slice(baseIndex, baseIndex + op.delete)
-        .forEach(o => undoDelta.push(o));
-      baseIndex += op.delete;
-    }
-  });
-  return undoDelta;
 }
 
 export { History as default, getLastChangeIndex };
