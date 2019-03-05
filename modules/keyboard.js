@@ -26,11 +26,15 @@ class Keyboard extends Module {
   constructor(quill, options) {
     super(quill, options);
     this.bindings = {};
-    Object.keys(this.options.bindings).forEach(name => {
-      if (this.options.bindings[name]) {
-        this.addBinding(this.options.bindings[name]);
-      }
-    });
+    if (Array.isArray(this.options.bindings)) {
+      throw new Error('Provided keyboard bindings should be an object (not an array).');
+    } else {
+      Object.keys(this.options.bindings).forEach(name => {
+        if (this.options.bindings[name]) {
+          this.addBinding(this.options.bindings[name]);
+        }
+      });
+    }
     this.addBinding({ key: 'Enter', shiftKey: null }, handleEnter);
     this.addBinding(
       { key: 'Enter', metaKey: null, ctrlKey: null, altKey: null },
