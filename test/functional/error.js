@@ -55,6 +55,8 @@ describe('quill', function() {
     await page.waitFor(5000);
 
     await page.goto('http://localhost:9000/standalone/withkeys/');
+    // pause so the error can be seen in the console
+    await page.waitFor(20000);
     await page.waitForSelector('.ql-editor', { timeout: 10000 });
     title = await page.title();
     expect(title).toEqual('Full Editor - Quill Rich Text Editor');
