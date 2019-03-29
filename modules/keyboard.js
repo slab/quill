@@ -28,7 +28,7 @@ class Keyboard extends Module {
     this.bindings = {};
 
     if (this.options.bindings) {
-      if (Object.prototype.toString.call(this.options.bindings) === `[object Object]`) {
+      if (Object.prototype.toString.call(this.options.bindings) === '[object Object]') {
         Object.keys(this.options.bindings).forEach(name => {
           if (this.options.bindings[name]) {
             this.addBinding(this.options.bindings[name]);
