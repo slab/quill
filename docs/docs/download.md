@@ -9,7 +9,7 @@ Quill comes ready to use in several convenient forms.
 
 ### CDN
 
-A globally distributed and available CDN is provided, backed by [Amazon Cloudfront](https://aws.amazon.com/cloudfront/).
+A globally distributed and available CDN is provided, backed by [Render](https://render.com/).
 
 ```html
 <!-- Main Quill library -->
