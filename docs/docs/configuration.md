@@ -89,3 +89,9 @@ DOM Element or a CSS selector for a DOM Element, specifying which container has 
 #### theme
 
 Name of theme to use. The builtin options are "bubble" or "snow". An invalid or falsy value will load a default minimal theme. Note the theme's specific stylesheet still needs to be included manually. See [Themes](/docs/themes/) for more information.
+
+#### enableDragging
+
+Default: `false`
+
+By default, Quill disables all [drag events](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API). These can be enabled for writing custom modules by setting this flag to `true`.

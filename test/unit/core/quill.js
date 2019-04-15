@@ -891,4 +891,35 @@ describe('Quill', function() {
       expect(this.quill.root.classList).not.toContain('ql-blank');
     });
   });
+
+  describe('dragging', function() {
+    it('disables dragging by default', function(done) {
+      this.quill = this.initialize(Quill, '');
+
+      const dragstart = new Event('dragstart');
+      spyOn(dragstart, 'preventDefault');
+
+      this.quill.root.addEventListener('dragstart', function() {
+        expect(dragstart.preventDefault).toHaveBeenCalledTimes(1);
+        done();
+      });
+
+      this.quill.root.dispatchEvent(dragstart);
+    });
+
+    it('can enable drag events with configuration', function(done) {
+      const options = { enableDragging: true };
+      this.quill = this.initialize(Quill, '', this.container, options);
+
+      const dragstart = new Event('dragstart');
+      spyOn(dragstart, 'preventDefault');
+
+      this.quill.root.addEventListener('dragstart', function() {
+        expect(dragstart.preventDefault).not.toHaveBeenCalled();
+        done();
+      });
+
+      this.quill.root.dispatchEvent(dragstart);
+    });
+  });
 });

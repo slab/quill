@@ -75,9 +75,11 @@ class Quill {
     this.container.innerHTML = '';
     instances.set(this.container, this);
     this.root = this.addContainer('ql-editor');
-    this.root.addEventListener('dragstart', e => {
-      e.preventDefault();
-    });
+    if (!this.options.enableDragging) {
+      this.root.addEventListener('dragstart', e => {
+        e.preventDefault();
+      });
+    }
     this.root.classList.add('ql-blank');
     this.root.setAttribute('data-gramm', false);
     this.scrollingContainer = this.options.scrollingContainer || this.root;
