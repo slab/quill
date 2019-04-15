@@ -448,30 +448,29 @@ Keyboard.DEFAULTS = {
 };
 
 function handleBackspace(range, context) {
+  // Check for astral symbols
+  const length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix) ? 2 : 1;
   if (range.index === 0 || this.quill.getLength() <= 1) return;
-  const [line] = this.quill.getLine(range.index);
   let formats = {};
+  const [line] = this.quill.getLine(range.index);
+  let delta = new Delta().retain(range.index - length).delete(length);
   if (context.offset === 0) {
+    // Always deleting newline here, length always 1
     const [prev] = this.quill.getLine(range.index - 1);
-    if (prev != null) {
-      if (prev.length() > 1 || prev.statics.blotName === 'table') {
-        const curFormats = line.formats();
-        const prevFormats = this.quill.getFormat(range.index - 1, 1);
-        formats = AttributeMap.diff(curFormats, prevFormats) || {};
+    if (prev) {
+      const curFormats = line.formats();
+      const prevFormats = this.quill.getFormat(range.index - 1, 1);
+      formats = AttributeMap.diff(curFormats, prevFormats) || {};
+      if (Object.keys(formats).length > 0) {
+        // line.length() - 1 targets \n in line, another -1 for newline being deleted
+        const formatDelta = new Delta()
+          .retain(range.index + line.length() - 2)
+          .retain(1, formats);
+        delta = delta.compose(formatDelta);
       }
     }
   }
-  // Check for astral symbols
-  const length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix) ? 2 : 1;
-  this.quill.deleteText(range.index - length, length, Quill.sources.USER);
-  if (Object.keys(formats).length > 0) {
-    this.quill.formatLine(
-      range.index - length,
-      length,
-      formats,
-      Quill.sources.USER,
-    );
-  }
+  this.quill.updateContents(delta, Quill.sources.USER);
   this.quill.focus();
 }
 
@@ -480,26 +479,21 @@ function handleDelete(range, context) {
   const length = /^[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(context.suffix) ? 2 : 1;
   if (range.index >= this.quill.getLength() - length) return;
   let formats = {};
-  let nextLength = 0;
   const [line] = this.quill.getLine(range.index);
+  let delta = new Delta().retain(range.index).delete(length);
   if (context.offset >= line.length() - 1) {
     const [next] = this.quill.getLine(range.index + 1);
     if (next) {
       const curFormats = line.formats();
       const nextFormats = this.quill.getFormat(range.index, 1);
       formats = AttributeMap.diff(curFormats, nextFormats) || {};
-      nextLength = next.length();
+      if (Object.keys(formats).length > 0) {
+        delta = delta.retain(next.length() - 1).retain(1, formats);
+      }
     }
   }
-  this.quill.deleteText(range.index, length, Quill.sources.USER);
-  if (Object.keys(formats).length > 0) {
-    this.quill.formatLine(
-      range.index + nextLength - 1,
-      length,
-      formats,
-      Quill.sources.USER,
-    );
-  }
+  this.quill.updateContents(delta, Quill.sources.USER);
+  this.quill.focus();
 }
 
 function handleDeleteRange(range) {
