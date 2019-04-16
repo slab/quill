@@ -597,6 +597,30 @@ describe('Editor', function() {
       );
     });
 
+    it('mixed list', function() {
+      const editor = this.initialize(
+        Editor,
+        `
+          <ol>
+            <li data-list="ordered">One</li>
+            <li data-list="ordered">Two</li>
+            <li data-list="bullet">Foo</li>
+            <li data-list="bullet">Bar</li>
+          </ol>
+        `,
+      );
+      expect(editor.getHTML(2, 12)).toEqualHTML(`
+        <ol>
+          <li>e</li>
+          <li>Two</li>
+        </ol>
+        <ul>
+          <li>Foo</li>
+          <li>Ba</li>
+        </ul>
+      `);
+    });
+
     it('nested list', function() {
       const editor = this.initialize(
         Editor,
