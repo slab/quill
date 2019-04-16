@@ -210,7 +210,7 @@ Additionally we will add support for widths and heights, as unregistered formats
 class VideoBlot extends BlockEmbed {
   static create(url) {
     let node = super.create();
-
+    node.setAttribute('src', url);
     // Set non-format related attributes with static values
     node.setAttribute('frameborder', '0');
     node.setAttribute('allowfullscreen', true);
