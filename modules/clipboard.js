@@ -414,9 +414,12 @@ function matchIndent(node, delta, scroll) {
     parent = parent.parentNode;
   }
   if (indent <= 0) return delta;
-  return delta.compose(
-    new Delta().retain(delta.length() - 1).retain(1, { indent }),
-  );
+  return delta.reduce((composed, op) => {
+    if (op.attributes && op.attributes.list) {
+      return composed.push(op);
+    }
+    return composed.insert(op.insert, { indent, ...(op.attributes || {}) });
+  }, new Delta());
 }
 
 function matchList(node, delta) {

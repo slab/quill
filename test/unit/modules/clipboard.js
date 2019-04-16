@@ -178,27 +178,27 @@ describe('Clipboard', function() {
 
     it('html nested list', function() {
       const delta = this.clipboard.convert({
-        html: '<ol><li>One<ol><li>Alpha</li><li>Beta</li></ol></li></ol>',
+        html:
+          '<ol><li>One<ol><li>Alpha</li><li>Beta<ol><li>I</li></ol></li></ol></li></ol>',
       });
       expect(delta).toEqual(
         new Delta()
-          .insert('One\nAlpha', { list: 'ordered' })
-          .insert('\n', { list: 'ordered', indent: 1 })
-          .insert('Beta', { list: 'ordered' })
-          .insert('\n', { list: 'ordered', indent: 1 }),
+          .insert('One\n', { list: 'ordered' })
+          .insert('Alpha\nBeta\n', { list: 'ordered', indent: 1 })
+          .insert('I\n', { list: 'ordered', indent: 2 }),
       );
     });
 
     it('html nested bullet', function() {
       const delta = this.clipboard.convert({
-        html: '<ul><li>One<ul><li>Alpha</li><li>Beta</li></ul></li></ul>',
+        html:
+          '<ul><li>One<ul><li>Alpha</li><li>Beta<ul><li>I</li></ul></li></ul></li></ul>',
       });
       expect(delta).toEqual(
         new Delta()
-          .insert('One\nAlpha', { list: 'bullet' })
-          .insert('\n', { list: 'bullet', indent: 1 })
-          .insert('Beta', { list: 'bullet' })
-          .insert('\n', { list: 'bullet', indent: 1 }),
+          .insert('One\n', { list: 'bullet' })
+          .insert('Alpha\nBeta\n', { list: 'bullet', indent: 1 })
+          .insert('I\n', { list: 'bullet', indent: 2 }),
       );
     });
 
