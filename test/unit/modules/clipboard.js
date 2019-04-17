@@ -202,6 +202,19 @@ describe('Clipboard', function() {
       );
     });
 
+    it('html partial list', function() {
+      const delta = this.clipboard.convert({
+        html:
+          '<ol><li><ol><li><ol><li>iiii</li></ol></li><li>bbbb</li></ol></li><li>2222</li></ol>',
+      });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('iiii\n', { list: 'ordered', indent: 2 })
+          .insert('bbbb\n', { list: 'ordered', indent: 1 })
+          .insert('2222\n', { list: 'ordered' }),
+      );
+    });
+
     it('html table', function() {
       const delta = this.clipboard.convert({
         html:

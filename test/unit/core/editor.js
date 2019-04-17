@@ -685,6 +685,36 @@ describe('Editor', function() {
       `);
     });
 
+    it('partial list', function() {
+      const editor = this.initialize(
+        Editor,
+        `
+        <ol>
+          <li data-list="ordered">1111</li>
+          <li data-list="ordered" class="ql-indent-1">AAAA</li>
+          <li data-list="ordered" class="ql-indent-2">IIII</li>
+          <li data-list="ordered" class="ql-indent-1">BBBB</li>
+          <li data-list="ordered">2222</li>
+        </ol>
+        `,
+      );
+      expect(editor.getHTML(12, 12)).toEqualHTML(`
+        <ol>
+          <li>
+            <ol>
+              <li>
+                <ol>
+                  <li>II</li>
+                </ol>
+              </li>
+              <li>BBBB</li>
+            </ol>
+          </li>
+          <li>2222</li>
+        </ol>
+      `);
+    });
+
     it('text within tag', function() {
       const editor = this.initialize(Editor, '<p><a>a</a></p>');
       expect(editor.getHTML(0, 1)).toEqual('<a>a</a>');
