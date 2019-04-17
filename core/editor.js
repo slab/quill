@@ -244,7 +244,6 @@ function convertListHTML(items, lastIndent, types) {
   if (indent > lastIndent) {
     types.push(type);
     if (indent === lastIndent + 1) {
-      types.push(type);
       return `<${tag}><li${attribute}>${convertHTML(
         child,
         offset,
