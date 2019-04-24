@@ -418,7 +418,8 @@ function matchIndent(node, delta, scroll) {
     if (op.attributes && op.attributes.list) {
       return composed.push(op);
     }
-    return composed.insert(op.insert, { indent, ...(op.attributes || {}) });
+    const attributes = Object.assign({ indent }, op.attributes);
+    return composed.insert(op.insert, attributes);
   }, new Delta());
 }
 
