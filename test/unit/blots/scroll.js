@@ -39,6 +39,14 @@ describe('Scroll', function() {
     }, 1);
   });
 
+  it('prevent dragstart', function() {
+    const scroll = this.initialize(Scroll, '<p>Hello World!</p>');
+    const dragstart = new Event('dragstart');
+    spyOn(dragstart, 'preventDefault');
+    scroll.domNode.dispatchEvent(dragstart);
+    expect(dragstart.preventDefault).toHaveBeenCalled();
+  });
+
   describe('leaf()', function() {
     it('text', function() {
       const scroll = this.initialize(Scroll, '<p>Tests</p>');
