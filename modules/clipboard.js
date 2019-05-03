@@ -8,6 +8,7 @@ import {
   StyleAttributor,
   BlockBlot,
 } from 'parchment';
+import { BlockEmbed } from '../blots/block';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
@@ -427,13 +428,19 @@ function matchList(node, delta) {
   return applyFormat(delta, 'list', list);
 }
 
-function matchNewline(node, delta) {
+function matchNewline(node, delta, scroll) {
   if (!deltaEndsWith(delta, '\n')) {
-    if (
-      isLine(node) ||
-      (delta.length() > 0 && node.nextSibling && isLine(node.nextSibling))
-    ) {
-      delta.insert('\n');
+    if (isLine(node)) {
+      return delta.insert('\n');
+    }
+    if (delta.length() > 0 && node.nextSibling) {
+      if (isLine(node.nextSibling)) {
+        return delta.insert('\n');
+      }
+      const match = scroll.query(node.nextSibling);
+      if (match && match.prototype instanceof BlockEmbed) {
+        return delta.insert('\n');
+      }
     }
   }
   return delta;

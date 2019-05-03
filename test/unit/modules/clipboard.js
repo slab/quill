@@ -257,6 +257,19 @@ describe('Clipboard', function() {
       );
     });
 
+    it('block embeds within blocks', function() {
+      const delta = this.clipboard.convert({
+        html: '<h1>01<iframe src="#"></iframe>34</h1><p>67</p>',
+      });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('01\n', { header: 1 })
+          .insert({ video: '#' }, { header: 1 })
+          .insert('34\n', { header: 1 })
+          .insert('67'),
+      );
+    });
+
     it('attributor and style match', function() {
       const delta = this.clipboard.convert({
         html: '<p style="direction:rtl;">Test</p>',
