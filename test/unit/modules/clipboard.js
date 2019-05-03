@@ -270,6 +270,35 @@ describe('Clipboard', function() {
       );
     });
 
+    it('wrapped block embed', function() {
+      const delta = this.clipboard.convert({
+        html: '<h1>01<a href="/"><iframe src="#"></iframe></a>34</h1><p>67</p>',
+      });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('01\n', { header: 1 })
+          .insert({ video: '#' }, { link: '/', header: 1 })
+          .insert('34\n', { header: 1 })
+          .insert('67'),
+      );
+    });
+
+    it('wrapped block embed with siblings', function() {
+      const delta = this.clipboard.convert({
+        html:
+          '<h1>01<a href="/">a<iframe src="#"></iframe>b</a>34</h1><p>67</p>',
+      });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('01', { header: 1 })
+          .insert('a\n', { link: '/', header: 1 })
+          .insert({ video: '#' }, { link: '/', header: 1 })
+          .insert('b', { link: '/', header: 1 })
+          .insert('34\n', { header: 1 })
+          .insert('67'),
+      );
+    });
+
     it('attributor and style match', function() {
       const delta = this.clipboard.convert({
         html: '<p style="direction:rtl;">Test</p>',

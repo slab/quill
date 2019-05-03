@@ -434,12 +434,16 @@ function matchNewline(node, delta, scroll) {
       return delta.insert('\n');
     }
     if (delta.length() > 0 && node.nextSibling) {
-      if (isLine(node.nextSibling)) {
-        return delta.insert('\n');
-      }
-      const match = scroll.query(node.nextSibling);
-      if (match && match.prototype instanceof BlockEmbed) {
-        return delta.insert('\n');
+      let { nextSibling } = node;
+      while (nextSibling != null) {
+        if (isLine(nextSibling)) {
+          return delta.insert('\n');
+        }
+        const match = scroll.query(nextSibling);
+        if (match && match.prototype instanceof BlockEmbed) {
+          return delta.insert('\n');
+        }
+        nextSibling = nextSibling.firstChild;
       }
     }
   }
