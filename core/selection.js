@@ -24,7 +24,11 @@ class Selection {
     // savedRange is last non-null range
     this.savedRange = new Range(0, 0);
     this.lastRange = this.savedRange;
-    this.handleComposition();
+
+    if (typeof IS_ANDROID === 'undefined' || !IS_ANDROID) {
+      this.handleComposition();
+    }
+    
     this.handleDragging();
     this.emitter.listenDOM('selectionchange', document, () => {
       if (!this.mouseDown) {
