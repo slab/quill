@@ -2,7 +2,7 @@ import clone from 'clone';
 import equal from 'deep-equal';
 import extend from 'extend';
 import Delta, { AttributeMap } from 'quill-delta';
-import { EmbedBlot, Scope, TextBlot } from 'parchment';
+import { EmbedBlot, Scope, TextBlot, ParentBlot } from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
@@ -550,6 +550,10 @@ Keyboard.DEFAULTS = {
     'embed right shift': makeEmbedArrowHandler('ArrowRight', true),
     'table down': makeTableArrowHandler(false),
     'table up': makeTableArrowHandler(true),
+    'ui left': makeUiArrowHandler('ArrowLeft', false),
+    'ui left shift': makeUiArrowHandler('ArrowLeft', true),
+    'ui right': makeUiArrowHandler('ArrowRight', false),
+    'ui right shift': makeUiArrowHandler('ArrowRight', true),
   },
 };
 
@@ -589,7 +593,25 @@ function makeCodeBlockHandler(indent) {
 }
 
 function makeEmbedArrowHandler(key, shiftKey) {
+  return makeArrowHandler(key, { shiftKey }, leaf => leaf instanceof EmbedBlot);
+}
+
+function makeUiArrowHandler(key, shiftKey) {
+  const format = ['list'];
+  return makeArrowHandler(key, { shiftKey, format }, (leaf, offset) => {
+    const shouldHandle =
+      offset === 0 &&
+      leaf.domNode.previousSibling &&
+      leaf.domNode.previousSibling.nodeType === Node.ELEMENT_NODE &&
+      leaf.domNode.previousSibling.classList.contains(ParentBlot.uiClass);
+
+    return shouldHandle;
+  });
+}
+
+function makeArrowHandler(key, options, shouldApplyCallback) {
   const where = key === 'ArrowLeft' ? 'prefix' : 'suffix';
+  const shiftKey = !!options.shiftKey;
   return {
     key,
     shiftKey,
@@ -600,8 +622,8 @@ function makeEmbedArrowHandler(key, shiftKey) {
       if (key === 'ArrowRight') {
         index += range.length + 1;
       }
-      const [leaf] = this.quill.getLeaf(index);
-      if (!(leaf instanceof EmbedBlot)) return true;
+      const [leaf, offset] = this.quill.getLeaf(index);
+      if (!shouldApplyCallback(leaf, offset)) return true;
       if (key === 'ArrowLeft') {
         if (shiftKey) {
           this.quill.setSelection(
