@@ -6,6 +6,7 @@ class Link extends Inline {
     let node = super.create(value);
     value = this.sanitize(value);
     node.setAttribute('href', value);
+    node.setAttribute('rel', 'noopener noreferrer');
     node.setAttribute('target', '_blank');
     return node;
   }
