@@ -456,6 +456,12 @@ function matchStyles(node, delta) {
   if (style.fontStyle === 'italic') {
     formats.italic = true;
   }
+  if (style.textDecoration === 'underline') {
+      formats.underline = true;
+  }
+  if (style.textDecoration === 'line-through') {
+      formats.strike = true;
+  }
   if (
     style.fontWeight.startsWith('bold') ||
     parseInt(style.fontWeight, 10) >= 700
