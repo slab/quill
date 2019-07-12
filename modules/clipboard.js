@@ -457,10 +457,10 @@ function matchStyles(node, delta) {
     formats.italic = true;
   }
   if (style.textDecoration === 'underline') {
-      formats.underline = true;
+    formats.underline = true;
   }
   if (style.textDecoration === 'line-through') {
-      formats.strike = true;
+    formats.strike = true;
   }
   if (
     style.fontWeight.startsWith('bold') ||
