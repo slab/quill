@@ -130,7 +130,7 @@ Note that a Delta's instructions always starts at the beginning of the document.
 
 ### Playground
 
-Play around Quill and take a look at how its content and changes look. Open your developer console for another view into the Deltas.
+Play around with Quill and take a look at how its content and changes look. Open your developer console for another view into the Deltas.
 
 <div data-height="470" data-theme-id="23269" data-slug-hash="dMQGmq" data-default-tab="result" data-embed-version="2" class='codepen'><pre><code></code></pre></div>
 
