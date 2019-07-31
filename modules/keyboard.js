@@ -136,7 +136,7 @@ class Keyboard extends Module {
         suffix: suffixText,
         event: evt,
       };
-      const prevented = matches.some(binding => {
+      matches.some(binding => {
         if (
           binding.collapsed != null &&
           binding.collapsed !== curContext.collapsed
@@ -176,9 +176,6 @@ class Keyboard extends Module {
         }
         return binding.handler.call(this, range, curContext, binding) !== true;
       });
-      if (prevented) {
-        evt.preventDefault();
-      }
     });
   }
 
