@@ -2,6 +2,20 @@ import Delta from 'quill-delta';
 import { Range } from '../../../core/selection';
 import Quill from '../../../core';
 
+const urlMatcher = function(node, delta) {
+  let index = 0;
+  const regex = /https?:\/\/[^\s]+/g;
+  let match = null;
+  const composer = new Delta();
+  // eslint-disable-next-line no-cond-assign
+  while ((match = regex.exec(node.data))) {
+    composer.retain(match.index - index);
+    index = regex.lastIndex;
+    composer.retain(match[0].length, { link: match[0] });
+  }
+  return delta.compose(composer);
+};
+
 describe('Clipboard', function() {
   describe('events', function() {
     beforeEach(function() {
@@ -315,19 +329,7 @@ describe('Clipboard', function() {
     });
 
     it('custom matcher', function() {
-      this.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {
-        let index = 0;
-        const regex = /https?:\/\/[^\s]+/g;
-        let match = null;
-        const composer = new Delta();
-        // eslint-disable-next-line no-cond-assign
-        while ((match = regex.exec(node.data))) {
-          composer.retain(match.index - index);
-          index = regex.lastIndex;
-          composer.retain(match[0].length, { link: match[0] });
-        }
-        return delta.compose(composer);
-      });
+      this.clipboard.addMatcher(Node.TEXT_NODE, urlMatcher);
       const delta = this.clipboard.convert({
         html: 'http://github.com https://quilljs.com',
       });
@@ -335,6 +337,17 @@ describe('Clipboard', function() {
         .insert('http://github.com', { link: 'http://github.com' })
         .insert(' ')
         .insert('https://quilljs.com', { link: 'https://quilljs.com' });
+      expect(delta).toEqual(expected);
+    });
+
+    it('custom matcher text', function() {
+      this.clipboard.addMatcher(Node.TEXT_NODE, urlMatcher);
+      const delta = this.clipboard.convert({
+        text: 'http://github.com',
+      });
+      const expected = new Delta().insert('http://github.com', {
+        link: 'http://github.com',
+      });
       expect(delta).toEqual(expected);
     });
 

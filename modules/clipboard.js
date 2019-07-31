@@ -84,11 +84,14 @@ class Clipboard extends Module {
         [CodeBlock.blotName]: formats[CodeBlock.blotName],
       });
     }
-    if (!html) {
-      return new Delta().insert(text || '');
+    let container;
+    if (html) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      container = doc.body;
+    } else {
+      container = document.createElement('span');
+      container.innerText = text || '';
     }
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    const container = doc.body;
     const nodeMatches = new WeakMap();
     const [elementMatchers, textMatchers] = this.prepareMatching(
       container,
