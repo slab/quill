@@ -106,7 +106,7 @@ class Keyboard extends Module {
 
   listen() {
     this.quill.root.addEventListener('keydown', evt => {
-      if (evt.defaultPrevented) return;
+      if (evt.defaultPrevented || evt.isComposing) return;
       const bindings = (this.bindings[evt.key] || []).concat(
         this.bindings[evt.which] || [],
       );
