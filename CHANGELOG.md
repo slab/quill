@@ -1,3 +1,13 @@
+# 1.3.7
+
+Security related bug fixes.
+
+- https://app.snyk.io/vuln/npm:extend:20180424
+- https://www.npmjs.com/advisories/1039
+
+Thank you [@danfuzz](https://github.com/danfuzz), [@danielw93](https://github.com/danielw93), [@jonathanlloyd](https://github.com/jonathanlloyd), and [@k-sai-kiranmayee](https://github.com/k-sai-kiranmayee) for your contributions to this release.
+
+
 # 1.3.6
 
 - Make picker accessible [#1999](https://github.com/quilljs/quill/pull/1999)
