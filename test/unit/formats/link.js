@@ -13,7 +13,7 @@ describe('Link', function() {
         .insert('3\n'),
     );
     expect(editor.scroll.domNode).toEqualHTML(
-      '<p>0<a href="https://quilljs.com" target="_blank">12</a>3</p>',
+      '<p>0<a href="https://quilljs.com" target="_blank" rel="noopener noreferrer">12</a>3</p>',
     );
   });
 
@@ -38,14 +38,14 @@ describe('Link', function() {
         .insert('3\n'),
     );
     expect(editor.scroll.domNode).toEqualHTML(
-      '<p>0<a href="about:blank" target="_blank">12</a>3</p>',
+      '<p>0<a href="about:blank" target="_blank" rel="noopener noreferrer">12</a>3</p>',
     );
   });
 
   it('change', function() {
     const editor = this.initialize(
       Editor,
-      '<p>0<a href="https://github.com" target="_blank">12</a>3</p>',
+      '<p>0<a href="https://github.com" target="_blank" rel="noopener noreferrer">12</a>3</p>',
     );
     editor.formatText(1, 2, { link: 'https://quilljs.com' });
     expect(editor.getDelta()).toEqual(
@@ -55,14 +55,14 @@ describe('Link', function() {
         .insert('3\n'),
     );
     expect(editor.scroll.domNode).toEqualHTML(
-      '<p>0<a href="https://quilljs.com" target="_blank">12</a>3</p>',
+      '<p>0<a href="https://quilljs.com" target="_blank" rel="noopener noreferrer">12</a>3</p>',
     );
   });
 
   it('remove', function() {
     const editor = this.initialize(
       Editor,
-      '<p>0<a class="ql-size-large" href="https://quilljs.com" target="_blank">12</a>3</p>',
+      '<p>0<a class="ql-size-large" href="https://quilljs.com" target="_blank" rel="noopener noreferrer">12</a>3</p>',
     );
     editor.formatText(1, 2, { link: false });
     const delta = new Delta()
