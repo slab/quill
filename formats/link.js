@@ -2,27 +2,30 @@ import Inline from '../blots/inline';
 
 
 class Link extends Inline {
-  static create(value) {
-    let node = super.create(value);
-    value = this.sanitize(value);
-    node.setAttribute('href', value);
+  static create(attributes) {
+    let node = super.create(attributes);
+    const href = this.sanitize(attributes.href);
+    node.setAttribute('href', href);
     node.setAttribute('rel', 'noopener noreferrer');
-    node.setAttribute('target', '_blank');
+    node.setAttribute('target', attributes.target);
     return node;
   }
 
   static formats(domNode) {
-    return domNode.getAttribute('href');
+    const href = domNode.getAttribute('href');
+    const target = domNode.getAttribute('target');
+    return {href: href ? href : '', target: target ? target : '_blank'}
   }
 
   static sanitize(url) {
     return sanitize(url, this.PROTOCOL_WHITELIST) ? url : this.SANITIZED_URL;
   }
 
-  format(name, value) {
-    if (name !== this.statics.blotName || !value) return super.format(name, value);
-    value = this.constructor.sanitize(value);
-    this.domNode.setAttribute('href', value);
+  format(name, attributes) {
+    if (name !== this.statics.blotName || !attributes.href) return super.format(name, attributes.href);
+    const href = this.constructor.sanitize(attributes.href);
+    this.domNode.setAttribute('href', href);
+    this.domNode.setAttribute('target', attributes.target);
   }
 }
 Link.blotName = 'link';

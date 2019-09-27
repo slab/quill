@@ -1,3 +1,5 @@
+export const linkNewWindowCheckWrapper = 'ql-link-new-window-check-wrapper'
+
 class Tooltip {
   constructor(quill, boundsContainer) {
     this.quill = quill;
@@ -14,6 +16,9 @@ class Tooltip {
 
   hide() {
     this.root.classList.add('ql-hidden');
+    if (this.root.getElementsByClassName(linkNewWindowCheckWrapper)[0]) {
+      this.root.getElementsByClassName(linkNewWindowCheckWrapper)[0].remove()
+    }
   }
 
   position(reference) {

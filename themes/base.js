@@ -6,7 +6,7 @@ import Theme from '../core/theme';
 import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
-import Tooltip from '../ui/tooltip';
+import Tooltip, { linkNewWindowCheckWrapper } from '../ui/tooltip';
 
 
 const ALIGNS = [ false, 'center', 'right', 'justify' ];
@@ -153,6 +153,7 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
   }
 });
 
+export const linkTargetCheckboxClass = 'ql-link-target-checkbox'
 
 class BaseTooltip extends Tooltip {
   constructor(quill, boundsContainer) {
@@ -180,8 +181,19 @@ class BaseTooltip extends Tooltip {
   edit(mode = 'link', preview = null) {
     this.root.classList.remove('ql-hidden');
     this.root.classList.add('ql-editing');
+    if (mode === 'link' && !this.root.getElementsByClassName(linkNewWindowCheckWrapper)[0]) {
+      this.root.insertAdjacentHTML('beforeend', '<div class="ql-link-new-window-check-wrapper">Open in new window <input class="' +
+      linkTargetCheckboxClass + '" type="checkbox"></input></div>')
+    }
+
     if (preview != null) {
-      this.textbox.value = preview;
+      if (typeof preview === 'string') {
+        this.root.getElementsByClassName(linkTargetCheckboxClass)[0].checked = '_blank'
+        this.textbox.value = preview;
+      } else {
+        this.textbox.value = preview.href;
+        this.root.getElementsByClassName(linkTargetCheckboxClass)[0].checked = preview.target === '_blank'
+      }
     } else if (mode !== this.root.getAttribute('data-mode')) {
       this.textbox.value = '';
     }
@@ -199,15 +211,23 @@ class BaseTooltip extends Tooltip {
 
   save() {
     let value = this.textbox.value;
-    switch(this.root.getAttribute('data-mode')) {
+    const { root } = this
+    const mode = root.getAttribute('data-mode');
+    switch(mode) {
       case 'link': {
         let scrollTop = this.quill.root.scrollTop;
+        const targetNewWindow = root.getElementsByClassName(linkTargetCheckboxClass)[0].checked
+
+        const linkConfig = {
+          href: value,
+          target: targetNewWindow ? '_blank': '_self'
+        }
         if (this.linkRange) {
-          this.quill.formatText(this.linkRange, 'link', value, Emitter.sources.USER);
+          this.quill.formatText(this.linkRange, 'link', linkConfig, Emitter.sources.USER);
           delete this.linkRange;
         } else {
           this.restoreFocus();
-          this.quill.format('link', value, Emitter.sources.USER);
+          this.quill.format('link', linkConfig, Emitter.sources.USER);
         }
         this.quill.root.scrollTop = scrollTop;
         break;
@@ -220,8 +240,8 @@ class BaseTooltip extends Tooltip {
         let range = this.quill.getSelection(true);
         if (range != null) {
           let index = range.index + range.length;
-          this.quill.insertEmbed(index, this.root.getAttribute('data-mode'), value, Emitter.sources.USER);
-          if (this.root.getAttribute('data-mode') === 'formula') {
+          this.quill.insertEmbed(index, root.getAttribute('data-mode'), value, Emitter.sources.USER);
+          if (root.getAttribute('data-mode') === 'formula') {
             this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
           }
           this.quill.setSelection(index + 2, Emitter.sources.USER);
@@ -229,6 +249,9 @@ class BaseTooltip extends Tooltip {
         break;
       }
       default:
+    }
+    if (mode === 'link' && root.getElementsByClassName(linkNewWindowCheckWrapper)[0]) {
+      root.getElementsByClassName(linkNewWindowCheckWrapper)[0].remove()
     }
     this.textbox.value = '';
     this.hide();
