@@ -22,6 +22,9 @@ class Link extends Inline {
   }
 
   format(name, attributes) {
+    if(!attributes) {
+      return super.format(name, '');
+    }
     if (name !== this.statics.blotName || !attributes.href) return super.format(name, attributes.href);
     const href = this.constructor.sanitize(attributes.href);
     this.domNode.setAttribute('href', href);
