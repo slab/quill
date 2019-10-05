@@ -167,6 +167,10 @@ class Syntax extends Module {
         'Syntax module requires highlight.js. Please include the library on the page before Quill.',
       );
     }
+    this.languages = this.options.languages.reduce((memo, { key }) => {
+      memo[key] = true;
+      return memo;
+    }, {});
     this.highlightBlot = this.highlightBlot.bind(this);
     this.initListener();
     this.initTimer();
@@ -225,6 +229,7 @@ class Syntax extends Module {
   }
 
   highlightBlot(text, language = 'plain') {
+    language = this.languages[language] ? language : 'plain';
     if (language === 'plain') {
       return escapeText(text)
         .split('\n')

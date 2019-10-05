@@ -116,6 +116,27 @@ describe('Syntax', function() {
       }, HIGHLIGHT_INTERVAL + 1);
     });
 
+    it('invalid language', function(done) {
+      this.quill.formatLine(0, 20, 'code-block', 'invalid');
+      setTimeout(() => {
+        expect(this.quill.root).toEqualHTML(`
+          <div class="ql-code-block-container" spellcheck="false">
+            <div class="ql-code-block" data-language="plain">var test = 1;</div>
+            <div class="ql-code-block" data-language="plain">var bugz = 0;</div>
+          </div>
+          <p><br></p>`);
+        expect(this.quill.getContents()).toEqual(
+          new Delta()
+            .insert('var test = 1;')
+            .insert('\n', { 'code-block': 'plain' })
+            .insert('var bugz = 0;')
+            .insert('\n', { 'code-block': 'plain' })
+            .insert('\n'),
+        );
+        done();
+      }, HIGHLIGHT_INTERVAL + 1);
+    });
+
     it('unformat first line', function(done) {
       this.quill.formatLine(0, 1, 'code-block', false);
       setTimeout(() => {
