@@ -39,7 +39,7 @@ quill.clipboard.addMatcher('B', function(node, delta) {
 
 ### dangerouslyPasteHTML
 
-Inserts content represented by HTML snippet into editor at a given index. The snippet is interpreted by Clipboard [matchers](#addMatcher), which may not produce the exactly input HTML. If no insertion index is provided, the entire editor contents will be overwritten. The [source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Inserts content represented by HTML snippet into editor at a given index, and sets the window focus to the Quill editor at that index. The snippet is interpreted by Clipboard [matchers](#addMatcher), which may not produce the exactly input HTML. If no insertion index is provided, the entire editor contents will be overwritten. The [source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 Improper handling of HTML can lead to [cross site scripting (XSS)](https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)) and failure to sanitize properly is both notoriously error-prone and a leading cause of web vulnerabilities. This method follows React's example and is aptly named to ensure the developer has taken the necessary precautions.
 
@@ -56,8 +56,29 @@ dangerouslyPasteHTML(index: Number, html: String, source: String = 'api')
 quill.setText('Hello!');
 
 quill.clipboard.dangerouslyPasteHTML(5, '&nbsp;<b>World</b>');
-// Editor is now '<p>Hello&nbsp;<strong>World</strong>!</p>';
+// Editor is now '<p>Hello&nbsp;<strong>World</strong>!</p>' and has the input focus captured.
 ```
+
+### convert
+
+Converts a string of text or HTML to a [Delta](/docs/delta/). This is used by `dangerouslyPasteHTML` and all the same warnings apply.
+
+**Methods**
+
+```javascript
+convert({text: String}) => Delta
+convert({html: String}) => Delta
+```
+
+**Examples**
+
+```javascript
+const html = '<p>Set HTML content <i>without</i> changing focus</p>'
+const delta = quill.clipboard.convert(html);
+quill.setContents(delta);
+// Editor is now '<p>Set HTML content <i>without</i> changing focus</p>' and has not changed focus;
+```
+
 
 
 ## Configuration
