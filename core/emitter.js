@@ -27,7 +27,7 @@ class Emitter extends EventEmitter {
   }
 
   handleDOM(event, ...args) {
-    const target = event.composedPath ? event.composedPath()[0] : event.target;
+    const target = event.composedPath()[0];
     const containsNode = (node, child) => {
       if (child.getRootNode() === document) {
         return node.contains(child);
