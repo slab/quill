@@ -4,7 +4,6 @@ import logger from './logger';
 const debug = logger('quill:events');
 const EVENTS = ['selectionchange', 'mousedown', 'mouseup', 'click'];
 const EMITTERS = [];
-const supportsRootNode = 'getRootNode' in document;
 
 EVENTS.forEach(eventName => {
   document.addEventListener(eventName, (...args) => {
@@ -30,7 +29,7 @@ class Emitter extends EventEmitter {
   handleDOM(event, ...args) {
     const target = event.composedPath ? event.composedPath()[0] : event.target;
     const containsNode = (node, child) => {
-      if (!supportsRootNode || child.getRootNode() === document) {
+      if (child.getRootNode() === document) {
         return node.contains(child);
       }
 
