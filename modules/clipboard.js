@@ -37,6 +37,7 @@ const CLIPBOARD_CONFIG = [
   ['tr', matchTable],
   ['b', matchAlias.bind(matchAlias, 'bold')],
   ['i', matchAlias.bind(matchAlias, 'italic')],
+  ['strike', matchAlias.bind(matchAlias, 'strike')],
   ['style', matchIgnore],
 ];
 
