@@ -49,12 +49,12 @@ Inline.allowedChildren = [Inline, Break, EmbedBlot, Text];
 Inline.order = [
   'cursor',
   'inline', // Must be lower
+  'link', // Chrome wants <a> to be lower
   'underline',
   'strike',
   'italic',
   'bold',
   'script',
-  'link',
   'code', // Must be higher
 ];
 
