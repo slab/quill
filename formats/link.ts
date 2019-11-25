@@ -4,7 +4,7 @@ class Link extends Inline {
   static blotName = 'link';
   static tagName = 'A';
   static SANITIZED_URL = 'about:blank';
-  static PROTOCOL_WHITELIST = ['http', 'https', 'mailto', 'tel'];
+  static PROTOCOL_WHITELIST = ['http', 'https', 'mailto', 'tel', 'sms'];
 
   static create(value) {
     const node = super.create(value) as Element;
