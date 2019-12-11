@@ -266,12 +266,12 @@ class Quill {
   }
 
   getFormat(index = this.getSelection(true), length = 0) {
-   if(index === null || typeof index === 'undefined' ){
-     throw Error('Invalid index type null or undefined');
-   }
-    return typeof index === 'number' ?
-        this.editor.getFormat(index, length) :
-        this.editor.getFormat(index.index, index.length);
+    if (index === null || typeof index === 'undefined') {
+      throw Error('Invalid index type null or undefined');
+    }
+    return typeof index === 'number'
+      ? this.editor.getFormat(index, length)
+      : this.editor.getFormat(index.index, index.length);
   }
 
   getIndex(blot) {
