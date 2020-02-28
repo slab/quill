@@ -5,9 +5,7 @@ import Selection from '../../core/selection';
 import Scroll from '../../blots/scroll';
 import Quill, { globalRegistry } from '../../core/quill';
 
-const div = document.createElement('div');
-div.id = 'test-container';
-document.body.appendChild(div);
+const div = setupTestContainer();
 
 window.onerror = function(msg) {
   return msg === 'Script error.';
@@ -27,6 +25,37 @@ beforeEach(function() {
   this.container = div.firstChild;
   this.initialize = initialize.bind(this);
 });
+
+function setupTestContainer() {
+  const testFrame = document.createElement('iframe');
+  testFrame.setAttribute('width', 2000);
+  testFrame.setAttribute('height', 2000);
+  testFrame.setAttribute('frameborder', 0);
+  document.body.appendChild(testFrame);
+  const headerCssNodesHtml = getCssLinkNodesText(document.head);
+  const bodyCssNodesHtml = getCssLinkNodesText(document.body);
+  testFrame.contentWindow.document.open();
+  testFrame.contentWindow.document.write(
+    `<!DOCTYPE html>\n<html><head>${headerCssNodesHtml}</head><body>${bodyCssNodesHtml}</body></html>`,
+  );
+  testFrame.contentWindow.document.close();
+  const divTestContainer = document.createElement('div');
+  divTestContainer.id = 'test-container';
+  testFrame.contentWindow.document.body.appendChild(divTestContainer);
+  return divTestContainer;
+}
+
+function getCssLinkNodesText(elementToSearchFrom) {
+  const cssLinkNodes = elementToSearchFrom.querySelectorAll(
+    'link[type="text/css"]',
+  );
+
+  return Array.from(cssLinkNodes.values())
+    .map(function(element) {
+      return element.outerHTML;
+    })
+    .join('');
+}
 
 function compareApproximately(actual, expected, tolerance) {
   const pass = Math.abs(actual - expected) <= tolerance;

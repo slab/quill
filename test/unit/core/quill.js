@@ -480,12 +480,19 @@ describe('Quill', function() {
     });
 
     it('convert css selectors', function() {
-      const config = expandConfig('#test-container', {
-        bounds: '#test-container',
-      });
-      expect(config.bounds).toEqual(document.querySelector('#test-container'));
+      const containerDocument = this.container.ownerDocument;
+      const config = expandConfig(
+        '#test-container',
+        {
+          bounds: '#test-container',
+        },
+        containerDocument,
+      );
+      expect(config.bounds).toEqual(
+        containerDocument.querySelector('#test-container'),
+      );
       expect(config.container).toEqual(
-        document.querySelector('#test-container'),
+        containerDocument.querySelector('#test-container'),
       );
     });
 
@@ -610,13 +617,14 @@ describe('Quill', function() {
     });
 
     it('toolbar container shorthand', function() {
+      const containerDocument = this.container.ownerDocument;
       const config = expandConfig('#test-container', {
         modules: {
-          toolbar: document.querySelector('#test-container'),
+          toolbar: containerDocument.querySelector('#test-container'),
         },
       });
       expect(config.modules.toolbar).toEqual({
-        container: document.querySelector('#test-container'),
+        container: containerDocument.querySelector('#test-container'),
         handlers: Toolbar.DEFAULTS.handlers,
       });
     });
