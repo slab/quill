@@ -16,7 +16,7 @@ const TokenAttributor = new ClassAttributor('code-token', 'hljs', {
 class CodeToken extends Inline {
   static formats(node, scroll) {
     while (node != null && node !== scroll.domNode) {
-      if (node.classList.contains(CodeBlock.className)) {
+      if (node.classList && node.classList.contains(CodeBlock.className)) {
         return super.formats(node, scroll);
       }
       node = node.parentNode;
