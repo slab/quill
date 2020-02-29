@@ -67,7 +67,7 @@ function compareApproximately(actual, expected, tolerance) {
 
 function compareHTML(actual, expected, ignoreClassId, ignoreUI = true) {
   const [div1, div2] = [actual, expected].map(function(html) {
-    if (html instanceof HTMLElement) {
+    if (typeof html !== 'string') {
       html = html.innerHTML;
     }
     const container = document.createElement('div');

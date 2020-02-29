@@ -19,7 +19,7 @@ class Toolbar extends Module {
     } else {
       this.container = this.options.container;
     }
-    if (!(this.container instanceof HTMLElement)) {
+    if (this.container.ownerDocument === 'undefined') {
       return debug.error('Container required for toolbar', this.options);
     }
     this.container.classList.add('ql-toolbar');
