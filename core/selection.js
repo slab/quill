@@ -21,7 +21,9 @@ class Selection {
     this.composing = false;
     this.mouseDown = false;
     this.root = this.scroll.domNode;
-    this.rootDocument = (this.root.getRootNode ? this.root.getRootNode() : document);
+    this.rootDocument = this.root.getRootNode
+      ? this.root.getRootNode()
+      : document;
     this.cursor = this.scroll.create('cursor', this);
     // savedRange is last non-null range
     this.savedRange = new Range(0, 0);
@@ -177,7 +179,7 @@ class Selection {
   }
 
   getNativeRange() {
-    let nativeRange = getRange(this.rootDocument);
+    const nativeRange = getRange(this.rootDocument);
     if (nativeRange == null) return null;
     const range = this.normalizeNative(nativeRange);
     debug.info('getNativeRange', range);
@@ -313,7 +315,10 @@ class Selection {
     ) {
       return;
     }
-    let selection = typeof this.rootDocument.getSelection === 'function' ? this.rootDocument.getSelection() : document.getSelection();
+    const selection =
+      typeof this.rootDocument.getSelection === 'function'
+        ? this.rootDocument.getSelection()
+        : document.getSelection();
     if (selection == null) return;
     if (startNode != null) {
       if (!this.hasFocus()) this.root.focus();

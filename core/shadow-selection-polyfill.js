@@ -1,3 +1,5 @@
+/* eslint-disable no-cond-assign */
+/* eslint-disable no-plusplus */
 /**
  * Copyright 2018 Google LLC
  *
@@ -18,14 +20,23 @@
 
 export const SHADOW_SELECTIONCHANGE = '-shadow-selectionchange';
 
-const hasShadow = 'attachShadow' in Element.prototype && 'getRootNode' in Element.prototype;
-const hasSelection = !!(hasShadow && document.createElement('div').attachShadow({ mode: 'open' }).getSelection);
+const hasShadow =
+  'attachShadow' in Element.prototype && 'getRootNode' in Element.prototype;
+const hasSelection = !!(
+  hasShadow &&
+  document.createElement('div').attachShadow({ mode: 'open' }).getSelection
+);
 const hasShady = window.ShadyDOM && window.ShadyDOM.inUse;
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) ||
-  /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const isSafari =
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent) ||
+  (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 const useDocument = !hasShadow || hasShady || (!hasSelection && !isSafari);
 
-const validNodeTypes = [Node.ELEMENT_NODE, Node.TEXT_NODE, Node.DOCUMENT_FRAGMENT_NODE];
+const validNodeTypes = [
+  Node.ELEMENT_NODE,
+  Node.TEXT_NODE,
+  Node.DOCUMENT_FRAGMENT_NODE,
+];
 function isValidNode(node) {
   return validNodeTypes.includes(node.nodeType);
 }
@@ -37,7 +48,7 @@ function findNode(s, parentNode, isLeft) {
   }
 
   for (let i = 0; i < nodes.length; ++i) {
-    const j = isLeft ? i : (nodes.length - 1 - i);
+    const j = isLeft ? i : nodes.length - 1 - i;
     const childNode = nodes[j];
     if (!isValidNode(childNode)) {
       continue; // eslint-disable-line no-continue
@@ -68,7 +79,7 @@ const addInternalListener = (() => {
   let withinInternals = false;
   const handlers = [];
 
-  document.addEventListener('selectionchange', (ev) => {
+  document.addEventListener('selectionchange', ev => {
     if (withinInternals) {
       return;
     }
@@ -77,10 +88,10 @@ const addInternalListener = (() => {
     window.setTimeout(() => {
       withinInternals = false;
     }, 2); // FIXME: should be > 1 to prevent infinite Selection.update() loop
-    handlers.forEach((fn) => fn(ev));
+    handlers.forEach(fn => fn(ev));
   });
 
-  return (fn) => handlers.push(fn);
+  return fn => handlers.push(fn);
 })();
 
 let wasCaret = false;
@@ -97,7 +108,6 @@ addInternalListener(() => {
   }
 });
 
-
 /**
  * @param {!Selection} s the window selection to use
  * @param {!Node} node the node to walk from
@@ -106,7 +116,8 @@ addInternalListener(() => {
  */
 function containsNextElement(s, node, walkForward) {
   const start = node;
-  while (node = walkFromNode(node, walkForward)) { // eslint-disable-line no-cond-assign
+  while ((node = walkFromNode(node, walkForward))) {
+    // eslint-disable-line no-cond-assign
     // walking (left) can contain our own parent, which we don't want
     if (!node.contains(start)) {
       break;
@@ -120,7 +131,6 @@ function containsNextElement(s, node, walkForward) {
   return node instanceof Element && s.containsNode(node, true);
 }
 
-
 /**
  * @param {!Selection} s the window selection to use
  * @param {!Node} leftNode the left node
@@ -129,7 +139,7 @@ function containsNextElement(s, node, walkForward) {
  */
 function getSelectionDirection(s, leftNode, rightNode) {
   if (s.type !== 'Range') {
-    return undefined;  // no direction
+    return undefined; // no direction
   }
   const measure = () => s.toString().length;
 
@@ -153,7 +163,8 @@ function getSelectionDirection(s, leftNode, rightNode) {
   if (updatedSize > initialSize || containsNextElement(s, rightNode, true)) {
     s.modify('extend', 'backward', 'character');
     return true;
-  } else if (updatedSize < initialSize || !s.containsNode(leftNode)) {
+  }
+  if (updatedSize < initialSize || !s.containsNode(leftNode)) {
     s.modify('extend', 'backward', 'character');
     return false;
   }
@@ -166,7 +177,8 @@ function getSelectionDirection(s, leftNode, rightNode) {
   if (updatedSize > initialSize || containsNextElement(s, leftNode, false)) {
     s.modify('extend', 'forward', 'character');
     return false;
-  } else if (updatedSize < initialSize || !s.containsNode(rightNode)) {
+  }
+  if (updatedSize < initialSize || !s.containsNode(rightNode)) {
     s.modify('extend', 'forward', 'character');
     return true;
   }
@@ -215,7 +227,7 @@ function ignoredTrailingSpace(node) {
   if (node.nodeType !== Node.TEXT_NODE) {
     return 0;
   }
-  const trailingSpaceCount =  /\s*$/.exec(node.textContent)[0].length;
+  const trailingSpaceCount = /\s*$/.exec(node.textContent)[0].length;
   if (!trailingSpaceCount) {
     return 0;
   }
@@ -249,7 +261,7 @@ export function internalGetShadowSelection(root) {
 
   const s = window.getSelection();
   if (!s.containsNode(root.host, true)) {
-    return {range: null, mode: 'none'};
+    return { range: null, mode: 'none' };
   }
 
   // TODO: inserting fake nodes isn't ideal, but containsNode doesn't work on nearby adjacent
@@ -260,7 +272,7 @@ export function internalGetShadowSelection(root) {
   const includesBeforeRoot = s.containsNode(fakeSelectionNode);
   fakeSelectionNode.remove();
   if (includesBeforeRoot) {
-    return {range: null, mode: 'outside-before'};
+    return { range: null, mode: 'outside-before' };
   }
 
   // insert a fake 'after' node to see if it's selected
@@ -268,19 +280,19 @@ export function internalGetShadowSelection(root) {
   const includesAfterRoot = s.containsNode(fakeSelectionNode);
   fakeSelectionNode.remove();
   if (includesAfterRoot) {
-    return {range: null, mode: 'outside-after'};
+    return { range: null, mode: 'outside-after' };
   }
 
   const measure = () => s.toString().length;
   if (!(s.type === 'Caret' || s.type === 'Range')) {
-    throw new TypeError('unexpected type: ' + s.type);
+    throw new TypeError(`unexpected type: ${s.type}`);
   }
 
   const leftNode = findNode(s, root, true);
   let rightNode;
   let isNaturalDirection;
   if (s.type === 'Range') {
-    rightNode = findNode(s, root, false);  // get right node here _before_ getSelectionDirection
+    rightNode = findNode(s, root, false); // get right node here _before_ getSelectionDirection
     isNaturalDirection = getSelectionDirection(s, leftNode, rightNode);
     // isNaturalDirection means "going right"
   }
@@ -293,21 +305,23 @@ export function internalGetShadowSelection(root) {
 
     range.setStart(leftNode, at);
     range.setEnd(leftNode, at);
-    return {range, mode: 'caret'};
-  } else if (isNaturalDirection === undefined) {
+    return { range, mode: 'caret' };
+  }
+  if (isNaturalDirection === undefined) {
     if (s.type !== 'Range') {
-      throw new TypeError('unexpected type: ' + s.type);
+      throw new TypeError(`unexpected type: ${s.type}`);
     }
     // This occurs when we can't move because we can't extend left or right to measure the
     // direction we're moving in. Good news though: we don't need to _change_ the selection
     // to measure it, so just return immediately.
     range.setStart(leftNode, 0);
     range.setEnd(rightNode, rightNode.length);
-    return {range, mode: 'all'};
+    return { range, mode: 'all' };
   }
 
   const size = measure();
-  let offsetLeft, offsetRight;
+  let offsetLeft;
+  let offsetRight;
 
   // only one newline/space char is cared about
   const validRightLength = rightNode.length - ignoredTrailingSpace(rightNode);
@@ -315,7 +329,7 @@ export function internalGetShadowSelection(root) {
   if (isNaturalDirection) {
     // walk in the opposite direction first
     s.extend(leftNode, 0);
-    offsetLeft = measure() + initialSpace(leftNode);  // measure doesn't include initial space
+    offsetLeft = measure() + initialSpace(leftNode); // measure doesn't include initial space
 
     // then in our actual direction
     s.extend(rightNode, validRightLength);
@@ -330,7 +344,7 @@ export function internalGetShadowSelection(root) {
 
     // then in our actual direction
     s.extend(leftNode, 0);
-    offsetLeft = measure() - size + initialSpace(leftNode);  // doesn't include initial space
+    offsetLeft = measure() - size + initialSpace(leftNode); // doesn't include initial space
 
     // then revert to the original position
     s.extend(leftNode, offsetLeft);

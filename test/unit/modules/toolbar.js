@@ -201,8 +201,8 @@ describe('Toolbar', function() {
 
       editor = new Quill(container.shadowRoot.querySelector('.editor'), {
         modules: {
-          toolbar: '.toolbar'
-        }
+          toolbar: '.toolbar',
+        },
       });
     });
 

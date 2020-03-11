@@ -1,16 +1,15 @@
 import EventEmitter from 'eventemitter3';
-import instances from './instances';
 import logger from './logger';
 import { SHADOW_SELECTIONCHANGE } from './shadow-selection-polyfill';
 
 const debug = logger('quill:events');
 const EVENTS = [SHADOW_SELECTIONCHANGE, 'mousedown', 'mouseup', 'click'];
 const EMITTERS = [];
-const supportsRootNode = ('getRootNode' in document);
+const supportsRootNode = 'getRootNode' in document;
 
 EVENTS.forEach(eventName => {
   document.addEventListener(eventName, (...args) => {
-    EMITTERS.forEach((em) => {
+    EMITTERS.forEach(em => {
       em.handleDOM(...args);
     });
   });
@@ -30,18 +29,18 @@ class Emitter extends EventEmitter {
   }
 
   handleDOM(event, ...args) {
-    const target = (event.composedPath ? event.composedPath()[0] : event.target);
-    const containsNode = (node, target) => {
-      if (!supportsRootNode || target.getRootNode() === document) {
-        return node.contains(target);
+    const target = event.composedPath ? event.composedPath()[0] : event.target;
+    const containsNode = (node, srcTarget) => {
+      if (!supportsRootNode || srcTarget.getRootNode() === document) {
+        return node.contains(srcTarget);
       }
 
-      while (!node.contains(target)) {
-        const root = target.getRootNode();
+      while (!node.contains(srcTarget)) {
+        const root = srcTarget.getRootNode();
         if (!root || !root.host) {
           return false;
         }
-        target = root.host;
+        srcTarget = root.host;
       }
       return true;
     };
