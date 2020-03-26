@@ -78,7 +78,6 @@ class Quill {
       e.preventDefault();
     });
     this.root.classList.add('ql-blank');
-    this.root.setAttribute('data-gramm', false);
     this.scrollingContainer = this.options.scrollingContainer || this.root;
     this.emitter = new Emitter();
     const ScrollBlot = this.options.registry.query(
