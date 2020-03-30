@@ -94,7 +94,8 @@ function compareNodes(node1, node2, ignoredAttributes = []) {
       )}`;
     }
     if (node1.childNodes.length !== node2.childNodes.length) {
-      return `Expected node childNodes length '${node1.childNodes.length}' to equal '${node2.childNodes.length}'`;
+      return `Expected node childNodes length 
+        '${node1.childNodes.length}' to equal '${node2.childNodes.length}'`;
     }
     if (node1.childNodes.length === 0) return null;
     let message = '';
