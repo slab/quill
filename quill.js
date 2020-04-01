@@ -1,53 +1,46 @@
 import Quill from './core';
-
+import AlertClass from './formats/alert';
 import { AlignClass, AlignStyle } from './formats/align';
+import { BackgroundClass, BackgroundStyle } from './formats/background';
+import Blockquote from './formats/blockquote';
+import Bold from './formats/bold';
+import CodeBlock, { Code as InlineCode } from './formats/code';
+import { ColorClass, ColorStyle } from './formats/color';
 import {
   DirectionAttribute,
   DirectionClass,
   DirectionStyle,
 } from './formats/direction';
-import Indent from './formats/indent';
-
-import Blockquote from './formats/blockquote';
-import Header from './formats/header';
-import List from './formats/list';
-
-import { BackgroundClass, BackgroundStyle } from './formats/background';
-import { ColorClass, ColorStyle } from './formats/color';
 import { FontClass, FontStyle } from './formats/font';
-import { SizeClass, SizeStyle } from './formats/size';
-
-import Bold from './formats/bold';
+import Formula from './formats/formula';
+import Header from './formats/header';
+import Image from './formats/image';
+import Indent from './formats/indent';
 import Italic from './formats/italic';
 import Link from './formats/link';
+import List from './formats/list';
 import Script from './formats/script';
+import { SizeClass, SizeStyle } from './formats/size';
 import Strike from './formats/strike';
 import Underline from './formats/underline';
-
-import Formula from './formats/formula';
-import Image from './formats/image';
 import Video from './formats/video';
-
-import CodeBlock, { Code as InlineCode } from './formats/code';
-
 import Syntax from './modules/syntax';
 import Table from './modules/table';
 import Toolbar from './modules/toolbar';
-
-import Icons from './ui/icons';
-import Picker from './ui/picker';
-import ColorPicker from './ui/color-picker';
-import IconPicker from './ui/icon-picker';
-import Tooltip from './ui/tooltip';
-
 import BubbleTheme from './themes/bubble';
 import SnowTheme from './themes/snow';
+import ColorPicker from './ui/color-picker';
+import IconPicker from './ui/icon-picker';
+import Icons from './ui/icons';
+import Picker from './ui/picker';
+import Tooltip from './ui/tooltip';
 
 Quill.register(
   {
     'attributors/attribute/direction': DirectionAttribute,
 
     'attributors/class/align': AlignClass,
+    'attributors/class/alert': AlertClass,
     'attributors/class/background': BackgroundClass,
     'attributors/class/color': ColorClass,
     'attributors/class/direction': DirectionClass,
@@ -67,6 +60,7 @@ Quill.register(
 Quill.register(
   {
     'formats/align': AlignClass,
+    'formats/alert': AlertClass,
     'formats/direction': DirectionClass,
     'formats/indent': Indent,
 
