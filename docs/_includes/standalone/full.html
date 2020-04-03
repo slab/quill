@@ -1,7 +1,10 @@
 <!-- head -->
-<link rel="stylesheet" href="{{site.katex}}/katex.min.css">
-<link rel="stylesheet" href="{{site.highlightjs}}/styles/monokai-sublime.min.css">
-<link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.snow.css">
+<link rel="stylesheet" href="{{site.katex}}/katex.min.css" />
+<link
+  rel="stylesheet"
+  href="{{site.highlightjs}}/styles/monokai-sublime.min.css"
+/>
+<link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.snow.css" />
 <style>
   body > #standalone-container {
     margin: 50px auto;
@@ -68,10 +71,10 @@
   var quill = new Quill('#editor-container', {
     modules: {
       syntax: true,
-      toolbar: '#toolbar-container'
+      toolbar: '#toolbar-container',
     },
     placeholder: 'Compose an epic...',
-    theme: 'snow'
+    theme: 'snow',
   });
 </script>
 <!-- script -->

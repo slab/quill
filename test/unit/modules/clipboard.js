@@ -34,6 +34,7 @@ describe('Clipboard', function() {
       it('pastes html data if present with file', function(done) {
         const upload = spyOn(this.quill.uploader, 'upload');
         this.quill.clipboard.onCapturePaste(
+          // eslint-disable-next-line prefer-object-spread
           Object.assign({}, this.clipboardEvent, { files: ['file '] }),
         );
         setTimeout(() => {

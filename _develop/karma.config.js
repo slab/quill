@@ -30,7 +30,7 @@ module.exports = config => {
     browsers: ['Chrome'],
 
     client: {
-      useIframe: false,
+      useIframe: true,
     },
 
     coverageReporter: {
@@ -60,14 +60,7 @@ module.exports = config => {
     config.browserDisconnectTimeout = 10000;
     config.browserDisconnectTolerance = 3;
     config.browserNoActivityTimeout = 60000;
+    config.browserSocketTimeout = 40000;
     config.captureTimeout = 120000;
-    // MS Edge does not work in an iframe
-    if (
-      process.env.BROWSER.indexOf('ios') > -1 ||
-      process.env.BROWSER.indexOf('android') > -1 ||
-      process.env.BROWSER.indexOf('firefox') > -1
-    ) {
-      config.client.useIframe = true;
-    }
   }
 };

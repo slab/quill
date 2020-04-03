@@ -1,28 +1,28 @@
 const desktop = {
-  'mac-chrome-latest': ['OS X 10.13', 'chrome', '67.0'],
-  'mac-firefox-latest': ['OS X 10.13', 'firefox', '60.0'],
-  'mac-safari-latest': ['OS X 10.13', 'safari', '11.1'],
-  'mac-chrome-previous': ['OS X 10.12', 'chrome', '66.0'],
-  'mac-firefox-previous': ['OS X 10.12', 'firefox', '59.0'],
-  'mac-safari-previous': ['OS X 10.12', 'safari', '10.1'],
+  'mac-chrome-latest': ['macOS 10.15', 'chrome', '80.0'],
+  'mac-firefox-latest': ['macOS 10.15', 'firefox', '74.0'],
+  'mac-safari-latest': ['macOS 10.15', 'safari', '13.0'],
+  'mac-chrome-previous': ['macOS 10.14', 'chrome', '79.0'],
+  'mac-firefox-previous': ['macOS 10.14', 'firefox', '73.0'],
+  'mac-safari-previous': ['macOS 10.14', 'safari', '12.0'],
 
-  'windows-chrome-latest': ['Windows 10', 'chrome', '67.0'],
-  'windows-firefox-latest': ['Windows 10', 'firefox', '60.0'],
-  'windows-edge-latest': ['Windows 10', 'microsoftedge', '16.16299'],
-  'windows-chrome-previous': ['Windows 8.1', 'chrome', '66.0'],
-  'windows-firefox-previous': ['Windows 8.1', 'firefox', '59.0'],
-  'windows-edge-previous': ['Windows 10', 'microsoftedge', '15.15063'],
+  'windows-chrome-latest': ['Windows 10', 'chrome', '80.0'],
+  'windows-firefox-latest': ['Windows 10', 'firefox', '74.0'],
+  'windows-edge-latest': ['Windows 10', 'microsoftedge', '80.0'],
+  'windows-chrome-previous': ['Windows 8.1', 'chrome', '79.0'],
+  'windows-firefox-previous': ['Windows 8.1', 'firefox', '74.0'],
+  'windows-edge-previous': ['Windows 10', 'microsoftedge', '79.0'],
 };
 
 const mobile = {
-  'ios-latest': ['iPhone X Simulator', 'iOS', '11.3', 'Safari'],
-  'ios-previous': ['iPhone 7 Plus Simulator', 'iOS', '10.3', 'Safari'],
+  'ios-latest': ['iPhone 11 Simulator', 'iOS', '13.2', 'Safari'],
+  'ios-previous': ['iPhone X Simulator', 'iOS', '12.4', 'Safari'],
 
-  'android-latest': ['Android GoogleAPI Emulator', 'Android', '7.1', 'Chrome'],
+  'android-latest': ['Android GoogleAPI Emulator', 'Android', '10.0', 'Chrome'],
   'android-previous': [
     'Android GoogleAPI Emulator',
     'Android',
-    '6.0',
+    '9.0',
     'Chrome',
   ],
 };
@@ -40,7 +40,7 @@ Object.keys(mobile).forEach(key => {
   module.exports[key] = {
     base: 'SauceLabs',
     browserName: mobile[key][3],
-    appiumVersion: '1.8.1',
+    appiumVersion: '1.16.0',
     deviceName: mobile[key][0],
     deviceOrientation: 'portrait',
     platformVersion: mobile[key][2],
