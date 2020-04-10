@@ -24,6 +24,7 @@ class Selection {
     // savedRange is last non-null range
     this.savedRange = new Range(0, 0);
     this.lastRange = this.savedRange;
+    this.lastNative = null;
     this.handleComposition();
     this.handleDragging();
     this.emitter.listenDOM('selectionchange', document, () => {
@@ -372,6 +373,7 @@ class Selection {
     const oldRange = this.lastRange;
     const [lastRange, nativeRange] = this.getRange();
     this.lastRange = lastRange;
+    this.lastNative = nativeRange;
     if (this.lastRange != null) {
       this.savedRange = this.lastRange;
     }
