@@ -1,4 +1,3 @@
-import extend from 'extend';
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import Delta, { AttributeMap } from 'quill-delta';
@@ -98,7 +97,12 @@ class Keyboard extends Module {
     }
     const keys = Array.isArray(binding.key) ? binding.key : [binding.key];
     keys.forEach(key => {
-      const singleBinding = extend({}, binding, { key }, context, handler);
+      const singleBinding = {
+        ...binding,
+        key,
+        ...context,
+        ...handler,
+      };
       this.bindings[singleBinding.key] = this.bindings[singleBinding.key] || [];
       this.bindings[singleBinding.key].push(singleBinding);
     });
@@ -383,7 +387,10 @@ Keyboard.DEFAULTS = {
       format: { list: 'checked' },
       handler(range) {
         const [line, offset] = this.quill.getLine(range.index);
-        const formats = extend({}, line.formats(), { list: 'checked' });
+        const formats = {
+          ...line.formats(),
+          list: 'checked',
+        };
         const delta = new Delta()
           .retain(range.index)
           .insert('\n', formats)
