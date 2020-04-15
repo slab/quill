@@ -1,4 +1,5 @@
 import Delta from 'quill-delta';
+import cloneDeep from 'lodash.clonedeep';
 import * as Parchment from 'parchment';
 import extend from 'extend';
 import Editor from './editor';
@@ -480,7 +481,7 @@ function expandConfig(container, userConfig) {
       );
     }
   }
-  const themeConfig = extend(true, {}, userConfig.theme.DEFAULTS);
+  const themeConfig = cloneDeep(userConfig.theme.DEFAULTS);
   [themeConfig, userConfig].forEach(config => {
     config.modules = config.modules || {};
     Object.keys(config.modules).forEach(module => {

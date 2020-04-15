@@ -32,9 +32,9 @@
     }
   },
   "dependencies": {
-    "clone": "^2.1.2",
     "eventemitter3": "^4.0.0",
     "extend": "^3.0.2",
+    "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "parchment": "2.0.0-dev.2",
     "quill-delta": "4.2.1"

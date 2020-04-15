@@ -1,5 +1,5 @@
-import clone from 'clone';
 import extend from 'extend';
+import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import Delta, { AttributeMap } from 'quill-delta';
 import { EmbedBlot, Scope, TextBlot } from 'parchment';
@@ -689,7 +689,7 @@ function normalize(binding) {
   if (typeof binding === 'string' || typeof binding === 'number') {
     binding = { key: binding };
   } else if (typeof binding === 'object') {
-    binding = clone(binding, false);
+    binding = cloneDeep(binding);
   } else {
     return null;
   }

@@ -1,5 +1,5 @@
 import { LeafBlot, Scope } from 'parchment';
-import clone from 'clone';
+import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import Emitter from './emitter';
 import logger from './logger';
@@ -396,8 +396,8 @@ class Selection {
       }
       const args = [
         Emitter.events.SELECTION_CHANGE,
-        clone(this.lastRange),
-        clone(oldRange),
+        cloneDeep(this.lastRange),
+        cloneDeep(oldRange),
         source,
       ];
       this.emitter.emit(Emitter.events.EDITOR_CHANGE, ...args);

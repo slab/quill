@@ -1,5 +1,5 @@
-import clone from 'clone';
 import extend from 'extend';
+import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import Delta, { AttributeMap } from 'quill-delta';
 import { LeafBlot } from 'parchment';
@@ -85,7 +85,7 @@ class Editor {
       });
     });
     this.scroll.optimize();
-    const delta = new Delta().retain(index).retain(length, clone(formats));
+    const delta = new Delta().retain(index).retain(length, cloneDeep(formats));
     return this.update(delta);
   }
 
@@ -93,7 +93,7 @@ class Editor {
     Object.keys(formats).forEach(format => {
       this.scroll.formatAt(index, length, format, formats[format]);
     });
-    const delta = new Delta().retain(index).retain(length, clone(formats));
+    const delta = new Delta().retain(index).retain(length, cloneDeep(formats));
     return this.update(delta);
   }
 
@@ -162,7 +162,9 @@ class Editor {
     Object.keys(formats).forEach(format => {
       this.scroll.formatAt(index, text.length, format, formats[format]);
     });
-    return this.update(new Delta().retain(index).insert(text, clone(formats)));
+    return this.update(
+      new Delta().retain(index).insert(text, cloneDeep(formats)),
+    );
   }
 
   isBlank() {
