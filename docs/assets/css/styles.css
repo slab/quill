@@ -606,56 +606,50 @@ body.home .arrow .shaft {
   height: 100px;
   width: 150px;
 }
-#users-container .user-linkedin {
+#users-container .user-asana {
   background-position: 0 0;
 }
-#users-container .user-asana {
+#users-container .user-front {
   background-position: 0 -100%;
 }
-#users-container .user-front {
+#users-container .user-voxmedia {
   background-position: 0 -200%;
 }
-#users-container .user-gannett {
+#users-container .user-gusto {
   background-position: 0 -300%;
 }
-#users-container .user-gusto {
+#users-container .user-linkedin {
   background-position: 0 -400%;
 }
-#users-container .user-hubspot {
+#users-container .user-intuit {
   background-position: 0 -500%;
 }
-#users-container .user-intuit {
+#users-container .user-lever {
   background-position: 0 -600%;
 }
-#users-container .user-lever {
+#users-container .user-buffer {
   background-position: 0 -700%;
 }
-#users-container .user-buffer {
+#users-container .user-microsoft {
   background-position: 0 -800%;
 }
-#users-container .user-microsoft {
+#users-container .user-airtable {
   background-position: 0 -900%;
 }
-#users-container .user-modeanalytics {
+#users-container .user-reedsy {
   background-position: 0 -1000%;
 }
-#users-container .user-reedsy {
+#users-container .user-salesforce {
   background-position: 0 -1100%;
 }
-#users-container .user-salesforce {
+#users-container .user-slab {
   background-position: 0 -1200%;
 }
-#users-container .user-slab {
+#users-container .user-slack {
   background-position: 0 -1300%;
 }
-#users-container .user-slack {
+#users-container .user-grammarly {
   background-position: 0 -1400%;
-}
-#users-container .user-usatoday {
-  background-position: 0 -1500%;
-}
-#users-container .user-voxmedia {
-  background-position: 0 -1600%;
 }
 
 #laptop-container {
