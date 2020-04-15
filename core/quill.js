@@ -1,7 +1,7 @@
 import Delta from 'quill-delta';
 import cloneDeep from 'lodash.clonedeep';
+import merge from 'lodash.merge';
 import * as Parchment from 'parchment';
-import extend from 'extend';
 import Editor from './editor';
 import Emitter from './emitter';
 import Module from './module';
@@ -458,8 +458,7 @@ Quill.imports = {
 };
 
 function expandConfig(container, userConfig) {
-  userConfig = extend(
-    true,
+  userConfig = merge(
     {
       container,
       modules: {
@@ -514,8 +513,7 @@ function expandConfig(container, userConfig) {
       container: userConfig.modules.toolbar,
     };
   }
-  userConfig = extend(
-    true,
+  userConfig = merge(
     {},
     Quill.DEFAULTS,
     { modules: moduleConfig },

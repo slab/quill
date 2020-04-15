@@ -1,4 +1,3 @@
-import extend from 'extend';
 import Delta from 'quill-delta';
 import {
   Attributor,
@@ -219,10 +218,8 @@ function applyFormat(delta, format, value) {
     if (op.attributes && op.attributes[format]) {
       return newDelta.push(op);
     }
-    return newDelta.insert(
-      op.insert,
-      extend({}, { [format]: value }, op.attributes),
-    );
+    const formats = value ? { [format]: value } : {};
+    return newDelta.insert(op.insert, { ...formats, ...op.attributes });
   }, new Delta());
 }
 
