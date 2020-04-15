@@ -1,6 +1,6 @@
 import clone from 'clone';
-import equal from 'deep-equal';
 import extend from 'extend';
+import isEqual from 'lodash.isequal';
 import Delta, { AttributeMap } from 'quill-delta';
 import { LeafBlot } from 'parchment';
 import { Range } from './selection';
@@ -223,7 +223,7 @@ class Editor {
       this.delta = oldDelta.compose(change);
     } else {
       this.delta = this.getDelta();
-      if (!change || !equal(oldDelta.compose(change), this.delta)) {
+      if (!change || !isEqual(oldDelta.compose(change), this.delta)) {
         change = oldDelta.diff(this.delta, selectionInfo);
       }
     }

@@ -1,4 +1,4 @@
-import equal from 'deep-equal';
+import isEqual from 'lodash.isequal';
 import Editor from '../../core/editor';
 import Emitter from '../../core/emitter';
 import Selection from '../../core/selection';
@@ -88,7 +88,7 @@ function compareNodes(node1, node2, ignoredAttributes = []) {
         return attr;
       }, {});
     });
-    if (!equal(attr1, attr2)) {
+    if (!isEqual(attr1, attr2)) {
       return `Expected attributes ${jasmine.pp(attr1)} to equal ${jasmine.pp(
         attr2,
       )}`;

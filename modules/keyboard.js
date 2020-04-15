@@ -1,6 +1,6 @@
 import clone from 'clone';
-import equal from 'deep-equal';
 import extend from 'extend';
+import isEqual from 'lodash.isequal';
 import Delta, { AttributeMap } from 'quill-delta';
 import { EmbedBlot, Scope, TextBlot } from 'parchment';
 import Quill from '../core/quill';
@@ -162,7 +162,7 @@ class Keyboard extends Module {
                 return curContext.format[name] != null;
               if (binding.format[name] === false)
                 return curContext.format[name] == null;
-              return equal(binding.format[name], curContext.format[name]);
+              return isEqual(binding.format[name], curContext.format[name]);
             })
           ) {
             return false;

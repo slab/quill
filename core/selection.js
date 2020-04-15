@@ -1,6 +1,6 @@
 import { LeafBlot, Scope } from 'parchment';
 import clone from 'clone';
-import equal from 'deep-equal';
+import isEqual from 'lodash.isequal';
 import Emitter from './emitter';
 import logger from './logger';
 
@@ -377,7 +377,7 @@ class Selection {
     if (this.lastRange != null) {
       this.savedRange = this.lastRange;
     }
-    if (!equal(oldRange, this.lastRange)) {
+    if (!isEqual(oldRange, this.lastRange)) {
       if (
         !this.composing &&
         nativeRange != null &&
