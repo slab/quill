@@ -129,7 +129,7 @@ quill.setContents([
 
 ### setText
 
-Sets contents of editor with given text, returing a [Delta](/guides/working-with-deltas/) representing the change. Note Quill documents must end with a newline so one will be added for you if omitted.  [Source](/1.0/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+Sets contents of editor with given text, returning a [Delta](/guides/working-with-deltas/) representing the change. Note Quill documents must end with a newline so one will be added for you if omitted.  [Source](/1.0/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
 
 **Methods**
 
@@ -145,7 +145,7 @@ quill.setText('Hello\n');
 
 ### updateContents
 
-Applies Delta to editor contents, returing a [Delta](/guides/working-with-deltas/) representing the change. These Deltas will be the same if the Delta passed in had no invalid operations. [Source](/1.0/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+Applies Delta to editor contents, returning a [Delta](/guides/working-with-deltas/) representing the change. These Deltas will be the same if the Delta passed in had no invalid operations. [Source](/1.0/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
 
 **Methods**
 
