@@ -199,15 +199,19 @@ class Keyboard extends Module {
       // Always deleting newline here, length always 1
       const [prev] = this.quill.getLine(range.index - 1);
       if (prev) {
-        const curFormats = line.formats();
-        const prevFormats = this.quill.getFormat(range.index - 1, 1);
-        formats = AttributeMap.diff(curFormats, prevFormats) || {};
-        if (Object.keys(formats).length > 0) {
-          // line.length() - 1 targets \n in line, another -1 for newline being deleted
-          const formatDelta = new Delta()
-            .retain(range.index + line.length() - 2)
-            .retain(1, formats);
-          delta = delta.compose(formatDelta);
+        const isPrevLineEmpty =
+          prev.statics.blotName === 'block' && prev.length() <= 1;
+        if (!isPrevLineEmpty) {
+          const curFormats = line.formats();
+          const prevFormats = this.quill.getFormat(range.index - 1, 1);
+          formats = AttributeMap.diff(curFormats, prevFormats) || {};
+          if (Object.keys(formats).length > 0) {
+            // line.length() - 1 targets \n in line, another -1 for newline being deleted
+            const formatDelta = new Delta()
+              .retain(range.index + line.length() - 2)
+              .retain(1, formats);
+            delta = delta.compose(formatDelta);
+          }
         }
       }
     }
