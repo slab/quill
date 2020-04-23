@@ -22,7 +22,7 @@ Shorthand for [`enable(false)`](#enable).
 
 ### enable
 
-Set ability for user to edit, via input devices like the mouse or keyboard. Does not affect capabilities of API calls, when the `source` is `"api"` or `"silent".
+Set ability for user to edit, via input devices like the mouse or keyboard. Does not affect capabilities of API calls, when the `source` is `"api"` or `"silent"`.
 
 **Methods**
 
