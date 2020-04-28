@@ -727,9 +727,19 @@ describe('Editor', function() {
     });
 
     it('multiline code', function() {
-      const editor = this.initialize(Editor, '<p>0123</p><p>4567</p>');
-      editor.formatLine(0, 9, { 'code-block': 'javascript' });
-      expect(editor.getHTML(0, 9)).toEqual('<pre>0123\n4567</pre>');
+      const editor = this.initialize(
+        Editor,
+        '<p><br></p><p>0123</p><p><br></p><p><br></p><p>4567</p><p><br></p>',
+      );
+      const length = editor.scroll.length();
+      editor.formatLine(0, length, { 'code-block': 'javascript' });
+
+      expect(editor.getHTML(0, length)).toEqual(
+        '<pre>\n\n0123\n\n\n4567\n\n</pre>',
+      );
+      expect(editor.getHTML(1, 7)).toEqual('<pre>\n0123\n\n\n\n</pre>');
+      expect(editor.getHTML(2, 7)).toEqual('<pre>\n123\n\n\n4\n</pre>');
+      expect(editor.getHTML(5, 7)).toEqual('<pre>\n\n\n\n4567\n</pre>');
     });
   });
 });

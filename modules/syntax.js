@@ -135,6 +135,18 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
     }
   }
 
+  html(index, length) {
+    const [codeBlock] = this.children.find(index);
+    const language = codeBlock
+      ? SyntaxCodeBlock.formats(codeBlock.domNode)
+      : 'plain';
+
+    return `<pre data-language="${language}">\n${this.code(
+      index,
+      length,
+    )}\n</pre>`;
+  }
+
   optimize(context) {
     super.optimize(context);
     if (
