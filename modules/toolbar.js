@@ -34,7 +34,22 @@ class Toolbar extends Module {
     });
     this.quill.on(Quill.events.EDITOR_CHANGE, (type, range) => {
       if (type === Quill.events.SELECTION_CHANGE) {
-        this.update(range);
+           if(event && event != undefined && event.keyCode == 13 && event.code == 'Enter') {
+			    this.controls.forEach(function (pair) {
+				 let [format, input] = pair;
+				  if(format=='header') {
+					 if(input.value > 0)
+					 {
+						input.value = '';
+						this.controls[2][1].value = '13px';
+						this.controls[0][1].value = 'calibri';
+						this.controls[6][1].value = '';
+					 }
+				  }
+			   })
+		   } else {
+             this.update(range);
+		   }
       }
     });
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, () => {

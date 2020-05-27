@@ -20,6 +20,8 @@ class Tooltip {
     let left = reference.left + reference.width/2 - this.root.offsetWidth/2;
     // root.scrollTop should be 0 if scrollContainer !== root
     let top = reference.bottom + this.quill.root.scrollTop;
+	if(left > 520){ left = 520; }
+	if(left < 0){ left = 0; }
     this.root.style.left = left + 'px';
     this.root.style.top = top + 'px';
     this.root.classList.remove('ql-flip');
