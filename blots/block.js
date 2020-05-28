@@ -12,7 +12,18 @@ import TextBlot from './text';
 import Cursort from './cursor';
 
 const NEWLINE_LENGTH = 1;
-const TEXT_FORMAT_NODES = ['SPAN','STRONG','B','EM','I','SUB','SUP','S','STRIKE','U'];
+const TEXT_FORMAT_NODES = [
+  'SPAN',
+  'STRONG',
+  'B',
+  'EM',
+  'I',
+  'SUB',
+  'SUP',
+  'S',
+  'STRIKE',
+  'U',
+];
 
 class Block extends BlockBlot {
   constructor(scroll, domNode) {
@@ -112,22 +123,23 @@ class Block extends BlockBlot {
   split(index, force = false) {
     if (force && (index === 0 || index >= this.length() - NEWLINE_LENGTH)) {
       const clone = this.clone();
-      
       /**
        * This part was added to retain the active format for the empty lines.
        */
-      if ( this.domNode.tagName === 'P'
-        && this.children
-        && this.children.head 
-        && this.children.head.domNode.nodeType === Node.ELEMENT_NODE ) {
+      if (
+        this.domNode.tagName === 'P' &&
+        this.children &&
+        this.children.head &&
+        this.children.head.domNode.nodeType === Node.ELEMENT_NODE
+      ) {
         const node = this.children.head.domNode.cloneNode(true);
-        this.retainFormats( node );
-        const cursor = node.querySelector( `.${Cursort.className}`);
-        if ( cursor ) {
+        this.retainFormats(node);
+        const cursor = node.querySelector(`.${Cursort.className}`);
+        if (cursor) {
           const br = document.createElement('br');
-          cursor.parentNode.replaceChild( br, cursor );
+          cursor.parentNode.replaceChild(br, cursor);
           const formatBlot = this.scroll.create(node);
-          clone.insertBefore( formatBlot, null );
+          clone.insertBefore(formatBlot, null);
         }
       }
       if (index === 0) {
@@ -145,23 +157,22 @@ class Block extends BlockBlot {
   /**
    * Retains the style nodes specified in TEXT_FORMAT_NODES
    * and removes all other nodes for the given element
-   * @param {*} element 
    */
   retainFormats(element) {
-      // loop through all the nodes of the element
-      var nodes = element.childNodes;
-      for(var i = 0; i < nodes.length; i++) {
-          var node = nodes[i];
-          // if it's a text node, remove it
-          if(node.nodeType === Node.TEXT_NODE && !TEXT_FORMAT_NODES.includes( node.nodeName )) {
-              node.parentNode.removeChild(node);
-              i--; // have to update our incrementor since we just removed a node from childNodes
-          } else if(node.nodeType === Node.ELEMENT_NODE) { // if it's an element, repeat this process
-              this.retainFormats(node);
-          }
+    const nodes = element.childNodes;
+    for (let i = 0; i < nodes.length; i += 1) {
+      const node = nodes[i];
+      if (
+        node.nodeType === Node.TEXT_NODE &&
+        !TEXT_FORMAT_NODES.includes(node.nodeName)
+      ) {
+        node.parentNode.removeChild(node);
+        i -= 1;
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        this.retainFormats(node);
       }
+    }
   }
-
 }
 Block.blotName = 'block';
 Block.tagName = 'P';
