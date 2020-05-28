@@ -9,7 +9,7 @@ import {
 import Break from './break';
 import Inline from './inline';
 import TextBlot from './text';
-import Cursort from './cursor';
+import Cursor from './cursor';
 
 const NEWLINE_LENGTH = 1;
 const TEXT_FORMAT_NODES = [
@@ -134,7 +134,7 @@ class Block extends BlockBlot {
       ) {
         const node = this.children.head.domNode.cloneNode(true);
         this.retainFormats(node);
-        const cursor = node.querySelector(`.${Cursort.className}`);
+        const cursor = node.querySelector(`.${Cursor.className}`);
         if (cursor) {
           const br = document.createElement('br');
           cursor.parentNode.replaceChild(br, cursor);
