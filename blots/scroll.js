@@ -135,7 +135,7 @@ class Scroll extends Parchment.Scroll {
 
   optimize(mutations = [], context = {}) {
     if (this.batch === true) return;
-    super.optimize(mutations, context);
+    //super.optimize(mutations, context);
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_OPTIMIZE, mutations, context);
     }
