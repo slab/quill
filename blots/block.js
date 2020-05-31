@@ -107,8 +107,68 @@ class Block extends BlockBlot {
   }
 
   optimize(context) {
+    const isEmptyP = this.domNode.nodeName === "P" && this.children.length === 0;
     super.optimize(context);
+
+    /**
+     * FIXME
+     * This is a tempory change to fix following 
+     * 1. Can't add multuple new lines without losing the format.
+     * 2. When setting content, the new lines are always formatless.
+     * 3. Deleting a line should not result in clearing it's formats.
+     * 4. Cursor height / line height should be consistent unless user change formatting.
+     * 
+     * In super method default blot ("BR") is appended if this blot is empty.
+     * Since this "Block" class is extended by some other classes
+     * this.domNode.nodeName === "P" is checked here but 
+     * a sperate child class should be added for "P" block and do this change
+     */
+    try {
+      if( isEmptyP && this.prev ) {
+        const formatNode = this.prev.children.tail.domNode.cloneNode(true);
+        if( formatNode.nodeType === Node.ELEMENT_NODE ) {
+          this.children.head.domNode.remove();
+          this.removeChild( this.children.head );
+          this.retainFormats(formatNode);
+          const newBr = document.createElement('BR');
+          const dn = this.getDeepestNode( formatNode );
+          dn.appendChild( newBr );
+          const formatBlot = this.scroll.create(formatNode);
+          this.appendChild( formatBlot );
+        }
+      } 
+    } catch (error) {
+    }
     this.cache = {};
+  }
+
+  /**
+   * Retains the style nodes specified in TEXT_FORMAT_NODES
+   * and removes all other nodes for the given element
+   */
+  retainFormats(element) {
+    const nodes = element.childNodes;
+    for (let i = 0; i < nodes.length; i += 1) {
+      const node = nodes[i];
+      const isCursorSpan = node.nodeName === "SPAN" && node.classList.contains( Cursor.className );
+      if (
+        isCursorSpan ||
+        node.nodeType === Node.TEXT_NODE ||
+        !TEXT_FORMAT_NODES.includes(node.nodeName)
+      ) {
+        node.parentNode.removeChild(node);
+        i -= 1;
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        this.retainFormats(node);
+      }
+    }
+  }
+
+  getDeepestNode(node) {
+    if ( node.firstChild ) {
+      return this.getDeepestNode(node.firstChild);
+    }
+    return node;
   }
 
   path(index) {
@@ -123,25 +183,6 @@ class Block extends BlockBlot {
   split(index, force = false) {
     if (force && (index === 0 || index >= this.length() - NEWLINE_LENGTH)) {
       const clone = this.clone();
-      /**
-       * This part was added to retain the active format for the empty lines.
-       */
-      if (
-        this.domNode.tagName === 'P' &&
-        this.children &&
-        this.children.head &&
-        this.children.head.domNode.nodeType === Node.ELEMENT_NODE
-      ) {
-        const node = this.children.head.domNode.cloneNode(true);
-        this.retainFormats(node);
-        const cursor = node.querySelector(`.${Cursor.className}`);
-        if (cursor) {
-          const br = document.createElement('br');
-          cursor.parentNode.replaceChild(br, cursor);
-          const formatBlot = this.scroll.create(node);
-          clone.insertBefore(formatBlot, null);
-        }
-      }
       if (index === 0) {
         this.parent.insertBefore(clone, this);
         return this;
@@ -152,26 +193,6 @@ class Block extends BlockBlot {
     const next = super.split(index, force);
     this.cache = {};
     return next;
-  }
-
-  /**
-   * Retains the style nodes specified in TEXT_FORMAT_NODES
-   * and removes all other nodes for the given element
-   */
-  retainFormats(element) {
-    const nodes = element.childNodes;
-    for (let i = 0; i < nodes.length; i += 1) {
-      const node = nodes[i];
-      if (
-        node.nodeType === Node.TEXT_NODE &&
-        !TEXT_FORMAT_NODES.includes(node.nodeName)
-      ) {
-        node.parentNode.removeChild(node);
-        i -= 1;
-      } else if (node.nodeType === Node.ELEMENT_NODE) {
-        this.retainFormats(node);
-      }
-    }
   }
 }
 Block.blotName = 'block';

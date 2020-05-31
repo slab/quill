@@ -1,6 +1,6 @@
 {
-  "name": "quill",
-  "version": "2.0.0-dev.4",
+  "name": "@creately/quill",
+  "version": "1.0.1",
   "description": "Your powerful, rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
