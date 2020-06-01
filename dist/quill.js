@@ -4471,7 +4471,7 @@ var Scroll = function (_Parchment$Scroll) {
       var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
       if (this.batch === true) return;
-      //super.optimize(mutations, context);
+      _get(Scroll.prototype.__proto__ || Object.getPrototypeOf(Scroll.prototype), 'optimize', this).call(this, mutations, context);
       if (mutations.length > 0) {
         this.emitter.emit(_emitter2.default.events.SCROLL_OPTIMIZE, mutations, context);
       }
