@@ -203,6 +203,20 @@ describe('Clipboard', function() {
       );
     });
 
+    it('html nested checklist', function() {
+      const delta = this.clipboard.convert({
+        html:
+          '<ul><li data-list="checked">One<ul><li data-list="checked">Alpha</li><li data-list="checked">Beta' +
+          '<ul><li data-list="checked">I</li></ul></li></ul></li></ul>',
+      });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('One\n', { list: 'checked' })
+          .insert('Alpha\nBeta\n', { list: 'checked', indent: 1 })
+          .insert('I\n', { list: 'checked', indent: 2 }),
+      );
+    });
+
     it('html partial list', function() {
       const delta = this.clipboard.convert({
         html:

@@ -414,7 +414,7 @@ function matchIndent(node, delta, scroll) {
   }
   if (indent <= 0) return delta;
   return delta.reduce((composed, op) => {
-    if (op.attributes && op.attributes.list) {
+    if (op.attributes && typeof op.attributes.indent === 'number') {
       return composed.push(op);
     }
     return composed.insert(op.insert, { indent, ...(op.attributes || {}) });
