@@ -171,9 +171,17 @@ BaseTheme.DEFAULTS = merge({}, Theme.DEFAULTS, {
             );
             fileInput.classList.add('ql-image');
             fileInput.addEventListener('change', () => {
-              const range = this.quill.getSelection(true);
-              this.quill.uploader.upload(range, fileInput.files);
-              fileInput.value = '';
+              const maxFilesize = this.quill.options.image.maxFilesize || 0;
+              const fileSize = fileInput.files[0].size; 
+              
+              if (maxFilesize === 0 || fileSize > maxFilesize) {
+                const range = this.quill.getSelection(true);
+                this.quill.uploader.upload(range, fileInput.files);
+                fileInput.value = '';
+              } else {
+                this.quill.options.image.errorHandler(fileSize);
+                fileInput.parentNode.removeChild(fileInput);
+              }
             });
             this.container.appendChild(fileInput);
           }
