@@ -107,7 +107,6 @@ class Block extends BlockBlot {
   }
 
   optimize(context) {
-    const isEmptyP = this.domNode.nodeName === "P" && this.children.length === 0;
     super.optimize(context);
 
     /**
@@ -124,7 +123,7 @@ class Block extends BlockBlot {
      * a sperate child class should be added for "P" block and do this change
      */
     try {
-      if( isEmptyP && this.prev ) {
+      if( this.isFormatlessEmptyP( this.domNode ) && this.prev && !this.isFormatlessEmptyP( this.prev.domNode ) ) {
         const formatNode = this.prev.children.tail.domNode.cloneNode(true);
         if( formatNode.nodeType === Node.ELEMENT_NODE ) {
           this.children.head.domNode.remove();
@@ -136,10 +135,36 @@ class Block extends BlockBlot {
           const formatBlot = this.scroll.create(formatNode);
           this.appendChild( formatBlot );
         }
-      } 
+      }
+      if( !this.isFormatlessEmptyP( this.domNode ) && this.prev && this.isFormatlessEmptyP( this.prev.domNode )) {
+        const formatNode = this.children.head.domNode.cloneNode(true);
+        this.applyToAllEmptyPrevs( this.prev, formatNode );
+      }
+      
     } catch (error) {
     }
     this.cache = {};
+  }
+
+  isFormatlessEmptyP( node ) {
+    return node.nodeName === "P" && node.innerHTML === `<br>`;
+  }
+
+  applyToAllEmptyPrevs( prev, formatNode ) {
+    if ( prev && this.isFormatlessEmptyP( prev.domNode )) {
+      if( formatNode.nodeType === Node.ELEMENT_NODE ) {
+        prev.children.head.domNode.remove();
+        prev.removeChild( prev.children.head );
+        this.retainFormats(formatNode);
+        const newBr = document.createElement('BR');
+        const dn = prev.getDeepestNode( formatNode );
+        dn.appendChild( newBr );
+        const formatBlot = prev.scroll.create(formatNode);
+        prev.appendChild( formatBlot );
+      }
+      this.applyToAllEmptyPrevs( prev.prev, formatNode );
+    }
+
   }
 
   /**

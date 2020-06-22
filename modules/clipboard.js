@@ -67,6 +67,7 @@ class Clipboard extends Module {
     this.quill.root.addEventListener('cut', e => this.onCaptureCopy(e, true));
     this.quill.root.addEventListener('paste', this.onCapturePaste.bind(this));
     this.matchers = [];
+    this.modifyDeltaOnPaste;
     CLIPBOARD_CONFIG.concat(this.options.matchers).forEach(
       ([selector, matcher]) => {
         this.addMatcher(selector, matcher);
@@ -164,10 +165,13 @@ class Clipboard extends Module {
     const formats = this.quill.getFormat(range.index);
     const pastedDelta = this.convert({ text, html }, formats);
     debug.log('onPaste', pastedDelta, { text, html });
-    const delta = new Delta()
+    let delta = new Delta()
       .retain(range.index)
       .delete(range.length)
       .concat(pastedDelta);
+    if ( this.modifyDeltaOnPaste ) {
+      delta = this.modifyDeltaOnPaste( delta );
+    }
     this.quill.updateContents(delta, Quill.sources.USER);
     // range.length contributes to delta.length()
     this.quill.setSelection(
