@@ -136,7 +136,11 @@ class Selection {
           range.setStart(node, offset);
           range.setEnd(node, offset + 1);
         } else {
-          range.setStart(node, offset - 1);
+          if (offset > 0) {
+            range.setStart(node, offset - 1);
+          } else {
+            range.setStart(node, offset);
+          }
           range.setEnd(node, offset);
           side = 'right';
         }
