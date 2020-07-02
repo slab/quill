@@ -123,9 +123,14 @@ class Block extends BlockBlot {
      * a sperate child class should be added for "P" block and do this change
      */
     try {
-      if( this.isFormatlessEmptyP( this.domNode ) && this.prev && !this.isFormatlessEmptyP( this.prev.domNode ) ) {
-        const formatNode = this.prev.children.tail.domNode.cloneNode(true);
-        if( formatNode.nodeType === Node.ELEMENT_NODE ) {
+      if( this.isFormatlessEmptyP( this.domNode )) {
+        let formatNode;
+        if ( this.prev && !this.isFormatlessEmptyP( this.prev.domNode )) {
+          formatNode = this.prev.children.tail.domNode.cloneNode(true);
+        } else if ( this.next && !this.isFormatlessEmptyP( this.next.domNode ) ) {
+          formatNode = this.next.children.head.domNode.cloneNode(true);
+        }
+        if( formatNode && formatNode.nodeType === Node.ELEMENT_NODE ) {
           this.children.head.domNode.remove();
           this.removeChild( this.children.head );
           this.retainFormats(formatNode);
