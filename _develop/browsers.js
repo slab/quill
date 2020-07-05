@@ -1,7 +1,7 @@
 const desktop = {
   'mac-chrome-latest': ['macOS 10.15', 'chrome', '80.0'],
   'mac-firefox-latest': ['macOS 10.15', 'firefox', '74.0'],
-  'mac-safari-latest': ['macOS 10.15', 'safari', '13.0'],
+  'mac-safari-latest': ['macOS 10.15', 'safari', '13.1'],
   'mac-chrome-previous': ['macOS 10.14', 'chrome', '79.0'],
   'mac-firefox-previous': ['macOS 10.14', 'firefox', '73.0'],
   'mac-safari-previous': ['macOS 10.14', 'safari', '12.0'],
