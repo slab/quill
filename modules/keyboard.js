@@ -102,6 +102,7 @@ class Keyboard extends Module {
         key,
         ...context,
         ...handler,
+        priority:binding.priority
       };
       this.bindings[singleBinding.key] = this.bindings[singleBinding.key] || [];
       this.bindings[singleBinding.key].push(singleBinding);
@@ -113,8 +114,10 @@ class Keyboard extends Module {
       if (evt.defaultPrevented || evt.isComposing) return;
       const bindings = (this.bindings[evt.key] || []).concat(
         this.bindings[evt.which] || [],
+      ).concat(
+        this.bindings["Any"] || [],
       );
-      const matches = bindings.filter(binding => Keyboard.match(evt, binding));
+      const matches = bindings.filter(binding => Keyboard.match(evt, binding)|| binding.key=="Any").sort(({priority : p1=0},{priority : p2=0})=>(p2-p1));
       if (matches.length === 0) return;
       const range = this.quill.getSelection();
       if (range == null || !this.quill.hasFocus()) return;
