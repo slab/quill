@@ -429,6 +429,13 @@ describe('Quill', function() {
       expect(quill.getContents()).toEqual(contents);
       expect(delta).toEqual(contents.delete(contents.length()));
     });
+
+    it('block embed', function() {
+      const quill = this.initialize(Quill, '<p>Hello World!</p>');
+      const contents = new Delta().insert({ video: '#' });
+      quill.setContents(contents);
+      expect(quill.getContents()).toEqual(contents);
+    });
   });
 
   describe('setText()', function() {
