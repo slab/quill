@@ -88,6 +88,22 @@ class Clipboard extends Module {
     if (!html) {
       return new Delta().insert(text || '');
     }
+
+    // FIXME
+    // When pasted from google docs, there are b tags with font-weight normal
+    // i.e. <b style="font-weight:normal"> replacing those b tags with span
+    var el = document.createElement('div');
+    el.innerHTML = html;
+    el.querySelectorAll('b').forEach( el => {
+      if( el.style.fontWeight === 'normal' ) {
+       const newSpan = document.createElement('span');
+       newSpan.innerHTML = el.innerHTML;
+       newSpan.setAttribute( 'style', el.getAttribute('style')); // To preserve other styles
+       el.parentElement.replaceChild( newSpan, el );
+      }
+    });
+    html = el.innerHTML;
+
     const doc = new DOMParser().parseFromString(html, 'text/html');
     const container = doc.body;
     const nodeMatches = new WeakMap();
