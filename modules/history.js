@@ -33,6 +33,16 @@ class History extends Module {
         this.redo.bind(this),
       );
     }
+
+    this.quill.root.addEventListener('beforeinput', event => {
+      if (event.inputType === 'historyUndo') {
+        this.undo();
+        event.preventDefault();
+      } else if (event.inputType === 'historyRedo') {
+        this.redo();
+        event.preventDefault();
+      }
+    });
   }
 
   change(source, dest) {
