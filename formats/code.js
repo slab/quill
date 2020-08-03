@@ -29,8 +29,8 @@ class CodeBlockContainer extends Container {
 }
 
 class CodeBlock extends Block {
-  static register() {
-    Quill.register(CodeBlockContainer);
+  static register(namespace) {
+    Quill.register(CodeBlockContainer, { namespace });
   }
 }
 

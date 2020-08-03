@@ -13,6 +13,7 @@ import './unit/blots/inline';
 import './unit/core/editor';
 import './unit/core/selection';
 import './unit/core/quill';
+import './unit/core/theme';
 
 import './unit/formats/color';
 import './unit/formats/link';
