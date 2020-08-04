@@ -166,10 +166,10 @@ SyntaxCodeBlock.requiredContainer = SyntaxCodeBlockContainer;
 SyntaxCodeBlock.allowedChildren = [CodeToken, CursorBlot, TextBlot, BreakBlot];
 
 class Syntax extends Module {
-  static register(namespace) {
-    Quill.register(CodeToken, { namespace, overwrite: true });
-    Quill.register(SyntaxCodeBlock, { namespace, overwrite: true });
-    Quill.register(SyntaxCodeBlockContainer, { namespace, overwrite: true });
+  static register(options) {
+    Quill.register(CodeToken, { ...options, overwrite: true });
+    Quill.register(SyntaxCodeBlock, { ...options, overwrite: true });
+    Quill.register(SyntaxCodeBlockContainer, { ...options, overwrite: true });
   }
 
   constructor(quill, options) {

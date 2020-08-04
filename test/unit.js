@@ -37,7 +37,6 @@ import './unit/ui/picker';
 import './unit/theme/base/tooltip';
 
 // Syntax version will otherwise be registered
-Quill.register(CodeBlockContainer, true);
 Quill.register(CodeBlock, true);
 
 export default Quill;

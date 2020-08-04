@@ -91,7 +91,7 @@ class Quill {
         registry.register(target);
       }
       if (typeof target.register === 'function') {
-        target.register(namespace);
+        target.register(options);
       }
     }
   }
