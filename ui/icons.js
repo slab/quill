@@ -57,7 +57,7 @@ export default {
     '3': header3Icon,
     '4': header4Icon,
     '5': header5Icon,
-    '6': header6Icon
+    '6': header6Icon,
   },
   italic: italicIcon,
   image: imageIcon,
