@@ -65,7 +65,7 @@ class Embed extends EmbedBlot {
   }
 
   update(mutations, context) {
-    mutations.forEach(mutation => {
+    mutations.every(mutation => {
       if (
         mutation.type === 'characterData' &&
         (mutation.target === this.leftGuard ||
@@ -73,7 +73,32 @@ class Embed extends EmbedBlot {
       ) {
         const range = this.restore(mutation.target);
         if (range) context.range = range;
+      } else if (
+        mutation.type === 'childList' &&
+        Array.from(mutation.removedNodes).includes(this.contentNode)
+      ) {
+        const newChar = mutations.find(
+          mutation2 => mutation2.type === 'characterData',
+        );
+        if (newChar) {
+          const text = newChar.target.textContent.trim();
+          const t2 = document.createTextNode(text);
+
+          this.parent.insertBefore(this.scroll.create(t2), this);
+        }
+
+        const r = new Range();
+        r.selectNodeContents(this.prev.domNode);
+        context.range = {
+          startNode: r.startContainer,
+          startOffset: r.endOffset,
+        };
+
+        this.detach();
+        this.remove();
+        return false;
       }
+      return true;
     });
   }
 }
