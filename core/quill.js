@@ -20,8 +20,8 @@ class Quill {
     logger.level(limit);
   }
 
-  static find(node) {
-    return node.__quill || Parchment.find(node);
+  static find(node, bubble) {
+    return node.__quill || Parchment.find(node, bubble);
   }
 
   static import(name) {
