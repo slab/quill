@@ -28,7 +28,7 @@ class Link extends Inline {
 Link.blotName = 'link';
 Link.tagName = 'A';
 Link.SANITIZED_URL = 'about:blank';
-Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto', 'tel'];
+Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto', 'tel','skype'];
 
 function sanitize(url, protocols) {
   const anchor = document.createElement('a');
