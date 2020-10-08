@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import DeltaOp from 'quill-delta/lib/op';
+import AttributeMap from 'quill-delta/dist/AttributeMap';
 import Parchment from 'parchment';
 import CodeBlock from '../formats/code';
 import CursorBlot from '../blots/cursor';
@@ -45,7 +45,7 @@ class Editor {
             let [leaf, ] = line.descendant(Parchment.Leaf, offset);
             formats = extend(formats, bubbleFormats(leaf));
           }
-          attributes = DeltaOp.attributes.diff(formats, attributes) || {};
+          attributes = AttributeMap.diff(formats, attributes) || {};
         } else if (typeof op.insert === 'object') {
           let key = Object.keys(op.insert)[0];  // There should only be one key
           if (key == null) return index;

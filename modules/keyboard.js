@@ -2,7 +2,7 @@ import clone from 'clone';
 import equal from 'deep-equal';
 import extend from 'extend';
 import Delta from 'quill-delta';
-import DeltaOp from 'quill-delta/lib/op';
+import AttributeMap from 'quill-delta/dist/AttributeMap';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
@@ -344,7 +344,7 @@ function handleBackspace(range, context) {
     if (prev != null && prev.length() > 1) {
       let curFormats = line.formats();
       let prevFormats = this.quill.getFormat(range.index-1, 1);
-      formats = DeltaOp.attributes.diff(curFormats, prevFormats) || {};
+      formats = AttributeMap.diff(curFormats, prevFormats) || {};
     }
   }
   // Check for astral symbols
@@ -367,7 +367,7 @@ function handleDelete(range, context) {
     if (next) {
       let curFormats = line.formats();
       let nextFormats = this.quill.getFormat(range.index, 1);
-      formats = DeltaOp.attributes.diff(curFormats, nextFormats) || {};
+      formats = AttributeMap.diff(curFormats, nextFormats) || {};
       nextLength = next.length();
     }
   }
@@ -383,7 +383,7 @@ function handleDeleteRange(range) {
   if (lines.length > 1) {
     let firstFormats = lines[0].formats();
     let lastFormats = lines[lines.length - 1].formats();
-    formats = DeltaOp.attributes.diff(lastFormats, firstFormats) || {};
+    formats = AttributeMap.diff(lastFormats, firstFormats) || {};
   }
   this.quill.deleteText(range, Quill.sources.USER);
   if (Object.keys(formats).length > 0) {
