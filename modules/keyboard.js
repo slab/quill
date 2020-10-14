@@ -25,7 +25,7 @@ class Keyboard extends Module {
   constructor(quill, options) {
     super(quill, options);
     this.bindings = {};
-    this.shortcuts = [];
+    this.disabledShortcuts = [];
     Object.keys(this.options.bindings).forEach(name => {
       if (this.options.bindings[name]) {
         this.addBinding(this.options.bindings[name]);
@@ -111,10 +111,10 @@ class Keyboard extends Module {
 
   listen() {
     this.quill.root.addEventListener('keydown', evt => {
-      if ( this.shortcuts.length ) {
-        for ( const sc of this.shortcuts ) {
-          const noMatch = Object.keys( sc ).find( key => evt[ key ] !== sc[ key ] )
-          if ( !noMatch ) return;
+      if (this.disabledShortcuts.length) {
+        for (const sc of this.disabledShortcuts) {
+          const noMatch = Object.keys(sc).find(key => evt[key] !== sc[key]);
+          if (!noMatch) return;
         }
       }
       if (evt.defaultPrevented || evt.isComposing) return;
