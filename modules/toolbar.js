@@ -116,7 +116,8 @@ class Toolbar extends Module {
         if (range == null) {
           option = null;
         } else if (formats[format] == null) {
-          option = input.querySelector('option[selected]');
+          option = Array.from(input.querySelectorAll('option')).filter((option) => option.getAttribute("value") === '');
+          option = option.length > 0 ? option[0] : input.querySelector('option[selected]');
         } else if (!Array.isArray(formats[format])) {
           let value = formats[format];
           if (typeof value === 'string') {
