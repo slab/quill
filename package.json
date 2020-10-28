@@ -36,7 +36,7 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.5.0",
-    "parchment": "2.0.0-dev.2",
+    "parchment": "https://github.com/Unacademy/parchment.git",
     "quill-delta": "4.2.2"
   },
   "devDependencies": {
