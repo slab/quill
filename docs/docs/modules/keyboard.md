@@ -130,7 +130,7 @@ Regex that must match the text immediately preceding the user's selection's star
 // When the user types space...
 quill.keyboard.addBinding({ key: ' ' }, {
   collapsed: true,
-  format: { list: false },  // ...on an line that's not already a list
+  format: { list: false },  // ...on a line that's not already a list
   prefix: /^-$/,            // ...following a '-' character
   offset: 1,                // ...at the 1st position of the line,
                             // otherwise handler would trigger if the user
