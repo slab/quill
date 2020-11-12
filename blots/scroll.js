@@ -164,6 +164,10 @@ class Scroll extends ScrollBlot {
     if (!Array.isArray(mutations)) {
       mutations = this.observer.takeRecords();
     }
+    mutations = mutations.filter(({ target }) => {
+      const blot = this.find(target, true);
+      return blot && blot.scroll === this;
+    });
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_BEFORE_UPDATE, source, mutations);
     }
