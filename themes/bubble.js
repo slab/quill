@@ -26,19 +26,8 @@ class BubbleTooltip extends BaseTooltip {
           this.root.style.left = '0px';
           this.root.style.width = '';
           this.root.style.width = `${this.root.offsetWidth}px`;
-          const lines = this.quill.getLines(range.index, range.length);
-          if (lines.length === 1) {
-            this.position(this.quill.getBounds(range));
-          } else {
-            const lastLine = lines[lines.length - 1];
-            const index = this.quill.getIndex(lastLine);
-            const length = Math.min(
-              lastLine.length() - 1,
-              range.index + range.length - index,
-            );
-            const indexBounds = this.quill.getBounds(new Range(index, length));
-            this.position(indexBounds);
-          }
+          const rangePosition = this.calculateRangePosition(range);
+          this.position(rangePosition);
         } else if (
           document.activeElement !== this.textbox &&
           this.quill.hasFocus()
@@ -60,7 +49,8 @@ class BubbleTooltip extends BaseTooltip {
         if (this.root.classList.contains('ql-hidden')) return;
         const range = this.quill.getSelection();
         if (range != null) {
-          this.position(this.quill.getBounds(range));
+          const rangePosition = this.calculateRangePosition(range);
+          this.position(rangePosition);
         }
       }, 1);
     });
@@ -68,6 +58,21 @@ class BubbleTooltip extends BaseTooltip {
 
   cancel() {
     this.show();
+  }
+
+  calculateRangePosition(range) {
+    const lines = this.quill.getLines(range.index, range.length);
+    if (lines.length === 1) {
+      return this.quill.getBounds(range);
+    }
+
+    const lastLine = lines[lines.length - 1];
+    const index = this.quill.getIndex(lastLine);
+    const length = Math.min(
+      lastLine.length() - 1,
+      range.index + range.length - index,
+    );
+    return this.quill.getBounds(new Range(index, length));
   }
 
   position(reference) {
