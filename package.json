@@ -81,7 +81,7 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Typeform/quill"
+    "url": "git+https://github.com/Typeform/quill.git"
   },
   "bugs": {
     "url": "https://github.com/Typeform/quill/issues"
