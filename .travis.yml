@@ -1,15 +1,21 @@
+version: ~> 1.0
+import: Typeform/travis-shared-config:package-config.yml@master
 language: node_js
-node_js: '10'
-script:
-  - npm run build
-  - travis_retry npm run travis
+node_js:
+  - 'lts/*'
+
+branches:
+  only:
+    - develop
+
 os:
   - linux
 dist: xenial
-cache:
-  directories:
-    - dist
-    - node_modules
+
+script:
+  - npm run build
+  - travis_retry npm run travis
+
 env:
   global:
     - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
@@ -21,7 +27,14 @@ env:
     - BROWSER=windows-firefox-latest
     - BROWSER=windows-edge-latest
     - BROWSER=ios-latest
-    - BROWSER=android-latest
+    # - BROWSER=android-latest
+
 jobs:
   allow_failures:
     - env: BROWSER=android-latest
+  include:
+    - stage: "Deploy"
+      if: (NOT type IN (pull_request)) AND (branch = develop)
+      script:
+        - npm run build
+        - npm run semantic-release
