@@ -48,7 +48,7 @@ class BubbleTooltip extends BaseTooltip {
       setTimeout(() => {
         if (this.root.classList.contains('ql-hidden')) return;
         const range = this.quill.getSelection();
-        if (range != null) {
+        if (range != null && range.length > 0) {
           const rangePosition = this.calculateRangePosition(range);
           this.position(rangePosition);
         }
@@ -62,7 +62,7 @@ class BubbleTooltip extends BaseTooltip {
 
   calculateRangePosition(range) {
     const lines = this.quill.getLines(range.index, range.length);
-    if (lines.length === 1) {
+    if (lines.length < 2) {
       return this.quill.getBounds(range);
     }
 
