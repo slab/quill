@@ -19,6 +19,7 @@ script:
 env:
   global:
     - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
+    - NPM_TOKEN=$GH_TOKEN
   jobs:
     - BROWSER=mac-chrome-latest
     - BROWSER=mac-firefox-latest
