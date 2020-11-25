@@ -171,6 +171,8 @@
     "wysiwyg"
   ],
   "release": {
-    "branches": ["develop"]
+    "branches": [
+      "develop"
+    ]
   }
 }
