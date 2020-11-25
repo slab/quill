@@ -1,11 +1,10 @@
 {
-  "name": "quill",
+  "name": "@typeform/quill",
   "version": "2.0.0-dev.4",
   "description": "Your powerful, rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
   "main": "dist/quill.js",
-  "private": true,
   "files": [
     "assets",
     "blots",
