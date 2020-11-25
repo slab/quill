@@ -1,5 +1,3 @@
-version: ~> 1.0
-import: Typeform/travis-shared-config:package-config.yml@master
 language: node_js
 node_js:
   - 'lts/*'
@@ -7,10 +5,16 @@ node_js:
 branches:
   only:
     - develop
-
 os:
   - linux
 dist: xenial
+
+before_install:
+  - npm config set '//npm.pkg.github.com/:_authToken' $GH_TOKEN
+  - npm config set @typeform:registry https://npm.pkg.github.com/
+
+install:
+  - npm ci
 
 script:
   - npm run build
