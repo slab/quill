@@ -7,7 +7,7 @@ Static method enabling logging messages at a given level: `'error'`, `'warn'`, `
 **Methods**
 
 ```javascript
-Quill.debug(level: String | Boolean)
+Quill.debug(level: string | Boolean)
 ```
 
 **Examples**
@@ -45,8 +45,8 @@ Registers a module, theme, or format(s), making them available to be added to an
 
 ```javascript
 Quill.register(format: Attributor | BlotDefinintion, supressWarning: Boolean = false)
-Quill.register(path: String, def: any, supressWarning: Boolean = false)
-Quill.register(defs: { [String]: any }, supressWarning: Boolean = false)
+Quill.register(path: string, def: any, supressWarning: Boolean = false)
+Quill.register(defs: { [key: string]: any }, supressWarning: Boolean = false)
 ```
 
 **Examples**
@@ -77,7 +77,7 @@ Adds and returns a container element inside the Quill container, sibling to the 
 **Methods**
 
 ```javascript
-addContainer(className: String, refNode?: Node): Element
+addContainer(className: string, refNode?: Node): Element
 addContainer(domNode: Node, refNode?: Node): Element
 ```
 
@@ -95,7 +95,7 @@ Retrieves a module that has been added to the editor.
 **Methods**
 
 ```javascript
-getModule(name: String): any
+getModule(name: string): any
 ```
 
 **Examples**

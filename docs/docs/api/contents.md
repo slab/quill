@@ -7,7 +7,7 @@ Deletes text from the editor, returning a [Delta](/guides/working-with-deltas/) 
 **Methods**
 
 ```javascript
-deleteText(index: Number, length: Number, source: String = 'api'): Delta
+deleteText(index: number, length: number, source: string = 'api'): Delta
 ```
 
 **Examples**
@@ -23,7 +23,7 @@ Retrieves contents of the editor, with formatting data, represented by a [Delta]
 **Methods**
 
 ```javascript
-getContents(index: Number = 0, length: Number = remaining): Delta
+getContents(index: number = 0, length: number = remaining): Delta
 ```
 
 **Examples**
@@ -39,7 +39,7 @@ Retrieves the length of the editor contents. Note even when Quill is empty, ther
 **Methods**
 
 ```javascript
-getLength(): Number
+getLength(): number
 ```
 
 **Examples**
@@ -57,7 +57,7 @@ The `length` parameter defaults to the length of the remaining document.
 **Methods**
 
 ```javascript
-getText(index: Number = 0, length: Number = remaining): String
+getText(index: number = 0, length: number = remaining): string
 ```
 
 **Examples**
@@ -73,7 +73,7 @@ Insert embedded content into the editor, returning a [Delta](/guides/working-wit
 **Methods**
 
 ```javascript
-insertEmbed(index: Number, type: String, value: any, source: String = 'api'): Delta
+insertEmbed(index: number, type: string, value: any, source: string = 'api'): Delta
 ```
 
 **Examples**
@@ -89,11 +89,11 @@ Inserts text into the editor, optionally with a specified format or multiple [fo
 **Methods**
 
 ```javascript
-insertText(index: Number, text: String, source: String = 'api'): Delta
-insertText(index: Number, text: String, format: String, value: any,
-           source: String = 'api'): Delta
-insertText(index: Number, text: String, formats: { [String]: any },
-           source: String = 'api'): Delta
+insertText(index: number, text: string, source: string = 'api'): Delta
+insertText(index: number, text: string, format: string, value: any,
+           source: string = 'api'): Delta
+insertText(index: number, text: string, formats: { [key: string]: any },
+           source: string = 'api'): Delta
 ```
 
 **Examples**
@@ -114,7 +114,7 @@ Overwrites editor with given contents. Contents should end with a [newline](/doc
 **Methods**
 
 ```javascript
-setContents(delta: Delta, source: String = 'api'): Delta
+setContents(delta: Delta, source: string = 'api'): Delta
 ```
 
 **Examples**
@@ -134,7 +134,7 @@ Sets contents of editor with given text, returning a [Delta](/guides/working-wit
 **Methods**
 
 ```javascript
-setText(text: String, source: String = 'api'): Delta
+setText(text: string, source: string = 'api'): Delta
 ```
 
 **Examples**
@@ -150,7 +150,7 @@ Applies Delta to editor contents, returning a [Delta](/guides/working-with-delta
 **Methods**
 
 ```javascript
-updateContents(delta: Delta, source: String = 'api'): Delta
+updateContents(delta: Delta, source: string = 'api'): Delta
 ```
 
 **Examples**

@@ -7,7 +7,7 @@ Format text at user's current selection, returning a [Delta](/guides/working-wit
 **Methods**
 
 ```javascript
-format(name: String, value: any, source: String = 'api'): Delta
+format(name: string, value: any, source: string = 'api'): Delta
 ```
 
 **Examples**
@@ -24,11 +24,11 @@ Formats all lines in given range, returning a [Delta](/guides/working-with-delta
 **Methods**
 
 ```javascript
-formatLine(index: Number, length: Number, source: String = 'api'): Delta
-formatLine(index: Number, length: Number, format: String, value: any,
-           source: String = 'api'): Delta
-formatLine(index: Number, length: Number, formats: { [String]: any },
-           source: String = 'api'): Delta
+formatLine(index: Number, length: Number, source: string = 'api'): Delta
+formatLine(index: Number, length: Number, format: string, value: any,
+           source: string = 'api'): Delta
+formatLine(index: Number, length: Number, formats: { [key: string]: any },
+           source: string = 'api'): Delta
 ```
 
 **Examples**
@@ -47,11 +47,11 @@ Formats text in the editor, returning a [Delta](/guides/working-with-deltas/) re
 **Methods**
 
 ```javascript
-formatText(index: Number, length: Number, source: String = 'api'): Delta
-formatText(index: Number, length: Number, format: String, value: any,
-           source: String = 'api'): Delta
-formatText(index: Number, length: Number, formats: { [String]: any },
-           source: String = 'api'): Delta
+formatText(index: Number, length: Number, source: string = 'api'): Delta
+formatText(index: Number, length: Number, format: string, value: any,
+           source: string = 'api'): Delta
+formatText(index: Number, length: Number, formats: { [key: string]: any },
+           source: string = 'api'): Delta
 ```
 
 **Examples**
@@ -76,8 +76,8 @@ Retrieves common formatting of the text in the given range. For a format to be r
 **Methods**
 
 ```javascript
-getFormat(range: Range = current): { [String]: any }
-getFormat(index: Number, length: Number = 0): { [String]: any }
+getFormat(range: Range = current): { [key: string]: any }
+getFormat(index: Number, length: Number = 0): { [key: string]: any }
 ```
 
 **Examples**
@@ -111,7 +111,7 @@ Removes all formatting and embeds within given range, returning a [Delta](/guide
 **Methods**
 
 ```javascript
-removeFormat(index: Number, length: Number, source: String = 'api'): Delta
+removeFormat(index: Number, length: Number, source: string = 'api'): Delta
 ```
 
 **Examples**

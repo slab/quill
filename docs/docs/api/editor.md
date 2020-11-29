@@ -76,7 +76,7 @@ Synchronously check editor for user updates and fires events, if changes have oc
 **Methods**
 
 ```javascript
-update(source: String = 'user')
+update(source: string = 'user')
 ```
 
 **Examples**

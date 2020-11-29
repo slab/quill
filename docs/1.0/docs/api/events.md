@@ -18,7 +18,7 @@ Changes to text may cause changes to the selection (ex. typing advances the curs
 **Callback Signature**
 
 ```javascript
-handler(delta: Delta, oldContents: Delta, source: String)
+handler(delta: Delta, oldContents: Delta, source: string)
 ```
 
 **Examples**
@@ -44,7 +44,7 @@ APIs causing the selection to change may also be called with a `"silent"` source
 ```javascript
 handler(range: { index: Number, length: Number },
         oldRange: { index: Number, length: Number },
-        source: String)
+        source: string)
 ```
 
 **Examples**
@@ -71,7 +71,7 @@ Emitted when either `text-change` or `selection-change` would be emitted, even w
 **Callback Signature**
 
 ```javascript
-handler(name: String, ...args)
+handler(name: string, ...args)
 ```
 
 **Examples**
@@ -93,7 +93,7 @@ Adds event handler. See [text-change](#text-change) or [selection-change](#selec
 **Methods**
 
 ```javascript
-on(name: String, handler: Function): Quill
+on(name: string, handler: Function): Quill
 ```
 
 **Examples**
@@ -112,7 +112,7 @@ Adds handler for one emission of an event. See [text-change](#text-change) or [s
 **Methods**
 
 ```javascript
-once(name: String, handler: Function): Quill
+once(name: string, handler: Function): Quill
 ```
 
 **Examples**
@@ -130,7 +130,7 @@ Removes event handler.
 **Methods**
 
 ```javascript
-off(name: String, handler: Function): Quill
+off(name: string, handler: Function): Quill
 ```
 
 **Examples**

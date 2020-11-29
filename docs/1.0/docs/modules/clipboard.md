@@ -20,7 +20,7 @@ Adds a custom matcher to the Clipboard. Matchers using `nodeType` are called fir
 **Methods**
 
 ```javascript
-addMatcher(selector: String, (node: Node, delta: Delta) => Delta)
+addMatcher(selector: string, (node: Node, delta: Delta) => Delta)
 addMatcher(nodeType: Number, (node: Node, delta: Delta) => Delta)
 ```
 
@@ -46,8 +46,8 @@ Improper handling of HTML can lead to [cross site scripting (XSS)](https://www.o
 **Methods**
 
 ```javascript
-dangerouslyPasteHTML(html: String, source: String = 'api')
-dangerouslyPasteHTML(index: Number, html: String, source: String = 'api')
+dangerouslyPasteHTML(html: string, source: string = 'api')
+dangerouslyPasteHTML(index: Number, html: string, source: string = 'api')
 ```
 
 **Examples**
