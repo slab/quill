@@ -144,10 +144,10 @@ To solve this, Quill "adds" a newline to all documents and always ends Deltas wi
 ```javascript
 // Hello World on two lines
 var content = [
-  { text: "Hello" },
-  { text: "\n", attributes: { align: "center" } },
-  { text: "World" },
-  { text: "\n", attributes: { align: "right" } }   // Deltas must end with newline
+  { text: "Hello", attributes: { align: "center" } },
+  { text: "\n" },
+  { text: "World", attributes: { align: "right" } },
+  { text: "\n" }   // Deltas must end with newline
 ];
 ```
 
