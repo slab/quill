@@ -48,13 +48,11 @@ class Editor {
             formats = merge(formats, bubbleFormats(leaf));
           }
           const diff = AttributeMap.diff(formats, attributes) || {};
-          console.log( diff , attributes );
           if (!isEqual(diff, attributes)) {
             attributes = merge(diff, attributes) || {};
           } else {
             attributes = diff;
           }
-          console.log( attributes );
         } else if (typeof op.insert === 'object') {
           const key = Object.keys(op.insert)[0]; // There should only be one key
           if (key == null) return index;
