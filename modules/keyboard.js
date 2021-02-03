@@ -698,6 +698,7 @@ function normalize(binding) {
   return binding;
 }
 
+// TODO: Move into quill.js or editor.js
 function deleteRange({ quill, range }) {
   const lines = quill.getLines(range);
   let formats = {};
