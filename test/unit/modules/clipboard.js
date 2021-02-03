@@ -58,6 +58,33 @@ describe('Clipboard', function() {
       });
     });
 
+    describe('cut', () => {
+      beforeEach(function() {
+        this.clipboardData = {};
+        this.clipboardEvent = {
+          clipboardData: {
+            setData: (type, data) => {
+              this.clipboardData[type] = data;
+            },
+          },
+          preventDefault: () => {},
+        };
+      });
+
+      it('keeps formats of first line', function(done) {
+        this.quill.clipboard.onCaptureCopy(this.clipboardEvent, true);
+        setTimeout(() => {
+          expect(this.quill.root).toEqualHTML('<h1>01<em>7</em>8</h1>');
+          expect(this.quill.getSelection()).toEqual(new Range(2));
+          expect(this.clipboardData['text/plain']).toEqual('23\n56');
+          expect(this.clipboardData['text/html']).toEqual(
+            '<h1>23</h1><p>5<em>6</em></p>',
+          );
+          done();
+        }, 2);
+      });
+    });
+
     it('dangerouslyPasteHTML(html)', function() {
       this.quill.clipboard.dangerouslyPasteHTML('<i>ab</i><b>cd</b>');
       expect(this.quill.root).toEqualHTML(
