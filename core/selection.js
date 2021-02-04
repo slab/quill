@@ -280,11 +280,11 @@ class Selection {
           endOffset !== native.endOffset) {
 
         if (startNode.tagName == "BR") {
-          startOffset = [].indexOf.call(startNode.parentNode.childNodes, startNode);
+          startOffset = [].indexOf.call(Array.from(startNode.parentNode.childNodes), startNode);
           startNode = startNode.parentNode;
         }
         if (endNode.tagName == "BR") {
-          endOffset = [].indexOf.call(endNode.parentNode.childNodes, endNode);
+          endOffset = [].indexOf.call(Array.from(endNode.parentNode.childNodes), endNode);
           endNode = endNode.parentNode;
         }
         let range = document.createRange();

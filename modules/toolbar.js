@@ -29,7 +29,7 @@ class Toolbar extends Module {
     Object.keys(this.options.handlers).forEach((format) => {
       this.addHandler(format, this.options.handlers[format]);
     });
-    [].forEach.call(this.container.querySelectorAll('button, select'), (input) => {
+    [].forEach.call(Array.from(this.container.querySelectorAll('button, select')), (input) => {
       this.attach(input);
     });
     this.quill.on(Quill.events.EDITOR_CHANGE, (type, range) => {
@@ -48,7 +48,7 @@ class Toolbar extends Module {
   }
 
   attach(input) {
-    let format = [].find.call(input.classList, (className) => {
+    let format = [].find.call(Array.from(input.classList), (className) => {
       return className.indexOf('ql-') === 0;
     });
     if (!format) return;

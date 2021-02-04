@@ -98,7 +98,7 @@ class CodeBlock extends Block {
 
   replace(target) {
     super.replace(target);
-    [].slice.call(this.domNode.querySelectorAll('*')).forEach(function(node) {
+    [].slice.call(Array.from(this.domNode.querySelectorAll('*'))).forEach(function(node) {
       let blot = Parchment.find(node);
       if (blot == null) {
         node.parentNode.removeChild(node);

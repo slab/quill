@@ -104,7 +104,7 @@ class Picker {
 
     this.options = options;
 
-    [].slice.call(this.select.options).forEach((option) => {
+    [].slice.call(Array.from(this.select.options)).forEach((option) => {
       let item = this.buildItem(option);
       options.appendChild(item);
       if (option.selected === true) {
@@ -115,7 +115,7 @@ class Picker {
   }
 
   buildPicker() {
-    [].slice.call(this.select.attributes).forEach((item) => {
+    [].slice.call(Array.from(this.select.attributes)).forEach((item) => {
       this.container.setAttribute(item.name, item.value);
     });
     this.container.classList.add('ql-picker');
@@ -145,7 +145,7 @@ class Picker {
     }
     if (item == null) return;
     item.classList.add('ql-selected');
-    this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
+    this.select.selectedIndex = [].indexOf.call(Array.from(item.parentNode.children), item);
     if (item.hasAttribute('data-value')) {
       this.label.setAttribute('data-value', item.getAttribute('data-value'));
     } else {

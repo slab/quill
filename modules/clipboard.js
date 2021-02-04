@@ -195,7 +195,7 @@ function traverse(node, elementMatchers, textMatchers) {  // Post-order
       return matcher(node, delta);
     }, new Delta());
   } else if (node.nodeType === node.ELEMENT_NODE) {
-    return [].reduce.call(node.childNodes || [], (delta, childNode) => {
+    return [].reduce.call(Array.from(node.childNodes) || [], (delta, childNode) => {
       let childrenDelta = traverse(childNode, elementMatchers, textMatchers);
       if (childNode.nodeType === node.ELEMENT_NODE) {
         childrenDelta = elementMatchers.reduce(function(childrenDelta, matcher) {

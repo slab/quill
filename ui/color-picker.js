@@ -6,7 +6,7 @@ class ColorPicker extends Picker {
     super(select);
     this.label.innerHTML = label;
     this.container.classList.add('ql-color-picker');
-    [].slice.call(this.container.querySelectorAll('.ql-picker-item'), 0, 7).forEach(function(item) {
+    [].slice.call(Array.from(this.container.querySelectorAll('.ql-picker-item')), 0, 7).forEach(function(item) {
       item.classList.add('ql-primary');
     });
   }
