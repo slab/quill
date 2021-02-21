@@ -72,9 +72,7 @@ resets(arr)
     list-style-type: none
     padding-left: LIST_STYLE_OUTER_WIDTH
     position: relative
-    @supports (display: contents)
-      > .ql-ui
-        display: contents
+
     > .ql-ui:before
       display: inline-block
       margin-left: -1*LIST_STYLE_OUTER_WIDTH
@@ -82,6 +80,12 @@ resets(arr)
       text-align: right
       white-space: nowrap
       width: LIST_STYLE_WIDTH
+
+  @supports (display: contents)
+    li[data-list=bullet],
+    li[data-list=ordered]
+      > .ql-ui
+        display: contents
 
   li[data-list=checked],
   li[data-list=unchecked]
