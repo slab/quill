@@ -104,26 +104,3 @@ getModule(name: String): any
 var toolbar = quill.getModule('toolbar');
 ```
 
-
-### disable
-
-Shorthand for [`enable(false)`](#enable).
-
-
-### enable
-
-Set ability for user to edit, via input devices like the mouse or keyboard. Does not affect capabilities of API calls.
-
-**Methods**
-
-```javascript
-enable(value: Boolean = true)
-```
-
-**Examples**
-
-```javascript
-quill.enable();
-quill.enable(false);   // Disables user input
-```
-
