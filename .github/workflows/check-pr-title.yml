@@ -1,0 +1,12 @@
+name: 'Jira Check'
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  publish:
+    runs-on: [self-hosted, fear]
+    steps:
+      - uses: deepakputhraya/action-pr-title@master
+        with:
+          regex: '^(\[[A-Z0-9]+-\d+\]|\[Snyk\]|\[NOISSUE\]|fix\(dependabot\)).+' # Regex the title should match.
