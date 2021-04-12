@@ -5,7 +5,7 @@ on:
 
 jobs:
   publish:
-    runs-on: [self-hosted, fear]
+    runs-on: [ubuntu-latest]
     steps:
       - uses: deepakputhraya/action-pr-title@master
         with:
