@@ -9,4 +9,4 @@ jobs:
     steps:
       - uses: deepakputhraya/action-pr-title@master
         with:
-          regex: '^(\[[A-Z0-9]+-\d+\]|\[Snyk\]|\[NOISSUE\]|fix\(dependabot\)).+' # Regex the title should match.
+          regex: '^(\[[A-Z0-9]+-[1-9]\d+\]|\[Snyk\]|fix\(dependabot\)).+' # Regex the title should match.
