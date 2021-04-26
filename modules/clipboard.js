@@ -41,6 +41,27 @@ const CLIPBOARD_CONFIG = [
   ['style', matchIgnore],
 ];
 
+/**
+ * Google Docs wraps copied content in a `<b>` tag for some reason
+ * This makes the formatting logic think that the pasted content must be bold
+ * The wrapping tag has an id of `docs-internal-guid-{guid}`
+ * which can be used to identify this wrapper
+ * and prevent further processing by the formatting matchers
+ */
+const GOOGLE_DOCS_WRAPPER_ID_REGEX = /^docs-internal-guid-\w+-\w+-\w+-\w+-\w+$/;
+
+const isGoogleDocsWrapper = node => {
+  return GOOGLE_DOCS_WRAPPER_ID_REGEX.test(node.id);
+};
+
+const makeGarbageFilteringMatcher = matcher => (node, delta, scroll) => {
+  if (isGoogleDocsWrapper(node)) {
+    return delta;
+  }
+
+  return matcher(node, delta, scroll);
+};
+
 const ATTRIBUTE_ATTRIBUTORS = [AlignAttribute, DirectionAttribute].reduce(
   (memo, attr) => {
     memo[attr.keyName] = attr;
@@ -70,7 +91,7 @@ class Clipboard extends Module {
     this.matchers = [];
     CLIPBOARD_CONFIG.concat(this.options.matchers).forEach(
       ([selector, matcher]) => {
-        this.addMatcher(selector, matcher);
+        this.addMatcher(selector, makeGarbageFilteringMatcher(matcher));
       },
     );
   }
