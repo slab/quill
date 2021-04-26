@@ -1,10 +1,10 @@
 {
   "name": "@engoo/quill",
-  "version": "2.0.0-dev.8",
+  "version": "2.0.0-dev.10",
   "description": "Your powerful, rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
-  "main": "dist/quill.js",
+  "main": "quill.js",
   "types": "types/index.d.ts",
   "files": [
     "assets",
@@ -14,13 +14,6 @@
     "modules",
     "themes",
     "ui",
-    "dist/quill.bubble.css",
-    "dist/quill.snow.css",
-    "dist/quill.core.css",
-    "dist/quill.js",
-    "dist/quill.core.js",
-    "dist/quill.min.js.map",
-    "dist/quill.min.js",
     "core.js",
     "quill.js",
     "types"
@@ -148,18 +141,17 @@
     "trailingComma": "all"
   },
   "scripts": {
-    "build": "npm run lint && npm run build:webpack",
+    "build": "yarn run lint && yarn run build:webpack",
     "build:webpack": "rm -vrf dist; webpack --config _develop/webpack.config.js",
-    "develop": "npm run start",
+    "develop": "yarn run start",
     "lint": "eslint blots core formats modules themes ui test",
-    "start": "npm run build:webpack; bundle exec foreman start -f _develop/procfile",
-    "test": "npm run test:unit",
-    "test:all": "npm run test:unit; npm run test:functional",
+    "start": "yarn run build:webpack; bundle exec foreman start -f _develop/procfile",
+    "test": "yarn run test:unit",
+    "test:all": "yarn run test:unit; yarn run test:functional",
     "test:functional": "./_develop/scripts/puppeteer.sh",
-    "test:unit": "npm run build; karma start _develop/karma.config.js",
+    "test:unit": "yarn run build; karma start _develop/karma.config.js",
     "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage",
-    "travis": "npm run lint && karma start _develop/karma.config.js --reporters dots,saucelabs",
-    "prepack": "npm run build"
+    "travis": "yarn run lint && karma start _develop/karma.config.js --reporters dots,saucelabs"
   },
   "keywords": [
     "editor",
