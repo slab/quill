@@ -115,12 +115,6 @@ const baseConfig = {
     path: path.resolve(__dirname, '../dist/'),
   },
   resolve: {
-    alias: {
-      parchment: path.resolve(
-        __dirname,
-        '../node_modules/parchment/src/parchment',
-      ),
-    },
     extensions: ['.js', '.styl', '.ts'],
   },
   module: {
@@ -153,7 +147,7 @@ module.exports = env => {
     return {
       ...prodConfig,
       mode: 'production',
-      entry: { 'quill.min.js': './quill.js' },
+      entry: { 'quill.js': './quill.js' },
       devtool: 'source-map',
     };
   }
