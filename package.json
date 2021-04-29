@@ -1,10 +1,11 @@
 {
-  "name": "quill",
-  "version": "2.0.0-dev.4",
+  "name": "@engoo/quill",
+  "version": "2.0.0-dev.10",
   "description": "Your powerful, rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
-  "main": "dist/quill.js",
+  "main": "quill.js",
+  "types": "types/index.d.ts",
   "files": [
     "assets",
     "blots",
@@ -13,15 +14,9 @@
     "modules",
     "themes",
     "ui",
-    "dist/quill.bubble.css",
-    "dist/quill.snow.css",
-    "dist/quill.core.css",
-    "dist/quill.js",
-    "dist/quill.core.js",
-    "dist/quill.min.js.map",
-    "dist/quill.min.js",
     "core.js",
-    "quill.js"
+    "quill.js",
+    "types"
   ],
   "config": {
     "ports": {
@@ -80,10 +75,7 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/quilljs/quill"
-  },
-  "bugs": {
-    "url": "https://github.com/quilljs/quill/issues"
+    "url": "https://github.com/iknow/quill"
   },
   "eslintConfig": {
     "extends": [
@@ -149,18 +141,17 @@
     "trailingComma": "all"
   },
   "scripts": {
-    "build": "npm run lint && npm run build:webpack",
-    "build:webpack": "webpack --config _develop/webpack.config.js; rm dist/quill.core dist/quill.bubble dist/quill.snow",
-    "build:release": "./_develop/scripts/release.sh",
-    "develop": "npm run start",
+    "build": "yarn run lint && yarn run build:webpack",
+    "build:webpack": "rm -vrf dist; webpack --config _develop/webpack.config.js",
+    "develop": "yarn run start",
     "lint": "eslint blots core formats modules themes ui test",
-    "start": "npm run build:webpack; bundle exec foreman start -f _develop/procfile",
-    "test": "npm run test:unit",
-    "test:all": "npm run test:unit; npm run test:functional",
+    "start": "yarn run build:webpack; bundle exec foreman start -f _develop/procfile",
+    "test": "yarn run test:unit",
+    "test:all": "yarn run test:unit; yarn run test:functional",
     "test:functional": "./_develop/scripts/puppeteer.sh",
-    "test:unit": "npm run build; karma start _develop/karma.config.js",
+    "test:unit": "yarn run build; karma start _develop/karma.config.js",
     "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage",
-    "travis": "npm run lint && karma start _develop/karma.config.js --reporters dots,saucelabs"
+    "travis": "yarn run lint && karma start _develop/karma.config.js --reporters dots,saucelabs"
   },
   "keywords": [
     "editor",
