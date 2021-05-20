@@ -138,7 +138,10 @@ class Picker {
     if (selected != null) {
       selected.classList.remove('ql-selected');
     }
-    if (item == null) return;
+    if (item == null) {
+      this.label.removeAttribute('data-value');
+      return;
+    }
     item.classList.add('ql-selected');
     this.select.selectedIndex = Array.from(item.parentNode.children).indexOf(
       item,

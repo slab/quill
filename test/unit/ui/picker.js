@@ -3,7 +3,7 @@ import Picker from '../../../ui/picker';
 describe('Picker', function() {
   beforeEach(function() {
     this.container.innerHTML =
-      '<select><option selected>0</option><option value="1">1</option></select>';
+      '<select><option selected value="0">0</option><option value="1">1</option></select>';
     this.pickerSelectorInstance = new Picker(this.container.firstChild);
     this.pickerSelector = this.container.querySelector('.ql-picker');
   });
@@ -14,7 +14,7 @@ describe('Picker', function() {
     expect(
       this.container.querySelector('.ql-picker-item.ql-selected').outerHTML,
     ).toEqualHTML(
-      '<span tabindex="0" role="button" class="ql-picker-item ql-selected" data-label="0"></span>',
+      '<span tabindex="0" role="button" class="ql-picker-item ql-selected" data-value="0" data-label="0"></span>',
     );
     expect(
       this.container.querySelector('.ql-picker-item:not(.ql-selected)')
@@ -22,6 +22,16 @@ describe('Picker', function() {
     ).toEqualHTML(
       '<span tabindex="0" role="button" class="ql-picker-item" data-value="1" data-label="1"></span>',
     );
+  });
+
+  it('removes data-value attribute from picker-label when reseting a selected item', function() {
+    expect(
+      this.pickerSelectorInstance.label.getAttribute('data-value'),
+    ).toEqual('0');
+    this.pickerSelectorInstance.selectItem(null);
+    expect(
+      this.pickerSelectorInstance.label.hasAttribute('data-value'),
+    ).toBeFalsy();
   });
 
   it('escape charcters', function() {
