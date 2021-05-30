@@ -1,13 +1,13 @@
-import Delta from 'quill-delta';
 import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
 import * as Parchment from 'parchment';
+import Delta from '../utils/delta';
 import Editor from './editor';
 import Emitter from './emitter';
-import Module from './module';
-import Selection, { Range } from './selection';
 import instances from './instances';
 import logger from './logger';
+import Module from './module';
+import Selection, { Range } from './selection';
 import Theme from './theme';
 
 const debug = logger('quill');

@@ -13,6 +13,7 @@
     "modules",
     "themes",
     "ui",
+    "utils",
     "dist/quill.bubble.css",
     "dist/quill.snow.css",
     "dist/quill.core.css",

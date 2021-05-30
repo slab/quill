@@ -1,5 +1,5 @@
-import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
+import Delta from '../../../utils/delta';
 
 describe('List', function() {
   it('add', function() {
