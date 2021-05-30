@@ -1,10 +1,11 @@
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
-import Delta, { AttributeMap } from 'quill-delta';
 import { EmbedBlot, Scope, TextBlot } from 'parchment';
-import Quill from '../core/quill';
+import { AttributeMap } from 'quill-delta';
 import logger from '../core/logger';
 import Module from '../core/module';
+import Quill from '../core/quill';
+import Delta from '../utils/delta';
 
 const debug = logger('quill:keyboard');
 

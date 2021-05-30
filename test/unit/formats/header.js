@@ -1,4 +1,4 @@
-import Delta from 'quill-delta';
+import Delta from '../../../utils/delta';
 import Editor from '../../../core/editor';
 
 describe('Header', function() {
