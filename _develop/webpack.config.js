@@ -154,7 +154,7 @@ module.exports = env => {
       ...prodConfig,
       mode: 'production',
       entry: { 'quill.min.js': './quill.js' },
-      devtool: 'source-map',
+      devtool: 'cheap-module-source-map',
     };
   }
   if (env && env.coverage) {
