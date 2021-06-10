@@ -1,0 +1,26 @@
+name: CI Standard Checks
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches:
+      - master
+
+jobs:
+  ci-standard-checks:
+    runs-on: [ubuntu-latest]
+
+    steps:
+      - name: Check Out Source Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: CI Standard Checks
+        uses: Typeform/ci-standard-checks@v1
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          dockerUsername: ${{ secrets.GITLEAKS_DOCKER_USERNAME }}
+          dockerPassword: ${{ secrets.GITLEAKS_DOCKER_PASSWORD }}
