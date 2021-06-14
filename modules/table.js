@@ -1,4 +1,4 @@
-import Delta from '../utils/delta';
+import Delta from 'quill-delta';
 import Quill from '../core/quill';
 import Module from '../core/module';
 import {

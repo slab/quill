@@ -1,3 +1,4 @@
+import Delta from 'quill-delta';
 import {
   AttributorStore,
   BlockBlot,
@@ -5,7 +6,6 @@ import {
   LeafBlot,
   Scope,
 } from 'parchment';
-import Delta from '../utils/delta';
 import Break from './break';
 import Inline from './inline';
 import TextBlot from './text';

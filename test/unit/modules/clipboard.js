@@ -1,6 +1,6 @@
-import Quill from '../../../core';
+import Delta from 'quill-delta';
 import { Range } from '../../../core/selection';
-import Delta from '../../../utils/delta';
+import Quill from '../../../core';
 
 describe('Clipboard', function() {
   describe('events', function() {

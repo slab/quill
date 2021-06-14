@@ -1,4 +1,4 @@
-import Delta from '../../../utils/delta';
+import Delta from 'quill-delta';
 
 describe('Delta', () => {
   describe('compose', () => {

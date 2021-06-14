@@ -1,14 +1,17 @@
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import merge from 'lodash.merge';
+<<<<<<< HEAD
 import { AttributeMap, Op } from 'quill-delta';
+=======
+import Delta, { AttributeMap } from 'quill-delta';
+>>>>>>> c9fa49e4 (Register table handler in a module)
 import { LeafBlot, Scope } from 'parchment';
 import { Range } from './selection';
 import CursorBlot from '../blots/cursor';
 import Block, { BlockEmbed, bubbleFormats } from '../blots/block';
 import Break from '../blots/break';
 import TextBlot, { escapeText } from '../blots/text';
-import Delta from '../utils/delta';
 
 const ASCII = /^[ -~]*$/;
 
