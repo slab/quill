@@ -1,15 +1,17 @@
+import Delta from 'quill-delta';
 import {
   Attributor,
-  BlockBlot,
   ClassAttributor,
   EmbedBlot,
   Scope,
   StyleAttributor,
+  BlockBlot,
 } from 'parchment';
 import { BlockEmbed } from '../blots/block';
+import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
-import Quill from '../core/quill';
+
 import { AlignAttribute, AlignStyle } from '../formats/align';
 import { BackgroundStyle } from '../formats/background';
 import CodeBlock from '../formats/code';
@@ -17,7 +19,6 @@ import { ColorStyle } from '../formats/color';
 import { DirectionAttribute, DirectionStyle } from '../formats/direction';
 import { FontStyle } from '../formats/font';
 import { SizeStyle } from '../formats/size';
-import Delta from '../utils/delta';
 import { deleteRange } from './keyboard';
 
 const debug = logger('quill:clipboard');

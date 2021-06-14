@@ -1,4 +1,4 @@
-import Delta from '../../../utils/delta';
+import Delta from 'quill-delta';
 import Quill from '../../../core/quill';
 
 describe('Table Module', function() {

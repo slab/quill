@@ -1,4 +1,5 @@
 import Delta from 'quill-delta';
+import Module from '../core/module';
 
 const parseCellIdentity = identity => {
   const parts = identity.split(':');
@@ -78,21 +79,18 @@ const reindexCellIdentities = (cells, { rows, columns }) => {
   return reindexedCells;
 };
 
-Delta.registerHandler('table', {
+export const tableHandler = {
   compose(a, b, keepNull) {
-    // Step 2~3: Compose rows and columns separately
     const rows = new Delta(a.rows || []).compose(new Delta(b.rows || []));
     const columns = new Delta(a.columns || []).compose(
       new Delta(b.columns || []),
     );
 
-    // Step 4: Reindex cell identities according to B's rows and columns
     const cells = reindexCellIdentities(a.cells || {}, {
       rows: new Delta(b.rows || []),
       columns: new Delta(b.columns || []),
     });
 
-    // Step 5: Compose cell content and attributes
     Object.keys(b.cells || {}).forEach(identity => {
       const aCell = cells[identity] || {};
       const bCell = b.cells[identity];
@@ -177,7 +175,10 @@ Delta.registerHandler('table', {
     const columns = new Delta(change.columns || []).invert(
       new Delta(base.columns || []),
     );
-    const cells = reindexCellIdentities(change.cells || {}, { rows, columns });
+    const cells = reindexCellIdentities(change.cells || {}, {
+      rows,
+      columns,
+    });
     Object.keys(cells).forEach(identity => {
       const changeCell = cells[identity] || {};
       const baseCell = (base.cells || {})[identity] || {};
@@ -210,6 +211,12 @@ Delta.registerHandler('table', {
 
     return compactTableData({ rows, columns, cells });
   },
-});
+};
 
-export default Delta;
+class TableEmbed extends Module {
+  static register() {
+    Delta.registerEmbed('table', tableHandler);
+  }
+}
+
+export default TableEmbed;

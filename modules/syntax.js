@@ -1,13 +1,13 @@
+import Delta from 'quill-delta';
 import { ClassAttributor, Scope } from 'parchment';
+import Inline from '../blots/inline';
+import Quill from '../core/quill';
+import Module from '../core/module';
 import { blockDelta } from '../blots/block';
 import BreakBlot from '../blots/break';
 import CursorBlot from '../blots/cursor';
-import Inline from '../blots/inline';
 import TextBlot, { escapeText } from '../blots/text';
-import Module from '../core/module';
-import Quill from '../core/quill';
 import CodeBlock, { CodeBlockContainer } from '../formats/code';
-import Delta from '../utils/delta';
 import { traverse } from './clipboard';
 
 const TokenAttributor = new ClassAttributor('code-token', 'hljs', {

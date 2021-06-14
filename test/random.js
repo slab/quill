@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import Delta from '../../utils/delta';
+import Delta from 'quill-delta';
+import TableEmbed from '../modules/tableEmbed';
 
 // Random testing in order to find unknown issues.
 
@@ -140,19 +140,24 @@ const getRandomBase = () => {
 const runTestCase = () => {
   const base = getRandomBase();
   const change = getRandomChange(base);
-  expect(base).eql(base.compose(change).compose(change.invert(base)));
+  expect(base).toEqual(base.compose(change).compose(change.invert(base)));
 
   const anotherChange = getRandomChange(base);
-  expect(change.compose(change.transform(anotherChange, true))).eql(
+  expect(change.compose(change.transform(anotherChange, true))).toEqual(
     anotherChange.compose(anotherChange.transform(change)),
   );
 };
 
-for (let i = 0; i < 20; i += 1) {
-  for (let j = 0; j < 1000; j += 1) {
-    runTestCase();
-  }
-  process.stdout.write('.');
-}
+describe('random tests', () => {
+  beforeAll(() => {
+    TableEmbed.register();
+  });
 
-process.stdout.write('\n');
+  it('delta', () => {
+    for (let i = 0; i < 20; i += 1) {
+      for (let j = 0; j < 1000; j += 1) {
+        runTestCase();
+      }
+    }
+  });
+});
