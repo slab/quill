@@ -1,8 +1,8 @@
+import Delta from 'quill-delta';
 import { EmbedBlot, Scope } from 'parchment';
+import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
-import Quill from '../core/quill';
-import Delta from '../utils/delta';
 
 const debug = logger('quill:toolbar');
 

@@ -1,10 +1,10 @@
-import Emitter from '../../../core/emitter';
+import Delta from 'quill-delta';
 import Quill, { expandConfig, overload } from '../../../core/quill';
-import { Range } from '../../../core/selection';
 import Theme from '../../../core/theme';
+import Emitter from '../../../core/emitter';
 import Toolbar from '../../../modules/toolbar';
 import Snow from '../../../themes/snow';
-import Delta from '../../../utils/delta';
+import { Range } from '../../../core/selection';
 
 describe('Quill', function() {
   it('imports', function() {

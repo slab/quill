@@ -1,7 +1,7 @@
+import Delta from 'quill-delta';
 import Quill from '../../../core';
 import { globalRegistry } from '../../../core/quill';
 import { getLastChangeIndex } from '../../../modules/history';
-import Delta from '../../../utils/delta';
 
 describe('History', function() {
   describe('getLastChangeIndex', function() {
