@@ -1,6 +1,11 @@
 import Delta from 'quill-delta';
+import TableEmbed from '../../../modules/tableEmbed';
 
 describe('Delta', () => {
+  beforeAll(() => {
+    TableEmbed.register();
+  });
+
   describe('compose', () => {
     it('adds a row', () => {
       const base = new Delta([
@@ -46,6 +51,71 @@ describe('Delta', () => {
                 ],
                 cells: {
                   '2:2': {
+                    content: [{ insert: 'Hello' }],
+                    attributes: { align: 'center' },
+                  },
+                },
+              },
+            },
+          },
+        ]),
+      );
+    });
+
+    it('adds two rows', () => {
+      const base = new Delta([
+        {
+          insert: {
+            table: {
+              rows: [
+                { insert: { id: '11111111' }, attributes: { height: 20 } },
+              ],
+              columns: [
+                { insert: { id: '22222222' } },
+                { insert: { id: '33333333' }, attributes: { width: 30 } },
+                { insert: { id: '44444444' } },
+              ],
+              cells: {
+                '1:2': {
+                  content: [{ insert: 'Hello' }],
+                  attributes: { align: 'center' },
+                },
+              },
+            },
+          },
+        },
+      ]);
+
+      const change = new Delta([
+        {
+          retain: {
+            table: {
+              rows: [
+                { insert: { id: '55555555' } },
+                { insert: { id: '66666666' } },
+              ],
+            },
+          },
+        },
+      ]);
+
+      expect(base.compose(change)).toEqual(
+        new Delta([
+          {
+            insert: {
+              table: {
+                rows: [
+                  { insert: { id: '55555555' } },
+                  { insert: { id: '66666666' } },
+                  { insert: { id: '11111111' }, attributes: { height: 20 } },
+                ],
+                columns: [
+                  { insert: { id: '22222222' } },
+                  { insert: { id: '33333333' }, attributes: { width: 30 } },
+                  { insert: { id: '44444444' } },
+                ],
+                cells: {
+                  '3:2': {
                     content: [{ insert: 'Hello' }],
                     attributes: { align: 'center' },
                   },

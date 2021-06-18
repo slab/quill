@@ -12,13 +12,13 @@ const composePosition = (delta, index) => {
   let newIndex = index;
   const thisIter = Delta.Op.iterator(delta.ops);
   let offset = 0;
-  while (thisIter.hasNext() && offset <= index) {
+  while (thisIter.hasNext() && offset <= newIndex) {
     const length = thisIter.peekLength();
     const nextType = thisIter.peekType();
     thisIter.next();
     switch (nextType) {
       case 'delete':
-        if (length > index - offset) {
+        if (length > newIndex - offset) {
           return null;
         }
         newIndex -= length;
