@@ -454,7 +454,7 @@ describe('Delta', () => {
         {
           retain: {
             table: {
-              rows: [{ remove: { id: '22222222' } }],
+              rows: [{ delete: 1 }],
               columns: [{ retain: 1 }, { delete: 1 }],
             },
           },
@@ -466,6 +466,7 @@ describe('Delta', () => {
           {
             retain: {
               table: {
+                rows: [{ insert: { id: '11111111' } }],
                 columns: [
                   { retain: 1 },
                   { insert: { id: '44444444' }, attributes: { width: 100 } },
