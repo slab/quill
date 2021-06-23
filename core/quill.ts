@@ -659,7 +659,7 @@ class Quill {
     const delta = new Delta().insert(text);
     return this.setContents(delta, source);
   }
-  
+
   setPlaceholder(placeholder) {
     if (placeholder && placeholder.length > 0) {
       this.root.setAttribute('data-placeholder', placeholder);
