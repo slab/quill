@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+env:
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        browser: ["mac-chrome-latest","mac-firefox-latest","mac-safari-latest","windows-chrome-latest","windows-firefox-latest","windows-edge-latest","ios-latest", "android-latest"]
+        experimental: [false]
+        include:
+          - browser: "android-latest"
+            experimental: true
+    name: Build assets
+    runs-on: [ubuntu-latest]
+    continue-on-error: ${{ matrix.experimental }}
+    steps:
+
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          always-auth: true
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@typeform'
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Node.js dependencies
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GH_TOKEN}}
+
+      - name: Build
+        run: npm run build
+
+      - name: Lint & Karma
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: npm run lint-and-karma || npm run lint-and-karma

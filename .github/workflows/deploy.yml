@@ -1,0 +1,52 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ['CI']
+    branches: [develop]
+    types:
+      - completed
+env:
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+jobs:
+  build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: [ubuntu-latest]
+    steps:
+
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          always-auth: true
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@typeform'
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Node.js dependencies
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GH_TOKEN}}
+
+      - name: Deploy
+        if: contains(github.ref, 'refs/heads/develop')
+        run: |
+          npm run build
+          npm run semantic-release
+  
