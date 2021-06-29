@@ -15,17 +15,11 @@ env:
 jobs:
   build:
     strategy:
-      fail-fast: false
       max-parallel: 2
       matrix:
         browser: ["mac-chrome-latest","mac-firefox-latest","mac-safari-latest","windows-chrome-latest","windows-firefox-latest","windows-edge-latest","ios-latest"]
-        experimental: [false]
-        include:
-          - browser: "android-latest"
-            experimental: true
     name: Build assets
     runs-on: [ubuntu-latest]
-    continue-on-error: ${{ matrix.experimental }}
     steps:
 
       - name: Cancel Previous Runs
