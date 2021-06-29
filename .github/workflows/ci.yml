@@ -15,7 +15,7 @@ env:
 jobs:
   build:
     strategy:
-      max-parallel: 2
+      max-parallel: 1
       matrix:
         browser: ["mac-chrome-latest","mac-firefox-latest","mac-safari-latest","windows-chrome-latest","windows-firefox-latest","windows-edge-latest","ios-latest"]
     name: Build assets
