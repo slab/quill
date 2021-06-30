@@ -9,7 +9,6 @@ on:
       - develop
 
 env:
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
 
 jobs:
@@ -34,9 +33,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-          always-auth: true
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@typeform'
 
       - name: Cache node modules
         uses: actions/cache@v2
@@ -48,8 +44,6 @@ jobs:
 
       - name: Install Node.js dependencies
         run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GH_TOKEN}}
 
       - name: Build
         run: npm run build

@@ -6,8 +6,6 @@ on:
     branches: [develop]
     types:
       - completed
-env:
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
   build:
@@ -27,9 +25,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-          always-auth: true
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@typeform'
 
       - name: Cache node modules
         uses: actions/cache@v2
@@ -41,8 +36,6 @@ jobs:
 
       - name: Install Node.js dependencies
         run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GH_TOKEN}}
 
       - name: Deploy
         if: contains(github.ref, 'refs/heads/develop')
