@@ -26,6 +26,11 @@ jobs:
         with:
           node-version: '12.x'
 
+      - name: Set GitHub packages registry
+        run: |
+          npm config set '//npm.pkg.github.com/:_authToken' ${{ secrets.GH_TOKEN }}
+          npm config set @typeform:registry https://npm.pkg.github.com/
+
       - name: Cache node modules
         uses: actions/cache@v2
         with:
