@@ -17,7 +17,7 @@ jobs:
       max-parallel: 1
       matrix:
         browser: ["mac-chrome-latest","mac-firefox-latest","mac-safari-latest","windows-chrome-latest","windows-firefox-latest","windows-edge-latest","ios-latest"]
-    name: Build assets
+    name: Build and Test
     runs-on: [ubuntu-latest]
     steps:
 

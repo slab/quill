@@ -7,6 +7,9 @@ on:
     types:
       - completed
 
+env:
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
 jobs:
   build:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
