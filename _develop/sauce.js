@@ -1,10 +1,10 @@
 const _ = require('lodash');
 const os = require('os');
 
-if (process.env.TRAVIS) {
+if (process.env.CI) {
   module.exports = {
-    build: process.env.TRAVIS_BUILD_ID,
-    tunnel: process.env.TRAVIS_JOB_NUMBER,
+    build: process.env.GITHUB_RUN_ID,
+    tunnel: process.env.GITHUB_RUN_NUMBER,
   };
 } else {
   const id = _.random(16 * 16 * 16 * 16).toString(16);

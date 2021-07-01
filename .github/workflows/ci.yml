@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+env:
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+
+jobs:
+  build:
+    strategy:
+      max-parallel: 1
+      matrix:
+        browser: ["mac-chrome-latest","mac-firefox-latest","mac-safari-latest","windows-chrome-latest","windows-firefox-latest","windows-edge-latest","ios-latest"]
+    name: Build assets
+    runs-on: [ubuntu-latest]
+    steps:
+
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Lint & Karma
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: npm run lint-and-karma || npm run lint-and-karma

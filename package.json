@@ -162,7 +162,7 @@
     "test:functional": "./_develop/scripts/puppeteer.sh",
     "test:unit": "npm run build; karma start _develop/karma.config.js",
     "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage",
-    "travis": "npm run lint && karma start _develop/karma.config.js --reporters dots,saucelabs"
+    "lint-and-karma": "npm run lint && karma start _develop/karma.config.js --reporters dots,saucelabs"
   },
   "keywords": [
     "editor",
