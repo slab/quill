@@ -353,7 +353,56 @@ describe('Editor', function() {
         new Delta().insert({ image: '/assets/favicon.png' }, { italic: true }),
       );
       expect(this.container).toEqualHTML(
-        '<p><em><img src="/assets/favicon.png"></em>',
+        '<p><em><img src="/assets/favicon.png"></em></p>',
+      );
+    });
+
+    it('insert text before block embed', function() {
+      const editor = this.initialize(
+        Editor,
+        '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+      editor.applyDelta(new Delta().retain(5).insert('5678'));
+      expect(this.container).toEqualHTML(
+        '<p>0123</p><p>5678</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+    });
+
+    it('insert attributed text before block embed', function() {
+      const editor = this.initialize(
+        Editor,
+        '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+      editor.applyDelta(new Delta().retain(5).insert('5678', { bold: true }));
+      expect(this.container).toEqualHTML(
+        '<p>0123</p><p><strong>5678</strong></p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+    });
+
+    it('insert text with newline before block embed', function() {
+      const editor = this.initialize(
+        Editor,
+        '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+      editor.applyDelta(new Delta().retain(5).insert('5678\n'));
+      expect(this.container).toEqualHTML(
+        '<p>0123</p><p>5678</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+    });
+
+    it('insert attributed text with newline before block embed', function() {
+      const editor = this.initialize(
+        Editor,
+        '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+      editor.applyDelta(
+        new Delta()
+          .retain(5)
+          .insert('5678', { bold: true })
+          .insert('\n'),
+      );
+      expect(this.container).toEqualHTML(
+        '<p>0123</p><p><strong>5678</strong></p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
     });
 
@@ -548,6 +597,30 @@ describe('Editor', function() {
       );
     });
 
+    it('mixed list', function() {
+      const editor = this.initialize(
+        Editor,
+        `
+          <ol>
+            <li data-list="ordered">One</li>
+            <li data-list="ordered">Two</li>
+            <li data-list="bullet">Foo</li>
+            <li data-list="bullet">Bar</li>
+          </ol>
+        `,
+      );
+      expect(editor.getHTML(2, 12)).toEqualHTML(`
+        <ol>
+          <li>e</li>
+          <li>Two</li>
+        </ol>
+        <ul>
+          <li>Foo</li>
+          <li>Ba</li>
+        </ul>
+      `);
+    });
+
     it('nested list', function() {
       const editor = this.initialize(
         Editor,
@@ -612,9 +685,61 @@ describe('Editor', function() {
       `);
     });
 
+    it('partial list', function() {
+      const editor = this.initialize(
+        Editor,
+        `
+        <ol>
+          <li data-list="ordered">1111</li>
+          <li data-list="ordered" class="ql-indent-1">AAAA</li>
+          <li data-list="ordered" class="ql-indent-2">IIII</li>
+          <li data-list="ordered" class="ql-indent-1">BBBB</li>
+          <li data-list="ordered">2222</li>
+        </ol>
+        `,
+      );
+      expect(editor.getHTML(12, 12)).toEqualHTML(`
+        <ol>
+          <li>
+            <ol>
+              <li>
+                <ol>
+                  <li>II</li>
+                </ol>
+              </li>
+              <li>BBBB</li>
+            </ol>
+          </li>
+          <li>2222</li>
+        </ol>
+      `);
+    });
+
     it('text within tag', function() {
       const editor = this.initialize(Editor, '<p><a>a</a></p>');
       expect(editor.getHTML(0, 1)).toEqual('<a>a</a>');
+    });
+
+    it('escape html', function() {
+      const editor = this.initialize(Editor, '<p><br></p>');
+      editor.insertText(0, '<b>Test</b>');
+      expect(editor.getHTML(0, 11)).toEqual('&lt;b&gt;Test&lt;/b&gt;');
+    });
+
+    it('multiline code', function() {
+      const editor = this.initialize(
+        Editor,
+        '<p><br></p><p>0123</p><p><br></p><p><br></p><p>4567</p><p><br></p>',
+      );
+      const length = editor.scroll.length();
+      editor.formatLine(0, length, { 'code-block': 'javascript' });
+
+      expect(editor.getHTML(0, length)).toEqual(
+        '<pre>\n\n0123\n\n\n4567\n\n</pre>',
+      );
+      expect(editor.getHTML(1, 7)).toEqual('<pre>\n0123\n\n\n\n</pre>');
+      expect(editor.getHTML(2, 7)).toEqual('<pre>\n123\n\n\n4\n</pre>');
+      expect(editor.getHTML(5, 7)).toEqual('<pre>\n\n\n\n4567\n</pre>');
     });
   });
 });

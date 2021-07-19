@@ -20,10 +20,12 @@ resets(arr)
 .ql-container.ql-disabled
   .ql-tooltip
     visibility: hidden
-  .ql-editor
-    li[data-list="checked"]:before,
-    li[data-list="unchecked"]:before
-      pointer-events: none
+
+.ql-container:not(.ql-disabled)
+  li[data-list=checked],
+  li[data-list=unchecked]
+    > .ql-ui
+      cursor: pointer
 
 .ql-clipboard
   left: -100000px
@@ -37,7 +39,7 @@ resets(arr)
 
 .ql-editor
   box-sizing: border-box
-  counter-reset: list-0
+  counter-reset: resets(0..MAX_INDENT)
   line-height: 1.42
   height: 100%
   outline: none
@@ -55,19 +57,23 @@ resets(arr)
     margin: 0
     padding: 0
   p, h1, h2, h3, h4, h5, h6
-    counter-reset: resets(0..MAX_INDENT)
+    @supports (counter-set: none)
+      counter-set: resets(0..MAX_INDENT)
+    @supports not (counter-set: none)
+      counter-reset: resets(0..MAX_INDENT)
   table
     border-collapse: collapse
-  tr, td
-    border: 1px solid #000
   td
+    border: 1px solid #000
     padding: 2px 5px
   ol
     padding-left: 1.5em
   li
     list-style-type: none
     padding-left: LIST_STYLE_OUTER_WIDTH
-    &:before
+    position: relative
+
+    > .ql-ui:before
       display: inline-block
       margin-left: -1*LIST_STYLE_OUTER_WIDTH
       margin-right: LIST_STYLE_MARGIN
@@ -75,36 +81,43 @@ resets(arr)
       white-space: nowrap
       width: LIST_STYLE_WIDTH
 
+  @supports (display: contents)
+    li[data-list=bullet],
+    li[data-list=ordered]
+      > .ql-ui
+        display: contents
+
   li[data-list=checked],
   li[data-list=unchecked]
-    pointer-events: none
-    *
-      pointer-events: all
-    &:before
+    > .ql-ui
       color: #777
-      cursor: pointer
-      pointer-events: all
 
-  li[data-list=bullet]:before
+  li[data-list=bullet] > .ql-ui:before
     content: '\2022'
-  li[data-list=checked]:before
+  li[data-list=checked] > .ql-ui:before
     content: '\2611'
-  li[data-list=unchecked]:before
+  li[data-list=unchecked] > .ql-ui:before
     content: '\2610'
 
   li[data-list=ordered]
-    counter-reset: resets(1..MAX_INDENT)
+    @supports (counter-set: none)
+      counter-set: resets(1..MAX_INDENT)
+    @supports not (counter-set: none)
+      counter-reset: resets(1..MAX_INDENT)
     counter-increment: list-0
-    &:before
+    > .ql-ui:before
       content: unquote('counter(list-0, ' + LIST_STYLE[0] + ')') '. '
   for num in (1..MAX_INDENT)
     li[data-list=ordered].ql-indent-{num}
       counter-increment: unquote('list-' + num)
-      &:before
+      > .ql-ui:before
         content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
     if (num < MAX_INDENT)
       li[data-list=ordered].ql-indent-{num}
-        counter-reset: resets((num+1)..MAX_INDENT)
+        @supports (counter-set: none)
+          counter-set: resets((num+1)..MAX_INDENT)
+        @supports not (counter-set: none)
+          counter-reset: resets((num+1)..MAX_INDENT)
 
   for num in (1..MAX_INDENT)
     .ql-indent-{num}:not(.ql-direction-rtl)
@@ -118,7 +131,7 @@ resets(arr)
 
   li.ql-direction-rtl
     padding-right: LIST_STYLE_OUTER_WIDTH
-    &:before
+    > .ql-ui:before
       margin-left: LIST_STYLE_MARGIN
       margin-right: -1*LIST_STYLE_OUTER_WIDTH
       text-align: left
@@ -192,6 +205,9 @@ resets(arr)
     text-align: justify
   .ql-align-right
     text-align: right
+
+  .ql-ui
+    position: absolute
 
 .ql-editor.ql-blank::before
   color: rgba(0,0,0,0.6)

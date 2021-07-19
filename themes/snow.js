@@ -1,4 +1,4 @@
-import extend from 'extend';
+import merge from 'lodash.merge';
 import Emitter from '../core/emitter';
 import BaseTheme, { BaseTooltip } from './base';
 import LinkBlot from '../formats/link';
@@ -70,7 +70,7 @@ class SnowTooltip extends BaseTooltip {
   }
 }
 SnowTooltip.TEMPLATE = [
-  '<a class="ql-preview" target="_blank" href="about:blank"></a>',
+  '<a class="ql-preview" rel="noopener noreferrer" target="_blank" href="about:blank"></a>',
   '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">',
   '<a class="ql-action"></a>',
   '<a class="ql-remove"></a>',
@@ -103,7 +103,7 @@ class SnowTheme extends BaseTheme {
     }
   }
 }
-SnowTheme.DEFAULTS = extend(true, {}, BaseTheme.DEFAULTS, {
+SnowTheme.DEFAULTS = merge({}, BaseTheme.DEFAULTS, {
   modules: {
     toolbar: {
       handlers: {

@@ -2,7 +2,7 @@ import Block from '../blots/block';
 import Break from '../blots/break';
 import Cursor from '../blots/cursor';
 import Inline from '../blots/inline';
-import TextBlot from '../blots/text';
+import TextBlot, { escapeText } from '../blots/text';
 import Container from '../blots/container';
 import Quill from '../core/quill';
 
@@ -13,9 +13,18 @@ class CodeBlockContainer extends Container {
     return domNode;
   }
 
+  code(index, length) {
+    const text = this.children
+      .map(child => (child.length() <= 1 ? '' : child.domNode.innerText))
+      .join('\n')
+      .slice(index, index + length);
+    return escapeText(text);
+  }
+
   html(index, length) {
-    const html = this.domNode.innerText.slice(index, index + length);
-    return `<pre>${html}</pre>`;
+    // `\n`s are needed in order to support empty lines at the beginning and the end.
+    // https://html.spec.whatwg.org/multipage/syntax.html#element-restrictions
+    return `<pre>\n${this.code(index, length)}\n</pre>`;
   }
 }
 

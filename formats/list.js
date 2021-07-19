@@ -23,17 +23,21 @@ class ListItem extends Block {
 
   constructor(scroll, domNode) {
     super(scroll, domNode);
+    const ui = domNode.ownerDocument.createElement('span');
     const listEventHandler = e => {
-      if (e.target !== domNode) return;
+      if (!scroll.isEnabled()) return;
       const format = this.statics.formats(domNode, scroll);
       if (format === 'checked') {
         this.format('list', 'unchecked');
+        e.preventDefault();
       } else if (format === 'unchecked') {
         this.format('list', 'checked');
+        e.preventDefault();
       }
     };
-    domNode.addEventListener('touchstart', listEventHandler);
-    domNode.addEventListener('mousedown', listEventHandler);
+    ui.addEventListener('mousedown', listEventHandler);
+    ui.addEventListener('touchstart', listEventHandler);
+    this.attachUI(ui);
   }
 
   format(name, value) {

@@ -28,7 +28,7 @@ import tableIcon from '../assets/icons/table.svg';
 import underlineIcon from '../assets/icons/underline.svg';
 import videoIcon from '../assets/icons/video.svg';
 
-module.exports = {
+export default {
   align: {
     '': alignLeftIcon,
     center: alignCenterIcon,

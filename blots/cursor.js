@@ -59,20 +59,6 @@ class Cursor extends EmbedBlot {
   restore() {
     if (this.selection.composing || this.parent == null) return null;
     const range = this.selection.getNativeRange();
-    let restoreText;
-    let start;
-    let end;
-    if (
-      range != null &&
-      range.start.node === this.textNode &&
-      range.end.node === this.textNode
-    ) {
-      [restoreText, start, end] = [
-        this.textNode,
-        range.start.offset,
-        range.end.offset,
-      ];
-    }
     // Link format will insert text outside of anchor tag
     while (
       this.domNode.lastChild != null &&
@@ -83,30 +69,64 @@ class Cursor extends EmbedBlot {
         this.domNode,
       );
     }
-    if (this.textNode.data !== Cursor.CONTENTS) {
-      const text = this.textNode.data.split(Cursor.CONTENTS).join('');
-      if (this.next instanceof TextBlot) {
-        restoreText = this.next.domNode;
-        this.next.insertAt(0, text);
-        this.textNode.data = Cursor.CONTENTS;
-      } else {
-        this.textNode.data = text;
-        this.parent.insertBefore(this.scroll.create(this.textNode), this);
-        this.textNode = document.createTextNode(Cursor.CONTENTS);
-        this.domNode.appendChild(this.textNode);
+
+    const prevTextBlot = this.prev instanceof TextBlot ? this.prev : null;
+    const prevTextLength = prevTextBlot ? prevTextBlot.length() : 0;
+    const nextTextBlot = this.next instanceof TextBlot ? this.next : null;
+    const nextText = nextTextBlot ? nextTextBlot.text : '';
+    const { textNode } = this;
+    // take text from inside this blot and reset it
+    const newText = textNode.data.split(Cursor.CONTENTS).join('');
+    textNode.data = Cursor.CONTENTS;
+
+    // proactively merge TextBlots around cursor so that optimization
+    // doesn't lose the cursor.  the reason we are here in cursor.restore
+    // could be that the user clicked in prevTextBlot or nextTextBlot, or
+    // the user typed something.
+    let mergedTextBlot;
+    if (prevTextBlot) {
+      mergedTextBlot = prevTextBlot;
+      if (newText || nextTextBlot) {
+        prevTextBlot.insertAt(prevTextBlot.length(), newText + nextText);
+        if (nextTextBlot) {
+          nextTextBlot.remove();
+        }
       }
+    } else if (nextTextBlot) {
+      mergedTextBlot = nextTextBlot;
+      nextTextBlot.insertAt(0, newText);
+    } else {
+      const newTextNode = document.createTextNode(newText);
+      mergedTextBlot = this.scroll.create(newTextNode);
+      this.parent.insertBefore(mergedTextBlot, this);
     }
+
     this.remove();
-    if (start != null) {
-      [start, end] = [start, end].map(offset => {
-        return Math.max(0, Math.min(restoreText.data.length, offset - 1));
-      });
-      return {
-        startNode: restoreText,
-        startOffset: start,
-        endNode: restoreText,
-        endOffset: end,
+    if (range) {
+      // calculate selection to restore
+      const remapOffset = (node, offset) => {
+        if (prevTextBlot && node === prevTextBlot.domNode) {
+          return offset;
+        }
+        if (node === textNode) {
+          return prevTextLength + offset - 1;
+        }
+        if (nextTextBlot && node === nextTextBlot.domNode) {
+          return prevTextLength + newText.length + offset;
+        }
+        return null;
       };
+
+      const start = remapOffset(range.start.node, range.start.offset);
+      const end = remapOffset(range.end.node, range.end.offset);
+      if (start !== null && end !== null) {
+        return {
+          startNode: mergedTextBlot.domNode,
+          startOffset: start,
+          endNode: mergedTextBlot.domNode,
+          endOffset: end,
+        };
+      }
     }
     return null;
   }

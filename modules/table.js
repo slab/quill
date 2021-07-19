@@ -22,11 +22,16 @@ class Table extends Module {
     this.listenBalanceCells();
   }
 
+  balanceTables() {
+    this.quill.scroll.descendants(TableContainer).forEach(table => {
+      table.balanceCells();
+    });
+  }
+
   deleteColumn() {
-    const [table, row, cell] = this.getTable();
+    const [table, , cell] = this.getTable();
     if (cell == null) return;
-    const column = row.children.indexOf(cell);
-    table.deleteColumn(column);
+    table.deleteColumn(cell.cellOffset());
     this.quill.update(Quill.sources.USER);
   }
 
@@ -61,10 +66,10 @@ class Table extends Module {
     const range = this.quill.getSelection();
     const [table, row, cell] = this.getTable(range);
     if (cell == null) return;
-    const column = row.children.offset(cell);
+    const column = cell.cellOffset();
     table.insertColumn(column + offset);
     this.quill.update(Quill.sources.USER);
-    let shift = row.parent.children.indexOf(row);
+    let shift = row.rowOffset();
     if (offset === 0) {
       shift += 1;
     }
@@ -87,7 +92,7 @@ class Table extends Module {
     const range = this.quill.getSelection();
     const [table, row, cell] = this.getTable(range);
     if (cell == null) return;
-    const index = row.parent.children.indexOf(row);
+    const index = row.rowOffset();
     table.insertRow(index + offset);
     this.quill.update(Quill.sources.USER);
     if (offset > 0) {
@@ -118,17 +123,16 @@ class Table extends Module {
     }, new Delta().retain(range.index));
     this.quill.updateContents(delta, Quill.sources.USER);
     this.quill.setSelection(range.index, Quill.sources.SILENT);
+    this.balanceTables();
   }
 
   listenBalanceCells() {
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, mutations => {
       mutations.some(mutation => {
-        if (mutation.target.tagName === 'TABLE') {
+        if (['TD', 'TR', 'TBODY', 'TABLE'].includes(mutation.target.tagName)) {
           this.quill.once(Quill.events.TEXT_CHANGE, (delta, old, source) => {
             if (source !== Quill.sources.USER) return;
-            this.quill.scroll.descendants(TableContainer).forEach(table => {
-              table.balanceCells();
-            });
+            this.balanceTables();
           });
           return true;
         }

@@ -30,7 +30,7 @@ module.exports = config => {
     browsers: ['Chrome'],
 
     client: {
-      useIframe: false,
+      useIframe: true,
     },
 
     coverageReporter: {
@@ -44,6 +44,10 @@ module.exports = config => {
         'record-screenshots': false,
       },
       build: sauce.build,
+      // There is no way to securely allow community PRs to be built and tested
+      // by Travis and SauceLabs. Please do not abuse.
+      username: 'quill',
+      accessKey: 'ced60aed-80ad-436b-9ba8-690ed1205180',
       tunnelIdentifier: sauce.tunnel,
     },
     customLaunchers: browsers,
@@ -51,20 +55,12 @@ module.exports = config => {
 
   /* eslint-disable no-param-reassign */
   if (process.env.TRAVIS) {
-    config.sauceLabs.startConnect = false;
     config.transports = ['polling'];
     config.browsers = [process.env.BROWSER];
     config.browserDisconnectTimeout = 10000;
     config.browserDisconnectTolerance = 3;
     config.browserNoActivityTimeout = 60000;
+    config.browserSocketTimeout = 40000;
     config.captureTimeout = 120000;
-    // MS Edge does not work in an iframe
-    if (
-      process.env.BROWSER.indexOf('ios') > -1 ||
-      process.env.BROWSER.indexOf('android') > -1 ||
-      process.env.BROWSER.indexOf('firefox') > -1
-    ) {
-      config.client.useIframe = true;
-    }
   }
 };

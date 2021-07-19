@@ -19,6 +19,13 @@ class TableCell extends Block {
     return undefined;
   }
 
+  cellOffset() {
+    if (this.parent) {
+      return this.parent.children.indexOf(this);
+    }
+    return -1;
+  }
+
   format(name, value) {
     if (name === TableCell.blotName && value) {
       this.domNode.setAttribute('data-row', value);
@@ -27,12 +34,19 @@ class TableCell extends Block {
     }
   }
 
-  table() {
-    let cur = this.parent;
-    while (cur != null && cur.statics.blotName !== 'table-container') {
-      cur = cur.parent;
+  row() {
+    return this.parent;
+  }
+
+  rowOffset() {
+    if (this.row()) {
+      return this.row().rowOffset();
     }
-    return cur;
+    return -1;
+  }
+
+  table() {
+    return this.row() && this.row().table();
   }
 }
 TableCell.blotName = 'table';
@@ -40,7 +54,7 @@ TableCell.tagName = 'TD';
 
 class TableRow extends Container {
   checkMerge() {
-    if (super.checkMerge()) {
+    if (super.checkMerge() && this.next.children.head != null) {
       const thisHead = this.children.head.formats();
       const thisTail = this.children.tail.formats();
       const nextHead = this.next.children.head.formats();
@@ -72,6 +86,17 @@ class TableRow extends Container {
       }
     });
   }
+
+  rowOffset() {
+    if (this.parent) {
+      return this.parent.children.indexOf(this);
+    }
+    return -1;
+  }
+
+  table() {
+    return this.parent && this.parent.parent;
+  }
 }
 TableRow.blotName = 'table-row';
 TableRow.tagName = 'TR';
@@ -97,6 +122,10 @@ class TableContainer extends Container {
         blot.optimize(); // Add break blot
       });
     });
+  }
+
+  cells(column) {
+    return this.rows().map(row => row.children.at(column));
   }
 
   deleteColumn(index) {
@@ -132,6 +161,12 @@ class TableContainer extends Container {
     });
     const ref = body.children.at(index);
     body.insertBefore(row, ref);
+  }
+
+  rows() {
+    const body = this.children.head;
+    if (body == null) return [];
+    return body.children.map(row => row);
   }
 }
 TableContainer.blotName = 'table-container';

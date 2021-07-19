@@ -39,7 +39,7 @@ const jsRules = {
       options: {
         presets: [
           [
-            'env',
+            '@babel/env',
             {
               targets: {
                 browsers: [
@@ -156,7 +156,8 @@ module.exports = env => {
       entry: { 'quill.min.js': './quill.js' },
       devtool: 'source-map',
     };
-  } else if (env && env.coverage) {
+  }
+  if (env && env.coverage) {
     baseConfig.module.rules[0].use[0].options.plugins = ['istanbul'];
     return baseConfig;
   }

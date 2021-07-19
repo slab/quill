@@ -12,19 +12,22 @@ class Scroll extends ScrollBlot {
   constructor(registry, domNode, { emitter }) {
     super(registry, domNode);
     this.emitter = emitter;
-    // Some reason fixes composition issues with character languages in Windows/Chrome, Safari
-    this.domNode.addEventListener('DOMNodeInserted', () => {});
+    this.batch = false;
     this.optimize();
     this.enable();
+    this.domNode.addEventListener('dragstart', e => this.handleDragStart(e));
   }
 
   batchStart() {
-    this.batch = true;
+    if (!Array.isArray(this.batch)) {
+      this.batch = [];
+    }
   }
 
   batchEnd() {
+    const mutations = this.batch;
     this.batch = false;
-    this.optimize();
+    this.update(mutations);
   }
 
   emitMount(blot) {
@@ -61,6 +64,10 @@ class Scroll extends ScrollBlot {
     this.optimize();
   }
 
+  handleDragStart(event) {
+    event.preventDefault();
+  }
+
   insertAt(index, value, def) {
     if (index >= this.length()) {
       if (def == null || this.scroll.query(value, Scope.BLOCK) == null) {
@@ -89,6 +96,10 @@ class Scroll extends ScrollBlot {
     } else {
       super.insertBefore(blot, ref);
     }
+  }
+
+  isEnabled() {
+    return this.domNode.getAttribute('contenteditable') === 'true';
   }
 
   leaf(index) {
@@ -124,7 +135,7 @@ class Scroll extends ScrollBlot {
   }
 
   optimize(mutations = [], context = {}) {
-    if (this.batch === true) return;
+    if (this.batch) return;
     super.optimize(mutations, context);
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_OPTIMIZE, mutations, context);
@@ -140,7 +151,12 @@ class Scroll extends ScrollBlot {
   }
 
   update(mutations) {
-    if (this.batch === true) return;
+    if (this.batch) {
+      if (Array.isArray(mutations)) {
+        this.batch = this.batch.concat(mutations);
+      }
+      return;
+    }
     let source = Emitter.sources.USER;
     if (typeof mutations === 'string') {
       source = mutations;
@@ -148,6 +164,10 @@ class Scroll extends ScrollBlot {
     if (!Array.isArray(mutations)) {
       mutations = this.observer.takeRecords();
     }
+    mutations = mutations.filter(({ target }) => {
+      const blot = this.find(target, true);
+      return blot && blot.scroll === this;
+    });
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_BEFORE_UPDATE, source, mutations);
     }

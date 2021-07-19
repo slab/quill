@@ -6,9 +6,9 @@ import Module from '../core/module';
 import { blockDelta } from '../blots/block';
 import BreakBlot from '../blots/break';
 import CursorBlot from '../blots/cursor';
-import TextBlot from '../blots/text';
+import TextBlot, { escapeText } from '../blots/text';
 import CodeBlock, { CodeBlockContainer } from '../formats/code';
-import { traverse } from '../modules/clipboard';
+import { traverse } from './clipboard';
 
 const TokenAttributor = new ClassAttributor('code-token', 'hljs', {
   scope: Scope.INLINE,
@@ -16,7 +16,7 @@ const TokenAttributor = new ClassAttributor('code-token', 'hljs', {
 class CodeToken extends Inline {
   static formats(node, scroll) {
     while (node != null && node !== scroll.domNode) {
-      if (node.classList.contains(CodeBlock.className)) {
+      if (node.classList && node.classList.contains(CodeBlock.className)) {
         return super.formats(node, scroll);
       }
       node = node.parentNode;
@@ -65,18 +65,6 @@ class SyntaxCodeBlock extends CodeBlock {
 
   static register() {} // Syntax module will register
 
-  delta() {
-    if (this.cache.delta == null) {
-      const delta = super.delta();
-      this.cache.delta = delta.compose(
-        new Delta().retain(delta.length(), {
-          [CodeToken.blotName]: null,
-        }),
-      );
-    }
-    return this.cache.delta;
-  }
-
   format(name, value) {
     if (name === this.statics.blotName && value) {
       this.domNode.setAttribute('data-language', value);
@@ -124,7 +112,7 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
     if (forced || this.forceNext || this.cachedText !== text) {
       if (text.trim().length > 0 || this.cachedText == null) {
         const oldDelta = this.children.reduce((delta, child) => {
-          return delta.concat(blockDelta(child));
+          return delta.concat(blockDelta(child, false));
         }, new Delta());
         const delta = highlight(text, language);
         oldDelta.diff(delta).reduce((index, { retain, attributes }) => {
@@ -145,6 +133,18 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
       this.cachedText = text;
       this.forceNext = false;
     }
+  }
+
+  html(index, length) {
+    const [codeBlock] = this.children.find(index);
+    const language = codeBlock
+      ? SyntaxCodeBlock.formats(codeBlock.domNode)
+      : 'plain';
+
+    return `<pre data-language="${language}">\n${this.code(
+      index,
+      length,
+    )}\n</pre>`;
   }
 
   optimize(context) {
@@ -179,6 +179,10 @@ class Syntax extends Module {
         'Syntax module requires highlight.js. Please include the library on the page before Quill.',
       );
     }
+    this.languages = this.options.languages.reduce((memo, { key }) => {
+      memo[key] = true;
+      return memo;
+    }, {});
     this.highlightBlot = this.highlightBlot.bind(this);
     this.initListener();
     this.initTimer();
@@ -237,19 +241,9 @@ class Syntax extends Module {
   }
 
   highlightBlot(text, language = 'plain') {
+    language = this.languages[language] ? language : 'plain';
     if (language === 'plain') {
-      return text
-        .replace(/[&<>"']/g, s => {
-          // https://lodash.com/docs#escape
-          const entityMap = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;',
-          };
-          return entityMap[s];
-        })
+      return escapeText(text)
         .split('\n')
         .reduce((delta, line, i) => {
           if (i !== 0) {

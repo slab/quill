@@ -33,17 +33,29 @@ class History extends Module {
         this.redo.bind(this),
       );
     }
+
+    this.quill.root.addEventListener('beforeinput', event => {
+      if (event.inputType === 'historyUndo') {
+        this.undo();
+        event.preventDefault();
+      } else if (event.inputType === 'historyRedo') {
+        this.redo();
+        event.preventDefault();
+      }
+    });
   }
 
   change(source, dest) {
     if (this.stack[source].length === 0) return;
     const delta = this.stack[source].pop();
-    this.stack[dest].push(delta);
+    const base = this.quill.getContents();
+    const inverseDelta = delta.invert(base);
+    this.stack[dest].push(inverseDelta);
     this.lastRecorded = 0;
     this.ignoreChange = true;
-    this.quill.updateContents(delta[source], Quill.sources.USER);
+    this.quill.updateContents(delta, Quill.sources.USER);
     this.ignoreChange = false;
-    const index = getLastChangeIndex(this.quill.scroll, delta[source]);
+    const index = getLastChangeIndex(this.quill.scroll, delta);
     this.quill.setSelection(index);
   }
 
@@ -58,22 +70,19 @@ class History extends Module {
   record(changeDelta, oldDelta) {
     if (changeDelta.ops.length === 0) return;
     this.stack.redo = [];
-    let undoDelta = this.quill.getContents().diff(oldDelta);
+    let undoDelta = changeDelta.invert(oldDelta);
     const timestamp = Date.now();
     if (
       this.lastRecorded + this.options.delay > timestamp &&
       this.stack.undo.length > 0
     ) {
       const delta = this.stack.undo.pop();
-      undoDelta = undoDelta.compose(delta.undo);
-      changeDelta = delta.redo.compose(changeDelta);
+      undoDelta = undoDelta.compose(delta);
     } else {
       this.lastRecorded = timestamp;
     }
-    this.stack.undo.push({
-      redo: changeDelta,
-      undo: undoDelta,
-    });
+    if (undoDelta.length() === 0) return;
+    this.stack.undo.push(undoDelta);
     if (this.stack.undo.length > this.options.maxStack) {
       this.stack.undo.shift();
     }
@@ -84,14 +93,8 @@ class History extends Module {
   }
 
   transform(delta) {
-    this.stack.undo.forEach(change => {
-      change.undo = delta.transform(change.undo, true);
-      change.redo = delta.transform(change.redo, true);
-    });
-    this.stack.redo.forEach(change => {
-      change.undo = delta.transform(change.undo, true);
-      change.redo = delta.transform(change.redo, true);
-    });
+    transformStack(this.stack.undo, delta);
+    transformStack(this.stack.redo, delta);
   }
 
   undo() {
@@ -103,6 +106,18 @@ History.DEFAULTS = {
   maxStack: 100,
   userOnly: false,
 };
+
+function transformStack(stack, delta) {
+  let remoteDelta = delta;
+  for (let i = stack.length - 1; i >= 0; i -= 1) {
+    const oldDelta = stack[i];
+    stack[i] = remoteDelta.transform(oldDelta, true);
+    remoteDelta = oldDelta.transform(remoteDelta);
+    if (stack[i].length() === 0) {
+      stack.splice(i, 1);
+    }
+  }
+}
 
 function endsWithNewlineChange(scroll, delta) {
   const lastOp = delta.ops[delta.ops.length - 1];

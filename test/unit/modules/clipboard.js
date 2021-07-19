@@ -9,42 +9,80 @@ describe('Clipboard', function() {
       this.quill.setSelection(2, 5);
     });
 
-    it('paste', function(done) {
-      this.quill.clipboard.onCapturePaste({
-        clipboardData: {
-          getData: () => {
-            return '<strong>|</strong>';
+    describe('paste', function() {
+      beforeAll(function() {
+        this.clipboardEvent = {
+          clipboardData: {
+            getData: type =>
+              type === 'text/html' ? '<strong>|</strong>' : '|',
           },
-        },
-        preventDefault: () => {},
+          preventDefault: () => {},
+        };
       });
-      setTimeout(() => {
-        expect(this.quill.root).toEqualHTML(
-          '<p>01<strong>|</strong><em>7</em>8</p>',
+
+      it('pastes html data', function(done) {
+        this.quill.clipboard.onCapturePaste(this.clipboardEvent);
+        setTimeout(() => {
+          expect(this.quill.root).toEqualHTML(
+            '<p>01<strong>|</strong><em>7</em>8</p>',
+          );
+          expect(this.quill.getSelection()).toEqual(new Range(3));
+          done();
+        }, 2);
+      });
+
+      it('pastes html data if present with file', function(done) {
+        const upload = spyOn(this.quill.uploader, 'upload');
+        this.quill.clipboard.onCapturePaste(
+          // eslint-disable-next-line prefer-object-spread
+          Object.assign({}, this.clipboardEvent, { files: ['file '] }),
         );
-        expect(this.quill.getSelection()).toEqual(new Range(3));
-        done();
-      }, 2);
+        setTimeout(() => {
+          expect(upload).not.toHaveBeenCalled();
+          expect(this.quill.root).toEqualHTML(
+            '<p>01<strong>|</strong><em>7</em>8</p>',
+          );
+          expect(this.quill.getSelection()).toEqual(new Range(3));
+          done();
+        }, 2);
+      });
+
+      it('does not fire selection-change', function(done) {
+        const change = jasmine.createSpy('change');
+        this.quill.on('selection-change', change);
+        this.quill.clipboard.onCapturePaste(this.clipboardEvent);
+        setTimeout(function() {
+          expect(change).not.toHaveBeenCalled();
+          done();
+        }, 2);
+      });
     });
 
-    it('selection-change', function(done) {
-      const handler = {
-        change() {},
-      };
-      spyOn(handler, 'change');
-      this.quill.on('selection-change', handler.change);
-      this.quill.clipboard.onCapturePaste({
-        clipboardData: {
-          getData: () => {
-            return '0';
+    describe('cut', () => {
+      beforeEach(function() {
+        this.clipboardData = {};
+        this.clipboardEvent = {
+          clipboardData: {
+            setData: (type, data) => {
+              this.clipboardData[type] = data;
+            },
           },
-        },
-        preventDefault: () => {},
+          preventDefault: () => {},
+        };
       });
-      setTimeout(function() {
-        expect(handler.change).not.toHaveBeenCalled();
-        done();
-      }, 2);
+
+      it('keeps formats of first line', function(done) {
+        this.quill.clipboard.onCaptureCopy(this.clipboardEvent, true);
+        setTimeout(() => {
+          expect(this.quill.root).toEqualHTML('<h1>01<em>7</em>8</h1>');
+          expect(this.quill.getSelection()).toEqual(new Range(2));
+          expect(this.clipboardData['text/plain']).toEqual('23\n56');
+          expect(this.clipboardData['text/html']).toEqual(
+            '<h1>23</h1><p>5<em>6</em></p>',
+          );
+          done();
+        }, 2);
+      });
     });
 
     it('dangerouslyPasteHTML(html)', function() {
@@ -118,6 +156,17 @@ describe('Clipboard', function() {
       expect(delta).toEqual(new Delta().insert('0\n1\n2\n3\n\n4\n\n5'));
     });
 
+    it('empty block', function() {
+      const html = '<h1>Test</h1><h2></h2><p>Body</p>';
+      const delta = this.clipboard.convert({ html });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('Test\n', { header: 1 })
+          .insert('\n', { header: 2 })
+          .insert('Body'),
+      );
+    });
+
     it('mixed inline and block', function() {
       const delta = this.clipboard.convert({
         html: '<div>One<div>Two</div></div>',
@@ -157,27 +206,54 @@ describe('Clipboard', function() {
 
     it('html nested list', function() {
       const delta = this.clipboard.convert({
-        html: '<ol><li>One<ol><li>Alpha</li><li>Beta</li></ol></li></ol>',
+        html:
+          '<ol><li>One<ol><li>Alpha</li><li>Beta<ol><li>I</li></ol></li></ol></li></ol>',
       });
       expect(delta).toEqual(
         new Delta()
-          .insert('One\nAlpha', { list: 'ordered' })
-          .insert('\n', { list: 'ordered', indent: 1 })
-          .insert('Beta', { list: 'ordered' })
-          .insert('\n', { list: 'ordered', indent: 1 }),
+          .insert('One\n', { list: 'ordered' })
+          .insert('Alpha\nBeta\n', { list: 'ordered', indent: 1 })
+          .insert('I\n', { list: 'ordered', indent: 2 }),
       );
     });
 
     it('html nested bullet', function() {
       const delta = this.clipboard.convert({
-        html: '<ul><li>One<ul><li>Alpha</li><li>Beta</li></ul></li></ul>',
+        html:
+          '<ul><li>One<ul><li>Alpha</li><li>Beta<ul><li>I</li></ul></li></ul></li></ul>',
       });
       expect(delta).toEqual(
         new Delta()
-          .insert('One\nAlpha', { list: 'bullet' })
-          .insert('\n', { list: 'bullet', indent: 1 })
-          .insert('Beta', { list: 'bullet' })
-          .insert('\n', { list: 'bullet', indent: 1 }),
+          .insert('One\n', { list: 'bullet' })
+          .insert('Alpha\nBeta\n', { list: 'bullet', indent: 1 })
+          .insert('I\n', { list: 'bullet', indent: 2 }),
+      );
+    });
+
+    it('html nested checklist', function() {
+      const delta = this.clipboard.convert({
+        html:
+          '<ul><li data-list="checked">One<ul><li data-list="checked">Alpha</li><li data-list="checked">Beta' +
+          '<ul><li data-list="checked">I</li></ul></li></ul></li></ul>',
+      });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('One\n', { list: 'checked' })
+          .insert('Alpha\nBeta\n', { list: 'checked', indent: 1 })
+          .insert('I\n', { list: 'checked', indent: 2 }),
+      );
+    });
+
+    it('html partial list', function() {
+      const delta = this.clipboard.convert({
+        html:
+          '<ol><li><ol><li><ol><li>iiii</li></ol></li><li>bbbb</li></ol></li><li>2222</li></ol>',
+      });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('iiii\n', { list: 'ordered', indent: 2 })
+          .insert('bbbb\n', { list: 'ordered', indent: 1 })
+          .insert('2222\n', { list: 'ordered' }),
       );
     });
 
@@ -186,13 +262,13 @@ describe('Clipboard', function() {
         html:
           '<table>' +
           '<thead><tr><td>A1</td><td>A2</td><td>A3</td></tr></thead>' +
-          '<tbody><tr><td>B1</td><td>B2</td><td>B3</td></tr></tbody>' +
+          '<tbody><tr><td>B1</td><td></td><td>B3</td></tr></tbody>' +
           '</table>',
       });
       expect(delta).toEqual(
         new Delta()
           .insert('A1\nA2\nA3\n', { table: 1 })
-          .insert('B1\nB2\nB3\n', { table: 2 }),
+          .insert('B1\n\nB3\n', { table: 2 }),
       );
     });
 
@@ -220,6 +296,48 @@ describe('Clipboard', function() {
           .insert('01\n')
           .insert({ video: '#' })
           .insert('34'),
+      );
+    });
+
+    it('block embeds within blocks', function() {
+      const delta = this.clipboard.convert({
+        html: '<h1>01<iframe src="#"></iframe>34</h1><p>67</p>',
+      });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('01\n', { header: 1 })
+          .insert({ video: '#' }, { header: 1 })
+          .insert('34\n', { header: 1 })
+          .insert('67'),
+      );
+    });
+
+    it('wrapped block embed', function() {
+      const delta = this.clipboard.convert({
+        html: '<h1>01<a href="/"><iframe src="#"></iframe></a>34</h1><p>67</p>',
+      });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('01\n', { header: 1 })
+          .insert({ video: '#' }, { link: '/', header: 1 })
+          .insert('34\n', { header: 1 })
+          .insert('67'),
+      );
+    });
+
+    it('wrapped block embed with siblings', function() {
+      const delta = this.clipboard.convert({
+        html:
+          '<h1>01<a href="/">a<iframe src="#"></iframe>b</a>34</h1><p>67</p>',
+      });
+      expect(delta).toEqual(
+        new Delta()
+          .insert('01', { header: 1 })
+          .insert('a\n', { link: '/', header: 1 })
+          .insert({ video: '#' }, { link: '/', header: 1 })
+          .insert('b', { link: '/', header: 1 })
+          .insert('34\n', { header: 1 })
+          .insert('67'),
       );
     });
 
@@ -262,11 +380,20 @@ describe('Clipboard', function() {
       expect(delta).toEqual(expected);
     });
 
+    it('does not execute javascript', function() {
+      window.unsafeFunction = jasmine.createSpy('unsafeFunction');
+      const html =
+        "<img src='/assets/favicon.png' onload='window.unsafeFunction()'/>";
+      this.clipboard.convert({ html });
+      expect(window.unsafeFunction).not.toHaveBeenCalled();
+      delete window.unsafeFunction;
+    });
+
     it('xss', function() {
       const delta = this.clipboard.convert({
         html: '<script>alert(2);</script>',
       });
-      expect(delta).toEqual(new Delta().insert('alert(2);'));
+      expect(delta).toEqual(new Delta().insert(''));
     });
   });
 });

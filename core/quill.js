@@ -1,6 +1,7 @@
 import Delta from 'quill-delta';
+import cloneDeep from 'lodash.clonedeep';
+import merge from 'lodash.merge';
 import * as Parchment from 'parchment';
-import extend from 'extend';
 import Editor from './editor';
 import Emitter from './emitter';
 import Module from './module';
@@ -12,6 +13,7 @@ import Theme from './theme';
 const debug = logger('quill');
 
 const globalRegistry = new Parchment.Registry();
+Parchment.ParentBlot.uiClass = 'ql-ui';
 
 class Quill {
   static debug(limit) {
@@ -74,11 +76,7 @@ class Quill {
     this.container.innerHTML = '';
     instances.set(this.container, this);
     this.root = this.addContainer('ql-editor');
-    this.root.addEventListener('dragstart', e => {
-      e.preventDefault();
-    });
     this.root.classList.add('ql-blank');
-    this.root.setAttribute('data-gramm', false);
     this.scrollingContainer = this.options.scrollingContainer || this.root;
     this.emitter = new Emitter();
     const ScrollBlot = this.options.registry.query(
@@ -101,11 +99,13 @@ class Quill {
       }
     });
     this.emitter.on(Emitter.events.SCROLL_UPDATE, (source, mutations) => {
-      const range = this.selection.lastRange;
-      const index = range && range.length === 0 ? range.index : undefined;
+      const oldRange = this.selection.lastRange;
+      const [newRange] = this.selection.getRange();
+      const selectionInfo =
+        oldRange && newRange ? { oldRange, newRange } : undefined;
       modify.call(
         this,
-        () => this.editor.update(null, mutations, index),
+        () => this.editor.update(null, mutations, selectionInfo),
         source,
       );
     });
@@ -121,6 +121,7 @@ class Quill {
     if (this.options.readOnly) {
       this.disable();
     }
+    this.allowReadOnlyEdits = false;
   }
 
   addContainer(container, refNode = null) {
@@ -154,6 +155,13 @@ class Quill {
     this.enable(false);
   }
 
+  editReadOnly(modifier) {
+    this.allowReadOnlyEdits = true;
+    const value = modifier();
+    this.allowReadOnlyEdits = false;
+    return value;
+  }
+
   enable(enabled = true) {
     this.scroll.enable(enabled);
     this.container.classList.toggle('ql-disabled', !enabled);
@@ -172,9 +180,8 @@ class Quill {
       () => {
         const range = this.getSelection(true);
         let change = new Delta();
-        if (range == null) {
-          return change;
-        } else if (this.scroll.query(name, Parchment.Scope.BLOCK)) {
+        if (range == null) return change;
+        if (this.scroll.query(name, Parchment.Scope.BLOCK)) {
           change = this.editor.formatLine(range.index, range.length, {
             [name]: value,
           });
@@ -339,7 +346,7 @@ class Quill {
   }
 
   isEnabled() {
-    return !this.container.classList.contains('ql-disabled');
+    return this.scroll.isEnabled();
   }
 
   off(...args) {
@@ -376,18 +383,13 @@ class Quill {
       () => {
         delta = new Delta(delta);
         const length = this.getLength();
-        const deleted = this.editor.deleteText(0, length);
+        // Quill will set empty editor to \n
+        const delete1 = this.editor.deleteText(0, length);
+        // delta always applied before existing content
         const applied = this.editor.applyDelta(delta);
-        const lastOp = applied.ops[applied.ops.length - 1];
-        if (
-          lastOp != null &&
-          typeof lastOp.insert === 'string' &&
-          lastOp.insert[lastOp.insert.length - 1] === '\n'
-        ) {
-          this.editor.deleteText(this.getLength() - 1, 1);
-          applied.delete(1);
-        }
-        return deleted.compose(applied);
+        // Remove extra \n from empty editor initialization
+        const delete2 = this.editor.deleteText(this.getLength() - 1, 1);
+        return delete1.compose(applied).compose(delete2);
       },
       source,
     );
@@ -398,7 +400,7 @@ class Quill {
       this.selection.setRange(null, length || Quill.sources.API);
     } else {
       [index, length, , source] = overload(index, length, source);
-      this.selection.setRange(new Range(index, length), source);
+      this.selection.setRange(new Range(Math.max(0, index), length), source);
       if (source !== Emitter.sources.SILENT) {
         this.selection.scrollIntoView(this.scrollingContainer);
       }
@@ -451,8 +453,7 @@ Quill.imports = {
 };
 
 function expandConfig(container, userConfig) {
-  userConfig = extend(
-    true,
+  userConfig = merge(
     {
       container,
       modules: {
@@ -474,7 +475,7 @@ function expandConfig(container, userConfig) {
       );
     }
   }
-  const themeConfig = extend(true, {}, userConfig.theme.DEFAULTS);
+  const themeConfig = cloneDeep(userConfig.theme.DEFAULTS);
   [themeConfig, userConfig].forEach(config => {
     config.modules = config.modules || {};
     Object.keys(config.modules).forEach(module => {
@@ -507,8 +508,7 @@ function expandConfig(container, userConfig) {
       container: userConfig.modules.toolbar,
     };
   }
-  userConfig = extend(
-    true,
+  userConfig = merge(
     {},
     Quill.DEFAULTS,
     { modules: moduleConfig },
@@ -535,7 +535,11 @@ function expandConfig(container, userConfig) {
 // Handle selection preservation and TEXT_CHANGE emission
 // common to modification APIs
 function modify(modifier, source, index, shift) {
-  if (!this.isEnabled() && source === Emitter.sources.USER) {
+  if (
+    !this.isEnabled() &&
+    source === Emitter.sources.USER &&
+    !this.allowReadOnlyEdits
+  ) {
     return new Delta();
   }
   let range = index == null ? null : this.getSelection();

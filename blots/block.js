@@ -1,4 +1,3 @@
-import extend from 'extend';
 import Delta from 'quill-delta';
 import {
   AttributorStore,
@@ -51,6 +50,7 @@ class Block extends BlockBlot {
   insertAt(index, value, def) {
     if (def != null) {
       super.insertAt(index, value, def);
+      this.cache = {};
       return;
     }
     if (value.length === 0) return;
@@ -134,10 +134,10 @@ class BlockEmbed extends EmbedBlot {
   }
 
   delta() {
-    return new Delta().insert(
-      this.value(),
-      extend(this.formats(), this.attributes.values()),
-    );
+    return new Delta().insert(this.value(), {
+      ...this.formats(),
+      ...this.attributes.values(),
+    });
   }
 
   format(name, value) {
@@ -164,31 +164,38 @@ class BlockEmbed extends EmbedBlot {
 BlockEmbed.scope = Scope.BLOCK_BLOT;
 // It is important for cursor behavior BlockEmbeds use tags that are block level elements
 
-function blockDelta(blot) {
+function blockDelta(blot, filter = true) {
   return blot
     .descendants(LeafBlot)
     .reduce((delta, leaf) => {
       if (leaf.length() === 0) {
         return delta;
       }
-      return delta.insert(leaf.value(), bubbleFormats(leaf));
+      return delta.insert(leaf.value(), bubbleFormats(leaf, {}, filter));
     }, new Delta())
     .insert('\n', bubbleFormats(blot));
 }
 
-function bubbleFormats(blot, formats = {}) {
+function bubbleFormats(blot, formats = {}, filter = true) {
   if (blot == null) return formats;
   if (typeof blot.formats === 'function') {
-    formats = extend(formats, blot.formats());
+    formats = {
+      ...formats,
+      ...blot.formats(),
+    };
+    if (filter) {
+      // exclude syntax highlighting from deltas and getFormat()
+      delete formats['code-token'];
+    }
   }
   if (
     blot.parent == null ||
-    blot.parent.blotName === 'scroll' ||
+    blot.parent.statics.blotName === 'scroll' ||
     blot.parent.statics.scope !== blot.statics.scope
   ) {
     return formats;
   }
-  return bubbleFormats(blot.parent, formats);
+  return bubbleFormats(blot.parent, formats, filter);
 }
 
 export { blockDelta, bubbleFormats, BlockEmbed, Block as default };

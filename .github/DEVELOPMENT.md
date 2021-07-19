@@ -2,7 +2,7 @@
 
 Quill's source is in [ES6](http://www.ecma-international.org/ecma-262/6.0/index.html) and utilizes [Webpack](https://webpack.github.io/) to organize its files. The documentation site (hosted at [quilljs.com](https://quilljs.com/)) is built with [Jekyll](http://jekyllrb.com/). [Karma](https://karma-runner.github.io/) and [Protractor](https://angular.github.io/protractor/) are used for testing.
 
-To develop Quill locally, you will want a copy of Quill's codebase, with the build pipeline and documentation site running locally. The documentation site lives in `doc/` but will use your local build instead of the CDN that the public site uses. This allows you to test changes on a local copy of all of the quilljs.com demos, such as the [standalone examples](https://github.com/quilljs/quill/docs/docs/standalone).
+To develop Quill locally, you will want a copy of Quill's codebase, with the build pipeline and documentation site running locally. The documentation site lives in `doc/` but will use your local build instead of the CDN that the public site uses. This allows you to test changes on a local copy of all of the quilljs.com demos, such as the [standalone examples](https://github.com/quilljs/quill/blob/develop/docs/docs/standalone).
 
 
 ### Setup
@@ -26,6 +26,17 @@ With three independent servers, it is useful to have a proxy to as a front end s
 All four services can be run with a single command thanks to [foreman](http://ddollar.github.io/foreman/):
 
     npm start
+
+Once the terminal settles (with messages indicating success from `jekyll`, `karma`, `proxy`, and `webpack`), you may access the different services as follows:
+
+| Service                      | URL                                                                          |
+| :--------------------------- | :--------------------------------------------------------------------------- |
+| Jekyll Documentation Site    | [localhost:9000](http://localhost:9000)                                      |
+| Standalone Editor (Full)     | [localhost:9000/standalone/full](http://localhost:9000/standalone/full/)     |
+| Standalone Editor (Snow)     | [localhost:9000/standalone/snow](http://localhost:9000/standalone/snow/)     |
+| Standalone Editor (Bubble)   | [localhost:9000/standalone/bubble](http://localhost:9000/standalone/bubble/) |
+| Karma Test Runner            | [localhost:9000/karma](http://localhost:9000/karma)                          |
+| Webpack Locally Hosted Build | [localhost:9080](http://localhost:9080)                                      |
 
 
 ### Testing

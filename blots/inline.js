@@ -8,9 +8,11 @@ class Inline extends InlineBlot {
     const otherIndex = Inline.order.indexOf(other);
     if (selfIndex >= 0 || otherIndex >= 0) {
       return selfIndex - otherIndex;
-    } else if (self === other) {
+    }
+    if (self === other) {
       return 0;
-    } else if (self < other) {
+    }
+    if (self < other) {
       return -1;
     }
     return 1;
@@ -47,12 +49,12 @@ Inline.allowedChildren = [Inline, Break, EmbedBlot, Text];
 Inline.order = [
   'cursor',
   'inline', // Must be lower
+  'link', // Chrome wants <a> to be lower
   'underline',
   'strike',
   'italic',
   'bold',
   'script',
-  'link',
   'code', // Must be higher
 ];
 
