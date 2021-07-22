@@ -110,12 +110,18 @@ class Quill {
       );
     });
     this.emitter.on(Emitter.events.SCROLL_EMBED_CHANGE, (blot, delta) => {
+      const oldRange = this.selection.lastRange;
+      const [newRange] = this.selection.getRange();
+      const selectionInfo =
+        oldRange && newRange ? { oldRange, newRange } : undefined;
       modify.call(
         this,
-        () =>
-          new Delta()
+        () => {
+          const change = new Delta()
             .retain(blot.offset(this))
-            .retain({ [blot.statics.blotName]: delta }),
+            .retain({ [blot.statics.blotName]: delta });
+          return this.editor.update(change, [], selectionInfo);
+        },
         Quill.sources.USER,
       );
     });
