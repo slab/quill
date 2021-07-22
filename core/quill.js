@@ -109,6 +109,16 @@ class Quill {
         source,
       );
     });
+    this.emitter.on(Emitter.events.SCROLL_EMBED_CHANGE, (blot, delta) => {
+      modify.call(
+        this,
+        () =>
+          new Delta()
+            .retain(blot.offset(this))
+            .retain({ [blot.statics.blotName]: delta }),
+        Quill.sources.USER,
+      );
+    });
     const contents = this.clipboard.convert({
       html: `${html}<p><br></p>`,
       text: '\n',
