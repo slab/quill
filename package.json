@@ -37,7 +37,7 @@
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.5.0",
     "parchment": "2.0.0-dev.2",
-    "quill-delta": "github:quilljs/delta#37b73be28d02ff5395268c460c3201f6fe37892f"
+    "quill-delta": "github:quilljs/delta#4a4c97af897abe0337cc8c9e419cd7f26a39de94"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

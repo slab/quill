@@ -215,7 +215,7 @@ export const tableHandler = {
 
 class TableEmbed extends Module {
   static register() {
-    Delta.registerEmbed('table', tableHandler);
+    Delta.registerEmbed('table-embed', tableHandler);
   }
 }
 
