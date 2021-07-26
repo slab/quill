@@ -622,7 +622,7 @@ function shiftRange(range, index, length, source) {
   if (range == null) return null;
   let start;
   let end;
-  if (index instanceof Delta) {
+  if (index.transformPosition) {
     [start, end] = [range.index, range.index + range.length].map(pos =>
       index.transformPosition(pos, source !== Emitter.sources.USER),
     );
