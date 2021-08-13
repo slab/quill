@@ -406,6 +406,125 @@ describe('Editor', function() {
       );
     });
 
+    it('insert text with delete in existing block', function() {
+      const editor = this.initialize(
+        Editor,
+        '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+      editor.applyDelta(
+        new Delta()
+          .retain(4)
+          .insert('abc')
+          // Retain newline at end of block being inserted into.
+          .retain(1)
+          .delete(1),
+      );
+      expect(this.container).toEqualHTML('<p>0123abc</p>');
+    });
+
+    it('insert text with delete before block embed', function() {
+      const editor = this.initialize(
+        Editor,
+        '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+      editor.applyDelta(
+        new Delta()
+          .retain(5)
+          // Explicit newline required to maintain correct index calculation for the delete.
+          .insert('abc\n')
+          .delete(1),
+      );
+      expect(this.container).toEqualHTML('<p>0123</p><p>abc</p>');
+    });
+
+    it('insert inline embed with delete in existing block', function() {
+      const editor = this.initialize(
+        Editor,
+        '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+      editor.applyDelta(
+        new Delta()
+          .retain(4)
+          .insert({ image: '/assets/favicon.png' })
+          // Retain newline at end of block being inserted into.
+          .retain(1)
+          .delete(1),
+      );
+      expect(this.container).toEqualHTML(
+        '<p>0123<img src="/assets/favicon.png"></p>',
+      );
+    });
+
+    it('insert inline embed with delete before block embed', function() {
+      const editor = this.initialize(
+        Editor,
+        '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+      editor.applyDelta(
+        new Delta()
+          .retain(5)
+          .insert({ image: '/assets/favicon.png' })
+          // Explicit newline required to maintain correct index calculation for the delete.
+          .insert('\n')
+          .delete(1),
+      );
+      expect(this.container).toEqualHTML(
+        '<p>0123</p><p><img src="/assets/favicon.png"></p>',
+      );
+    });
+
+    it('insert inline embed with delete before block embed using delete op first', function() {
+      const editor = this.initialize(
+        Editor,
+        '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+      editor.applyDelta(
+        new Delta()
+          .retain(5)
+          .delete(1)
+          .insert({ image: '/assets/favicon.png' })
+          // Explicit newline required to maintain correct index calculation for the delete.
+          .insert('\n'),
+      );
+      expect(this.container).toEqualHTML(
+        '<p>0123</p><p><img src="/assets/favicon.png"></p>',
+      );
+    });
+
+    it('insert inline embed and text with delete before block embed', function() {
+      const editor = this.initialize(
+        Editor,
+        '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+      editor.applyDelta(
+        new Delta()
+          .retain(5)
+          .insert({ image: '/assets/favicon.png' })
+          // Explicit newline required to maintain correct index calculation for the delete.
+          .insert('abc\n')
+          .delete(1),
+      );
+      expect(this.container).toEqualHTML(
+        '<p>0123</p><p><img src="/assets/favicon.png">abc</p>',
+      );
+    });
+
+    it('insert block embed with delete before block embed', function() {
+      const editor = this.initialize(
+        Editor,
+        '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+      editor.applyDelta(
+        new Delta()
+          .retain(5)
+          .insert({ video: '#changed' })
+          .delete(1),
+      );
+      expect(this.container).toEqualHTML(
+        '<p>0123</p><iframe src="#changed" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+    });
+
     it('improper block embed insert', function() {
       const editor = this.initialize(Editor, '<p>0123</p>');
       editor.applyDelta(new Delta().retain(2).insert({ video: '#' }));

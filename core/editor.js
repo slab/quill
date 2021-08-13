@@ -2,7 +2,7 @@ import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import merge from 'lodash.merge';
 import Delta, { AttributeMap } from 'quill-delta';
-import { LeafBlot } from 'parchment';
+import { LeafBlot, Scope } from 'parchment';
 import { Range } from './selection';
 import CursorBlot from '../blots/cursor';
 import Block, { BlockEmbed, bubbleFormats } from '../blots/block';
@@ -51,6 +51,12 @@ class Editor {
         } else if (typeof op.insert === 'object') {
           const key = Object.keys(op.insert)[0]; // There should only be one key
           if (key == null) return index;
+          if (
+            this.scroll.query(key, Scope.INLINE) != null &&
+            this.scroll.descendant(BlockEmbed, index)[0]
+          ) {
+            consumeNextNewline = true;
+          }
           this.scroll.insertAt(index, key, op.insert[key]);
         }
         scrollLength += length;
