@@ -10,7 +10,7 @@ The History module is responsible for handling undo and redo for Quill. It can b
 
 - Default: `1000`
 
-Changes occuring within the `delay` number of milliseconds is merged into a single change.
+Changes occuring within the `delay` number of milliseconds are merged into a single change.
 
 For example, with delay set to `0`, nearly every character is recorded as one change and so undo would undo one character at a time. With delay set to `1000`, undo would undo all changes that occured within the last 1000 milliseconds.
 
