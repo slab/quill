@@ -406,6 +406,20 @@ describe('Editor', function() {
       );
     });
 
+    it('multiple inserts and deletes', function() {
+      const editor = this.initialize(Editor, '<p>0123</p>');
+      editor.applyDelta(
+        new Delta()
+          .retain(1)
+          .insert('a')
+          .delete(2)
+          .insert('cd')
+          .delete(1)
+          .insert('efg'),
+      );
+      expect(this.container).toEqualHTML('<p>0acdefg</p>');
+    });
+
     it('insert text with delete in existing block', function() {
       const editor = this.initialize(
         Editor,
