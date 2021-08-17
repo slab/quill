@@ -525,6 +525,36 @@ describe('Editor', function() {
       );
     });
 
+    it('deletes block embed and appends text', function() {
+      const editor = this.initialize(
+        Editor,
+        `<p><br></p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p>b</p>`,
+      );
+      editor.applyDelta(
+        new Delta()
+          .retain(1)
+          .insert('a')
+          .delete(1),
+      );
+      expect(this.container).toEqualHTML('<p><br></p><p>ab</p>');
+    });
+
+    it('multiple delete block embed and append texts', function() {
+      const editor = this.initialize(
+        Editor,
+        `<p><br></p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p>b</p>`,
+      );
+      editor.applyDelta(
+        new Delta()
+          .retain(1)
+          .insert('a')
+          .delete(1)
+          .insert('!')
+          .delete(1),
+      );
+      expect(this.container).toEqualHTML('<p><br></p><p>a!b</p>');
+    });
+
     it('improper block embed insert', function() {
       const editor = this.initialize(Editor, '<p>0123</p>');
       editor.applyDelta(new Delta().retain(2).insert({ video: '#' }));
