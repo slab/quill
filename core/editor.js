@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import merge from 'lodash.merge';
-import Delta, { AttributeMap } from 'quill-delta';
+import Delta, { AttributeMap, Op } from 'quill-delta';
 import { LeafBlot, Scope } from 'parchment';
 import { Range } from './selection';
 import CursorBlot from '../blots/cursor';
@@ -24,7 +24,7 @@ class Editor {
     this.scroll.batchStart();
     const normalizedDelta = normalizeDelta(delta);
     normalizedDelta.reduce((index, op) => {
-      const length = op.retain || op.delete || op.insert.length || 1;
+      const length = Op.length(op);
       let attributes = op.attributes || {};
       if (op.insert != null) {
         if (typeof op.insert === 'string') {
@@ -71,7 +71,7 @@ class Editor {
         this.scroll.deleteAt(index, op.delete);
         return index;
       }
-      return index + (op.retain || op.insert.length || 1);
+      return index + Op.length(op);
     }, 0);
     this.scroll.batchEnd();
     this.scroll.optimize();
