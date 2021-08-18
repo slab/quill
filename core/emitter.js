@@ -51,7 +51,7 @@ Emitter.events = {
   SCROLL_BLOT_UNMOUNT: 'scroll-blot-unmount',
   SCROLL_OPTIMIZE: 'scroll-optimize',
   SCROLL_UPDATE: 'scroll-update',
-  SCROLL_EMBED_CHANGE: 'scroll-embed-change',
+  SCROLL_EMBED_UPDATE: 'scroll-embed-update',
   SELECTION_CHANGE: 'selection-change',
   TEXT_CHANGE: 'text-change',
 };

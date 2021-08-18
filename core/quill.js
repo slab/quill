@@ -109,7 +109,7 @@ class Quill {
         source,
       );
     });
-    this.emitter.on(Emitter.events.SCROLL_EMBED_CHANGE, (blot, delta) => {
+    this.emitter.on(Emitter.events.SCROLL_EMBED_UPDATE, (blot, delta) => {
       const oldRange = this.selection.lastRange;
       const [newRange] = this.selection.getRange();
       const selectionInfo =
