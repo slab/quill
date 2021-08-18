@@ -55,6 +55,12 @@ class Editor {
         scrollLength += length;
       } else {
         deleteDelta.push(op);
+
+        if (op.retain !== null && typeof op.retain === 'object') {
+          const key = Object.keys(op.retain)[0];
+          if (key == null) return index;
+          this.scroll.updateEmbedAt(index, key, op.retain[key]);
+        }
       }
       Object.keys(attributes).forEach(name => {
         this.scroll.formatAt(index, length, name, attributes[name]);
