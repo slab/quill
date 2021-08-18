@@ -21,27 +21,20 @@ class Editor {
     this.scroll.update();
     let scrollLength = this.scroll.length();
     this.scroll.batchStart();
-    // Track indexes of violations of newline requirements
-    // (at end of doc and before block embeds)
-    const implicitNewlines = [];
     const normalizedDelta = normalizeDelta(delta);
+    const deleteDelta = new Delta();
     normalizedDelta.reduce((index, op) => {
       const length = Op.length(op);
       let attributes = op.attributes || {};
+      let addedNewline = false;
       if (op.insert != null) {
+        deleteDelta.retain(length);
         if (typeof op.insert === 'string') {
           let text = op.insert;
-          if (text.endsWith('\n') && implicitNewlines.length > 0) {
-            implicitNewlines.shift();
-            text = text.slice(0, -1);
-          }
-          if (
-            (index >= scrollLength ||
-              this.scroll.descendant(BlockEmbed, index)[0]) &&
-            !text.endsWith('\n')
-          ) {
-            implicitNewlines.push(index + length);
-          }
+          addedNewline =
+            !text.endsWith('\n') &&
+            (scrollLength <= index ||
+              this.scroll.descendant(BlockEmbed, index)[0]);
           this.scroll.insertAt(index, text);
           const [line, offset] = this.scroll.line(index);
           let formats = merge({}, bubbleFormats(line));
@@ -53,25 +46,25 @@ class Editor {
         } else if (typeof op.insert === 'object') {
           const key = Object.keys(op.insert)[0]; // There should only be one key
           if (key == null) return index;
-          if (
+          addedNewline =
             this.scroll.query(key, Scope.INLINE) != null &&
-            this.scroll.descendant(BlockEmbed, index)[0]
-          ) {
-            implicitNewlines.push(index);
-          }
+            (scrollLength <= index ||
+              this.scroll.descendant(BlockEmbed, index)[0]);
           this.scroll.insertAt(index, key, op.insert[key]);
         }
         scrollLength += length;
+      } else {
+        deleteDelta.push(op);
       }
       Object.keys(attributes).forEach(name => {
         this.scroll.formatAt(index, length, name, attributes[name]);
       });
-      return index + length;
+      const addedLength = addedNewline ? 1 : 0;
+      scrollLength += addedLength;
+      deleteDelta.delete(addedLength);
+      return index + length + addedLength;
     }, 0);
-    const implicitDelta = implicitNewlines.reduce((delta, index) => {
-      return delta.retain(index).delete(1);
-    }, new Delta());
-    normalizedDelta.compose(implicitDelta).reduce((index, op) => {
+    deleteDelta.reduce((index, op) => {
       if (typeof op.delete === 'number') {
         this.scroll.deleteAt(index, op.delete);
         return index;

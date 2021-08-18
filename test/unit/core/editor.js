@@ -569,6 +569,40 @@ describe('Editor', function() {
       expect(this.container).toEqualHTML('<p><br></p><p>a!b</p>');
     });
 
+    it('multiple nonconsecutive delete block embed and append texts', function() {
+      const editor = this.initialize(
+        Editor,
+        `<p><br></p>
+         <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe>
+         <p>a</p>
+         <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe>
+         <p>bb</p>
+         <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe>
+         <p>ccc</p>
+         <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe>
+         <p>dddd</p>`,
+      );
+      const old = editor.getDelta();
+      const delta = new Delta()
+        .retain(1)
+        .insert('1')
+        .delete(1)
+        .retain(2)
+        .insert('2')
+        .delete(1)
+        .retain(3)
+        .insert('3')
+        .delete(1)
+        .retain(4)
+        .insert('4')
+        .delete(1);
+      editor.applyDelta(delta);
+      expect(editor.getDelta()).toEqual(old.compose(delta));
+      expect(this.container).toEqualHTML(
+        '<p><br></p><p>1a</p><p>2bb</p><p>3ccc</p><p>4dddd</p>',
+      );
+    });
+
     it('improper block embed insert', function() {
       const editor = this.initialize(Editor, '<p>0123</p>');
       editor.applyDelta(new Delta().retain(2).insert({ video: '#' }));
