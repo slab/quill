@@ -54,8 +54,10 @@ const getRandomCellContent = () => {
 const getRandomChange = base => {
   const table = {};
   const dimension = {
-    rows: new Delta(base.ops[0].insert.table.rows || []).length(),
-    columns: new Delta(base.ops[0].insert.table.columns || []).length(),
+    rows: new Delta(base.ops[0].insert['table-embed'].rows || []).length(),
+    columns: new Delta(
+      base.ops[0].insert['table-embed'].columns || [],
+    ).length(),
   };
   ['rows', 'columns'].forEach(field => {
     const baseLength = dimension[field];
@@ -99,7 +101,7 @@ const getRandomChange = base => {
       }),
     };
   });
-  return new Delta([attachAttributes({ retain: { table } })]);
+  return new Delta([attachAttributes({ retain: { 'table-embed': table } })]);
 };
 
 const getRandomRowColumnInsert = count => {
@@ -134,7 +136,7 @@ const getRandomBase = () => {
     });
     if (Object.keys(cells).length) table.cells = cells;
   }
-  return new Delta([{ insert: { table } }]);
+  return new Delta([{ insert: { 'table-embed': table } }]);
 };
 
 const runTestCase = () => {

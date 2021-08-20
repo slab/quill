@@ -11,7 +11,7 @@ describe('Delta', () => {
       const base = new Delta([
         {
           insert: {
-            table: {
+            'table-embed': {
               rows: [
                 { insert: { id: '11111111' }, attributes: { height: 20 } },
               ],
@@ -32,14 +32,16 @@ describe('Delta', () => {
       ]);
 
       const change = new Delta([
-        { retain: { table: { rows: [{ insert: { id: '55555555' } }] } } },
+        {
+          retain: { 'table-embed': { rows: [{ insert: { id: '55555555' } }] } },
+        },
       ]);
 
       expect(base.compose(change)).toEqual(
         new Delta([
           {
             insert: {
-              table: {
+              'table-embed': {
                 rows: [
                   { insert: { id: '55555555' } },
                   { insert: { id: '11111111' }, attributes: { height: 20 } },
@@ -66,7 +68,7 @@ describe('Delta', () => {
       const base = new Delta([
         {
           insert: {
-            table: {
+            'table-embed': {
               rows: [
                 { insert: { id: '11111111' }, attributes: { height: 20 } },
               ],
@@ -89,7 +91,7 @@ describe('Delta', () => {
       const change = new Delta([
         {
           retain: {
-            table: {
+            'table-embed': {
               rows: [
                 { insert: { id: '55555555' } },
                 { insert: { id: '66666666' } },
@@ -103,7 +105,7 @@ describe('Delta', () => {
         new Delta([
           {
             insert: {
-              table: {
+              'table-embed': {
                 rows: [
                   { insert: { id: '55555555' } },
                   { insert: { id: '66666666' } },
@@ -131,7 +133,7 @@ describe('Delta', () => {
       const base = new Delta([
         {
           insert: {
-            table: {
+            'table-embed': {
               rows: [
                 { insert: { id: '11111111' } },
                 { insert: { id: '22222222' }, attributes: { height: 20 } },
@@ -153,7 +155,7 @@ describe('Delta', () => {
       const change = new Delta([
         {
           retain: {
-            table: {
+            'table-embed': {
               rows: [{ insert: { id: '66666666' } }],
               cells: {
                 '3:2': { attributes: { align: 'right' } },
@@ -168,7 +170,7 @@ describe('Delta', () => {
         new Delta([
           {
             insert: {
-              table: {
+              'table-embed': {
                 rows: [
                   { insert: { id: '66666666' } },
                   { insert: { id: '11111111' } },
@@ -197,7 +199,7 @@ describe('Delta', () => {
       const base = new Delta([
         {
           insert: {
-            table: {
+            'table-embed': {
               rows: [
                 { insert: { id: '11111111' }, attributes: { height: 20 } },
               ],
@@ -220,7 +222,7 @@ describe('Delta', () => {
       const change = new Delta([
         {
           retain: {
-            table: {
+            'table-embed': {
               columns: [{ retain: 1 }, { delete: 1 }],
             },
           },
@@ -231,7 +233,7 @@ describe('Delta', () => {
         new Delta([
           {
             insert: {
-              table: {
+              'table-embed': {
                 rows: [
                   { insert: { id: '11111111' }, attributes: { height: 20 } },
                 ],
@@ -250,7 +252,9 @@ describe('Delta', () => {
       const base = new Delta([
         {
           insert: {
-            table: { cells: { '1:2': { attributes: { align: 'center' } } } },
+            'table-embed': {
+              cells: { '1:2': { attributes: { align: 'center' } } },
+            },
           },
         },
       ]);
@@ -258,27 +262,31 @@ describe('Delta', () => {
       const change = new Delta([
         {
           retain: {
-            table: { cells: { '1:2': { attributes: { align: null } } } },
+            'table-embed': {
+              cells: { '1:2': { attributes: { align: null } } },
+            },
           },
         },
       ]);
 
       expect(base.compose(change)).toEqual(
-        new Delta([{ insert: { table: {} } }]),
+        new Delta([{ insert: { 'table-embed': {} } }]),
       );
     });
 
     it('removes all rows', () => {
       const base = new Delta([
-        { insert: { table: { rows: [{ insert: { id: '11111111' } }] } } },
+        {
+          insert: { 'table-embed': { rows: [{ insert: { id: '11111111' } }] } },
+        },
       ]);
 
       const change = new Delta([
-        { retain: { table: { rows: [{ delete: 1 }] } } },
+        { retain: { 'table-embed': { rows: [{ delete: 1 }] } } },
       ]);
 
       expect(base.compose(change)).toEqual(
-        new Delta([{ insert: { table: {} } }]),
+        new Delta([{ insert: { 'table-embed': {} } }]),
       );
     });
   });
@@ -288,7 +296,7 @@ describe('Delta', () => {
       const change1 = new Delta([
         {
           retain: {
-            table: {
+            'table-embed': {
               rows: [
                 { insert: { id: '11111111' } },
                 { insert: { id: '22222222' } },
@@ -307,7 +315,7 @@ describe('Delta', () => {
       const change2 = new Delta([
         {
           retain: {
-            table: {
+            'table-embed': {
               rows: [{ delete: 1 }, { retain: 1, attributes: { height: 50 } }],
               columns: [
                 { delete: 1 },
@@ -322,7 +330,7 @@ describe('Delta', () => {
         new Delta([
           {
             retain: {
-              table: {
+              'table-embed': {
                 rows: [
                   { retain: 3 },
                   { delete: 1 },
@@ -344,7 +352,7 @@ describe('Delta', () => {
       const change1 = new Delta([
         {
           retain: {
-            table: {
+            'table-embed': {
               rows: [{ insert: { id: '22222222' } }],
               cells: {
                 '8:1': {
@@ -362,7 +370,7 @@ describe('Delta', () => {
       const change2 = new Delta([
         {
           retain: {
-            table: {
+            'table-embed': {
               rows: [{ delete: 1 }],
               cells: {
                 '6:1': {
@@ -381,7 +389,7 @@ describe('Delta', () => {
         new Delta([
           {
             retain: {
-              table: {
+              'table-embed': {
                 rows: [{ retain: 1 }, { delete: 1 }],
                 cells: {
                   '7:1': {
@@ -402,7 +410,9 @@ describe('Delta', () => {
       const change1 = new Delta([
         {
           retain: {
-            table: { cells: { '8:1': { attributes: { align: 'right' } } } },
+            'table-embed': {
+              cells: { '8:1': { attributes: { align: 'right' } } },
+            },
           },
         },
       ]);
@@ -410,7 +420,9 @@ describe('Delta', () => {
       const change2 = new Delta([
         {
           retain: {
-            table: { cells: { '8:1': { attributes: { align: 'left' } } } },
+            'table-embed': {
+              cells: { '8:1': { attributes: { align: 'left' } } },
+            },
           },
         },
       ]);
@@ -419,14 +431,16 @@ describe('Delta', () => {
         new Delta([
           {
             retain: {
-              table: { cells: { '8:1': { attributes: { align: 'left' } } } },
+              'table-embed': {
+                cells: { '8:1': { attributes: { align: 'left' } } },
+              },
             },
           },
         ]),
       );
 
       expect(change1.transform(change2, true)).toEqual(
-        new Delta([{ retain: { table: {} } }]),
+        new Delta([{ retain: { 'table-embed': {} } }]),
       );
     });
   });
@@ -436,7 +450,7 @@ describe('Delta', () => {
       const base = new Delta([
         {
           insert: {
-            table: {
+            'table-embed': {
               rows: [
                 { insert: { id: '11111111' } },
                 { insert: { id: '22222222' } },
@@ -453,7 +467,7 @@ describe('Delta', () => {
       const change = new Delta([
         {
           retain: {
-            table: {
+            'table-embed': {
               rows: [{ delete: 1 }],
               columns: [{ retain: 1 }, { delete: 1 }],
             },
@@ -465,7 +479,7 @@ describe('Delta', () => {
         new Delta([
           {
             retain: {
-              table: {
+              'table-embed': {
                 rows: [{ insert: { id: '11111111' } }],
                 columns: [
                   { retain: 1 },
@@ -482,7 +496,7 @@ describe('Delta', () => {
       const base = new Delta([
         {
           insert: {
-            table: {
+            'table-embed': {
               rows: [
                 { insert: { id: '11111111' } },
                 { insert: { id: '22222222' } },
@@ -504,7 +518,7 @@ describe('Delta', () => {
       const change = new Delta([
         {
           retain: {
-            table: {
+            'table-embed': {
               rows: [{ insert: { id: '55555555' } }],
               cells: {
                 '2:2': {
@@ -519,7 +533,7 @@ describe('Delta', () => {
         new Delta([
           {
             retain: {
-              table: {
+              'table-embed': {
                 rows: [{ delete: 1 }],
                 cells: {
                   '1:2': {
@@ -537,7 +551,7 @@ describe('Delta', () => {
       const base = new Delta([
         {
           insert: {
-            table: {
+            'table-embed': {
               rows: [
                 { insert: { id: '11111111' } },
                 { insert: { id: '22222222' } },
@@ -559,7 +573,7 @@ describe('Delta', () => {
       const change = new Delta([
         {
           retain: {
-            table: {
+            'table-embed': {
               columns: [{ retain: 1 }, { delete: 1 }],
             },
           },
@@ -569,7 +583,7 @@ describe('Delta', () => {
         new Delta([
           {
             retain: {
-              table: {
+              'table-embed': {
                 columns: [{ retain: 1 }, { insert: { id: '44444444' } }],
                 cells: {
                   '1:2': {
