@@ -30,7 +30,7 @@ class Editor {
       if (op.insert != null) {
         deleteDelta.retain(length);
         if (typeof op.insert === 'string') {
-          let text = op.insert;
+          const text = op.insert;
           addedNewline =
             !text.endsWith('\n') &&
             (scrollLength <= index ||
