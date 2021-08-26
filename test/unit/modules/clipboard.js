@@ -31,18 +31,40 @@ describe('Clipboard', function() {
         }, 2);
       });
 
+      // Copying from Word includes both html and files
       it('pastes html data if present with file', function(done) {
         const upload = spyOn(this.quill.uploader, 'upload');
-        this.quill.clipboard.onCapturePaste(
-          // eslint-disable-next-line prefer-object-spread
-          Object.assign({}, this.clipboardEvent, { files: ['file '] }),
-        );
+        this.quill.clipboard.onCapturePaste({
+          ...this.clipboardEvent,
+          clipboardData: {
+            ...this.clipboardEvent.clipboardData,
+            files: ['file'],
+          },
+        });
         setTimeout(() => {
           expect(upload).not.toHaveBeenCalled();
           expect(this.quill.root).toEqualHTML(
             '<p>01<strong>|</strong><em>7</em>8</p>',
           );
           expect(this.quill.getSelection()).toEqual(new Range(3));
+          done();
+        }, 2);
+      });
+
+      it('pastes image file if present with image only html', function(done) {
+        const upload = spyOn(this.quill.uploader, 'upload');
+        this.quill.clipboard.onCapturePaste({
+          ...this.clipboardEvent,
+          clipboardData: {
+            getData: type =>
+              type === 'text/html'
+                ? `<meta charset='utf-8'><img src="/assets/favicon.png"/>`
+                : '|',
+            files: ['file'],
+          },
+        });
+        setTimeout(() => {
+          expect(upload).toHaveBeenCalled();
           done();
         }, 2);
       });
