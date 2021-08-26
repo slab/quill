@@ -149,12 +149,12 @@ class Clipboard extends Module {
     e.preventDefault();
     const range = this.quill.getSelection(true);
     if (range == null) return;
-    const html = e.clipboardData.getData('text/html');
-    const text = e.clipboardData.getData('text/plain');
     const files = Array.from(e.clipboardData.files || []);
-    if (!html && files.length > 0) {
+    if (files.length > 0) {
       this.quill.uploader.upload(range, files);
     } else {
+      const html = e.clipboardData.getData('text/html');
+      const text = e.clipboardData.getData('text/plain');
       this.onPaste(range, { html, text });
     }
   }
