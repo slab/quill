@@ -145,9 +145,20 @@ colorItemsPerRow = 7
       font-size: 85%
       padding: 2px 4px
     .ql-code-block-container
-      background-color: #23241f
-      color: #f8f8f2
+      counter-reset: line-counter
+      background-color: #fbfbfb
+      color: #353535
       overflow: visible
+    @counter-style line-numbers
+      system: numeric;
+      symbols: "0" "1" "2" "3" "4" "5" "6" "7" "8" "9"
+      pad: 3 " "
+    .ql-code-block::before
+      counter-increment: line-counter
+      content: counter(line-counter, line-numbers) "  "
+      color: #0004ff
+    .ql-code-block:nth-child(2n)
+      background-color: #eaeaea
     img
       max-width: 100%
 
