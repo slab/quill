@@ -19,7 +19,7 @@ Note: This branch and README covers the upcoming 2.0 release. View [1.x docs her
 </p>
 <p align="center">
   <a href="https://travis-ci.org/quilljs/quill" title="Build Status">
-    <img src="https://travis-ci.org/quilljs/quill.svg?branch=master" alt="Build Status">
+    <img src="https://app.travis-ci.com/quilljs/quill.svg?branch=develop" alt="Build Status">
   </a>
   <a href="https://npmjs.com/package/quill" title="Version">
     <img src="https://img.shields.io/npm/v/quill.svg" alt="Version">
@@ -38,14 +38,13 @@ Note: This branch and README covers the upcoming 2.0 release. View [1.x docs her
 
 To get started, check out [https://quilljs.com/](https://quilljs.com/) for documentation, guides, and live demos!
 
-
 ## Quickstart
 
 Instantiate a new Quill object with a css selector for the div that should become the editor.
 
 ```html
 <!-- Include Quill stylesheet -->
-<link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
+<link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
 
 <!-- Create the toolbar container -->
 <div id="toolbar">
@@ -65,19 +64,17 @@ Instantiate a new Quill object with a css selector for the div that should becom
 <script>
   var editor = new Quill('#editor', {
     modules: { toolbar: '#toolbar' },
-    theme: 'snow'
+    theme: 'snow',
   });
 </script>
 ```
 
 Take a look at the [Quill](https://quilljs.com/) website for more documentation, guides and [live playground](https://quilljs.com/playground/)!
 
-
 ## Download
 
 - [npm](https://www.npmjs.com/package/quill) - `npm install quill`
 - tar - https://github.com/quilljs/quill/releases
-
 
 ### CDN
 
@@ -87,14 +84,13 @@ Take a look at the [Quill](https://quilljs.com/) website for more documentation,
 <script src="//cdn.quilljs.com/1.0.0/quill.min.js"></script>
 
 <!-- Theme included stylesheets -->
-<link href="//cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
-<link href="//cdn.quilljs.com/1.0.0/quill.bubble.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
+<link href="//cdn.quilljs.com/1.0.0/quill.bubble.css" rel="stylesheet" />
 
 <!-- Core build with no theme, formatting, non-essential modules -->
-<link href="//cdn.quilljs.com/1.0.0/quill.core.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.0.0/quill.core.css" rel="stylesheet" />
 <script src="//cdn.quilljs.com/1.0.0/quill.core.js"></script>
-  ```
-
+```
 
 ## Community
 
@@ -104,7 +100,6 @@ Get help or stay up to date.
 - Follow [@jhchen](https://twitter.com/jhchen) and [@quilljs](https://twitter.com/quilljs) on Twitter
 - Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/quill)
 - If privacy is required, email support@quilljs.com
-
 
 ## License
 
