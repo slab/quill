@@ -10,8 +10,9 @@ class Formula extends Embed {
     }
     const node = super.create(value);
     if (typeof value === 'string') {
-      if (USE_ASCII_MATHS) value = this.asciiMathsParser.parse(value);
-      window.katex.render(value, node, {
+      let laTexValue = value;
+      if (USE_ASCII_MATHS) laTexValue = this.asciiMathsParser.parse(value);
+      window.katex.render(laTexValue, node, {
         throwOnError: false,
         errorColor: '#f00',
       });
