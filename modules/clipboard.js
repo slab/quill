@@ -475,8 +475,9 @@ function matchStyles(node, delta) {
     formats.strike = true;
   }
   if (
-    style.fontWeight.startsWith('bold') ||
-    parseInt(style.fontWeight, 10) >= 700
+    style.fontWeight &&
+    (style.fontWeight.startsWith('bold') ||
+    parseInt(style.fontWeight, 10) >= 700)
   ) {
     formats.bold = true;
   }
