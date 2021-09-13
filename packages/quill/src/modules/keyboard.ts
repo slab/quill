@@ -173,6 +173,13 @@ class Keyboard extends Module<KeyboardOptions> {
   listen() {
     this.quill.root.addEventListener('keydown', (evt) => {
       if (evt.defaultPrevented || evt.isComposing) return;
+
+      // evt.isComposing is false when pressing Enter/Backspace when composing in Safari
+      // https://bugs.webkit.org/show_bug.cgi?id=165004
+      const isComposing =
+        evt.keyCode === 229 && (evt.key === 'Enter' || evt.key === 'Backspace');
+      if (isComposing) return;
+
       const bindings = (this.bindings[evt.key] || []).concat(
         this.bindings[evt.which] || [],
       );
