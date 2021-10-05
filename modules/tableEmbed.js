@@ -8,7 +8,7 @@ const parseCellIdentity = identity => {
 
 const stringifyCellIdentity = (row, column) => `${row + 1}:${column + 1}`;
 
-const composePosition = (delta, index) => {
+export const composePosition = (delta, index) => {
   let newIndex = index;
   const thisIter = Delta.Op.iterator(delta.ops);
   let offset = 0;
