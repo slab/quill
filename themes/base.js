@@ -29,6 +29,7 @@ const SIZES = [ 'small', false, 'large', 'huge' ];
 class BaseTheme extends Theme {
   constructor(quill, options) {
     super(quill, options);
+    this.security = quill.security;
     let listener = (e) => {
       if (!document.body.contains(quill.root)) {
         return document.body.removeEventListener('click', listener);
@@ -64,13 +65,13 @@ class BaseTheme extends Theme {
         name = name.slice('ql-'.length);
         if (icons[name] == null) return;
         if (name === 'direction') {
-          button.innerHTML = icons[name][''] + icons[name]['rtl'];
+          button.innerHTML = this.security.blessHTML(icons[name][''] + icons[name]['rtl']);
         } else if (typeof icons[name] === 'string') {
-          button.innerHTML = icons[name];
+          button.innerHTML = this.security.blessHTML(icons[name]);
         } else {
           let value = button.value || '';
           if (value != null && icons[name][value]) {
-            button.innerHTML = icons[name][value];
+            button.innerHTML = this.security.blessHTML(icons[name][value]);
           }
         }
       });
@@ -83,13 +84,13 @@ class BaseTheme extends Theme {
         if (select.querySelector('option') == null) {
           fillSelect(select, ALIGNS);
         }
-        return new IconPicker(select, icons.align);
+        return new IconPicker(select, icons.align, this.security);
       } else if (select.classList.contains('ql-background') || select.classList.contains('ql-color')) {
         let format = select.classList.contains('ql-background') ? 'background' : 'color';
         if (select.querySelector('option') == null) {
           fillSelect(select, COLORS, format === 'background' ? '#ffffff' : '#000000');
         }
-        return new ColorPicker(select, icons[format]);
+        return new ColorPicker(select, icons[format], this.security);
       } else {
         if (select.querySelector('option') == null) {
           if (select.classList.contains('ql-font')) {
@@ -100,7 +101,7 @@ class BaseTheme extends Theme {
             fillSelect(select, SIZES);
           }
         }
-        return new Picker(select);
+        return new Picker(select, this.security);
       }
     });
     let update = () => {

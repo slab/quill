@@ -8,8 +8,9 @@ function toggleAriaAttribute(element, attribute) {
 }
 
 class Picker {
-  constructor(select) {
+  constructor(select, security) {
     this.select = select;
+    this.security = security;
     this.container = document.createElement('span');
     this.buildPicker();
     this.select.style.display = 'none';
@@ -81,7 +82,7 @@ class Picker {
   buildLabel() {
     let label = document.createElement('span');
     label.classList.add('ql-picker-label');
-    label.innerHTML = DropdownIcon;
+    label.innerHTML = this.security.blessHTML(DropdownIcon);
     label.tabIndex = '0';
     label.setAttribute('role', 'button');
     label.setAttribute('aria-expanded', 'false');

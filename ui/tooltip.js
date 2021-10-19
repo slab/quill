@@ -3,7 +3,7 @@ class Tooltip {
     this.quill = quill;
     this.boundsContainer = boundsContainer || document.body;
     this.root = quill.addContainer('ql-tooltip');
-    this.root.innerHTML = this.constructor.TEMPLATE;
+    this.root.innerHTML = quill.security.blessHTML(this.constructor.TEMPLATE);
     if (this.quill.root === this.quill.scrollingContainer) {
       this.quill.root.addEventListener('scroll', () => {
         this.root.style.marginTop = (-1*this.quill.root.scrollTop) + 'px';

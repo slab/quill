@@ -2,9 +2,9 @@ import Picker from './picker';
 
 
 class ColorPicker extends Picker {
-  constructor(select, label) {
+  constructor(select, label, security) {
     super(select);
-    this.label.innerHTML = label;
+    this.label.innerHTML = security.blessHTML(label);
     this.container.classList.add('ql-color-picker');
     [].slice.call(this.container.querySelectorAll('.ql-picker-item'), 0, 7).forEach(function(item) {
       item.classList.add('ql-primary');

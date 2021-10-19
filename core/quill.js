@@ -8,6 +8,7 @@ import Selection, { Range } from './selection';
 import extend from 'extend';
 import logger from './logger';
 import Theme from './theme';
+import Security from './security';
 
 let debug = logger('quill');
 
@@ -57,6 +58,7 @@ class Quill {
   }
 
   constructor(container, options = {}) {
+    this.security = new Security();
     this.options = expandConfig(container, options);
     this.container = this.options.container;
     if (this.container == null) {
@@ -67,7 +69,7 @@ class Quill {
     }
     let html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
-    this.container.innerHTML = '';
+    this.container.textContent = '';
     this.container.__quill = this;
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
