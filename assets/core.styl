@@ -93,7 +93,7 @@ resets(arr)
       color: #777
 
   li[data-list=bullet] > .ql-ui:before
-    content: '\2022'
+    content: counter(list-0, disc)
   li[data-list=checked] > .ql-ui:before
     content: '\2611'
   li[data-list=unchecked] > .ql-ui:before
