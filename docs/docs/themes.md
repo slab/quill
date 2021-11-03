@@ -21,7 +21,7 @@ redirect_from:
 </style>
 <!-- head -->
 
-Themes allow you to easily make your editor look good with minimal effort. Quill features two offically supported themes: [Snow](#snow) and [Bubble](#bubble).
+Themes allow you to easily make your editor look good with minimal effort. Quill features two officially supported themes: [Snow](#snow) and [Bubble](#bubble).
 
 ### Usage
 
