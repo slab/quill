@@ -36,7 +36,7 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.5.0",
-    "parchment": "2.0.0-dev.2",
+    "parchment": "2.0.0-dev.3",
     "quill-delta": "github:quilljs/delta#87cd1e6de795eb29abe79a29429ca3b126dc9031"
   },
   "devDependencies": {

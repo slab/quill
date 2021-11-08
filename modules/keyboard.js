@@ -111,13 +111,13 @@ class Keyboard extends Module {
   listen() {
     this.quill.root.addEventListener('keydown', evt => {
       if (evt.defaultPrevented || evt.isComposing) return;
-      const blot = this.quill.scroll.find(evt.target, true);
-      if (blot && blot.scroll !== this.quill.scroll) return;
       const bindings = (this.bindings[evt.key] || []).concat(
         this.bindings[evt.which] || [],
       );
       const matches = bindings.filter(binding => Keyboard.match(evt, binding));
       if (matches.length === 0) return;
+      const blot = Quill.find(evt.target, true);
+      if (blot && blot.scroll !== this.quill.scroll) return;
       const range = this.quill.getSelection();
       if (range == null || !this.quill.hasFocus()) return;
       const [line, offset] = this.quill.getLine(range.index);

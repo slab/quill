@@ -13,19 +13,6 @@ class Range {
   }
 }
 
-function getBlotInScroll(node, scroll) {
-  let current = node;
-  while (current) {
-    const blot = scroll.find(current, true);
-    const currentScroll = blot && blot.scroll;
-    if (currentScroll === scroll) {
-      return blot;
-    }
-    current = currentScroll && currentScroll.domNode.parentElement;
-  }
-  return null;
-}
-
 class Selection {
   constructor(scroll, emitter) {
     this.emitter = emitter;
@@ -219,7 +206,7 @@ class Selection {
     }
     const indexes = positions.map(position => {
       const [node, offset] = position;
-      const blot = getBlotInScroll(node, this.scroll);
+      const blot = this.scroll.find(node, true);
       const index = blot.offset(this.scroll);
       if (offset === 0) {
         return index;
