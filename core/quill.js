@@ -23,8 +23,8 @@ class Quill {
     logger.level(limit);
   }
 
-  static find(node) {
-    return instances.get(node) || globalRegistry.find(node);
+  static find(node, bubble = false) {
+    return instances.get(node) || globalRegistry.find(node, bubble);
   }
 
   static import(name) {
