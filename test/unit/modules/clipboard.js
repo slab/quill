@@ -168,6 +168,30 @@ describe('Clipboard', function () {
       );
     });
 
+    it('newlines between inline elements', function () {
+      const html = '<span>foo</span>\n<span>bar</span>';
+      const delta = this.clipboard.convert({ html });
+      expect(delta).toEqual(new Delta().insert('foo bar'));
+    });
+
+    it('multiple newlines between inline elements', function () {
+      const html = '<span>foo</span>\n\n\n\n<span>bar</span>';
+      const delta = this.clipboard.convert({ html });
+      expect(delta).toEqual(new Delta().insert('foo bar'));
+    });
+
+    it('newlines between block elements', function () {
+      const html = '<p>foo</p>\n<p>bar</p>';
+      const delta = this.clipboard.convert({ html });
+      expect(delta).toEqual(new Delta().insert('foo\nbar'));
+    });
+
+    it('multiple newlines between block elements', function () {
+      const html = '<p>foo</p>\n\n\n\n<p>bar</p>';
+      const delta = this.clipboard.convert({ html });
+      expect(delta).toEqual(new Delta().insert('foo\nbar'));
+    });
+
     it('break', function () {
       const html =
         '<div>0<br>1</div><div>2<br></div><div>3</div><div><br>4</div><div><br></div><div>5</div>';

@@ -325,6 +325,15 @@ function isLine(node: Element) {
   ].includes(node.tagName.toLowerCase());
 }
 
+function isBetweenInlineElements(node) {
+  return (
+    node.previousSibling &&
+    node.nextSibling &&
+    !isLine(node.previousSibling) &&
+    !isLine(node.nextSibling)
+  );
+}
+
 const preNodes = new WeakMap();
 function isPre(node: Node) {
   if (node == null) return false;
@@ -562,7 +571,11 @@ function matchText(node, delta) {
     return delta.insert(text.trim());
   }
   if (!isPre(node)) {
-    if (text.trim().length === 0 && text.includes('\n')) {
+    if (
+      text.trim().length === 0 &&
+      text.includes('\n') &&
+      !isBetweenInlineElements(node)
+    ) {
       return delta;
     }
     const replacer = (collapse, match) => {
