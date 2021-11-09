@@ -229,6 +229,30 @@ describe('Clipboard', () => {
       );
     });
 
+    test('newlines between inline elements', () => {
+      const html = '<span>foo</span>\n<span>bar</span>';
+      const delta = createClipboard().convert({ html });
+      expect(delta).toEqual(new Delta().insert('foo bar'));
+    });
+
+    test('multiple newlines between inline elements', () => {
+      const html = '<span>foo</span>\n\n\n\n<span>bar</span>';
+      const delta = createClipboard().convert({ html });
+      expect(delta).toEqual(new Delta().insert('foo bar'));
+    });
+
+    test('newlines between block elements', () => {
+      const html = '<p>foo</p>\n<p>bar</p>';
+      const delta = createClipboard().convert({ html });
+      expect(delta).toEqual(new Delta().insert('foo\nbar'));
+    });
+
+    test('multiple newlines between block elements', () => {
+      const html = '<p>foo</p>\n\n\n\n<p>bar</p>';
+      const delta = createClipboard().convert({ html });
+      expect(delta).toEqual(new Delta().insert('foo\nbar'));
+    });
+
     test('break', () => {
       const html =
         '<div>0<br>1</div><div>2<br></div><div>3</div><div><br>4</div><div><br></div><div>5</div>';

@@ -1,5 +1,7 @@
 # [Unreleased]
 
+- **Clipboard** Convert newlines between inline elements to a space.
+
 # 2.0.0-beta.2
 
 - Fix IME not working correctly in Safari.
