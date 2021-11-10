@@ -285,8 +285,10 @@ function deltaEndsWith(delta: Delta, text: string) {
   return endText.slice(-1 * text.length) === text;
 }
 
-function isLine(node: Element) {
-  if (node.childNodes.length === 0) return false; // Exclude embed blocks
+function isLine(node: Element, scroll: ScrollBlot) {
+  if (node.nodeType !== Node.ELEMENT_NODE) return false;
+  const match: any = scroll.query(node);
+  if (match && match.prototype instanceof EmbedBlot) return false;
   return [
     'address',
     'article',
@@ -494,14 +496,14 @@ function matchList(node: Node, delta: Delta) {
 function matchNewline(node: Node, delta: Delta, scroll: ScrollBlot) {
   if (!deltaEndsWith(delta, '\n')) {
     // @ts-expect-error
-    if (isLine(node)) {
+    if (isLine(node, scroll)) {
       return delta.insert('\n');
     }
     if (delta.length() > 0 && node.nextSibling) {
       let { nextSibling } = node;
       while (nextSibling != null) {
         // @ts-expect-error
-        if (isLine(nextSibling)) {
+        if (isLine(nextSibling, scroll)) {
           return delta.insert('\n');
         }
         const match = scroll.query(nextSibling);
@@ -555,7 +557,7 @@ function matchTable(node, delta) {
   return applyFormat(delta, 'table', row);
 }
 
-function matchText(node, delta) {
+function matchText(node, delta, scroll) {
   let text = node.data;
   // Word represents empty line with <o:p>&nbsp;</o:p>
   if (node.parentNode.tagName === 'O:P') {
@@ -572,14 +574,14 @@ function matchText(node, delta) {
     text = text.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
     text = text.replace(/\s\s+/g, replacer.bind(replacer, true)); // collapse whitespace
     if (
-      (node.previousSibling == null && isLine(node.parentNode)) ||
-      (node.previousSibling != null && isLine(node.previousSibling))
+      (node.previousSibling == null && isLine(node.parentNode, scroll)) ||
+      (node.previousSibling != null && isLine(node.previousSibling, scroll))
     ) {
       text = text.replace(/^\s+/, replacer.bind(replacer, false));
     }
     if (
-      (node.nextSibling == null && isLine(node.parentNode)) ||
-      (node.nextSibling != null && isLine(node.nextSibling))
+      (node.nextSibling == null && isLine(node.parentNode, scroll)) ||
+      (node.nextSibling != null && isLine(node.nextSibling, scroll))
     ) {
       text = text.replace(/\s+$/, replacer.bind(replacer, false));
     }

@@ -168,6 +168,18 @@ describe('Clipboard', function () {
       );
     });
 
+    it('space between empty paragraphs', function () {
+      const html = '<p></p> <p></p>';
+      const delta = this.clipboard.convert({ html });
+      expect(delta).toEqual(new Delta().insert('\n'));
+    });
+
+    it('newline between empty paragraphs', function () {
+      const html = '<p></p>\n<p></p>';
+      const delta = this.clipboard.convert({ html });
+      expect(delta).toEqual(new Delta().insert('\n'));
+    });
+
     it('break', function () {
       const html =
         '<div>0<br>1</div><div>2<br></div><div>3</div><div><br>4</div><div><br></div><div>5</div>';
