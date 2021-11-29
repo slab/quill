@@ -152,6 +152,14 @@ class Selection {
     let side = 'left';
     let rect;
     if (node instanceof Text) {
+      // Return null if the text node is empty because it is
+      // not able to get a useful client rect:
+      // https://github.com/w3c/csswg-drafts/issues/2514.
+      // Empty text nodes are most likely caused by TextBlot#optimize()
+      // not getting called when editor content changes.
+      if (!node.data.length) {
+        return null;
+      }
       if (offset < node.data.length) {
         range.setStart(node, offset);
         range.setEnd(node, offset + 1);

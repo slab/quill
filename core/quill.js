@@ -265,6 +265,7 @@ class Quill {
     } else {
       bounds = this.selection.getBounds(index.index, index.length);
     }
+    if (!bounds) return null;
     const containerBounds = this.container.getBoundingClientRect();
     return {
       bottom: bounds.bottom - containerBounds.top,
