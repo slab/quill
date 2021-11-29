@@ -3,10 +3,10 @@ name: CI
 on:
   push:
     branches:
-      - develop
+      - main
   pull_request:
     branches:
-      - develop
+      - main
 
 env:
   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
@@ -16,11 +16,19 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        browser: ["mac-chrome-latest","mac-firefox-latest","mac-safari-latest","windows-chrome-latest","windows-firefox-latest","windows-edge-latest","ios-latest"]
+        browser:
+          [
+            'mac-chrome-latest',
+            'mac-firefox-latest',
+            'mac-safari-latest',
+            'windows-chrome-latest',
+            'windows-firefox-latest',
+            'windows-edge-latest',
+            'ios-latest',
+          ]
     name: Build and Test
     runs-on: [ubuntu-latest]
     steps:
-
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.6.0
         with:
@@ -32,7 +40,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: '14.x'
 
       - name: Cache node modules
         uses: actions/cache@v2
