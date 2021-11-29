@@ -3,7 +3,7 @@ name: Deploy
 on:
   workflow_run:
     workflows: ['CI']
-    branches: [develop]
+    branches: [main]
     types:
       - completed
 
@@ -15,7 +15,6 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: [ubuntu-latest]
     steps:
-
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.6.0
         with:
@@ -27,7 +26,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: '14.x'
 
       - name: Set GitHub packages registry
         run: |
@@ -46,7 +45,7 @@ jobs:
         run: npm ci
 
       - name: Deploy
-        if: contains(github.ref, 'refs/heads/develop')
+        if: contains(github.ref, 'refs/heads/main')
         run: |
           npm run build
           npm run semantic-release
