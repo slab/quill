@@ -99,11 +99,13 @@ resets(arr)
   li[data-list=unchecked] > .ql-ui:before
     content: '\2610'
 
-  li[data-list=ordered]
+  li[data-list]
     @supports (counter-set: none)
       counter-set: resets(1..MAX_INDENT)
     @supports not (counter-set: none)
       counter-reset: resets(1..MAX_INDENT)
+
+  li[data-list=ordered]
     counter-increment: list-0
     > .ql-ui:before
       content: unquote('counter(list-0, ' + LIST_STYLE[0] + ')') '. '
@@ -113,7 +115,7 @@ resets(arr)
       > .ql-ui:before
         content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
     if (num < MAX_INDENT)
-      li[data-list=ordered].ql-indent-{num}
+      li[data-list].ql-indent-{num}
         @supports (counter-set: none)
           counter-set: resets((num+1)..MAX_INDENT)
         @supports not (counter-set: none)
