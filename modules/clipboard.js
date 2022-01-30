@@ -154,7 +154,6 @@ class Clipboard extends Module {
     const files = Array.from(e.clipboardData.files || []);
     if (!html && files.length > 0) {
       this.quill.uploader.upload(range, files);
-      return;
     } else if (html && files.length > 0) {
       const doc = new DOMParser().parseFromString(html, 'text/html');
       if (

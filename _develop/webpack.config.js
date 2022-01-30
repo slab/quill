@@ -30,32 +30,17 @@ const source = [
   return path.resolve(__dirname, '..', file);
 });
 
+//yswang modify to package as es5
 const jsRules = {
   test: /\.js$/,
   include: source,
   use: [
-    {
-      loader: 'babel-loader',
-      options: {
-        presets: [
-          [
-            '@babel/env',
-            {
-              targets: {
-                browsers: [
-                  'last 2 Chrome major versions',
-                  'last 2 Firefox major versions',
-                  'last 2 Safari major versions',
-                  'last 2 Edge major versions',
-                  'last 2 iOS major versions',
-                  'last 2 ChromeAndroid major versions',
-                ],
-              },
-            },
-          ],
-        ],
+      {
+          loader: 'babel-loader',
+          options: {
+              presets: ['@babel/preset-env']
+          },
       },
-    },
   ],
 };
 
@@ -78,21 +63,22 @@ const stylRules = {
   use: [MiniCssExtractPlugin.loader, 'css-loader', 'stylus-loader'],
 };
 
+//yswang modify to package as es5
 const tsRules = {
   test: /\.ts$/,
   use: [
-    {
-      loader: 'ts-loader',
-      options: {
-        compilerOptions: {
-          declaration: false,
-          module: 'es6',
-          sourceMap: true,
-          target: 'es6',
-        },
-        transpileOnly: true,
+      {
+          loader: 'ts-loader',
+          options: {
+              compilerOptions: {
+              declaration: false,
+              module: 'es6',
+              sourceMap: true,
+              target: 'es5',
+              },
+              transpileOnly: true,
+          },
       },
-    },
   ],
 };
 
