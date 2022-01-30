@@ -1,3 +1,7 @@
+# 2.0.0-dev5-yswang
+
+modify package as ES5.
+
 # 2.0.0
 
 In progress. Please see the [Upgrading to 2.0](http://quilljs.com/guides/upgrading-to-2-0/) guide.
