@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example 1</title>
+
+    <link rel="stylesheet" href="../dist/quill.snow.css">
+    <script src="../dist/quill.min.js"></script>
+
+    <style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        background-color: #f3f5f7;
+    }
+
+    .ql-toolbar {
+        position: fixed;
+        width: 100%;
+        z-index: 100;
+        background-color: #fff;
+        padding: 8px !important;
+        border-bottom: 1px solid #ddd;
+    }
+    #editor {
+        padding: 60px 0 30px 0;
+    }
+    .ql-editor {
+        margin-left: auto;
+        margin-right: auto;
+        width: 800px;
+        padding: 60px;
+        background-color: #fff;
+        box-shadow: 0 0 0 1px rgba(16,22,26,.1),0 1px 1px rgba(16,22,26,.2),0 2px 6px rgba(16,22,26,.2);
+    }
+    .ql-formats {
+        background-color: #f5f8fa;
+        border-radius: 3px;
+        padding: 2px !important;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="editor">
+        <h1>Apache ECharts 5.3.0 发布，增强动画表达力、渲染性能、服务端渲染</h1>
+        <p>在之前 ECharts 的动画集中在图形添加、更新以及移除的过渡动画上，过渡动画往往只有开始状态和结束状态。</p>
+        <p>为了表达更复杂的动画效果，我们 5.3.0 中为自定义系列和图形组件引入了全新的关键帧动画。</p>
+    </div>
+    
+
+    <script>
+        var editor = new Quill('#editor', {
+            modules: {
+                toolbar: {
+                    container: [
+                        [{ 'font': [] }], //字体
+                        [{ 'size': ['small', false, 'large', 'huge'] }], // 字体大小
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }], //几级标题
+                        ['bold', 'italic', 'underline', 'strike'], //加粗，斜体，下划线，删除线
+                        [{ 'script': 'sub'}, { 'script': 'super' }], // 上下标
+                        [{ 'align': [] }], //对齐方式
+                        [{ 'color': [] }, { 'background': [] }], // 字体颜色，字体背景颜色
+                        //[{ 'header': 1 }, { 'header': 2 }], // 标题，键值对的形式；1、2表示字体大小
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }], //列表
+                        [{ 'indent': '-1'}, { 'indent': '+1' }], // 缩进
+                        ['link', 'blockquote', 'code', 'code-block'], //引用，代码块
+                        [{ 'direction': 'rtl' }], // 文本方向
+                        ['image','video', 'table', 'divider'], //上传图片、上传视频
+                        ['clean'] //清除字体样式
+                    ]
+                }
+            },
+            theme: 'snow',
+        });
+    </script>
+</body>
+</html>
