@@ -30,6 +30,8 @@ import videoIcon from '../assets/icons/video.svg';
 
 // yswang add
 import dividerIcon from '../assets/icons/divider.svg';
+import undoIcon from '../assets/icons/undo.svg';
+import redoIcon from '../assets/icons/redo.svg';
 
 export default {
   align: {
@@ -76,4 +78,6 @@ export default {
   video: videoIcon,
   // yswang add
   divider: dividerIcon,
+  undo: undoIcon,
+  redo: redoIcon,
 };

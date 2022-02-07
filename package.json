@@ -13,6 +13,8 @@
     "modules",
     "themes",
     "ui",
+    "myformats",
+    "mymodules",
     "dist/quill.bubble.css",
     "dist/quill.snow.css",
     "dist/quill.core.css",

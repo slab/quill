@@ -27,6 +27,7 @@ const source = [
   'themes',
   'ui',
   'myformats', // yswang add
+  'mymodules', // yswang add
 ].map(file => {
   return path.resolve(__dirname, '..', file);
 });

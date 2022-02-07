@@ -58,6 +58,7 @@
             modules: {
                 toolbar: {
                     container: [
+                        ['undo', 'redo'],
                         [{ 'font': [] }], //字体
                         [{ 'size': ['small', false, 'large', 'huge'] }], // 字体大小
                         [{ 'header': [1, 2, 3, 4, 5, 6, false] }], //几级标题
@@ -72,11 +73,26 @@
                         [{ 'direction': 'rtl' }], // 文本方向
                         ['image','video', 'table', 'divider'], //上传图片、上传视频
                         ['clean'] //清除字体样式
-                    ]
+                    ],
+                    handlers: {
+                        'undo': function() {
+                            this.quill.history.undo();
+                        },
+                        'redo': function() {
+                            this.quill.history.redo();
+                        },
+                        'divider': function() {
+                            var range = this.quill.getSelection(true);
+                            // this.quill.insertText(range.index, '\n', Quill.sources.USER)
+                            this.quill.insertEmbed(range.index, 'divider', true, Quill.sources.USER);
+                            this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+                        }
+                    }
                 }
             },
-            theme: 'snow',
+            theme: 'snow'
         });
+
     </script>
 </body>
 </html>

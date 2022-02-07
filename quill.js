@@ -30,9 +30,6 @@ import Video from './formats/video';
 
 import CodeBlock, { Code as InlineCode } from './formats/code';
 
-// yswang add
-import Divider from './myformats/divider';
-
 import Syntax from './modules/syntax';
 import Table from './modules/table';
 import Toolbar from './modules/toolbar';
@@ -45,6 +42,14 @@ import Tooltip from './ui/tooltip';
 
 import BubbleTheme from './themes/bubble';
 import SnowTheme from './themes/snow';
+
+// yswang add
+import Divider from './myformats/divider';
+import Undo from './myformats/undo';
+import Redo from './myformats/redo';
+import DividerModule from './mymodules/divider';
+import UndoRedo from './mymodules/undoRedo';
+
 
 Quill.register(
   {
@@ -69,14 +74,17 @@ Quill.register(
 
 Quill.register(
   {
-    'formats/align': AlignClass,
+    // yswang AlignClass -> AlignStyle
+    'formats/align': AlignStyle,
     'formats/direction': DirectionClass,
     'formats/indent': Indent,
 
     'formats/background': BackgroundStyle,
     'formats/color': ColorStyle,
-    'formats/font': FontClass,
-    'formats/size': SizeClass,
+    // yswang FontClass -> FontStyle
+    'formats/font': FontStyle,
+    // yswang SizeClass -> SizeStyle
+    'formats/size': SizeStyle,
 
     'formats/blockquote': Blockquote,
     'formats/code-block': CodeBlock,
@@ -95,9 +103,6 @@ Quill.register(
     'formats/image': Image,
     'formats/video': Video,
 
-    // yswang add
-    'formats/divider': Divider,
-
     'modules/syntax': Syntax,
     'modules/table': Table,
     'modules/toolbar': Toolbar,
@@ -110,8 +115,17 @@ Quill.register(
     'ui/icon-picker': IconPicker,
     'ui/color-picker': ColorPicker,
     'ui/tooltip': Tooltip,
+
+    // yswang add ----
+    'formats/divider': Divider,
+    'formats/undo': Undo,
+    'formats/redo': Redo,
+    'modules/divider': DividerModule,
+    'modules/undoRedo': UndoRedo,
+    // yswang ----
+
   },
-  true,
+  true
 );
 
 export default Quill;
