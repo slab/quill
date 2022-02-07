@@ -8,8 +8,16 @@ colorItemMargin = 2px
 colorItemSize = 16px
 colorItemsPerRow = 7
 
+toolbtnHoverBgColor = #E1E8ED
+toolbtnActiveBgColor = #CED9E0
+
 
 .ql-{themeName}.ql-toolbar, .ql-{themeName} .ql-toolbar
+  display: flex
+  align-items: center
+  flex-wrap: wrap
+  flex-direction: row
+  justify-content: center
   &:after
     clear: both
     content: ''
@@ -19,15 +27,21 @@ colorItemsPerRow = 7
     background: none
     border: none
     cursor: pointer
-    display: inline-block
-    float: left
-    height: controlHeight
-    padding: inputPaddingHeight inputPaddingWidth
-    width: controlHeight + (inputPaddingWidth - inputPaddingHeight)*2
+    box-sizing: border-box
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-shrink: 0
+    min-width: 20px
+    min-height: 20px
+    padding: 2px
+    margin-left: 2px
+    margin-right: 2px
+    border-radius: 3px
 
     svg
-      float: left
-      height: 100%
+      height: 20px
+      width: 20px
 
     &:active:hover
       outline: none
@@ -35,10 +49,16 @@ colorItemsPerRow = 7
   input.ql-image[type=file]
     display: none
 
-  button:hover, button:focus, button.ql-active,
-  .ql-picker-label:hover, .ql-picker-label.ql-active,
-  .ql-picker-item:hover, .ql-picker-item.ql-selected
-    color: activeColor
+  button:hover, 
+  button:focus,
+  .ql-picker-label:hover,
+  .ql-picker-item:hover
+    background-color: toolbtnHoverBgColor
+
+  button.ql-active,
+  .ql-picker-label.ql-active,
+  .ql-picker-item.ql-selected
+    background-color: toolbtnActiveBgColor
     .ql-fill, .ql-stroke.ql-fill
       fill: activeColor
     .ql-stroke, .ql-stroke-miter
@@ -78,8 +98,12 @@ colorItemsPerRow = 7
       clear: both
       content: ''
       display: table
-    display: inline-block
-    vertical-align: middle
+    display: flex
+    align-items: center
+    flex-wrap: nowrap
+    padding: 0
+    margin-left: 3px
+    margin-right: 3px
 
   .ql-stroke
     fill: none
@@ -129,6 +153,8 @@ colorItemsPerRow = 7
       font-size: 0.67em
     a
       text-decoration: underline
+    p
+      line-height: 1.5
     blockquote
       border-left: 4px solid #ccc
       margin-bottom: 5px
@@ -150,27 +176,42 @@ colorItemsPerRow = 7
       overflow: visible
     img
       max-width: 100%
+      border: 0 none
 
   .ql-picker
+    border-radius: 3px
     color: inactiveColor
-    display: inline-block
-    float: left
-    font-size: 14px
-    font-weight: 500
-    height: controlHeight
+    font-size: inherit
+    font-weight: 200
     position: relative
-    vertical-align: middle
+    margin-left: 2px
+    margin-right: 2px
+    -moz-user-select: none
+    -ms-user-select: none
+    user-select: none
   .ql-picker-label
+    border-radius: 3px
     cursor: pointer
-    display: inline-block
-    height: 100%
-    padding-left: 8px
-    padding-right: 2px
+    display: flex
+    align-items: center
+    justify-content: center
+    min-width: 20px
+    min-height: 20px
+    padding: 2px
     position: relative
-    width: 100%
+    -moz-user-select: none
+    -ms-user-select: none
+    user-select: none
     &::before
-      display: inline-block
-      line-height: 22px
+      display: block
+      text-align: left
+      line-height: 20px
+    
+    svg {
+      width: 20px
+      height: 20px
+    }
+  
   .ql-picker-options
     background-color: backgroundColor
     display: none
@@ -197,12 +238,11 @@ colorItemsPerRow = 7
       top: 100%
       z-index: 1
 
-  .ql-color-picker, .ql-icon-picker
-    width: controlHeight + 4
+  .ql-color-picker, 
+  .ql-icon-picker
     .ql-picker-label
-      padding: 2px 4px
-      svg
-        right: 4px
+      padding: 2px
+  
   .ql-icon-picker
     .ql-picker-options
       padding: 4px 0px
@@ -228,7 +268,7 @@ colorItemsPerRow = 7
       margin-top: -9px
       right: 0
       top: 50%
-      width: 18px
+      width: 16px
 
   .ql-picker.ql-header, .ql-picker.ql-font, .ql-picker.ql-size
     .ql-picker-label[data-label]:not([data-label='']),

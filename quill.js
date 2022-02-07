@@ -30,6 +30,9 @@ import Video from './formats/video';
 
 import CodeBlock, { Code as InlineCode } from './formats/code';
 
+// yswang add
+import Divider from './myformats/divider';
+
 import Syntax from './modules/syntax';
 import Table from './modules/table';
 import Toolbar from './modules/toolbar';
@@ -91,6 +94,9 @@ Quill.register(
     'formats/formula': Formula,
     'formats/image': Image,
     'formats/video': Video,
+
+    // yswang add
+    'formats/divider': Divider,
 
     'modules/syntax': Syntax,
     'modules/table': Table,

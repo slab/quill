@@ -12,9 +12,8 @@ resets(arr)
 .ql-container
   box-sizing: border-box
   font-family: Helvetica, Arial, sans-serif
-  font-size: 13px
-  height: 100%
-  margin: 0px
+  font-size: 14px
+  margin: 0
   position: relative
 
 .ql-container.ql-disabled
@@ -40,11 +39,8 @@ resets(arr)
 .ql-editor
   box-sizing: border-box
   counter-reset: resets(0..MAX_INDENT)
-  line-height: 1.42
-  height: 100%
+  line-height: 1.5
   outline: none
-  overflow-y: auto
-  padding: 12px 15px
   tab-size: 4
   -moz-tab-size: 4
   text-align: left
@@ -55,16 +51,20 @@ resets(arr)
 
   p, ol, pre, blockquote, h1, h2, h3, h4, h5, h6
     margin: 0
+    margin-bottom: 20px
     padding: 0
   p, h1, h2, h3, h4, h5, h6
     @supports (counter-set: none)
       counter-set: resets(0..MAX_INDENT)
     @supports not (counter-set: none)
       counter-reset: resets(0..MAX_INDENT)
+  p
+    line-height: 1.5
   table
     border-collapse: collapse
+    margin-bottom: 20px
   td
-    border: 1px solid #000
+    border: 1px solid #666
     padding: 2px 5px
   ol
     padding-left: 1.5em

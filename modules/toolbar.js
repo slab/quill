@@ -164,7 +164,8 @@ function addControls(container, groups) {
     groups = [groups];
   }
   groups.forEach(controls => {
-    const group = document.createElement('span');
+    // yswang: span->div
+    const group = document.createElement('div');
     group.classList.add('ql-formats');
     controls.forEach(control => {
       if (typeof control === 'string') {

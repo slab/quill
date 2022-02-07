@@ -26,6 +26,7 @@ const source = [
   'test',
   'themes',
   'ui',
+  'myformats', // yswang add
 ].map(file => {
   return path.resolve(__dirname, '..', file);
 });

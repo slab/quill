@@ -1,11 +1,1 @@
-<svg viewbox="0 0 18 18">
-  <rect class="ql-stroke" height="12" width="12" x="3" y="3"></rect>
-  <rect class="ql-fill" height="2" width="3" x="5" y="5"></rect>
-  <rect class="ql-fill" height="2" width="4" x="9" y="5"></rect>
-  <g class="ql-fill ql-transparent">
-    <rect height="2" width="3" x="5" y="8"></rect>
-    <rect height="2" width="4" x="9" y="8"></rect>
-    <rect height="2" width="3" x="5" y="11"></rect>
-    <rect height="2" width="4" x="9" y="11"></rect>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.875 5.583c.253 0 .458.206.458.459v11.916a.458.458 0 0 1-.458.459H5.125a.458.458 0 0 1-.458-.459V6.042c0-.253.205-.459.458-.459h13.75zM9.25 14.776H5.857l.001 2.449H9.25v-2.45zm8.892 0h-7.746v2.449h7.746v-2.45zM9.25 10.854H5.857v2.776H9.25v-2.776zm8.892 0h-7.746v2.776h7.746v-2.776zM9.25 6.774l-3.392.001v2.933H9.25V6.774zm8.892.001h-7.746v2.933h7.746V6.775z" fill="#464D5A" fill-rule="nonzero"/></svg>

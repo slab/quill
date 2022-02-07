@@ -12,7 +12,8 @@ function toggleAriaAttribute(element, attribute) {
 class Picker {
   constructor(select) {
     this.select = select;
-    this.container = document.createElement('span');
+    // yswang: span->div
+    this.container = document.createElement('div');
     this.buildPicker();
     this.select.style.display = 'none';
     this.select.parentNode.insertBefore(this.container, this.select);
@@ -44,7 +45,8 @@ class Picker {
 
   buildItem(option) {
     const item = document.createElement('span');
-    item.tabIndex = '0';
+    // yswang: no tabindex
+    // item.tabIndex = '0';
     item.setAttribute('role', 'button');
     item.classList.add('ql-picker-item');
     if (option.hasAttribute('value')) {
@@ -74,10 +76,12 @@ class Picker {
   }
 
   buildLabel() {
-    const label = document.createElement('span');
+    // yswang: span->div
+    const label = document.createElement('div');
     label.classList.add('ql-picker-label');
     label.innerHTML = DropdownIcon;
-    label.tabIndex = '0';
+    // yswang: no tabindex
+    // label.tabIndex = '0';
     label.setAttribute('role', 'button');
     label.setAttribute('aria-expanded', 'false');
     this.container.appendChild(label);
@@ -85,12 +89,13 @@ class Picker {
   }
 
   buildOptions() {
-    const options = document.createElement('span');
+    // yswang: span->div
+    const options = document.createElement('div');
     options.classList.add('ql-picker-options');
 
     // Don't want screen readers to read this until options are visible
     options.setAttribute('aria-hidden', 'true');
-    options.tabIndex = '-1';
+    // options.tabIndex = '-1';
 
     // Need a unique id for aria-controls
     options.id = `ql-picker-options-${optionsCounter}`;

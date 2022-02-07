@@ -1,6 +1,1 @@
-<svg viewbox="0 0 18 18">
-  <line class="ql-stroke" x1="3" x2="15" y1="14" y2="14"></line>
-  <line class="ql-stroke" x1="3" x2="15" y1="4" y2="4"></line>
-  <line class="ql-stroke" x1="9" x2="15" y1="9" y2="9"></line>
-  <polyline class="ql-fill ql-stroke" points="3 7 3 11 5 9 3 7"></polyline>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z"/><path d="M5 17v1.25h14V17H5zm11-8v6l3-3-3-3zM5 13.25v1.25h9v-1.25H5zM5 9.5v1.25h9V9.5H5zm0-3.75V7h14V5.75H5z" fill="#464D5A"/></g></svg>

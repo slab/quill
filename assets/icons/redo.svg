@@ -1,4 +1,1 @@
-<svg viewbox="0 0 18 18">
-  <polygon class="ql-fill ql-stroke" points="12 10 14 12 16 10 12 10"></polygon>
-  <path class="ql-stroke" d="M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5"></path>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="M16 8.25h-6c-2.761 0-5 1.989-5 4.75a5 5 0 0 0 5 5h7" stroke="#464D5A" stroke-width="1.25"/><path d="M15 5.372V10.9a.2.2 0 0 0 .301.173l4.423-2.599a.2.2 0 0 0 .009-.339l-4.423-2.93a.2.2 0 0 0-.31.167z" fill="#464D5A"/></g></svg>

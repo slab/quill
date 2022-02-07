@@ -28,6 +28,9 @@ import tableIcon from '../assets/icons/table.svg';
 import underlineIcon from '../assets/icons/underline.svg';
 import videoIcon from '../assets/icons/video.svg';
 
+// yswang add
+import dividerIcon from '../assets/icons/divider.svg';
+
 export default {
   align: {
     '': alignLeftIcon,
@@ -71,4 +74,6 @@ export default {
   table: tableIcon,
   underline: underlineIcon,
   video: videoIcon,
+  // yswang add
+  divider: dividerIcon,
 };

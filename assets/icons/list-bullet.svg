@@ -1,8 +1,1 @@
-<svg viewbox="0 0 18 18">
-  <line class="ql-stroke" x1="6" x2="15" y1="4" y2="4"></line>
-  <line class="ql-stroke" x1="6" x2="15" y1="9" y2="9"></line>
-  <line class="ql-stroke" x1="6" x2="15" y1="14" y2="14"></line>
-  <line class="ql-stroke" x1="3" x2="3" y1="4" y2="4"></line>
-  <line class="ql-stroke" x1="3" x2="3" y1="9" y2="9"></line>
-  <line class="ql-stroke" x1="3" x2="3" y1="14" y2="14"></line>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.7 16.3a.5.5 0 0 1 .5.5V18a.5.5 0 0 1-.5.5H5.5A.5.5 0 0 1 5 18v-1.2a.5.5 0 0 1 .5-.5h1.2zm13.3.45V18H9v-1.25h11zM6.7 10.9a.5.5 0 0 1 .5.5v1.2a.5.5 0 0 1-.5.5H5.5a.5.5 0 0 1-.5-.5v-1.2a.5.5 0 0 1 .5-.5h1.2zm13.3.48v1.25H9v-1.25h11zM6.7 5.5a.5.5 0 0 1 .5.5v1.2a.5.5 0 0 1-.5.5H5.5a.5.5 0 0 1-.5-.5V6a.5.5 0 0 1 .5-.5h1.2zM20 6v1.25H9V6h11z" fill="#464D5A" fill-rule="evenodd"/></svg>

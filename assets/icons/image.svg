@@ -1,5 +1,1 @@
-<svg viewbox="0 0 18 18">
-  <rect class="ql-stroke" height="10" width="12" x="3" y="4"></rect>
-  <circle class="ql-fill" cx="6" cy="7" r="1"></circle>
-  <polyline class="ql-even ql-fill" points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.417 5.583c.506 0 .916.41.916.917v11c0 .506-.41.917-.916.917H5.583a.917.917 0 0 1-.916-.917v-11c0-.506.41-.917.916-.917h12.834zm-.275 1.192H5.858v10.45h12.284V6.775zm-4.614 3.392l3.055 5.5H7.417l2.037-3.658 1.521 2.497 2.553-4.34z" fill="#464D5A" fill-rule="evenodd"/></svg>
