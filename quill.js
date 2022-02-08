@@ -45,10 +45,11 @@ import SnowTheme from './themes/snow';
 
 // yswang add
 import Divider from './myformats/divider';
-import Undo from './myformats/undo';
-import Redo from './myformats/redo';
+import { Undo, Redo } from './myformats/undoRedo';
 import DividerModule from './mymodules/divider';
 import UndoRedo from './mymodules/undoRedo';
+import ToolbarTip from './mymodules/toolbarTip';
+// yswang ------
 
 
 Quill.register(
@@ -121,7 +122,8 @@ Quill.register(
     'formats/undo': Undo,
     'formats/redo': Redo,
     'modules/divider': DividerModule,
-    'modules/undoRedo': UndoRedo,
+    'modules/undoredo': UndoRedo,
+    'modules/toolbartip': ToolbarTip,
     // yswang ----
 
   },

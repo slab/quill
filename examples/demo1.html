@@ -6,7 +6,7 @@
     <title>Example 1</title>
 
     <link rel="stylesheet" href="../dist/quill.snow.css">
-    <script src="../dist/quill.min.js"></script>
+    <script src="../dist/quill.js"></script>
 
     <style>
     html, body {
@@ -18,8 +18,15 @@
         background-color: #f3f5f7;
     }
 
+    #scrolling-container {
+        height: 100%;
+        min-height: 100%;
+        overflow-y: auto;
+    }
+
     .ql-toolbar {
         position: fixed;
+        right: 17px;
         width: 100%;
         z-index: 100;
         background-color: #fff;
@@ -27,17 +34,19 @@
         border-bottom: 1px solid #ddd;
     }
     #editor {
-        padding: 60px 0 30px 0;
-    }
-    .ql-editor {
+        width: 900px;
+        padding: 60px 80px;
         margin-left: auto;
         margin-right: auto;
-        width: 800px;
-        padding: 60px;
+        margin-top: 60px;
+        margin-bottom: 40px;
         background-color: #fff;
         box-shadow: 0 0 0 1px rgba(16,22,26,.1),0 1px 1px rgba(16,22,26,.2),0 2px 6px rgba(16,22,26,.2);
     }
-    .ql-formats {
+    .ql-editor {
+        
+    }
+    .ql-formats2 {
         background-color: #f5f8fa;
         border-radius: 3px;
         padding: 2px !important;
@@ -46,10 +55,33 @@
 </head>
 
 <body>
-    <div id="editor">
-        <h1>Apache ECharts 5.3.0 发布，增强动画表达力、渲染性能、服务端渲染</h1>
-        <p>在之前 ECharts 的动画集中在图形添加、更新以及移除的过渡动画上，过渡动画往往只有开始状态和结束状态。</p>
-        <p>为了表达更复杂的动画效果，我们 5.3.0 中为自定义系列和图形组件引入了全新的关键帧动画。</p>
+    <div id="scrolling-container">
+        <div id="editor">
+            <h2 style="text-align: center;">Minas Tirith</h2>
+            <p><br></p>
+            <p>Pippin looked out from the shelter of Gandalf"s cloak. He wondered if he was awake or still sleeping, still in the swift-moving dream in which he had been wrapped so long since the great ride began. The dark world was rushing by and the wind sang loudly in his ears. He could see nothing but the wheeling stars, and away to his right vast shadows against the sky where the mountains of the South marched past. Sleepily he tried to reckon the times and stages of their journey, but his memory was drowsy and uncertain.</p>
+            <p><br></p>
+            <p>There had been the first ride at terrible speed without a halt, and then in the dawn he had seen a pale gleam of gold, and they had come to the silent town and the great empty house on the hill. And hardly had they reached its shelter when the winged shadow had passed over once again, and men wilted with fear. But Gandalf had spoken soft words to him, and he had slept in a corner, tired but uneasy, dimly aware of comings and goings and of men talking and Gandalf giving orders. And then again riding, riding in the night. This was the second, no, the third night since he had looked in the Stone. And with that hideous memory he woke fully, and shivered, and the noise of the wind became filled with menacing voices.</p>
+            <p><br></p>
+            <p>A light kindled in the sky, a blaze of yellow fire behind dark barriers Pippin cowered back, afraid for a moment, wondering into what dreadful country Gandalf was bearing him. He rubbed his eyes, and then he saw that it was the moon rising above the eastern shadows, now almost at the full. So the night was not yet old and for hours the dark journey would go on. He stirred and spoke.</p>
+            <p><br></p>
+            <p>"Where are we, Gandalf?" he asked.</p>
+            <p><br></p>
+            <p>"In the realm of Gondor," the wizard answered. "The land of Anórien is still passing by."</p>
+            <p><br></p>
+            <p>There was a silence again for a while. Then, "What is that?" cried Pippin suddenly, clutching at Gandalf"s cloak. "Look! Fire, red fire! Are there dragons in this land? Look, there is another!"</p>
+            <p><br></p>
+            <p>For answer Gandalf cried aloud to his horse. "On, Shadowfax! We must hasten. Time is short. See! The beacons of Gondor are alight, calling for aid. War is kindled. See, there is the fire on Amon Dîn, and flame on Eilenach; and there they go speeding west: Nardol, Erelas, Min-Rimmon, Calenhad, and the Halifirien on the borders of Rohan."</p>
+            <p><br></p>
+            <p>But Shadowfax paused in his stride, slowing to a walk, and then he lifted up his head and neighed. And out of the darkness the answering neigh of other horses came; and presently the thudding of hoofs was heard, and three riders swept up and passed like flying ghosts in the moon and vanished into the West. Then Shadowfax gathered himself together and sprang away, and the night flowed over him like a roaring wind.
+            </p>
+            <p><br></p>
+            <p>Pippin became drowsy again and paid little attention to Gandalf telling him of the customs of Gondor, and how the Lord of the City had beacons built on the tops of outlying hills along both borders of the great range, and maintained posts at these points where fresh horses were always in readiness to bear his errand-riders to Rohan in the North, or to Belfalas in the South. "It is long since the beacons of the North were lit," he said; "and in the ancient days of Gondor they were not needed, for they had the Seven Stones." Pippin stirred uneasily.</p>
+            <p><br></p>
+            <p>"Sleep again, and do not be afraid!" said Gandalf. "For you are not going like Frodo to Mordor, but to Minas Tirith, and there you will be as safe as you can be anywhere in these days. If Gondor falls, or the Ring is taken, then the Shire will be no refuge."</p>
+            <p><br></p>
+            <p>"You do not comfort me," said Pippin, but nonetheless sleep crept over him. The last thing that he remembered before he fell into deep dream was a glimpse of high white peaks, glimmering like floating isles above the clouds as they caught the light of the westering moon. He wondered where Frodo was, and if he was already in Mordor, or if he was dead; and he did not know that Frodo from far away looked on that same moon as it set beyond Gondor ere the coming of the day.</p>
+        </div>
     </div>
     
 
@@ -60,12 +92,11 @@
                     container: [
                         ['undo', 'redo'],
                         [{ 'font': [] }], //字体
-                        [{ 'size': ['small', false, 'large', 'huge'] }], // 字体大小
-                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }], //几级标题
-                        ['bold', 'italic', 'underline', 'strike'], //加粗，斜体，下划线，删除线
-                        [{ 'script': 'sub'}, { 'script': 'super' }], // 上下标
-                        [{ 'align': [] }], //对齐方式
+                        [{ 'size': [] }], // 字体大小
+                        [{ 'header': [false, 1, 2, 3, 4, 5, 6] }], //几级标题
+                        ['bold', 'italic', 'underline', 'strike', { 'script': 'sub'}, { 'script': 'super' }], //加粗，斜体，下划线，删除线, 上下标
                         [{ 'color': [] }, { 'background': [] }], // 字体颜色，字体背景颜色
+                        [{ 'align': [] }], //对齐方式
                         //[{ 'header': 1 }, { 'header': 2 }], // 标题，键值对的形式；1、2表示字体大小
                         [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }], //列表
                         [{ 'indent': '-1'}, { 'indent': '+1' }], // 缩进
@@ -74,22 +105,11 @@
                         ['image','video', 'table', 'divider'], //上传图片、上传视频
                         ['clean'] //清除字体样式
                     ],
-                    handlers: {
-                        'undo': function() {
-                            this.quill.history.undo();
-                        },
-                        'redo': function() {
-                            this.quill.history.redo();
-                        },
-                        'divider': function() {
-                            var range = this.quill.getSelection(true);
-                            // this.quill.insertText(range.index, '\n', Quill.sources.USER)
-                            this.quill.insertEmbed(range.index, 'divider', true, Quill.sources.USER);
-                            this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-                        }
-                    }
+                    /*handlers: {
+                    }*/
                 }
             },
+            scrollingContainer: '#scrolling-container',
             theme: 'snow'
         });
 

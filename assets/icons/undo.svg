@@ -1,1 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="M8 8.25h6c2.761 0 5 1.989 5 4.75a5 5 0 0 1-5 5H7" stroke="#464D5A" stroke-width="1.25"/><path d="M9 5.372V10.9a.2.2 0 0 1-.301.173L4.276 8.474a.2.2 0 0 1-.009-.339l4.423-2.93a.2.2 0 0 1 .31.167z" fill="#464D5A"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+<path class="ql-stroke" d="M8 8.25h6c2.761 0 5 1.989 5 4.75a5 5 0 0 1-5 5H7" stroke="#464D5A" stroke-width="1.25" fill="none" fill-rule="evenodd"/>
+<path class="ql-fill" d="M9 5.372V10.9a.2.2 0 0 1-.301.173L4.276 8.474a.2.2 0 0 1-.009-.339l4.423-2.93a.2.2 0 0 1 .31.167z" fill="#464D5A" fill-rule="evenodd"/>
+</svg>

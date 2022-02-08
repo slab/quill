@@ -6,7 +6,6 @@ import Module from '../core/module';
 class DividerModule extends Module {
     constructor(quill, options) {
         super(quill, options);
-        console.log('********* init DividerModule ....');
         this.toolbar = quill.getModule('toolbar');
         if (typeof this.toolbar !== 'undefined') {
             this.toolbar.addHandler('divider', this.insertDivider);

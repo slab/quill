@@ -6,4 +6,10 @@ import Block from '../blots/block';
 class Undo extends Block { }
 Undo.blotName = 'undo';
 
-export default Undo;
+/**
+ * 撤回和重做的功能，只需要添加handler就可以实现
+ */
+ class Redo extends Block { }
+ Redo.blotName = 'redo';
+
+export { Undo, Redo };

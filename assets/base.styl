@@ -8,8 +8,8 @@ colorItemMargin = 2px
 colorItemSize = 16px
 colorItemsPerRow = 7
 
-toolbtnHoverBgColor = #E1E8ED
-toolbtnActiveBgColor = #CED9E0
+toolbtnHoverBgColor = #EBF1F5
+toolbtnActiveBgColor = #D8E1E8
 
 
 .ql-{themeName}.ql-toolbar, .ql-{themeName} .ql-toolbar
@@ -38,13 +38,18 @@ toolbtnActiveBgColor = #CED9E0
     margin-left: 2px
     margin-right: 2px
     border-radius: 3px
-
     svg
       height: 20px
       width: 20px
-
     &:active:hover
       outline: none
+  
+  button.ql-disabled
+    color: #999
+    .ql-fill
+      fill: #bbb
+    .ql-stroke
+      stroke: #bbb
 
   input.ql-image[type=file]
     display: none
@@ -180,7 +185,6 @@ toolbtnActiveBgColor = #CED9E0
 
   .ql-picker
     border-radius: 3px
-    color: inactiveColor
     font-size: inherit
     font-weight: 200
     position: relative
@@ -195,38 +199,49 @@ toolbtnActiveBgColor = #CED9E0
     display: flex
     align-items: center
     justify-content: center
+    flex-wrap: nowrap
     min-width: 20px
     min-height: 20px
     padding: 2px
     position: relative
+    font-size: 0.875rem
     -moz-user-select: none
     -ms-user-select: none
     user-select: none
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
     &::before
       display: block
       text-align: left
       line-height: 20px
-    
-    svg {
+    svg
       width: 20px
       height: 20px
-    }
   
   .ql-picker-options
     background-color: backgroundColor
+    border: 0 none
+    -webkit-box-shadow: 0 0 0 1px rgba(16,22,26,.1),0 1px 1px rgba(16,22,26,.2),0 2px 6px rgba(16,22,26,.2)
+    box-shadow: 0 0 0 1px rgba(16,22,26,.1),0 1px 1px rgba(16,22,26,.2),0 2px 6px rgba(16,22,26,.2)
     display: none
     min-width: 100%
-    padding: 4px 8px
+    padding: 3px
+    border-radius: 3px
     position: absolute
     white-space: nowrap
+    line-height: 1.0
     .ql-picker-item
       cursor: pointer
       display: block
-      padding-bottom: 5px
-      padding-top: 5px
+      padding: 8px 10px
+      font-size: 0.875rem
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+      border-radius: 3px
   .ql-picker.ql-expanded
     .ql-picker-label
-      color: borderColor
       z-index: 2
       .ql-fill
         fill: borderColor
@@ -234,9 +249,8 @@ toolbtnActiveBgColor = #CED9E0
         stroke: borderColor
     .ql-picker-options
       display: block
-      margin-top: -1px
       top: 100%
-      z-index: 1
+      z-index: 10
 
   .ql-color-picker, 
   .ql-icon-picker
@@ -245,11 +259,12 @@ toolbtnActiveBgColor = #CED9E0
   
   .ql-icon-picker
     .ql-picker-options
-      padding: 4px 0px
+      padding: 4px
     .ql-picker-item
-      height: controlHeight
-      width: controlHeight
-      padding: 2px 4px
+      min-height: 20px
+      min-width: 20px
+      padding: 2px
+  
   .ql-color-picker
     .ql-picker-options
       padding: inputPaddingHeight inputPaddingWidth
@@ -262,11 +277,26 @@ toolbtnActiveBgColor = #CED9E0
       padding: 0px
       width: colorItemSize
 
+  .ql-align
+    .ql-picker-options
+        padding: 5px
+        min-width: 106px;
+        left: 50%
+        transform: translateX(-50%)
+      .ql-picker-item
+        float: left
+        display: inline-block
+        padding: 2px
+        line-height: 1.0
+        svg
+          width: 20px
+          height: 20px
+
   .ql-picker:not(.ql-color-picker):not(.ql-icon-picker)
     svg
       position: absolute
       margin-top: -9px
-      right: 0
+      right: 2px
       top: 50%
       width: 16px
 
@@ -277,14 +307,21 @@ toolbtnActiveBgColor = #CED9E0
         content: attr(data-label)
 
   .ql-picker.ql-header
-    width: 98px
+    width: 70px
+    .ql-picker-label
+      justify-content: flex-start
+      text-align: left
+    .ql-picker-label::before
+      padding: 0 10px 0 3px
+      overflow: hidden
+      text-overflow: ellipsis
     .ql-picker-label::before,
     .ql-picker-item::before
-      content: 'Normal'
+      content: '正文'
     for num in (1..6)
       .ql-picker-label[data-value=\"{num}\"]::before,
       .ql-picker-item[data-value=\"{num}\"]::before
-        content: 'Heading ' + num
+        content: '标题 ' + num
     .ql-picker-item[data-value="1"]::before
       font-size: 2em
     .ql-picker-item[data-value="2"]::before
@@ -299,10 +336,17 @@ toolbtnActiveBgColor = #CED9E0
       font-size: 0.67em
 
   .ql-picker.ql-font
-    width: 108px
+    width: 100px
+    .ql-picker-label
+      justify-content: flex-start
+      text-align: left
+    .ql-picker-label::before
+      padding: 0 10px 0 3px
+      overflow: hidden
+      text-overflow: ellipsis
     .ql-picker-label::before,
     .ql-picker-item::before
-      content: 'Sans Serif'
+      content: '默认字体'
     .ql-picker-label[data-value=serif]::before,
     .ql-picker-item[data-value=serif]::before
       content: 'Serif'
@@ -313,12 +357,68 @@ toolbtnActiveBgColor = #CED9E0
       font-family: Georgia, Times New Roman, serif
     .ql-picker-item[data-value=monospace]::before
       font-family: Monaco, Courier New, monospace
+    .ql-picker-label[data-value='Microsoft YaHei']::before,
+    .ql-picker-item[data-value='Microsoft YaHei']::before
+      content: '微软雅黑'
+      font-family: 'Microsoft YaHei'
+    .ql-picker-label[data-value='SimSun']::before,
+    .ql-picker-item[data-value='SimSun']::before
+      content: '宋体'
+      font-family: 'SimSun'
+    .ql-picker-label[data-value='NSimSun']::before,
+    .ql-picker-item[data-value='NSimSun']::before
+      content: '新宋体'
+      font-family: 'NSimSun'
+    .ql-picker-label[data-value='FangSong']::before,
+    .ql-picker-item[data-value='FangSong']::before
+      content: '仿宋'
+      font-family: 'FangSong'
+    .ql-picker-label[data-value='KaiTi']::before,
+    .ql-picker-item[data-value='KaiTi']::before
+      content: '楷体'
+      font-family: 'KaiTi'
+    .ql-picker-label[data-value='SimHei']::before,
+    .ql-picker-item[data-value='SimHei']::before
+      content: '黑体'
+      font-family: 'SimHei'
+    .ql-picker-label[data-value='Arial']::before,
+    .ql-picker-item[data-value='Arial']::before
+      content: 'Arial'
+      font-family: 'Arial'
+    .ql-picker-label[data-value='Arial Black']::before,
+    .ql-picker-item[data-value='Arial Black']::before
+      content: 'Arial Black'
+      font-family: 'Arial Black'
+    .ql-picker-label[data-value='Times New Roman']::before,
+    .ql-picker-item[data-value='Times New Roman']::before
+      content: 'Times New Roman'
+      font-family: 'Times New Roman'
+    .ql-picker-label[data-value='Courier New']::before,
+    .ql-picker-item[data-value='Courier New']::before
+      content: 'Courier New'
+      font-family: 'Courier New'
+    .ql-picker-label[data-value='Tahoma']::before,
+    .ql-picker-item[data-value='Tahoma']::before
+      content: 'Tahoma'
+      font-family: 'Tahoma'
+    .ql-picker-label[data-value='Verdana']::before,
+    .ql-picker-item[data-value='Verdana']::before
+      content: 'Verdana'
+      font-family: 'Verdana'
+
 
   .ql-picker.ql-size
-    width: 98px
+    width: 90px
+    .ql-picker-label
+      justify-content: flex-start
+      text-align: left
+    .ql-picker-label::before
+      padding: 0 10px 0 3px
+      overflow: hidden
+      text-overflow: ellipsis
     .ql-picker-label::before,
     .ql-picker-item::before
-      content: 'Normal'
+      content: '默认大小'
     .ql-picker-label[data-value=small]::before,
     .ql-picker-item[data-value=small]::before
       content: 'Small'
@@ -334,6 +434,52 @@ toolbtnActiveBgColor = #CED9E0
       font-size: 18px
     .ql-picker-item[data-value=huge]::before
       font-size: 32px
+    .ql-picker-label[data-value='9px']::before,
+    .ql-picker-item[data-value='9px']::before
+      content: '9'
+    .ql-picker-label[data-value='10px']::before,
+    .ql-picker-item[data-value='10px']::before
+      content: '10'
+    .ql-picker-label[data-value='12px']::before,
+    .ql-picker-item[data-value='12px']::before
+      content: '12'
+    .ql-picker-label[data-value='14px']::before,
+    .ql-picker-item[data-value='14px']::before
+      content: '14'
+    .ql-picker-label[data-value='16px']::before,
+    .ql-picker-item[data-value='16px']::before
+      content: '16'
+    .ql-picker-label[data-value='18px']::before,
+    .ql-picker-item[data-value='18px']::before
+      content: '18'
+    .ql-picker-label[data-value='20px']::before,
+    .ql-picker-item[data-value='20px']::before
+      content: '20'
+    .ql-picker-label[data-value='22px']::before,
+    .ql-picker-item[data-value='22px']::before
+      content: '22'
+    .ql-picker-label[data-value='24px']::before,
+    .ql-picker-item[data-value='24px']::before
+      content: '24'
+    .ql-picker-label[data-value='26px']::before,
+    .ql-picker-item[data-value='26px']::before
+      content: '26'
+    .ql-picker-label[data-value='28px']::before,
+    .ql-picker-item[data-value='28px']::before
+      content: '28'
+    .ql-picker-label[data-value='30px']::before,
+    .ql-picker-item[data-value='30px']::before
+      content: '30'
+    .ql-picker-label[data-value='36px']::before,
+    .ql-picker-item[data-value='36px']::before
+      content: '36'
+    .ql-picker-label[data-value='48px']::before,
+    .ql-picker-item[data-value='48px']::before
+      content: '48'
+    .ql-picker-label[data-value='72px']::before,
+    .ql-picker-item[data-value='72px']::before
+      content: '72'
+
 
   .ql-color-picker.ql-background
     .ql-picker-item
@@ -347,3 +493,25 @@ toolbtnActiveBgColor = #CED9E0
   .ql-ui
     right: 5px
     top: 5px
+
+
+.ql-toolbartip
+  position: absolute
+  z-index: 200
+  background-color: rgba(0,0,0,0.7)
+  color: #fff
+  padding: 5px 10px
+  line-height: 1.2
+  font-size: 0.875rem
+  min-width: 30px
+  border-radius: 3px
+  &:before
+    content: ""
+    position: absolute
+    top: -6px
+    left: 50%
+    transform: translateX(-50%)
+    border-width: 0 6px 6px 6px
+    border-style: solid
+    border-color: transparent transparent rgba(0,0,0,0.7) transparent
+    z-index: 99

@@ -46,11 +46,12 @@ const COLORS = [
   '#3d1466',
 ];
 
-const FONTS = [false, 'serif', 'monospace'];
+// yswang modify FONTS, HEADERS, SIZES
+const FONTS = [false, 'Microsoft YaHei', 'SimSun', 'NSimSun', 'FangSong', 'KaiTi', 'SimHei', 'Arial', 'Arial Black', 'Times New Roman', 'Courier New', 'Tahoma', 'Verdana'];
 
-const HEADERS = ['1', '2', '3', false];
+const HEADERS = [false, '1', '2', '3', '4'];
 
-const SIZES = ['small', false, 'large', 'huge'];
+const SIZES = [false, '9px', '10px', '12px', '14px', '16px', '18px', '20px', '22px', '24px', '26px', '28px', '30px', '36px', '48px', '72px'];
 
 class BaseTheme extends Theme {
   constructor(quill, options) {

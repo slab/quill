@@ -7,6 +7,11 @@ class History extends Module {
     super(quill, options);
     this.lastRecorded = 0;
     this.ignoreChange = false;
+
+    // yswang add
+    this.changeListener = null;
+    // yswang ----
+
     this.clear();
     this.quill.on(
       Quill.events.EDITOR_CHANGE,
@@ -57,10 +62,19 @@ class History extends Module {
     this.ignoreChange = false;
     const index = getLastChangeIndex(this.quill.scroll, delta);
     this.quill.setSelection(index);
+
+    // yswang add
+    this.emitChanges();
+    // yswang ----
+
   }
 
   clear() {
     this.stack = { undo: [], redo: [] };
+
+    // yswang add
+    this.emitChanges();
+    // yswang ----
   }
 
   cutoff() {
@@ -86,6 +100,10 @@ class History extends Module {
     if (this.stack.undo.length > this.options.maxStack) {
       this.stack.undo.shift();
     }
+
+    // yswang add
+    this.emitChanges();
+    // yswang ----
   }
 
   redo() {
@@ -95,11 +113,33 @@ class History extends Module {
   transform(delta) {
     transformStack(this.stack.undo, delta);
     transformStack(this.stack.redo, delta);
+
+    // yswang add
+    this.emitChanges();
+    // yswang ----
   }
 
   undo() {
     this.change('undo', 'redo');
   }
+
+  // yswang add canUndo|canRedo
+  canUndo() {
+    return this.stack.undo.length > 0;
+  }
+  canRedo() {
+    return this.stack.redo.length > 0;
+  }
+  changeListen(callback) {
+    this.changeListener = typeof callback === 'function' ? callback : null;
+  }
+  emitChanges() {
+    if (this.changeListener) {
+      this.changeListener(this.canUndo(), this.canRedo());
+    }
+  }
+  // yswang ----
+  
 }
 History.DEFAULTS = {
   delay: 1000,

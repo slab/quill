@@ -9,7 +9,7 @@ tooltipMargin = 8px
     padding: 5px 12px
     white-space: nowrap
     &::before
-      content: "Visit URL:"
+      content: "访问URL:"
       line-height: 26px
       margin-right: tooltipMargin
     input[type=text]
@@ -28,11 +28,11 @@ tooltipMargin = 8px
       vertical-align: top
     a.ql-action::after
       border-right: 1px solid borderColor
-      content: 'Edit'
+      content: '编辑'
       margin-left: tooltipMargin*2
       padding-right: tooltipMargin
     a.ql-remove::before
-      content: 'Remove'
+      content: '移除'
       margin-left: tooltipMargin
     a
       line-height: 26px
@@ -43,11 +43,11 @@ tooltipMargin = 8px
       display: inline-block
     a.ql-action::after
       border-right: 0px
-      content: 'Save'
+      content: '保存'
       padding-right: 0px
   .ql-tooltip[data-mode=link]::before
-    content: "Enter link:"
+    content: "链接地址:"
   .ql-tooltip[data-mode=formula]::before
-    content: "Enter formula:"
+    content: "公式:"
   .ql-tooltip[data-mode=video]::before
-    content: "Enter video:"
+    content: "视频地址:"
