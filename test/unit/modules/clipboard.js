@@ -398,6 +398,30 @@ describe('Clipboard', function () {
       expect(delta).toEqual(expected);
     });
 
+    it('runs a text node matcher on a plain text paste', function () {
+      this.clipboard.addMatcher(Node.TEXT_NODE, function (node, delta) {
+        let index = 0;
+        const regex = /https?:\/\/[^\s]+/g;
+        let match = null;
+        const composer = new Delta();
+        // eslint-disable-next-line no-cond-assign
+        while ((match = regex.exec(node.data))) {
+          composer.retain(match.index - index);
+          index = regex.lastIndex;
+          composer.retain(match[0].length, { link: match[0] });
+        }
+        return delta.compose(composer);
+      });
+      const delta = this.clipboard.convert({
+        text: 'http://github.com https://quilljs.com',
+      });
+      const expected = new Delta()
+        .insert('http://github.com', { link: 'http://github.com' })
+        .insert(' ')
+        .insert('https://quilljs.com', { link: 'https://quilljs.com' });
+      expect(delta).toEqual(expected);
+    });
+
     it('does not execute javascript', function () {
       window.unsafeFunction = jasmine.createSpy('unsafeFunction');
       const html =
