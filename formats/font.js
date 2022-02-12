@@ -4,7 +4,7 @@ const config = {
   scope: Scope.INLINE,
   // yswang modify
   // whitelist: ['serif', 'monospace'],
-  whitelist: ['Microsoft YaHei', 'SimSun', 'NSimSun', 'FangSong', 'KaiTi', 'SimHei', 'Arial', 'Arial Black', 'Times New Roman', 'Courier New', 'Tahoma', 'Verdana'],
+  whitelist: ['Microsoft YaHei', 'SimSun', 'NSimSun', 'FangSong', 'KaiTi', 'SimHei', 'Arial', 'Arial Black', 'Times New Roman', 'Courier New', 'Tahoma', 'Verdana']
 };
 
 const FontClass = new ClassAttributor('font', 'ql-font', config);

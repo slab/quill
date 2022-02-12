@@ -66,7 +66,6 @@ class History extends Module {
     // yswang add
     this.emitChanges();
     // yswang ----
-
   }
 
   clear() {
@@ -127,19 +126,21 @@ class History extends Module {
   canUndo() {
     return this.stack.undo.length > 0;
   }
+
   canRedo() {
     return this.stack.redo.length > 0;
   }
+
   changeListen(callback) {
     this.changeListener = typeof callback === 'function' ? callback : null;
   }
+
   emitChanges() {
     if (this.changeListener) {
       this.changeListener(this.canUndo(), this.canRedo());
     }
   }
   // yswang ----
-  
 }
 History.DEFAULTS = {
   delay: 1000,

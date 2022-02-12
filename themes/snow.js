@@ -130,7 +130,7 @@ SnowTheme.DEFAULTS = merge({}, BaseTheme.DEFAULTS, {
     // yswang add
     divider: true,
     undoredo: true,
-    toolbartip: true
+    toolbartip: true,
   },
 });
 
