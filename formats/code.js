@@ -14,17 +14,16 @@ class CodeBlockContainer extends Container {
   }
 
   code(index, length) {
-    const text = this.children
+    return this.children
       .map(child => (child.length() <= 1 ? '' : child.domNode.innerText))
       .join('\n')
       .slice(index, index + length);
-    return escapeText(text);
   }
 
   html(index, length) {
     // `\n`s are needed in order to support empty lines at the beginning and the end.
     // https://html.spec.whatwg.org/multipage/syntax.html#element-restrictions
-    return `<pre>\n${this.code(index, length)}\n</pre>`;
+    return `<pre>\n${escapeText(this.code(index, length))}\n</pre>`;
   }
 }
 
