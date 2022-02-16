@@ -59,7 +59,8 @@ class Cursor extends EmbedBlot {
   restore() {
     if (this.selection.composing || this.parent == null) return null;
     const range = this.selection.getNativeRange();
-    // Link format will insert text outside of anchor tag
+    // Browser may push down styles/nodes inside the cursor blot.
+    // https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#push-down-values
     while (
       this.domNode.lastChild != null &&
       this.domNode.lastChild !== this.textNode
@@ -141,6 +142,31 @@ class Cursor extends EmbedBlot {
     ) {
       const range = this.restore();
       if (range) context.range = range;
+    }
+  }
+
+  // Avoid .ql-cursor being a descendant of `<a/>`.
+  // The reason is Safari pushes down `<a/>` on text insertion.
+  // That will cause DOM nodes not sync with the model.
+  //
+  // For example ({I} is the caret), given the markup:
+  //    <a><span class="ql-cursor">\uFEFF{I}</span></a>
+  // When typing a char "x", `<a/>` will be pushed down inside the `<span>` first:
+  //    <span class="ql-cursor"><a>\uFEFF{I}</a></span>
+  // And then "x" will be inserted after `<a/>`:
+  //    <span class="ql-cursor"><a>\uFEFF</a>d{I}</span>
+  optimize(context) {
+    super.optimize(context);
+
+    let { parent } = this;
+    while (parent) {
+      if (parent.domNode.tagName === 'A') {
+        this.savedLength = Cursor.CONTENTS.length;
+        parent.isolate(this.offset(parent), this.length()).unwrap();
+        this.savedLength = 0;
+        break;
+      }
+      parent = parent.parent;
     }
   }
 
