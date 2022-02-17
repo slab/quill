@@ -20038,32 +20038,66 @@ var Clipboard = function (_Module) {
     }
   }, {
     key: "convert",
-    value: function convert(html) {
-      if (typeof html === "string") {
-        this.container.innerHTML = html.replace(/\>\r?\n +\</g, "><"); // Remove spaces between tags
-        return this.convert();
-      }
-      var formats = this.quill.getFormat(this.quill.selection.savedRange.index);
+    value: function convert(_ref3) {
+      var html = _ref3.html,
+          text = _ref3.text;
+      var formats = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
       if (formats[_code2.default.blotName]) {
-        var text = this.container.innerText;
-        this.container.innerHTML = "";
         return new _quillDelta2.default().insert(text, _defineProperty({}, _code2.default.blotName, formats[_code2.default.blotName]));
       }
+      if (!html) {
+        return new _quillDelta2.default().insert(text || "");
+      }
+      var delta = this.convertHTML(html);
+      // Remove trailing newline
+      if (deltaEndsWith(delta, "\n") && (delta.ops[delta.ops.length - 1].attributes == null || formats.table)) {
+        return delta.compose(new _quillDelta2.default().retain(delta.length() - 1).delete(1));
+      }
+      return delta;
+    }
+  }, {
+    key: "convertHTML",
+    value: function convertHTML(html) {
+      var doc = new DOMParser().parseFromString(html, "text/html");
+      var container = doc.body;
+      var nodeMatches = new WeakMap();
 
-      var _prepareMatching = this.prepareMatching(),
+      var _prepareMatching = this.prepareMatching(container, nodeMatches),
           _prepareMatching2 = _slicedToArray(_prepareMatching, 2),
           elementMatchers = _prepareMatching2[0],
           textMatchers = _prepareMatching2[1];
 
-      var delta = traverse(this.container, elementMatchers, textMatchers);
-      // Remove trailing newline
-      if (deltaEndsWith(delta, "\n") && delta.ops[delta.ops.length - 1].attributes == null) {
-        delta = delta.compose(new _quillDelta2.default().retain(delta.length() - 1).delete(1));
-      }
-      debug.log("convert", this.container.innerHTML, delta);
-      this.container.innerHTML = "";
-      return delta;
+      return traverse(this.quill.scroll, container, elementMatchers, textMatchers, nodeMatches);
     }
+
+    // convert(html) {
+    //   if (typeof html === "string") {
+    //     this.container.innerHTML = html.replace(/\>\r?\n +\</g, "><"); // Remove spaces between tags
+    //     return this.convert();
+    //   }
+    //   const formats = this.quill.getFormat(this.quill.selection.savedRange.index);
+    //   if (formats[CodeBlock.blotName]) {
+    //     const text = this.container.innerText;
+    //     this.container.innerHTML = "";
+    //     return new Delta().insert(text, {
+    //       [CodeBlock.blotName]: formats[CodeBlock.blotName],
+    //     });
+    //   }
+    //   let [elementMatchers, textMatchers] = this.prepareMatching();
+    //   let delta = traverse(this.container, elementMatchers, textMatchers);
+    //   // Remove trailing newline
+    //   if (
+    //     deltaEndsWith(delta, "\n") &&
+    //     delta.ops[delta.ops.length - 1].attributes == null
+    //   ) {
+    //     delta = delta.compose(new Delta().retain(delta.length() - 1).delete(1));
+    //   }
+    //   debug.log("convert", this.container.innerHTML, delta);
+    //   this.container.innerHTML = "";
+    //   return delta;
+    // }
+
   }, {
     key: "dangerouslyPasteHTML",
     value: function dangerouslyPasteHTML(index, html) {
@@ -20163,9 +20197,9 @@ var Clipboard = function (_Module) {
 
   }, {
     key: "onPaste",
-    value: function onPaste(range, _ref3) {
-      var text = _ref3.text,
-          html = _ref3.html;
+    value: function onPaste(range, _ref4) {
+      var text = _ref4.text,
+          html = _ref4.html;
 
       var formats = this.quill.getFormat(range.index);
       var pastedDelta = this.convert({ text: text, html: html }, formats);
@@ -20255,29 +20289,64 @@ function isLine(node) {
   return ["block", "list-item"].indexOf(style.display) > -1;
 }
 
-function traverse(node, elementMatchers, textMatchers) {
-  // Post-order
+function traverse(scroll, node, elementMatchers, textMatchers, nodeMatches) {
   if (node.nodeType === node.TEXT_NODE) {
     return textMatchers.reduce(function (delta, matcher) {
-      return matcher(node, delta);
+      return matcher(node, delta, scroll);
     }, new _quillDelta2.default());
-  } else if (node.nodeType === node.ELEMENT_NODE) {
-    return [].reduce.call(node.childNodes || [], function (delta, childNode) {
-      var childrenDelta = traverse(childNode, elementMatchers, textMatchers);
+  }
+  if (node.nodeType === node.ELEMENT_NODE) {
+    return Array.from(node.childNodes || []).reduce(function (delta, childNode) {
+      var childrenDelta = traverse(scroll, childNode, elementMatchers, textMatchers, nodeMatches);
       if (childNode.nodeType === node.ELEMENT_NODE) {
-        childrenDelta = elementMatchers.reduce(function (childrenDelta, matcher) {
-          return matcher(childNode, childrenDelta);
+        childrenDelta = elementMatchers.reduce(function (reducedDelta, matcher) {
+          return matcher(childNode, reducedDelta, scroll);
         }, childrenDelta);
-        childrenDelta = (childNode[DOM_KEY] || []).reduce(function (childrenDelta, matcher) {
-          return matcher(childNode, childrenDelta);
+        childrenDelta = (nodeMatches.get(childNode) || []).reduce(function (reducedDelta, matcher) {
+          return matcher(childNode, reducedDelta, scroll);
         }, childrenDelta);
       }
       return delta.concat(childrenDelta);
     }, new _quillDelta2.default());
-  } else {
-    return new _quillDelta2.default();
   }
+  return new _quillDelta2.default();
 }
+
+// function traverse(node, elementMatchers, textMatchers) {
+//   // Post-order
+//   if (node.nodeType === node.TEXT_NODE) {
+//     return textMatchers.reduce(function(delta, matcher) {
+//       return matcher(node, delta);
+//     }, new Delta());
+//   } else if (node.nodeType === node.ELEMENT_NODE) {
+//     return [].reduce.call(
+//       node.childNodes || [],
+//       (delta, childNode) => {
+//         let childrenDelta = traverse(childNode, elementMatchers, textMatchers);
+//         if (childNode.nodeType === node.ELEMENT_NODE) {
+//           childrenDelta = elementMatchers.reduce(function(
+//             childrenDelta,
+//             matcher
+//           ) {
+//             return matcher(childNode, childrenDelta);
+//           },
+//           childrenDelta);
+//           childrenDelta = (childNode[DOM_KEY] || []).reduce(function(
+//             childrenDelta,
+//             matcher
+//           ) {
+//             return matcher(childNode, childrenDelta);
+//           },
+//           childrenDelta);
+//         }
+//         return delta.concat(childrenDelta);
+//       },
+//       new Delta()
+//     );
+//   } else {
+//     return new Delta();
+//   }
+// }
 
 function matchAlias(format, node, delta) {
   return applyFormat(delta, format, true);

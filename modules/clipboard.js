@@ -56,7 +56,7 @@ const STYLE_ATTRIBUTORS = [
 class Clipboard extends Module {
   constructor(quill, options) {
     super(quill, options);
-    this.quill.root.addEventListener("paste", this.onPaste.bind(this));
+    this.quill.root.addEventListener("paste", this.onCapturePaste.bind(this));
     this.container = this.quill.addContainer("ql-clipboard");
     this.container.setAttribute("contenteditable", true);
     this.container.setAttribute("tabindex", -1);
@@ -169,7 +169,7 @@ class Clipboard extends Module {
     let strIndex = base64Url.indexOf(",") + 1;
     if (!strIndex) return false;
     let str = base64Url.slice(strIndex);
-    return this.fileType.some((e) => str.includes(e));
+    return this.options.fileType.some((e) => str.includes(e));
   }
 
   onCapturePaste(e) {
@@ -188,7 +188,7 @@ class Clipboard extends Module {
         let src = $(el).attr("src");
         if (
           !RegexpsBase64.test(src) ||
-          this.calSize(src) > this.fileSize ||
+          this.calSize(src) > this.options.fileSize ||
           !this.calType(src)
         ) {
           $(el).remove();
