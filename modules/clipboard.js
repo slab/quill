@@ -73,32 +73,69 @@ class Clipboard extends Module {
     this.matchers.push([selector, matcher]);
   }
 
-  convert(html) {
-    if (typeof html === "string") {
-      this.container.innerHTML = html.replace(/\>\r?\n +\</g, "><"); // Remove spaces between tags
-      return this.convert();
-    }
-    const formats = this.quill.getFormat(this.quill.selection.savedRange.index);
+  convert({ html, text }, formats = {}) {
     if (formats[CodeBlock.blotName]) {
-      const text = this.container.innerText;
-      this.container.innerHTML = "";
       return new Delta().insert(text, {
         [CodeBlock.blotName]: formats[CodeBlock.blotName],
       });
     }
-    let [elementMatchers, textMatchers] = this.prepareMatching();
-    let delta = traverse(this.container, elementMatchers, textMatchers);
+    if (!html) {
+      return new Delta().insert(text || "");
+    }
+    const delta = this.convertHTML(html);
     // Remove trailing newline
     if (
       deltaEndsWith(delta, "\n") &&
-      delta.ops[delta.ops.length - 1].attributes == null
+      (delta.ops[delta.ops.length - 1].attributes == null || formats.table)
     ) {
-      delta = delta.compose(new Delta().retain(delta.length() - 1).delete(1));
+      return delta.compose(new Delta().retain(delta.length() - 1).delete(1));
     }
-    debug.log("convert", this.container.innerHTML, delta);
-    this.container.innerHTML = "";
     return delta;
   }
+
+  convertHTML(html) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const container = doc.body;
+    const nodeMatches = new WeakMap();
+    const [elementMatchers, textMatchers] = this.prepareMatching(
+      container,
+      nodeMatches
+    );
+    return traverse(
+      this.quill.scroll,
+      container,
+      elementMatchers,
+      textMatchers,
+      nodeMatches
+    );
+  }
+
+  // convert(html) {
+  //   if (typeof html === "string") {
+  //     this.container.innerHTML = html.replace(/\>\r?\n +\</g, "><"); // Remove spaces between tags
+  //     return this.convert();
+  //   }
+  //   const formats = this.quill.getFormat(this.quill.selection.savedRange.index);
+  //   if (formats[CodeBlock.blotName]) {
+  //     const text = this.container.innerText;
+  //     this.container.innerHTML = "";
+  //     return new Delta().insert(text, {
+  //       [CodeBlock.blotName]: formats[CodeBlock.blotName],
+  //     });
+  //   }
+  //   let [elementMatchers, textMatchers] = this.prepareMatching();
+  //   let delta = traverse(this.container, elementMatchers, textMatchers);
+  //   // Remove trailing newline
+  //   if (
+  //     deltaEndsWith(delta, "\n") &&
+  //     delta.ops[delta.ops.length - 1].attributes == null
+  //   ) {
+  //     delta = delta.compose(new Delta().retain(delta.length() - 1).delete(1));
+  //   }
+  //   debug.log("convert", this.container.innerHTML, delta);
+  //   this.container.innerHTML = "";
+  //   return delta;
+  // }
 
   dangerouslyPasteHTML(index, html, source = Quill.sources.API) {
     if (typeof index === "string") {
@@ -288,41 +325,73 @@ function isLine(node) {
   return ["block", "list-item"].indexOf(style.display) > -1;
 }
 
-function traverse(node, elementMatchers, textMatchers) {
-  // Post-order
+function traverse(scroll, node, elementMatchers, textMatchers, nodeMatches) {
   if (node.nodeType === node.TEXT_NODE) {
-    return textMatchers.reduce(function(delta, matcher) {
-      return matcher(node, delta);
+    return textMatchers.reduce((delta, matcher) => {
+      return matcher(node, delta, scroll);
     }, new Delta());
-  } else if (node.nodeType === node.ELEMENT_NODE) {
-    return [].reduce.call(
-      node.childNodes || [],
-      (delta, childNode) => {
-        let childrenDelta = traverse(childNode, elementMatchers, textMatchers);
-        if (childNode.nodeType === node.ELEMENT_NODE) {
-          childrenDelta = elementMatchers.reduce(function(
-            childrenDelta,
-            matcher
-          ) {
-            return matcher(childNode, childrenDelta);
-          },
-          childrenDelta);
-          childrenDelta = (childNode[DOM_KEY] || []).reduce(function(
-            childrenDelta,
-            matcher
-          ) {
-            return matcher(childNode, childrenDelta);
-          },
-          childrenDelta);
-        }
-        return delta.concat(childrenDelta);
-      },
-      new Delta()
-    );
-  } else {
-    return new Delta();
   }
+  if (node.nodeType === node.ELEMENT_NODE) {
+    return Array.from(node.childNodes || []).reduce((delta, childNode) => {
+      let childrenDelta = traverse(
+        scroll,
+        childNode,
+        elementMatchers,
+        textMatchers,
+        nodeMatches
+      );
+      if (childNode.nodeType === node.ELEMENT_NODE) {
+        childrenDelta = elementMatchers.reduce((reducedDelta, matcher) => {
+          return matcher(childNode, reducedDelta, scroll);
+        }, childrenDelta);
+        childrenDelta = (nodeMatches.get(childNode) || []).reduce(
+          (reducedDelta, matcher) => {
+            return matcher(childNode, reducedDelta, scroll);
+          },
+          childrenDelta
+        );
+      }
+      return delta.concat(childrenDelta);
+    }, new Delta());
+  }
+  return new Delta();
 }
+
+// function traverse(node, elementMatchers, textMatchers) {
+//   // Post-order
+//   if (node.nodeType === node.TEXT_NODE) {
+//     return textMatchers.reduce(function(delta, matcher) {
+//       return matcher(node, delta);
+//     }, new Delta());
+//   } else if (node.nodeType === node.ELEMENT_NODE) {
+//     return [].reduce.call(
+//       node.childNodes || [],
+//       (delta, childNode) => {
+//         let childrenDelta = traverse(childNode, elementMatchers, textMatchers);
+//         if (childNode.nodeType === node.ELEMENT_NODE) {
+//           childrenDelta = elementMatchers.reduce(function(
+//             childrenDelta,
+//             matcher
+//           ) {
+//             return matcher(childNode, childrenDelta);
+//           },
+//           childrenDelta);
+//           childrenDelta = (childNode[DOM_KEY] || []).reduce(function(
+//             childrenDelta,
+//             matcher
+//           ) {
+//             return matcher(childNode, childrenDelta);
+//           },
+//           childrenDelta);
+//         }
+//         return delta.concat(childrenDelta);
+//       },
+//       new Delta()
+//     );
+//   } else {
+//     return new Delta();
+//   }
+// }
 
 function matchAlias(format, node, delta) {
   return applyFormat(delta, format, true);
