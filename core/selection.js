@@ -194,6 +194,12 @@ class Selection {
   }
 
   getRange() {
+    const root = this.scroll.domNode;
+    if ('isConnected' in root && !root.isConnected) {
+      // document.getSelection() forces layout on Blink, so we trend to
+      // not calling it.
+      return [null, null];
+    }
     const normalized = this.getNativeRange();
     if (normalized == null) return [null, null];
     const range = this.normalizedToRange(normalized);
