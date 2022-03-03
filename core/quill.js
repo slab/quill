@@ -125,11 +125,13 @@ class Quill {
         Quill.sources.USER,
       );
     });
-    const contents = this.clipboard.convert({
-      html: `${html}<p><br></p>`,
-      text: '\n',
-    });
-    this.setContents(contents);
+    if (html) {
+      const contents = this.clipboard.convert({
+        html: `${html}<p><br></p>`,
+        text: '\n',
+      });
+      this.setContents(contents);
+    }
     this.history.clear();
     if (this.options.placeholder) {
       this.root.setAttribute('data-placeholder', this.options.placeholder);
