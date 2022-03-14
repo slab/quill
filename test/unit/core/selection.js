@@ -330,9 +330,13 @@ describe('Selection', function() {
       this.selection.format('bold', true);
       expect(this.selection.getRange()[0].index).toEqual(4);
       expect(this.container).toEqualHTML(`
-        <p>0123<strong><span class="ql-cursor">${
-          Cursor.CONTENTS
-        }</span></strong></p>
+        <p>0123
+          <strong>
+            <span class="ql-cursor">
+              ${Cursor.CONTENTS}
+            </span>
+          </strong>
+        </p>
       `);
     });
 
@@ -343,9 +347,13 @@ describe('Selection', function() {
       expect(this.container).toEqualHTML(`
         <p>
           <em>01</em>
-          <strong><em><span class="ql-cursor">${
-            Cursor.CONTENTS
-          }</span></em></strong>
+          <strong>
+            <em>
+              <span class="ql-cursor">
+                ${Cursor.CONTENTS}
+              </span>
+            </em>
+          </strong>
           <em>23</em>
         </p>
       `);
@@ -356,9 +364,16 @@ describe('Selection', function() {
       this.selection.format('underline', true);
       expect(this.selection.getRange()[0].index).toEqual(1);
       expect(this.container).toEqualHTML(`
-        <p><em>0<u><span class="ql-cursor">${
-          Cursor.CONTENTS
-        }</span></u></em><strong>1</strong></p>
+        <p>
+          <em>0
+            <u>
+              <span class="ql-cursor">
+                ${Cursor.CONTENTS}
+              </span>
+            </u>
+          </em>
+          <strong>1</strong>
+        </p>
       `);
     });
 
@@ -367,9 +382,13 @@ describe('Selection', function() {
       this.selection.format('bold', true);
       expect(this.selection.getRange()[0].index).toEqual(0);
       expect(this.container).toEqualHTML(`
-        <p><strong><span class="ql-cursor">${
-          Cursor.CONTENTS
-        }</span></strong></p>
+        <p>
+          <strong>
+            <span class="ql-cursor">
+              ${Cursor.CONTENTS}
+            </span>
+          </strong>
+        </p>
       `);
     });
 
@@ -392,7 +411,9 @@ describe('Selection', function() {
         <p>
           01
           <em style="color: red; background-color: blue;"><u>
-            <span class="ql-cursor">${Cursor.CONTENTS}</span>
+            <span class="ql-cursor">
+              ${Cursor.CONTENTS}
+            </span>
           </u></em>
           23
         </p>
@@ -672,6 +693,46 @@ describe('Selection', function() {
       );
       this.quill.updateContents([{ retain: 1 }, { insert: '\n' }]);
       expect(selection.getBounds(2, 0)).toEqual(null);
+    });
+  });
+  describe('shadow root', function() {
+    // Some browsers don't support shadow DOM
+    if (!document.head.attachShadow) {
+      return;
+    }
+
+    let container;
+    let root;
+
+    beforeEach(function() {
+      root = document.createElement('div');
+      root.attachShadow({ mode: 'open' });
+      root.shadowRoot.innerHTML = '<div></div>';
+
+      document.body.appendChild(root);
+
+      container = root.shadowRoot.firstChild;
+    });
+
+    afterEach(function() {
+      document.body.removeChild(root);
+    });
+
+    it('getRange()', function() {
+      const selection = this.initialize(Selection, '<p>0123</p>', container);
+      selection.setNativeRange(container.firstChild.firstChild, 1);
+      const [range] = selection.getRange();
+      expect(range.index).toEqual(1);
+      expect(range.length).toEqual(0);
+    });
+
+    it('setRange()', function() {
+      const selection = this.initialize(Selection, '', container);
+      const expected = new Range(0);
+      selection.setRange(expected);
+      const [range] = selection.getRange();
+      expect(range).toEqual(expected);
+      expect(selection.hasFocus()).toBe(true);
     });
   });
 });
