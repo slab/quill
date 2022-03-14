@@ -46,7 +46,7 @@ Returns the leaf [Blot](https://github.com/quilljs/parchment) at the specified i
 **Methods**
 
 ```javascript
-getLeaf(index: Number): Blot
+getLeaf(index: Number): [Blot, Number]
 ```
 
 **Examples**
