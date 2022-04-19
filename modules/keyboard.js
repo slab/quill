@@ -269,6 +269,25 @@ class Keyboard extends Module {
     this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
     this.quill.focus();
   }
+  
+  onCaptureKeypress(event) {
+    if (event.defaultPrevented || !this.quill.isEnabled()) return;
+
+    const range = this.quill.getSelection(true);
+    if (range == null || range.length == 0) return;
+
+    event.preventDefault();
+    this.handleKeypress(range, event.key);
+  }
+
+
+  handleKeypress(range, key) {
+    const delta = new Delta().retain(range.index).delete(range.length).insert(key);
+    this.quill.updateContents(delta, Quill.sources.USER);
+
+    this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+    this.quill.focus();
+  }
 }
 
 Keyboard.DEFAULTS = {
