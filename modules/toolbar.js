@@ -147,7 +147,6 @@ class Toolbar extends Module {
     });
   }
 }
-Toolbar.DEFAULTS = {};
 
 function addButton(container, format, value) {
   const input = document.createElement('button');
@@ -213,7 +212,8 @@ Toolbar.DEFAULTS = {
           }
         });
       } else {
-        this.quill.removeFormat(range, Quill.sources.USER);
+        const { index, length } = range;
+        this.quill.removeFormat(index, length, Quill.sources.USER);
       }
     },
     direction(value) {
