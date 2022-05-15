@@ -166,7 +166,7 @@ DividerBlot.blotName = 'divider';
 DividerBlot.tagName = 'hr';
 ```
 
-Our click handler calls [`insertEmbed()`](/docs/api/#insertembed), which does not as convienently determine, save, and restore the user selection for us like [`format()`](/docs/api/#format) does, so we have to do a little more work to preserve selection ourselves. In addition, when we try to insert a BlockEmbed in the middle of the Block, Quill splits the Block for us. To make this behavior more clear, we will explicitly split the block oursevles by inserting a newline before inserting the divider. Take a look at the Babel tab in the CodePen for specifics.
+Our click handler calls [`insertEmbed()`](/docs/api/#insertembed), which does not as conveniently determine, save, and restore the user selection for us like [`format()`](/docs/api/#format) does, so we have to do a little more work to preserve selection ourselves. In addition, when we try to insert a BlockEmbed in the middle of the Block, Quill splits the Block for us. To make this behavior more clear, we will explicitly split the block oursevles by inserting a newline before inserting the divider. Take a look at the Babel tab in the CodePen for specifics.
 
 <div data-height="400" data-theme-id="23269" data-slug-hash="QEPLrv" data-default-tab="result" data-embed-version="2" class="codepen"></div>
 
