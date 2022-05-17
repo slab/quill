@@ -27,7 +27,8 @@ class Editor {
     this.scroll.batchStart();
     const normalizedDelta = normalizeDelta(delta);
     const deleteDelta = new Delta();
-    normalizedDelta.reduce((index, op) => {
+    const normalizedOps = splitOpLines(normalizedDelta.ops.slice());
+    normalizedOps.reduce((index, op) => {
       const length = Op.length(op);
       let attributes = op.attributes || {};
       let isImplicitNewlinePrepended = false;
@@ -410,6 +411,23 @@ function shiftRange(
   amount: number,
 ) {
   return new Range(index + amount, length);
+}
+
+function splitOpLines(ops) {
+  const split = [];
+  ops.forEach(op => {
+    if (typeof op.insert === 'string') {
+      const lines = op.insert.split('\n');
+      lines.forEach((line, index) => {
+        if (index) split.push({ insert: '\n', attributes: op.attributes });
+        if (line) split.push({ insert: line, attributes: op.attributes });
+      });
+    } else {
+      split.push(op);
+    }
+  });
+
+  return split;
 }
 
 export default Editor;
