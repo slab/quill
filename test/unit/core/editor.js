@@ -771,6 +771,14 @@ describe('Editor', function () {
       editor.applyDelta(new Delta().delete(4).retain(1).delete(2));
       expect(editor.scroll.domNode.innerHTML).toEqual('<p>2</p>');
     });
+
+    it('prepending bold with a newline and unformatted text', function () {
+      const editor = this.initialize(Editor, '<p><strong>a</strong></p>');
+      editor.applyDelta(new Delta().insert('\n1'));
+      expect(this.container).toEqualHTML(
+        '<p><br></p><p>1<strong>a</strong></p>',
+      );
+    });
   });
 
   describe('getFormat()', function () {
