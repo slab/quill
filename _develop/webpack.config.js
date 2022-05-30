@@ -85,7 +85,6 @@ const tsRules = {
       loader: 'ts-loader',
       options: {
         compilerOptions: {
-          declaration: false,
           module: 'es6',
           sourceMap: true,
           target: 'es6',
