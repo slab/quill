@@ -38,6 +38,10 @@ class Scroll extends ScrollBlot {
     this.emitter.emit(Emitter.events.SCROLL_BLOT_UNMOUNT, blot);
   }
 
+  emitEmbedUpdate(blot, change) {
+    this.emitter.emit(Emitter.events.SCROLL_EMBED_UPDATE, blot, change);
+  }
+
   deleteAt(index, length) {
     const [first, offset] = this.line(index);
     const [last] = this.line(index + length);
@@ -170,7 +174,7 @@ class Scroll extends ScrollBlot {
     }
     mutations = mutations.filter(({ target }) => {
       const blot = this.find(target, true);
-      return blot && blot.scroll === this;
+      return blot && !blot.updateContent;
     });
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_BEFORE_UPDATE, source, mutations);
@@ -178,6 +182,15 @@ class Scroll extends ScrollBlot {
     super.update(mutations.concat([])); // pass copy
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_UPDATE, source, mutations);
+    }
+  }
+
+  updateEmbedAt(index, key, change) {
+    // Currently it only supports top-level embeds (BlockEmbed).
+    // We can update `ParentBlot` in parchment to support inline embeds.
+    const [blot] = this.descendant(b => b instanceof BlockEmbed, index);
+    if (blot && blot.statics.blotName === key) {
+      blot.updateContent(change);
     }
   }
 }

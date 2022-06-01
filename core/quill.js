@@ -23,8 +23,8 @@ class Quill {
     logger.level(limit);
   }
 
-  static find(node) {
-    return instances.get(node) || globalRegistry.find(node);
+  static find(node, bubble = false) {
+    return instances.get(node) || globalRegistry.find(node, bubble);
   }
 
   static import(name) {
@@ -107,6 +107,22 @@ class Quill {
         this,
         () => this.editor.update(null, mutations, selectionInfo),
         source,
+      );
+    });
+    this.emitter.on(Emitter.events.SCROLL_EMBED_UPDATE, (blot, delta) => {
+      const oldRange = this.selection.lastRange;
+      const [newRange] = this.selection.getRange();
+      const selectionInfo =
+        oldRange && newRange ? { oldRange, newRange } : undefined;
+      modify.call(
+        this,
+        () => {
+          const change = new Delta()
+            .retain(blot.offset(this))
+            .retain({ [blot.statics.blotName]: delta });
+          return this.editor.update(change, [], selectionInfo);
+        },
+        Quill.sources.USER,
       );
     });
     if (html) {
@@ -609,7 +625,7 @@ function shiftRange(range, index, length, source) {
   if (range == null) return null;
   let start;
   let end;
-  if (index instanceof Delta) {
+  if (index && typeof index.transformPosition === 'function') {
     [start, end] = [range.index, range.index + range.length].map(pos =>
       index.transformPosition(pos, source !== Emitter.sources.USER),
     );
