@@ -551,8 +551,17 @@ function makeCodeBlockHandler(indent) {
     key: 'Tab',
     shiftKey: !indent,
     format: { 'code-block': true },
-    handler(range) {
+    handler(range, { event }) {
       const CodeBlock = this.quill.scroll.query('code-block');
+      if (range.length === 0 && !event.shiftKey) {
+        this.quill.insertText(range.index, CodeBlock.TAB, Quill.sources.USER);
+        this.quill.setSelection(
+          range.index + CodeBlock.TAB.length,
+          Quill.sources.SILENT,
+        );
+        return;
+      }
+
       const lines =
         range.length === 0
           ? this.quill.getLines(range.index, 1)
