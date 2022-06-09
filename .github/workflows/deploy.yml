@@ -7,9 +7,6 @@ on:
     types:
       - completed
 
-env:
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
 jobs:
   build:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -32,6 +29,8 @@ jobs:
         run: |
           npm config set '//npm.pkg.github.com/:_authToken' ${{ secrets.GH_TOKEN }}
           npm config set @typeform:registry https://npm.pkg.github.com/
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Cache node modules
         uses: actions/cache@v2
