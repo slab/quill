@@ -9,7 +9,6 @@ on:
       - main
 
 env:
-  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
 
 jobs:
   build:
@@ -52,6 +51,8 @@ jobs:
 
       - name: Install Node.js dependencies
         run: npm ci
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
 
       - name: Build
         run: npm run build
