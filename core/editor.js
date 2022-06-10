@@ -325,6 +325,9 @@ function combineFormats(formats, combined) {
     } else if (Array.isArray(combined[name])) {
       if (combined[name].indexOf(formats[name]) < 0) {
         merged[name] = combined[name].concat([formats[name]]);
+      } else {
+        // If style already exists, don't add to an array, but don't lose other styles
+        merged[name] = combined[name];
       }
     } else {
       merged[name] = [combined[name], formats[name]];

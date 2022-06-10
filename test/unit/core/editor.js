@@ -762,6 +762,41 @@ describe('Editor', function() {
       });
     });
 
+    it('across leaves repeated', function() {
+      const editor = this.initialize(
+        Editor,
+        `
+        <h1>
+          <strong class="ql-size-small"><em>01</em></strong>
+          <em class="ql-size-large"><u>23</u></em>
+          <em class="ql-size-huge"><u>45</u></em>
+          <em class="ql-size-small"><u>45</u></em>
+        </h1>
+      `,
+      );
+      expect(editor.getFormat(1, 4)).toEqual({
+        italic: true,
+        header: 1,
+        size: ['small', 'large', 'huge'],
+      });
+    });
+
+    it('across lines repeated', function() {
+      const editor = this.initialize(
+        Editor,
+        `
+        <h1 class="ql-align-right"><em>01</em></h1>
+        <h1 class="ql-align-center"><em>34</em></h1>
+        <h1 class="ql-align-right"><em>36</em></h1>
+        <h1 class="ql-align-center"><em>33</em></h1>
+      `,
+      );
+      expect(editor.getFormat(1, 3)).toEqual({
+        italic: true,
+        header: 1,
+        align: ['right', 'center'],
+      });
+    });
     it('across lines', function() {
       const editor = this.initialize(
         Editor,
