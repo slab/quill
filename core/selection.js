@@ -228,11 +228,11 @@ class Selection {
       const [node, offset] = position;
       const blot = this.scroll.find(node, true);
       const index = blot.offset(this.scroll);
-      if (offset === 0) {
-        return index;
-      }
       if (blot instanceof LeafBlot) {
         return index + blot.index(node, offset);
+      }
+      if (offset === 0) {
+        return index;
       }
       return index + blot.length();
     });
