@@ -106,6 +106,38 @@ describe('Toolbar', function() {
     });
   });
 
+  describe('shadow dom', function() {
+    // Some browsers don't support shadow DOM
+    if (!document.head.attachShadow) {
+      return;
+    }
+
+    let container;
+    let editor;
+
+    beforeEach(function() {
+      container = document.createElement('div');
+      container.attachShadow({ mode: 'open' });
+      container.shadowRoot.innerHTML = `
+        <div class="editor"></div>
+        <div class="toolbar"></div>`;
+
+      editor = new Quill(container.shadowRoot.querySelector('.editor'), {
+        modules: {
+          toolbar: '.toolbar',
+        },
+      });
+    });
+
+    it('should initialise', function() {
+      const editorDiv = container.shadowRoot.querySelector('.editor');
+      const toolbarDiv = container.shadowRoot.querySelector('.toolbar');
+      expect(editorDiv.className).toBe('editor ql-container');
+      expect(toolbarDiv.className).toBe('toolbar ql-toolbar');
+      expect(editor.container).toBe(editorDiv);
+    });
+  });
+
   describe('active', function() {
     beforeEach(function() {
       const container = this.initialize(

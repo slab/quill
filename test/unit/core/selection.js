@@ -41,6 +41,47 @@ describe('Selection', function() {
     });
   });
 
+  describe('shadow root', function() {
+    // Some browsers don't support shadow DOM
+    if (!document.head.attachShadow) {
+      return;
+    }
+
+    let container;
+    let root;
+
+    beforeEach(function() {
+      root = document.createElement('div');
+      root.attachShadow({ mode: 'open' });
+      root.shadowRoot.innerHTML = '<div></div>';
+
+      document.body.appendChild(root);
+
+      container = root.shadowRoot.firstChild;
+    });
+
+    afterEach(function() {
+      document.body.removeChild(root);
+    });
+
+    it('getRange()', function() {
+      const selection = this.initialize(Selection, '<p>0123</p>', container);
+      selection.setNativeRange(container.firstChild.firstChild, 1);
+      const [range] = selection.getRange();
+      expect(range.index).toEqual(1);
+      expect(range.length).toEqual(0);
+    });
+
+    it('setRange()', function() {
+      const selection = this.initialize(Selection, '', container);
+      const expected = new Range(0);
+      selection.setRange(expected);
+      const [range] = selection.getRange();
+      expect(range).toEqual(expected);
+      expect(selection.hasFocus()).toBe(true);
+    });
+  });
+
   describe('getRange()', function() {
     it('empty document', function() {
       const selection = this.initialize(Selection, '');
