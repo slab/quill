@@ -42,7 +42,12 @@ class Editor {
             const [leaf] = line.descendant(LeafBlot, offset);
             formats = merge(formats, bubbleFormats(leaf));
           }
-          attributes = AttributeMap.diff(formats, attributes) || {};
+          const diff = AttributeMap.diff(formats, attributes) || {};
+          if (!isEqual(diff, attributes)) {
+            attributes = merge(diff, attributes) || {};
+          } else {
+            attributes = diff;
+          }
         } else if (typeof op.insert === 'object') {
           const key = Object.keys(op.insert)[0]; // There should only be one key
           if (key == null) return index;
