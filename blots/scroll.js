@@ -27,7 +27,7 @@ class Scroll extends ScrollBlot {
   batchEnd() {
     const mutations = this.batch;
     this.batch = false;
-    this.update(mutations);
+    this.update(mutations.length ? mutations : undefined);
   }
 
   emitMount(blot) {
