@@ -1,25 +1,47 @@
 import { LeafBlot, Scope } from 'parchment';
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
-import Emitter from './emitter';
+import Emitter, { EmitterSource } from './emitter';
 import logger from './logger';
+import Cursor from '../blots/cursor';
+import Scroll from '../blots/scroll';
 
 const debug = logger('quill:selection');
 
+type NativeRange = ReturnType<Document['createRange']>;
+
+interface NormalizedRange {
+  start: {
+    node: NativeRange['startContainer'];
+    offset: NativeRange['startOffset'];
+  };
+  end: { node: NativeRange['endContainer']; offset: NativeRange['endOffset'] };
+  native: NativeRange;
+}
+
 class Range {
-  constructor(index, length = 0) {
-    this.index = index;
-    this.length = length;
-  }
+  constructor(public index: number, public length = 0) {}
 }
 
 class Selection {
-  constructor(scroll, emitter) {
+  scroll: Scroll;
+  emitter: Emitter;
+  composing: boolean;
+  mouseDown: boolean;
+
+  root: HTMLElement;
+  cursor: Cursor;
+  savedRange: Range;
+  lastRange: Range | null;
+  lastNative: NormalizedRange | null;
+
+  constructor(scroll: Scroll, emitter: Emitter) {
     this.emitter = emitter;
     this.scroll = scroll;
     this.composing = false;
     this.mouseDown = false;
     this.root = this.scroll.domNode;
+    // @ts-expect-error
     this.cursor = this.scroll.create('cursor', this);
     // savedRange is last non-null range
     this.savedRange = new Range(0, 0);
@@ -128,6 +150,7 @@ class Selection {
         const after = blot.split(nativeRange.start.offset);
         blot.parent.insertBefore(this.cursor, after);
       } else {
+        // @ts-expect-error TODO: nativeRange.start.node doesn't seem to match function signature
         blot.insertBefore(this.cursor, nativeRange.start.node); // Should never happen
       }
       this.cursor.attach();
@@ -138,11 +161,11 @@ class Selection {
     this.update();
   }
 
-  getBounds(index, length = 0) {
+  getBounds(index: number, length = 0) {
     const scrollLength = this.scroll.length();
     index = Math.min(index, scrollLength - 1);
     length = Math.min(index + length, scrollLength - 1) - index;
-    let node;
+    let node: Node;
     let [leaf, offset] = this.scroll.leaf(index);
     if (leaf == null) return null;
     [node, offset] = leaf.position(offset, true);
@@ -156,7 +179,7 @@ class Selection {
       return range.getBoundingClientRect();
     }
     let side = 'left';
-    let rect;
+    let rect: DOMRect;
     if (node instanceof Text) {
       // Return null if the text node is empty because it is
       // not able to get a useful client rect:
@@ -176,6 +199,7 @@ class Selection {
       }
       rect = range.getBoundingClientRect();
     } else {
+      if (!(leaf.domNode instanceof Element)) return null;
       rect = leaf.domNode.getBoundingClientRect();
       if (offset > 0) side = 'right';
     }
@@ -189,7 +213,7 @@ class Selection {
     };
   }
 
-  getNativeRange() {
+  getNativeRange(): NormalizedRange | null {
     const selection = document.getSelection();
     if (selection == null || selection.rangeCount <= 0) return null;
     const nativeRange = selection.getRangeAt(0);
@@ -199,7 +223,7 @@ class Selection {
     return range;
   }
 
-  getRange() {
+  getRange(): [Range, NormalizedRange] | [null, null] {
     const root = this.scroll.domNode;
     if ('isConnected' in root && !root.isConnected) {
       // document.getSelection() forces layout on Blink, so we trend to
@@ -219,8 +243,10 @@ class Selection {
     );
   }
 
-  normalizedToRange(range) {
-    const positions = [[range.start.node, range.start.offset]];
+  normalizedToRange(range: NormalizedRange) {
+    const positions: [Node, number][] = [
+      [range.start.node, range.start.offset],
+    ];
     if (!range.native.collapsed) {
       positions.push([range.end.node, range.end.offset]);
     }
@@ -241,7 +267,7 @@ class Selection {
     return new Range(start, end - start);
   }
 
-  normalizeNative(nativeRange) {
+  normalizeNative(nativeRange: NativeRange) {
     if (
       !contains(this.root, nativeRange.startContainer) ||
       (!nativeRange.collapsed && !contains(this.root, nativeRange.endContainer))
@@ -283,25 +309,24 @@ class Selection {
     return range;
   }
 
-  rangeToNative(range) {
-    const indexes = range.collapsed
-      ? [range.index]
-      : [range.index, range.index + range.length];
-    const args = [];
+  rangeToNative(range: Range): [Node | null, number, Node | null, number] {
     const scrollLength = this.scroll.length();
-    indexes.forEach((index, i) => {
+
+    const getPosition = (
+      index: number,
+      inclusive: boolean,
+    ): [Node | null, number] => {
       index = Math.min(scrollLength - 1, index);
       const [leaf, leafOffset] = this.scroll.leaf(index);
-      const [node, offset] = leaf.position(leafOffset, i !== 0);
-      args.push(node, offset);
-    });
-    if (args.length < 2) {
-      return args.concat(args);
-    }
-    return args;
+      return leaf ? leaf.position(leafOffset, inclusive) : [null, -1];
+    };
+    return [
+      ...getPosition(range.index, false),
+      ...getPosition(range.index + range.length, true),
+    ];
   }
 
-  scrollIntoView(scrollingContainer) {
+  scrollIntoView(scrollingContainer: Element) {
     const range = this.lastRange;
     if (range == null) return;
     const bounds = this.getBounds(range.index, range.length);
@@ -322,8 +347,8 @@ class Selection {
   }
 
   setNativeRange(
-    startNode,
-    startOffset,
+    startNode: Node | null,
+    startOffset?: number,
     endNode = startNode,
     endOffset = startOffset,
     force = false,
@@ -350,13 +375,13 @@ class Selection {
         endNode !== native.endContainer ||
         endOffset !== native.endOffset
       ) {
-        if (startNode.tagName === 'BR') {
+        if (startNode instanceof Element && startNode.tagName === 'BR') {
           startOffset = Array.from(startNode.parentNode.childNodes).indexOf(
             startNode,
           );
           startNode = startNode.parentNode;
         }
-        if (endNode.tagName === 'BR') {
+        if (endNode instanceof Element && endNode.tagName === 'BR') {
           endOffset = Array.from(endNode.parentNode.childNodes).indexOf(
             endNode,
           );
@@ -374,7 +399,13 @@ class Selection {
     }
   }
 
-  setRange(range, force = false, source = Emitter.sources.API) {
+  setRange(range: Range | null, force: boolean, source?: EmitterSource): void;
+  setRange(range: Range | null, source?: EmitterSource): void;
+  setRange(
+    range: Range | null,
+    force: boolean | EmitterSource = false,
+    source: EmitterSource = Emitter.sources.API,
+  ): void {
     if (typeof force === 'string') {
       source = force;
       force = false;
@@ -389,7 +420,7 @@ class Selection {
     this.update(source);
   }
 
-  update(source = Emitter.sources.USER) {
+  update(source: EmitterSource = Emitter.sources.USER) {
     const oldRange = this.lastRange;
     const [lastRange, nativeRange] = this.getRange();
     this.lastRange = lastRange;
@@ -431,7 +462,7 @@ class Selection {
 function contains(parent, descendant) {
   try {
     // Firefox inserts inaccessible nodes around video elements
-    descendant.parentNode; // eslint-disable-line no-unused-expressions
+    descendant.parentNode; // eslint-disable-line @typescript-eslint/no-unused-expressions
   } catch (e) {
     return false;
   }

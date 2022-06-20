@@ -37,24 +37,26 @@
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.5.0",
     "parchment": "^2.0.0",
-    "quill-delta": "github:quilljs/delta#87cd1e6de795eb29abe79a29429ca3b126dc9031"
+    "quill-delta": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/node": "^7.14.2",
     "@babel/preset-env": "^7.9.5",
+    "@types/eventemitter3": "^2.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-istanbul": "^6.0.0",
     "css-loader": "^3.5.1",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb": "^18.1.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^6.10.1",
     "eslint-import-resolver-webpack": "~0.12.1",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-react-hooks": "^3.0.0",
     "highlight.js": "^9.18.1",
     "html-loader": "~1.1.0",
     "http-proxy": "^1.18.0",
@@ -73,7 +75,7 @@
     "stylus": "~0.54.7",
     "stylus-loader": "^3.0.2",
     "ts-loader": "^6.2.2",
-    "typescript": "^3.8.3",
+    "typescript": "^4.6.4",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
@@ -88,9 +90,13 @@
   },
   "eslintConfig": {
     "extends": [
-      "airbnb",
+      "airbnb-base",
+      "airbnb-typescript/base",
       "prettier"
     ],
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    },
     "env": {
       "browser": true,
       "commonjs": true,
@@ -113,6 +119,14 @@
       "class-methods-use-this": [
         "off"
       ],
+      "import/no-cycle": "off",
+      "no-restricted-exports": "off",
+      "@typescript-eslint/indent": "off",
+      "@typescript-eslint/lines-between-class-members": "off",
+      "@typescript-eslint/space-before-function-paren": "off",
+      "@typescript-eslint/no-use-before-define": "off",
+      "@typescript-eslint/quotes": "off",
+      "@typescript-eslint/comma-dangle": "off",
       "import/no-extraneous-dependencies": [
         "error",
         {

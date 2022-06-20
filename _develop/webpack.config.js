@@ -80,19 +80,7 @@ const stylRules = {
 
 const tsRules = {
   test: /\.ts$/,
-  use: [
-    {
-      loader: 'ts-loader',
-      options: {
-        compilerOptions: {
-          module: 'es6',
-          sourceMap: true,
-          target: 'es6',
-        },
-        transpileOnly: true,
-      },
-    },
-  ],
+  use: [{ loader: 'ts-loader' }],
 };
 
 const baseConfig = {
@@ -114,12 +102,6 @@ const baseConfig = {
     path: path.resolve(__dirname, '../dist/'),
   },
   resolve: {
-    alias: {
-      parchment: path.resolve(
-        __dirname,
-        '../node_modules/parchment/src/parchment',
-      ),
-    },
     extensions: ['.js', '.styl', '.ts'],
   },
   module: {

@@ -664,14 +664,5 @@ describe('Selection', function() {
         this.bounds = selection.getBounds(0, 10);
       }).not.toThrow();
     });
-
-    it('empty container', function() {
-      const selection = this.initialize(
-        Selection,
-        '<table><tr><td data-row="a">a</td></tr></table>',
-      );
-      this.quill.updateContents([{ retain: 1 }, { insert: '\n' }]);
-      expect(selection.getBounds(2, 0)).toEqual(null);
-    });
   });
 });
