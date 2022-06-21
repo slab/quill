@@ -20,8 +20,8 @@
     "dist/quill.core.js",
     "dist/quill.min.js.map",
     "dist/quill.min.js",
-    "core.js",
-    "quill.js"
+    "core.ts",
+    "quill.ts"
   ],
   "config": {
     "ports": {

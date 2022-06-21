@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import Quill from '../quill.js';
+import Quill from '../quill.ts';
 import CodeBlock, { CodeBlockContainer } from '../formats/code';
 
 import './helpers/unit';

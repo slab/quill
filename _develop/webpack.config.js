@@ -17,8 +17,8 @@ const constantPack = new webpack.DefinePlugin({
 });
 
 const source = [
-  'quill.js',
-  'core.js',
+  'quill.ts',
+  'core.ts',
   'blots',
   'core',
   'formats',
@@ -87,8 +87,8 @@ const baseConfig = {
   mode: 'development',
   context: path.resolve(__dirname, '..'),
   entry: {
-    'quill.js': ['./quill.js'],
-    'quill.core.js': ['./core.js'],
+    'quill.js': ['./quill.ts'],
+    'quill.core.js': ['./core.ts'],
     'quill.core': './assets/core.styl',
     'quill.bubble': './assets/bubble.styl',
     'quill.snow': './assets/snow.styl',
@@ -134,7 +134,7 @@ module.exports = env => {
     return {
       ...prodConfig,
       mode: 'production',
-      entry: { 'quill.min.js': './quill.js' },
+      entry: { 'quill.min.js': './quill.ts' },
       devtool: 'source-map',
     };
   }
