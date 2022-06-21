@@ -4,10 +4,14 @@ import TextBlot from './text';
 const GUARD_TEXT = '\uFEFF';
 
 class Embed extends EmbedBlot {
+  contentNode: HTMLSpanElement;
+  leftGuard: Text;
+  rightGuard: Text;
+
   constructor(scroll, node) {
     super(scroll, node);
     this.contentNode = document.createElement('span');
-    this.contentNode.setAttribute('contenteditable', false);
+    this.contentNode.setAttribute('contenteditable', 'false');
     Array.from(this.domNode.childNodes).forEach(childNode => {
       this.contentNode.appendChild(childNode);
     });

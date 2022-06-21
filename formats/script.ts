@@ -1,6 +1,10 @@
 import Inline from '../blots/inline';
 
+// @ts-expect-error TODO: Inline.tagName should be string[] | string
 class Script extends Inline {
+  static blotName = 'script';
+  static tagName = ['SUB', 'SUP'];
+
   static create(value) {
     if (value === 'super') {
       return document.createElement('sup');
@@ -17,7 +21,5 @@ class Script extends Inline {
     return undefined;
   }
 }
-Script.blotName = 'script';
-Script.tagName = ['SUB', 'SUP'];
 
 export default Script;

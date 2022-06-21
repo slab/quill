@@ -8,7 +8,8 @@ ListContainer.tagName = 'OL';
 
 class ListItem extends Block {
   static create(value) {
-    const node = super.create();
+    // @ts-expect-error
+    const node = super.create() as Element;
     node.setAttribute('data-list', value);
     return node;
   }

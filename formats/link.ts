@@ -1,8 +1,13 @@
 import Inline from '../blots/inline';
 
 class Link extends Inline {
+  static blotName = 'link';
+  static tagName = 'A';
+  static SANITIZED_URL = 'about:blank';
+  static PROTOCOL_WHITELIST = ['http', 'https', 'mailto', 'tel'];
+
   static create(value) {
-    const node = super.create(value);
+    const node = super.create(value) as Element;
     node.setAttribute('href', this.sanitize(value));
     node.setAttribute('rel', 'noopener noreferrer');
     node.setAttribute('target', '_blank');
@@ -13,7 +18,7 @@ class Link extends Inline {
     return domNode.getAttribute('href');
   }
 
-  static sanitize(url) {
+  static sanitize(url: string) {
     return sanitize(url, this.PROTOCOL_WHITELIST) ? url : this.SANITIZED_URL;
   }
 
@@ -21,14 +26,11 @@ class Link extends Inline {
     if (name !== this.statics.blotName || !value) {
       super.format(name, value);
     } else {
+      // @ts-expect-error
       this.domNode.setAttribute('href', this.constructor.sanitize(value));
     }
   }
 }
-Link.blotName = 'link';
-Link.tagName = 'A';
-Link.SANITIZED_URL = 'about:blank';
-Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto', 'tel'];
 
 function sanitize(url, protocols) {
   const anchor = document.createElement('a');

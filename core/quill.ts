@@ -87,7 +87,7 @@ class Quill {
 
   static register(
     path: string | BlotConstructor | Parchment.Attributor,
-    target: BlotConstructor | Parchment.Attributor,
+    target?: BlotConstructor | Parchment.Attributor,
     overwrite = false,
   ) {
     if (typeof path !== 'string') {

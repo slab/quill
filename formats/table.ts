@@ -1,9 +1,14 @@
+import LinkedList from 'parchment/dist/typings/collection/linked-list';
 import Block from '../blots/block';
 import Container from '../blots/container';
 
 class TableCell extends Block {
+  static blotName = 'table';
+  static tagName = 'TD';
+
   static create(value) {
-    const node = super.create();
+    // @ts-expect-error
+    const node = super.create() as Element;
     if (value) {
       node.setAttribute('data-row', value);
     } else {
@@ -34,8 +39,10 @@ class TableCell extends Block {
     }
   }
 
-  row() {
-    return this.parent;
+  // eslint-disable-next-line no-use-before-define
+  row(): TableRow {
+    // eslint-disable-next-line no-use-before-define
+    return this.parent as TableRow;
   }
 
   rowOffset() {
@@ -49,15 +56,17 @@ class TableCell extends Block {
     return this.row() && this.row().table();
   }
 }
-TableCell.blotName = 'table';
-TableCell.tagName = 'TD';
 
 class TableRow extends Container {
   checkMerge() {
     if (super.checkMerge() && this.next.children.head != null) {
+      // @ts-expect-error all children are table cells
       const thisHead = this.children.head.formats();
+      // @ts-expect-error all children are table cells
       const thisTail = this.children.tail.formats();
+      // @ts-expect-error all children are table cells
       const nextHead = this.next.children.head.formats();
+      // @ts-expect-error all children are table cells
       const nextTail = this.next.children.tail.formats();
       return (
         thisHead.table === thisTail.table &&
@@ -69,18 +78,22 @@ class TableRow extends Container {
   }
 
   optimize(...args) {
+    // @ts-expect-error
     super.optimize(...args);
-    this.children.forEach(child => {
+    (this.children as LinkedList<TableCell>).forEach(child => {
       if (child.next == null) return;
       const childFormats = child.formats();
+      // @ts-expect-error
       const nextFormats = child.next.formats();
       if (childFormats.table !== nextFormats.table) {
         const next = this.splitAfter(child);
         if (next) {
+          // @ts-expect-error TODO: parameters of optimize() should be a optional
           next.optimize();
         }
         // We might be able to merge with prev now
         if (this.prev) {
+          // @ts-expect-error TODO: parameters of optimize() should be a optional
           this.prev.optimize();
         }
       }
@@ -107,7 +120,8 @@ TableBody.tagName = 'TBODY';
 
 class TableContainer extends Container {
   balanceCells() {
-    const rows = this.descendants(TableRow);
+    // @ts-expect-error TODO: fix signature of ParentBlot.descendants
+    const rows = this.descendants(TableRow) as TableRow[];
     const maxColumns = rows.reduce((max, row) => {
       return Math.max(row.children.length, max);
     }, 0);
@@ -119,6 +133,7 @@ class TableContainer extends Container {
         }
         const blot = this.scroll.create(TableCell.blotName, value);
         row.appendChild(blot);
+        // @ts-expect-error TODO: parameters of optimize() should be a optional
         blot.optimize(); // Add break blot
       });
     });
@@ -129,20 +144,22 @@ class TableContainer extends Container {
   }
 
   deleteColumn(index) {
-    const [body] = this.descendant(TableBody);
+    // @ts-expect-error
+    const [body] = this.descendant(TableBody) as TableBody[];
     if (body == null || body.children.head == null) return;
     body.children.forEach(row => {
-      const cell = row.children.at(index);
+      const cell = (row as TableRow).children.at(index);
       if (cell != null) {
         cell.remove();
       }
     });
   }
 
-  insertColumn(index) {
-    const [body] = this.descendant(TableBody);
+  insertColumn(index: number) {
+    // @ts-expect-error
+    const [body] = this.descendant(TableBody) as TableBody[];
     if (body == null || body.children.head == null) return;
-    body.children.forEach(row => {
+    (body.children as LinkedList<TableRow>).forEach(row => {
       const ref = row.children.at(index);
       const value = TableCell.formats(row.children.head.domNode);
       const cell = this.scroll.create(TableCell.blotName, value);
@@ -150,11 +167,13 @@ class TableContainer extends Container {
     });
   }
 
-  insertRow(index) {
-    const [body] = this.descendant(TableBody);
+  insertRow(index: number) {
+    // @ts-expect-error
+    const [body] = this.descendant(TableBody) as TableBody[];
     if (body == null || body.children.head == null) return;
     const id = tableId();
-    const row = this.scroll.create(TableRow.blotName);
+    const row = this.scroll.create(TableRow.blotName) as TableRow;
+    // @ts-expect-error
     body.children.head.children.forEach(() => {
       const cell = this.scroll.create(TableCell.blotName, id);
       row.appendChild(cell);
@@ -166,6 +185,7 @@ class TableContainer extends Container {
   rows() {
     const body = this.children.head;
     if (body == null) return [];
+    // @ts-expect-error
     return body.children.map(row => row);
   }
 }

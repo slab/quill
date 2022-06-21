@@ -1,12 +1,18 @@
 import Embed from '../blots/embed';
 
 class Formula extends Embed {
+  static blotName = 'formula';
+  static className = 'ql-formula';
+  static tagName = 'SPAN';
+
   static create(value) {
+    // @ts-expect-error
     if (window.katex == null) {
       throw new Error('Formula module requires KaTeX.');
     }
-    const node = super.create(value);
+    const node = super.create(value) as Element;
     if (typeof value === 'string') {
+      // @ts-expect-error
       window.katex.render(value, node, {
         throwOnError: false,
         errorColor: '#f00',
@@ -16,7 +22,7 @@ class Formula extends Embed {
     return node;
   }
 
-  static value(domNode) {
+  static value(domNode: Element) {
     return domNode.getAttribute('data-value');
   }
 
@@ -25,8 +31,5 @@ class Formula extends Embed {
     return `<span>${formula}</span>`;
   }
 }
-Formula.blotName = 'formula';
-Formula.className = 'ql-formula';
-Formula.tagName = 'SPAN';
 
 export default Formula;
