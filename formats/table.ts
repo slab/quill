@@ -39,9 +39,7 @@ class TableCell extends Block {
     }
   }
 
-  // eslint-disable-next-line no-use-before-define
   row(): TableRow {
-    // eslint-disable-next-line no-use-before-define
     return this.parent as TableRow;
   }
 

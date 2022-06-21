@@ -88,77 +88,6 @@
   "bugs": {
     "url": "https://github.com/quilljs/quill/issues"
   },
-  "eslintConfig": {
-    "extends": [
-      "airbnb-base",
-      "airbnb-typescript/base",
-      "prettier"
-    ],
-    "parserOptions": {
-      "project": "./tsconfig.json"
-    },
-    "env": {
-      "browser": true,
-      "commonjs": true,
-      "es6": true
-    },
-    "plugins": [
-      "prettier"
-    ],
-    "settings": {
-      "import/resolver": {
-        "webpack": {
-          "config": "_develop/webpack.config.js"
-        }
-      }
-    },
-    "rules": {
-      "arrow-body-style": [
-        "off"
-      ],
-      "class-methods-use-this": [
-        "off"
-      ],
-      "import/no-cycle": "off",
-      "no-restricted-exports": "off",
-      "@typescript-eslint/indent": "off",
-      "@typescript-eslint/lines-between-class-members": "off",
-      "@typescript-eslint/space-before-function-paren": "off",
-      "@typescript-eslint/no-use-before-define": "off",
-      "@typescript-eslint/quotes": "off",
-      "@typescript-eslint/comma-dangle": "off",
-      "import/no-extraneous-dependencies": [
-        "error",
-        {
-          "devDependencies": [
-            "_develop/*.js",
-            "test/**/*.js"
-          ]
-        }
-      ],
-      "no-param-reassign": [
-        "off"
-      ],
-      "no-use-before-define": [
-        "error",
-        {
-          "functions": false
-        }
-      ],
-      "import/named": [
-        "error"
-      ],
-      "max-classes-per-file": [
-        "off"
-      ],
-      "prettier/prettier": "error"
-    }
-  },
-  "eslintIgnore": [
-    "dist/",
-    "docs/",
-    "node_modules/"
-  ],
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all"
@@ -168,7 +97,7 @@
     "build:webpack": "webpack --config _develop/webpack.config.js; rm dist/quill.core dist/quill.bubble dist/quill.snow",
     "build:release": "./_develop/scripts/release.sh",
     "develop": "npm run start",
-    "lint": "eslint blots core formats modules themes ui test",
+    "lint": "eslint .",
     "start": "npm run build:webpack; bundle exec foreman start -f _develop/procfile",
     "test": "npm run test:unit; npm run test:random",
     "test:all": "npm run test:unit; npm run test:functional; npm run test:random",

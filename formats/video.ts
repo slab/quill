@@ -34,6 +34,7 @@ class Video extends BlockEmbed {
   }
 
   domNode: HTMLVideoElement;
+
   format(name, value) {
     if (ATTRIBUTES.indexOf(name) > -1) {
       if (value) {
