@@ -30,6 +30,8 @@ class Selection {
     this.emitter.listenDOM('selectionchange', document, () => {
       if (!this.mouseDown && !this.composing) {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
+      } else if (this.lastRange != null && (this.lastRange.index > 0 || this.lastRange.length > 0)) {
+        this.focus();
       }
     });
     this.emitter.on(Emitter.events.SCROLL_BEFORE_UPDATE, () => {
