@@ -161,10 +161,10 @@ class Quill {
     this.root.classList.add('ql-blank');
     this.scrollingContainer = this.options.scrollingContainer || this.root;
     this.emitter = new Emitter();
-    // @ts-expect-error
-    const ScrollBlot: ScrollConstructor = this.options.registry.query(
+    // @ts-expect-error TODO: fix BlotConstructor
+    const ScrollBlot = this.options.registry.query(
       Parchment.ScrollBlot.blotName,
-    );
+    ) as ScrollConstructor;
     this.scroll = new ScrollBlot(this.options.registry, this.root, {
       emitter: this.emitter,
     });

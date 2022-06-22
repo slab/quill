@@ -7,18 +7,17 @@ import {
   Registry,
 } from 'parchment';
 import { Blot, Parent } from 'parchment/dist/typings/blot/abstract/blot';
-import Delta from 'quill-delta';
 import Emitter, { EmitterSource } from '../core/emitter';
 import Block, { BlockEmbed } from './block';
 import Break from './break';
 import Container from './container';
 
-function isLine(blot: Blot): blot is Block | BlockEmbed {
+function isLine(blot: unknown): blot is Block | BlockEmbed {
   return blot instanceof Block || blot instanceof BlockEmbed;
 }
 
 interface UpdatableEmbed {
-  updateContent(change: Delta): void;
+  updateContent(change: unknown): void;
 }
 
 function isUpdatable(blot: Blot): blot is Blot & UpdatableEmbed {
@@ -123,12 +122,11 @@ class Scroll extends ScrollBlot {
     this.optimize();
   }
 
-  insertBefore(blot, ref) {
+  insertBefore(blot: Blot, ref?: Blot) {
     if (blot.statics.scope === Scope.INLINE_BLOT) {
-      // @ts-expect-error Currently the type is not enforced
-      const wrapper: Parent = this.scroll.create(
+      const wrapper = this.scroll.create(
         this.statics.defaultChild.blotName,
-      );
+      ) as Parent;
       wrapper.appendChild(blot);
       super.insertBefore(wrapper, ref);
     } else {
@@ -140,17 +138,14 @@ class Scroll extends ScrollBlot {
     return this.domNode.getAttribute('contenteditable') === 'true';
   }
 
-  leaf(index: number): [LeafBlot, number] | [null, -1] {
+  leaf(index: number): [LeafBlot | null, number] {
     const last = this.path(index).pop();
     if (!last) {
       return [null, -1];
     }
 
     const [blot, offset] = last;
-    if (!(blot instanceof LeafBlot)) {
-      return [null, -1];
-    }
-    return [blot, offset];
+    return blot instanceof LeafBlot ? [blot, offset] : [null, -1];
   }
 
   line(index: number): [Block | BlockEmbed | null, number] {
@@ -194,7 +189,7 @@ class Scroll extends ScrollBlot {
     }
   }
 
-  path(index) {
+  path(index: number) {
     return super.path(index).slice(1); // Exclude self
   }
 
@@ -202,9 +197,9 @@ class Scroll extends ScrollBlot {
     // Never remove self
   }
 
-  update(source?: EmitterSource);
-  update(mutations?: MutationRecord[]);
-  update(mutations?: MutationRecord[] | EmitterSource) {
+  update(source?: EmitterSource): void;
+  update(mutations?: MutationRecord[]): void;
+  update(mutations?: MutationRecord[] | EmitterSource): void {
     if (this.batch) {
       if (Array.isArray(mutations)) {
         this.batch = this.batch.concat(mutations);
@@ -231,7 +226,7 @@ class Scroll extends ScrollBlot {
     }
   }
 
-  updateEmbedAt(index, key, change) {
+  updateEmbedAt(index: number, key: string, change: unknown) {
     // Currently it only supports top-level embeds (BlockEmbed).
     // We can update `ParentBlot` in parchment to support inline embeds.
     const [blot] = this.descendant(b => b instanceof BlockEmbed, index);

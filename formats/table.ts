@@ -24,6 +24,8 @@ class TableCell extends Block {
     return undefined;
   }
 
+  next: this | null;
+
   cellOffset() {
     if (this.parent) {
       return this.parent.children.indexOf(this);
@@ -56,15 +58,17 @@ class TableCell extends Block {
 }
 
 class TableRow extends Container {
+  static blotName = 'table-row';
+  static tagName = 'TR';
+
+  children: LinkedList<TableCell>;
+  next: this | null;
+
   checkMerge() {
     if (super.checkMerge() && this.next.children.head != null) {
-      // @ts-expect-error all children are table cells
       const thisHead = this.children.head.formats();
-      // @ts-expect-error all children are table cells
       const thisTail = this.children.tail.formats();
-      // @ts-expect-error all children are table cells
       const nextHead = this.next.children.head.formats();
-      // @ts-expect-error all children are table cells
       const nextTail = this.next.children.tail.formats();
       return (
         thisHead.table === thisTail.table &&
@@ -78,10 +82,9 @@ class TableRow extends Container {
   optimize(...args) {
     // @ts-expect-error
     super.optimize(...args);
-    (this.children as LinkedList<TableCell>).forEach(child => {
+    this.children.forEach(child => {
       if (child.next == null) return;
       const childFormats = child.formats();
-      // @ts-expect-error
       const nextFormats = child.next.formats();
       if (childFormats.table !== nextFormats.table) {
         const next = this.splitAfter(child);
@@ -109,14 +112,20 @@ class TableRow extends Container {
     return this.parent && this.parent.parent;
   }
 }
-TableRow.blotName = 'table-row';
-TableRow.tagName = 'TR';
 
-class TableBody extends Container {}
-TableBody.blotName = 'table-body';
-TableBody.tagName = 'TBODY';
+class TableBody extends Container {
+  static blotName = 'table-body';
+  static tagName = 'TBODY';
+
+  children: LinkedList<TableRow>;
+}
 
 class TableContainer extends Container {
+  static blotName = 'table-container';
+  static tagName = 'TABLE';
+
+  children: LinkedList<TableBody>;
+
   balanceCells() {
     // @ts-expect-error TODO: fix signature of ParentBlot.descendants
     const rows = this.descendants(TableRow) as TableRow[];
@@ -137,16 +146,16 @@ class TableContainer extends Container {
     });
   }
 
-  cells(column) {
+  cells(column: number) {
     return this.rows().map(row => row.children.at(column));
   }
 
-  deleteColumn(index) {
+  deleteColumn(index: number) {
     // @ts-expect-error
     const [body] = this.descendant(TableBody) as TableBody[];
     if (body == null || body.children.head == null) return;
     body.children.forEach(row => {
-      const cell = (row as TableRow).children.at(index);
+      const cell = row.children.at(index);
       if (cell != null) {
         cell.remove();
       }
@@ -157,7 +166,7 @@ class TableContainer extends Container {
     // @ts-expect-error
     const [body] = this.descendant(TableBody) as TableBody[];
     if (body == null || body.children.head == null) return;
-    (body.children as LinkedList<TableRow>).forEach(row => {
+    body.children.forEach(row => {
       const ref = row.children.at(index);
       const value = TableCell.formats(row.children.head.domNode);
       const cell = this.scroll.create(TableCell.blotName, value);
@@ -171,7 +180,6 @@ class TableContainer extends Container {
     if (body == null || body.children.head == null) return;
     const id = tableId();
     const row = this.scroll.create(TableRow.blotName) as TableRow;
-    // @ts-expect-error
     body.children.head.children.forEach(() => {
       const cell = this.scroll.create(TableCell.blotName, id);
       row.appendChild(cell);
@@ -183,12 +191,9 @@ class TableContainer extends Container {
   rows() {
     const body = this.children.head;
     if (body == null) return [];
-    // @ts-expect-error
     return body.children.map(row => row);
   }
 }
-TableContainer.blotName = 'table-container';
-TableContainer.tagName = 'TABLE';
 
 TableContainer.allowedChildren = [TableBody];
 TableBody.requiredContainer = TableContainer;
