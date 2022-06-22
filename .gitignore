@@ -1,4 +1,7 @@
 .*
+!.eslintrc.json
+!.eslintignore
+
 /dist
 /node_modules
 /selenium

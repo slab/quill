@@ -41,7 +41,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
-    "@babel/node": "^7.14.2",
     "@babel/preset-env": "^7.9.5",
     "@types/eventemitter3": "^2.0.2",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
@@ -75,6 +74,7 @@
     "stylus": "~0.54.7",
     "stylus-loader": "^3.0.2",
     "ts-loader": "^6.2.2",
+    "ts-node": "^10.8.1",
     "typescript": "^4.6.4",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
@@ -103,7 +103,7 @@
     "test:all": "npm run test:unit; npm run test:functional; npm run test:random",
     "test:functional": "./_develop/scripts/puppeteer.sh",
     "test:unit": "npm run build; karma start _develop/karma.config.js",
-    "test:random": "babel-node ./node_modules/.bin/jasmine test/random.js --presets=@babel/preset-env",
+    "test:random": "ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/jasmine test/random.js",
     "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage",
     "travis": "npm run lint && karma start _develop/karma.config.js --reporters dots,saucelabs"
   },
