@@ -521,6 +521,16 @@ describe('Selection', function() {
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
 
+    it('with cursor', function() {
+      const selection = this.initialize(Selection, '<p><br></p>', this.div);
+      selection.format('bold', true);
+      this.bounds = selection.getBounds(0);
+      if (/Android/i.test(navigator.userAgent)) return; // false positive on emulators atm
+      expect(this.bounds.left).toBeApproximately(this.reference.left, 1);
+      expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
+      expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
+    });
+
     it('empty line', function() {
       const selection = this.initialize(
         Selection,
