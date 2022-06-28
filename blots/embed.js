@@ -25,6 +25,9 @@ class Embed extends EmbedBlot {
   }
 
   restore(node) {
+    if (node.data === GUARD_TEXT) {
+      return null;
+    }
     let range;
     let textNode;
     const text = node.data.split(GUARD_TEXT).join('');
