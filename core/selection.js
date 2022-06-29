@@ -430,12 +430,11 @@ class Selection {
 
 function contains(parent, descendant) {
   try {
-    // Firefox inserts inaccessible nodes around video elements
-    descendant.parentNode; // eslint-disable-line no-unused-expressions
+    return parent.contains(descendant);
   } catch (e) {
+    // Firefox inserts inaccessible nodes around video elements
     return false;
   }
-  return parent.contains(descendant);
 }
 
 export { Range, Selection as default };
