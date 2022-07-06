@@ -1,12 +1,23 @@
-import { EmbedBlot, Scope } from 'parchment';
+import { EmbedBlot, Scope, ScrollBlot } from 'parchment';
+import { Parent } from 'parchment/dist/typings/blot/abstract/blot';
+import Selection from '../core/selection';
 import TextBlot from './text';
 
 class Cursor extends EmbedBlot {
+  static blotName = 'cursor';
+  static className = 'ql-cursor';
+  static tagName = 'span';
+  static CONTENTS = '\uFEFF'; // Zero width no break space
+
   static value() {
     return undefined;
   }
 
-  constructor(scroll, domNode, selection) {
+  selection: Selection;
+  textNode: Text;
+  savedLength: number;
+
+  constructor(scroll: ScrollBlot, domNode, selection: Selection) {
     super(scroll, domNode);
     this.selection = selection;
     this.textNode = document.createTextNode(Cursor.CONTENTS);
@@ -24,7 +35,7 @@ class Cursor extends EmbedBlot {
       super.format(name, value);
       return;
     }
-    let target = this;
+    let target: Parent | this = this;
     let index = 0;
     while (target != null && target.statics.scope !== Scope.BLOCK_BLOT) {
       index += target.offset(target.parent);
@@ -32,6 +43,7 @@ class Cursor extends EmbedBlot {
     }
     if (target != null) {
       this.savedLength = Cursor.CONTENTS.length;
+      // @ts-expect-error TODO: allow empty context in Parchment
       target.optimize();
       target.formatAt(index, Cursor.CONTENTS.length, name, value);
       this.savedLength = 0;
@@ -47,7 +59,7 @@ class Cursor extends EmbedBlot {
     return this.savedLength;
   }
 
-  position() {
+  position(): [Text, number] {
     return [this.textNode, this.textNode.data.length];
   }
 
@@ -74,6 +86,7 @@ class Cursor extends EmbedBlot {
     const prevTextBlot = this.prev instanceof TextBlot ? this.prev : null;
     const prevTextLength = prevTextBlot ? prevTextBlot.length() : 0;
     const nextTextBlot = this.next instanceof TextBlot ? this.next : null;
+    // @ts-expect-error TODO: make TextBlot.text public
     const nextText = nextTextBlot ? nextTextBlot.text : '';
     const { textNode } = this;
     // take text from inside this blot and reset it
@@ -155,13 +168,14 @@ class Cursor extends EmbedBlot {
   //    <span class="ql-cursor"><a>\uFEFF{I}</a></span>
   // And then "x" will be inserted after `<a/>`:
   //    <span class="ql-cursor"><a>\uFEFF</a>d{I}</span>
-  optimize(context) {
+  optimize(context?: unknown) {
     super.optimize(context);
 
     let { parent } = this;
     while (parent) {
       if (parent.domNode.tagName === 'A') {
         this.savedLength = Cursor.CONTENTS.length;
+        // @ts-expect-error TODO: make isolate generic
         parent.isolate(this.offset(parent), this.length()).unwrap();
         this.savedLength = 0;
         break;
@@ -174,9 +188,5 @@ class Cursor extends EmbedBlot {
     return '';
   }
 }
-Cursor.blotName = 'cursor';
-Cursor.className = 'ql-cursor';
-Cursor.tagName = 'span';
-Cursor.CONTENTS = '\uFEFF'; // Zero width no break space
 
 export default Cursor;

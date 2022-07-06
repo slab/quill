@@ -1,15 +1,44 @@
-import { Scope, ScrollBlot, ContainerBlot, LeafBlot } from 'parchment';
-import Emitter from '../core/emitter';
+import {
+  Scope,
+  ScrollBlot,
+  ContainerBlot,
+  LeafBlot,
+  ParentBlot,
+  Registry,
+} from 'parchment';
+import { Blot, Parent } from 'parchment/dist/typings/blot/abstract/blot';
+import Emitter, { EmitterSource } from '../core/emitter';
 import Block, { BlockEmbed } from './block';
 import Break from './break';
 import Container from './container';
 
-function isLine(blot) {
+function isLine(blot: unknown): blot is Block | BlockEmbed {
   return blot instanceof Block || blot instanceof BlockEmbed;
 }
 
+interface UpdatableEmbed {
+  updateContent(change: unknown): void;
+}
+
+function isUpdatable(blot: Blot): blot is Blot & UpdatableEmbed {
+  return typeof ((blot as unknown) as any).updateContent === 'function';
+}
+
 class Scroll extends ScrollBlot {
-  constructor(registry, domNode, { emitter }) {
+  static blotName = 'scroll';
+  static className = 'ql-editor';
+  static tagName = 'DIV';
+  static defaultChild = Block;
+  static allowedChildren = [Block, BlockEmbed, Container];
+
+  emitter: Emitter;
+  batch: false | MutationRecord[];
+
+  constructor(
+    registry: Registry,
+    domNode: HTMLDivElement,
+    { emitter }: { emitter: Emitter },
+  ) {
     super(registry, domNode);
     this.emitter = emitter;
     this.batch = false;
@@ -25,6 +54,7 @@ class Scroll extends ScrollBlot {
   }
 
   batchEnd() {
+    if (!this.batch) return;
     const mutations = this.batch;
     this.batch = false;
     this.update(mutations);
@@ -60,7 +90,7 @@ class Scroll extends ScrollBlot {
   }
 
   enable(enabled = true) {
-    this.domNode.setAttribute('contenteditable', enabled);
+    this.domNode.setAttribute('contenteditable', enabled ? 'true' : 'false');
   }
 
   formatAt(index, length, format, value) {
@@ -72,7 +102,7 @@ class Scroll extends ScrollBlot {
     event.preventDefault();
   }
 
-  insertAt(index, value, def) {
+  insertAt(index: number, value: string, def?: unknown) {
     if (index >= this.length()) {
       if (def == null || this.scroll.query(value, Scope.BLOCK) == null) {
         const blot = this.scroll.create(this.statics.defaultChild.blotName);
@@ -92,9 +122,11 @@ class Scroll extends ScrollBlot {
     this.optimize();
   }
 
-  insertBefore(blot, ref) {
+  insertBefore(blot: Blot, ref?: Blot) {
     if (blot.statics.scope === Scope.INLINE_BLOT) {
-      const wrapper = this.scroll.create(this.statics.defaultChild.blotName);
+      const wrapper = this.scroll.create(
+        this.statics.defaultChild.blotName,
+      ) as Parent;
       wrapper.appendChild(blot);
       super.insertBefore(wrapper, ref);
     } else {
@@ -106,23 +138,30 @@ class Scroll extends ScrollBlot {
     return this.domNode.getAttribute('contenteditable') === 'true';
   }
 
-  leaf(index) {
+  leaf(index: number): [LeafBlot | null, number] {
     const last = this.path(index).pop();
-    if (!last || !(last[0] instanceof LeafBlot)) {
+    if (!last) {
       return [null, -1];
     }
-    return last;
+
+    const [blot, offset] = last;
+    return blot instanceof LeafBlot ? [blot, offset] : [null, -1];
   }
 
-  line(index) {
+  line(index: number): [Block | BlockEmbed | null, number] {
     if (index === this.length()) {
       return this.line(index - 1);
     }
+    // @ts-expect-error TODO: make descendant() generic
     return this.descendant(isLine, index);
   }
 
-  lines(index = 0, length = Number.MAX_VALUE) {
-    const getLines = (blot, blotIndex, blotLength) => {
+  lines(index = 0, length = Number.MAX_VALUE): (Block | BlockEmbed)[] {
+    const getLines = (
+      blot: ParentBlot,
+      blotIndex: number,
+      blotLength: number,
+    ) => {
       let lines = [];
       let lengthLeft = blotLength;
       blot.children.forEachAt(
@@ -150,7 +189,7 @@ class Scroll extends ScrollBlot {
     }
   }
 
-  path(index) {
+  path(index: number) {
     return super.path(index).slice(1); // Exclude self
   }
 
@@ -158,14 +197,16 @@ class Scroll extends ScrollBlot {
     // Never remove self
   }
 
-  update(mutations) {
+  update(source?: EmitterSource): void;
+  update(mutations?: MutationRecord[]): void;
+  update(mutations?: MutationRecord[] | EmitterSource): void {
     if (this.batch) {
       if (Array.isArray(mutations)) {
         this.batch = this.batch.concat(mutations);
       }
       return;
     }
-    let source = Emitter.sources.USER;
+    let source: EmitterSource = Emitter.sources.USER;
     if (typeof mutations === 'string') {
       source = mutations;
     }
@@ -174,7 +215,7 @@ class Scroll extends ScrollBlot {
     }
     mutations = mutations.filter(({ target }) => {
       const blot = this.find(target, true);
-      return blot && !blot.updateContent;
+      return blot && !isUpdatable(blot);
     });
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_BEFORE_UPDATE, source, mutations);
@@ -185,19 +226,22 @@ class Scroll extends ScrollBlot {
     }
   }
 
-  updateEmbedAt(index, key, change) {
+  updateEmbedAt(index: number, key: string, change: unknown) {
     // Currently it only supports top-level embeds (BlockEmbed).
     // We can update `ParentBlot` in parchment to support inline embeds.
     const [blot] = this.descendant(b => b instanceof BlockEmbed, index);
-    if (blot && blot.statics.blotName === key) {
+    if (blot && blot.statics.blotName === key && isUpdatable(blot)) {
       blot.updateContent(change);
     }
   }
 }
-Scroll.blotName = 'scroll';
-Scroll.className = 'ql-editor';
-Scroll.tagName = 'DIV';
-Scroll.defaultChild = Block;
-Scroll.allowedChildren = [Block, BlockEmbed, Container];
+
+export interface ScrollConstructor {
+  new (
+    registry: Registry,
+    domNode: HTMLDivElement,
+    options: { emitter: Emitter },
+  ): Scroll;
+}
 
 export default Scroll;

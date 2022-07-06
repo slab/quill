@@ -1,23 +1,27 @@
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import merge from 'lodash.merge';
-import Delta, { AttributeMap, Op } from 'quill-delta';
 import { LeafBlot, Scope } from 'parchment';
-import { Range } from './selection';
-import CursorBlot from '../blots/cursor';
+import Delta, { AttributeMap, Op } from 'quill-delta';
 import Block, { BlockEmbed, bubbleFormats } from '../blots/block';
 import Break from '../blots/break';
+import CursorBlot from '../blots/cursor';
+import Scroll from '../blots/scroll';
 import TextBlot, { escapeText } from '../blots/text';
+import { Range } from './selection';
 
 const ASCII = /^[ -~]*$/;
 
 class Editor {
-  constructor(scroll) {
+  scroll: Scroll;
+  delta: Delta;
+
+  constructor(scroll: Scroll) {
     this.scroll = scroll;
     this.delta = this.getDelta();
   }
 
-  applyDelta(delta) {
+  applyDelta(delta: Delta) {
     this.scroll.update();
     let scrollLength = this.scroll.length();
     this.scroll.batchStart();
@@ -31,14 +35,17 @@ class Editor {
         deleteDelta.retain(length);
         if (typeof op.insert === 'string') {
           const text = op.insert;
+          // @ts-expect-error TODO: Fix this the next time the file is edited.
           addedNewline =
             !text.endsWith('\n') &&
             (scrollLength <= index ||
+              // @ts-expect-error
               this.scroll.descendant(BlockEmbed, index)[0]);
           this.scroll.insertAt(index, text);
           const [line, offset] = this.scroll.line(index);
           let formats = merge({}, bubbleFormats(line));
           if (line instanceof Block) {
+            // @ts-expect-error
             const [leaf] = line.descendant(LeafBlot, offset);
             formats = merge(formats, bubbleFormats(leaf));
           }
@@ -46,9 +53,11 @@ class Editor {
         } else if (typeof op.insert === 'object') {
           const key = Object.keys(op.insert)[0]; // There should only be one key
           if (key == null) return index;
+          // @ts-expect-error TODO: Fix this the next time the file is edited.
           addedNewline =
             this.scroll.query(key, Scope.INLINE) != null &&
             (scrollLength <= index ||
+              // @ts-expect-error
               this.scroll.descendant(BlockEmbed, index)[0]);
           this.scroll.insertAt(index, key, op.insert[key]);
         }
@@ -131,6 +140,7 @@ class Editor {
       });
     } else {
       lines = this.scroll.lines(index, length);
+      // @ts-expect-error
       leaves = this.scroll.descendants(LeafBlot, index, length);
     }
     [lines, leaves] = [lines, leaves].map(blots => {
@@ -180,8 +190,9 @@ class Editor {
   isBlank() {
     if (this.scroll.children.length === 0) return true;
     if (this.scroll.children.length > 1) return false;
-    const block = this.scroll.children.head;
-    if (block.statics.blotName !== Block.blotName) return false;
+    const blot = this.scroll.children.head;
+    if (blot.statics.blotName !== Block.blotName) return false;
+    const block = blot as Block;
     if (block.children.length > 1) return false;
     return block.children.head instanceof Break;
   }
@@ -218,6 +229,7 @@ class Editor {
       const index = textBlot.offset(this.scroll);
       const oldValue = mutations[0].oldValue.replace(CursorBlot.CONTENTS, '');
       const oldText = new Delta().insert(oldValue);
+      // @ts-expect-error
       const newText = new Delta().insert(textBlot.value());
       const relativeSelectionInfo = selectionInfo && {
         oldRange: shiftRange(selectionInfo.oldRange, -index),
@@ -348,7 +360,7 @@ function getListType(type) {
   }
 }
 
-function normalizeDelta(delta) {
+function normalizeDelta(delta: Delta) {
   return delta.reduce((normalizedDelta, op) => {
     if (typeof op.insert === 'string') {
       const text = op.insert.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
@@ -358,7 +370,10 @@ function normalizeDelta(delta) {
   }, new Delta());
 }
 
-function shiftRange({ index, length }, amount) {
+function shiftRange(
+  { index, length }: { index: number; length: number },
+  amount: number,
+) {
   return new Range(index + amount, length);
 }
 

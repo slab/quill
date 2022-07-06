@@ -1,4 +1,3 @@
-import Delta from 'quill-delta';
 import {
   AttributorStore,
   BlockBlot,
@@ -6,6 +5,8 @@ import {
   LeafBlot,
   Scope,
 } from 'parchment';
+import { Blot } from 'parchment/dist/typings/blot/abstract/blot';
+import Delta from 'quill-delta';
 import Break from './break';
 import Inline from './inline';
 import TextBlot from './text';
@@ -13,10 +14,7 @@ import TextBlot from './text';
 const NEWLINE_LENGTH = 1;
 
 class Block extends BlockBlot {
-  constructor(scroll, domNode) {
-    super(scroll, domNode);
-    this.cache = {};
-  }
+  cache: { delta?: Delta | null; length?: number } = {};
 
   delta() {
     if (this.cache.delta == null) {
@@ -47,7 +45,7 @@ class Block extends BlockBlot {
     this.cache = {};
   }
 
-  insertAt(index, value, def) {
+  insertAt(index, value, def?: unknown) {
     if (def != null) {
       super.insertAt(index, value, def);
       this.cache = {};
@@ -64,7 +62,7 @@ class Block extends BlockBlot {
       }
       this.cache = {};
     }
-    let block = this;
+    let block: Blot | this = this;
     lines.reduce((lineIndex, line) => {
       block = block.split(lineIndex, true);
       block.insertAt(0, line);
@@ -128,6 +126,9 @@ Block.defaultChild = Break;
 Block.allowedChildren = [Break, Inline, EmbedBlot, TextBlot];
 
 class BlockEmbed extends EmbedBlot {
+  attributes: AttributorStore;
+  domNode: HTMLElement;
+
   attach() {
     super.attach();
     this.attributes = new AttributorStore(this.domNode);
@@ -143,6 +144,7 @@ class BlockEmbed extends EmbedBlot {
   format(name, value) {
     const attribute = this.scroll.query(name, Scope.BLOCK_ATTRIBUTE);
     if (attribute != null) {
+      // @ts-expect-error TODO: Scroll#query() should return Attributor when scope is attribute
       this.attributes.attribute(attribute, value);
     }
   }
@@ -164,16 +166,19 @@ class BlockEmbed extends EmbedBlot {
 BlockEmbed.scope = Scope.BLOCK_BLOT;
 // It is important for cursor behavior BlockEmbeds use tags that are block level elements
 
-function blockDelta(blot, filter = true) {
-  return blot
-    .descendants(LeafBlot)
-    .reduce((delta, leaf) => {
-      if (leaf.length() === 0) {
-        return delta;
-      }
-      return delta.insert(leaf.value(), bubbleFormats(leaf, {}, filter));
-    }, new Delta())
-    .insert('\n', bubbleFormats(blot));
+function blockDelta(blot: BlockBlot, filter = true) {
+  return (
+    blot
+      // @ts-expect-error
+      .descendants(LeafBlot)
+      .reduce((delta, leaf: LeafBlot) => {
+        if (leaf.length() === 0) {
+          return delta;
+        }
+        return delta.insert(leaf.value(), bubbleFormats(leaf, {}, filter));
+      }, new Delta())
+      .insert('\n', bubbleFormats(blot))
+  );
 }
 
 function bubbleFormats(blot, formats = {}, filter = true) {

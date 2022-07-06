@@ -1,0 +1,41 @@
+{
+  "extends": ["airbnb-base", "airbnb-typescript/base", "prettier"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true
+  },
+  "plugins": ["prettier"],
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "_develop/webpack.config.js"
+      }
+    }
+  },
+  "rules": {
+    "class-methods-use-this": "off",
+    "import/no-cycle": "off",
+    "no-restricted-exports": "off",
+    "@typescript-eslint/indent": "off",
+    "@typescript-eslint/lines-between-class-members": "off",
+    "@typescript-eslint/space-before-function-paren": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/quotes": "off",
+    "@typescript-eslint/comma-dangle": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": ["_develop/*.js", "test/**/*.js"]
+      }
+    ],
+    "no-param-reassign": "off",
+    "no-use-before-define": ["error", { "functions": false, "classes": false }],
+    "import/named": "error",
+    "max-classes-per-file": "off",
+    "prettier/prettier": "error"
+  }
+}

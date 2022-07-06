@@ -4,15 +4,18 @@ import { sanitize } from './link';
 const ATTRIBUTES = ['alt', 'height', 'width'];
 
 class Image extends EmbedBlot {
+  static blotName = 'image';
+  static tagName = 'IMG';
+
   static create(value) {
-    const node = super.create(value);
+    const node = super.create(value) as Element;
     if (typeof value === 'string') {
       node.setAttribute('src', this.sanitize(value));
     }
     return node;
   }
 
-  static formats(domNode) {
+  static formats(domNode: Element) {
     return ATTRIBUTES.reduce((formats, attribute) => {
       if (domNode.hasAttribute(attribute)) {
         formats[attribute] = domNode.getAttribute(attribute);
@@ -21,7 +24,7 @@ class Image extends EmbedBlot {
     }, {});
   }
 
-  static match(url) {
+  static match(url: string) {
     return /\.(jpe?g|gif|png)$/.test(url) || /^data:image\/.+;base64/.test(url);
   }
 
@@ -29,18 +32,21 @@ class Image extends EmbedBlot {
     if (/Firefox/i.test(navigator.userAgent)) {
       setTimeout(() => {
         // Disable image resizing in Firefox
+        // @ts-expect-error
         document.execCommand('enableObjectResizing', false, false);
       }, 1);
     }
   }
 
-  static sanitize(url) {
+  static sanitize(url: string) {
     return sanitize(url, ['http', 'https', 'data']) ? url : '//:0';
   }
 
-  static value(domNode) {
+  static value(domNode: Element) {
     return domNode.getAttribute('src');
   }
+
+  domNode: HTMLImageElement;
 
   format(name, value) {
     if (ATTRIBUTES.indexOf(name) > -1) {
@@ -54,7 +60,5 @@ class Image extends EmbedBlot {
     }
   }
 }
-Image.blotName = 'image';
-Image.tagName = 'IMG';
 
 export default Image;

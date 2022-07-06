@@ -1,4 +1,4 @@
-import Delta from 'quill-delta';
+import Delta, { OpIterator } from 'quill-delta';
 import Module from '../core/module';
 
 const parseCellIdentity = identity => {
@@ -10,7 +10,7 @@ const stringifyCellIdentity = (row, column) => `${row + 1}:${column + 1}`;
 
 export const composePosition = (delta, index) => {
   let newIndex = index;
-  const thisIter = Delta.Op.iterator(delta.ops);
+  const thisIter = new OpIterator(delta.ops);
   let offset = 0;
   while (thisIter.hasNext() && offset <= newIndex) {
     const length = thisIter.peekLength();

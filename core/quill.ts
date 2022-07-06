@@ -1,47 +1,108 @@
-import Delta from 'quill-delta';
+import Delta, { Op } from 'quill-delta';
 import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
 import * as Parchment from 'parchment';
+import {
+  Blot,
+  BlotConstructor,
+} from 'parchment/dist/typings/blot/abstract/blot';
 import Editor from './editor';
-import Emitter from './emitter';
+import Emitter, { EmitterSource } from './emitter';
 import Module from './module';
 import Selection, { Range } from './selection';
 import instances from './instances';
 import logger from './logger';
-import Theme from './theme';
+import Theme, { ThemeConstructor } from './theme';
+import Block, { BlockEmbed } from '../blots/block';
+import History from '../modules/history';
+import Clipboard from '../modules/clipboard';
+import Keyboard from '../modules/keyboard';
+import Uploader from '../modules/uploader';
+import Scroll, { ScrollConstructor } from '../blots/scroll';
 
 const debug = logger('quill');
 
 const globalRegistry = new Parchment.Registry();
 Parchment.ParentBlot.uiClass = 'ql-ui';
 
+interface Options {
+  theme?: string;
+  debug?: string | boolean;
+  registry?: Parchment.Registry;
+  readOnly?: boolean;
+  container?: HTMLElement;
+  placeholder?: string;
+  bounds?: HTMLElement | null;
+  scrollingContainer?: HTMLElement | null;
+  modules?: Record<string, unknown>;
+}
+
+interface ExpandedOptions extends Omit<Options, 'theme'> {
+  theme: ThemeConstructor;
+  registry: Parchment.Registry;
+  container: HTMLElement;
+  modules: Record<string, unknown>;
+}
+
 class Quill {
-  static debug(limit) {
+  static DEFAULTS: Partial<Options> = {
+    bounds: null,
+    modules: {},
+    placeholder: '',
+    readOnly: false,
+    registry: globalRegistry,
+    scrollingContainer: null,
+    theme: 'default',
+  };
+  static events = Emitter.events;
+  static sources = Emitter.sources;
+  // eslint-disable-next-line no-undef
+  // @ts-expect-error defined in webpack
+  static version = typeof QUILL_VERSION === 'undefined' ? 'dev' : QUILL_VERSION;
+
+  static imports = {
+    delta: Delta,
+    parchment: Parchment,
+    'core/module': Module,
+    'core/theme': Theme,
+  };
+
+  static debug(limit: string | boolean) {
     if (limit === true) {
       limit = 'log';
     }
     logger.level(limit);
   }
 
-  static find(node, bubble = false) {
+  static find(node: Node, bubble = false) {
     return instances.get(node) || globalRegistry.find(node, bubble);
   }
 
-  static import(name) {
+  static import(name: string) {
     if (this.imports[name] == null) {
       debug.error(`Cannot import ${name}. Are you sure it was registered?`);
     }
     return this.imports[name];
   }
 
-  static register(path, target, overwrite = false) {
+  static register(
+    path:
+      | string
+      | BlotConstructor
+      | Parchment.Attributor
+      | Record<string, unknown>,
+    target?: BlotConstructor | Parchment.Attributor | boolean,
+    overwrite = false,
+  ) {
     if (typeof path !== 'string') {
-      const name = path.attrName || path.blotName;
+      const name = 'attrName' in path ? path.attrName : path.blotName;
       if (typeof name === 'string') {
         // register(Blot | Attributor, overwrite)
+        // @ts-expect-error
         this.register(`formats/${name}`, path, target);
       } else {
         Object.keys(path).forEach(key => {
+          // @ts-expect-error
           this.register(key, path[key], target);
         });
       }
@@ -52,21 +113,42 @@ class Quill {
       this.imports[path] = target;
       if (
         (path.startsWith('blots/') || path.startsWith('formats/')) &&
+        // @ts-expect-error
         target.blotName !== 'abstract'
       ) {
         globalRegistry.register(target);
       }
+      // @ts-expect-error
       if (typeof target.register === 'function') {
+        // @ts-expect-error
         target.register(globalRegistry);
       }
     }
   }
 
-  constructor(container, options = {}) {
+  scrollingContainer: HTMLElement;
+  container: HTMLElement;
+  root: HTMLDivElement;
+  scroll: Scroll;
+  emitter: Emitter;
+  allowReadOnlyEdits: boolean;
+  editor: Editor;
+  selection: Selection;
+
+  theme: Theme;
+  keyboard: Keyboard;
+  clipboard: Clipboard;
+  history: History;
+  uploader: Uploader;
+
+  options: ExpandedOptions;
+
+  constructor(container: HTMLElement, options: Options = {}) {
     this.options = expandConfig(container, options);
     this.container = this.options.container;
     if (this.container == null) {
-      return debug.error('Invalid Quill container', container);
+      debug.error('Invalid Quill container', container);
+      return;
     }
     if (this.options.debug) {
       Quill.debug(this.options.debug);
@@ -79,9 +161,10 @@ class Quill {
     this.root.classList.add('ql-blank');
     this.scrollingContainer = this.options.scrollingContainer || this.root;
     this.emitter = new Emitter();
+    // @ts-expect-error TODO: fix BlotConstructor
     const ScrollBlot = this.options.registry.query(
       Parchment.ScrollBlot.blotName,
-    );
+    ) as ScrollConstructor;
     this.scroll = new ScrollBlot(this.options.registry, this.root, {
       emitter: this.emitter,
     });
@@ -142,7 +225,12 @@ class Quill {
     this.allowReadOnlyEdits = false;
   }
 
-  addContainer(container, refNode = null) {
+  addContainer(container: string, refNode?: Node): HTMLDivElement;
+  addContainer(container: HTMLElement, refNode?: Node): HTMLElement;
+  addContainer(
+    container: string | HTMLElement,
+    refNode = null,
+  ): HTMLDivElement | HTMLElement {
     if (typeof container === 'string') {
       const className = container;
       container = document.createElement('div');
@@ -156,7 +244,7 @@ class Quill {
     this.selection.setRange(null);
   }
 
-  deleteText(index, length, source) {
+  deleteText(index: number, length: number, source) {
     [index, length, , source] = overload(index, length, source);
     return modify.call(
       this,
@@ -173,7 +261,7 @@ class Quill {
     this.enable(false);
   }
 
-  editReadOnly(modifier) {
+  editReadOnly<T>(modifier: () => T): T {
     this.allowReadOnlyEdits = true;
     const value = modifier();
     this.allowReadOnlyEdits = false;
@@ -291,7 +379,7 @@ class Quill {
     return this.editor.getFormat(index.index, index.length);
   }
 
-  getIndex(blot) {
+  getIndex(blot: Blot) {
     return blot.offset(this.scroll);
   }
 
@@ -299,26 +387,31 @@ class Quill {
     return this.scroll.length();
   }
 
-  getLeaf(index) {
+  getLeaf(index: number) {
     return this.scroll.leaf(index);
   }
 
-  getLine(index) {
+  getLine(index: number) {
     return this.scroll.line(index);
   }
 
-  getLines(index = 0, length = Number.MAX_VALUE) {
+  getLines(index: { index: number; length: number }): (Block | BlockEmbed)[];
+  getLines(index: number, length: number): (Block | BlockEmbed)[];
+  getLines(
+    index: { index: number; length: number } | number = 0,
+    length = Number.MAX_VALUE,
+  ): (Block | BlockEmbed)[] {
     if (typeof index !== 'number') {
       return this.scroll.lines(index.index, index.length);
     }
     return this.scroll.lines(index, length);
   }
 
-  getModule(name) {
+  getModule(name: string) {
     return this.theme.modules[name];
   }
 
-  getSelection(focus = false) {
+  getSelection(focus = false): Range | null {
     if (focus) this.focus();
     this.update(); // Make sure we access getRange with editor in consistent state
     return this.selection.getRange()[0];
@@ -368,20 +461,20 @@ class Quill {
     return this.scroll.isEnabled();
   }
 
-  off(...args) {
+  off(...args: Parameters<typeof this.emitter.off>) {
     return this.emitter.off(...args);
   }
 
-  on(...args) {
+  on(...args: Parameters<typeof this.emitter.on>) {
     return this.emitter.on(...args);
   }
 
-  once(...args) {
+  once(...args: Parameters<typeof this.emitter.once>) {
     return this.emitter.once(...args);
   }
 
-  removeFormat(index, length, source) {
-    [index, length, , source] = overload(index, length, source);
+  removeFormat(...args: Parameters<typeof overload>) {
+    const [index, length, , source] = overload(...args);
     return modify.call(
       this,
       () => {
@@ -396,7 +489,7 @@ class Quill {
     this.selection.scrollIntoView(this.scrollingContainer);
   }
 
-  setContents(delta, source = Emitter.sources.API) {
+  setContents(delta: Delta | Op[], source = Emitter.sources.API) {
     return modify.call(
       this,
       () => {
@@ -413,11 +506,18 @@ class Quill {
       source,
     );
   }
-
-  setSelection(index, length, source) {
+  setSelection(range: Range | null, source?: EmitterSource): void;
+  setSelection(index: number, length: number, source?: EmitterSource): void;
+  setSelection(
+    index: Range | null | number,
+    length?: EmitterSource | number,
+    source?: EmitterSource,
+  ): void {
     if (index == null) {
+      // @ts-expect-error https://github.com/microsoft/TypeScript/issues/22609
       this.selection.setRange(null, length || Quill.sources.API);
     } else {
+      // @ts-expect-error
       [index, length, , source] = overload(index, length, source);
       this.selection.setRange(new Range(Math.max(0, index), length), source);
       if (source !== Emitter.sources.SILENT) {
@@ -431,48 +531,31 @@ class Quill {
     return this.setContents(delta, source);
   }
 
-  update(source = Emitter.sources.USER) {
+  update(source: EmitterSource = Emitter.sources.USER) {
     const change = this.scroll.update(source); // Will update selection before selection.update() does if text changes
     this.selection.update(source);
     // TODO this is usually undefined
     return change;
   }
 
-  updateContents(delta, source = Emitter.sources.API) {
+  updateContents(delta: Delta | Op[], source = Emitter.sources.API) {
     return modify.call(
       this,
       () => {
         delta = new Delta(delta);
-        return this.editor.applyDelta(delta, source);
+        return this.editor.applyDelta(delta);
       },
       source,
       true,
     );
   }
 }
-Quill.DEFAULTS = {
-  bounds: null,
-  modules: {},
-  placeholder: '',
-  readOnly: false,
-  registry: globalRegistry,
-  scrollingContainer: null,
-  theme: 'default',
-};
-Quill.events = Emitter.events;
-Quill.sources = Emitter.sources;
-// eslint-disable-next-line no-undef
-Quill.version = typeof QUILL_VERSION === 'undefined' ? 'dev' : QUILL_VERSION;
 
-Quill.imports = {
-  delta: Delta,
-  parchment: Parchment,
-  'core/module': Module,
-  'core/theme': Theme,
-};
-
-function expandConfig(container, userConfig) {
-  userConfig = merge(
+function expandConfig(
+  container: HTMLElement,
+  userConfig: Options,
+): ExpandedOptions {
+  let expandedConfig = merge(
     {
       container,
       modules: {
@@ -484,18 +567,18 @@ function expandConfig(container, userConfig) {
     },
     userConfig,
   );
-  if (!userConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
-    userConfig.theme = Theme;
+  if (!expandedConfig.theme || expandedConfig.theme === Quill.DEFAULTS.theme) {
+    expandedConfig.theme = Theme;
   } else {
-    userConfig.theme = Quill.import(`themes/${userConfig.theme}`);
-    if (userConfig.theme == null) {
+    expandedConfig.theme = Quill.import(`themes/${expandedConfig.theme}`);
+    if (expandedConfig.theme == null) {
       throw new Error(
-        `Invalid theme ${userConfig.theme}. Did you register it?`,
+        `Invalid theme ${expandedConfig.theme}. Did you register it?`,
       );
     }
   }
-  const themeConfig = cloneDeep(userConfig.theme.DEFAULTS);
-  [themeConfig, userConfig].forEach(config => {
+  const themeConfig = cloneDeep(expandedConfig.theme.DEFAULTS);
+  [themeConfig, expandedConfig].forEach(config => {
     config.modules = config.modules || {};
     Object.keys(config.modules).forEach(module => {
       if (config.modules[module] === true) {
@@ -504,7 +587,7 @@ function expandConfig(container, userConfig) {
     });
   });
   const moduleNames = Object.keys(themeConfig.modules).concat(
-    Object.keys(userConfig.modules),
+    Object.keys(expandedConfig.modules),
   );
   const moduleConfig = moduleNames.reduce((config, name) => {
     const moduleClass = Quill.import(`modules/${name}`);
@@ -519,36 +602,36 @@ function expandConfig(container, userConfig) {
   }, {});
   // Special case toolbar shorthand
   if (
-    userConfig.modules != null &&
-    userConfig.modules.toolbar &&
-    userConfig.modules.toolbar.constructor !== Object
+    expandedConfig.modules != null &&
+    expandedConfig.modules.toolbar &&
+    expandedConfig.modules.toolbar.constructor !== Object
   ) {
-    userConfig.modules.toolbar = {
-      container: userConfig.modules.toolbar,
+    expandedConfig.modules.toolbar = {
+      container: expandedConfig.modules.toolbar,
     };
   }
-  userConfig = merge(
+  expandedConfig = merge(
     {},
     Quill.DEFAULTS,
     { modules: moduleConfig },
     themeConfig,
-    userConfig,
+    expandedConfig,
   );
   ['bounds', 'container', 'scrollingContainer'].forEach(key => {
-    if (typeof userConfig[key] === 'string') {
-      userConfig[key] = document.querySelector(userConfig[key]);
+    if (typeof expandedConfig[key] === 'string') {
+      expandedConfig[key] = document.querySelector(expandedConfig[key]);
     }
   });
-  userConfig.modules = Object.keys(userConfig.modules).reduce(
+  expandedConfig.modules = Object.keys(expandedConfig.modules).reduce(
     (config, name) => {
-      if (userConfig.modules[name]) {
-        config[name] = userConfig.modules[name];
+      if (expandedConfig.modules[name]) {
+        config[name] = expandedConfig.modules[name];
       }
       return config;
     },
     {},
   );
-  return userConfig;
+  return expandedConfig;
 }
 
 // Handle selection preservation and TEXT_CHANGE emission
@@ -585,21 +668,71 @@ function modify(modifier, source, index, shift) {
   return change;
 }
 
-function overload(index, length, name, value, source) {
+type NormalizedIndexLength = [
+  number,
+  number,
+  Record<string, unknown>,
+  EmitterSource
+];
+function overload(index: number, source?: EmitterSource): NormalizedIndexLength;
+function overload(
+  index: number,
+  length: number,
+  source?: EmitterSource,
+): NormalizedIndexLength;
+function overload(
+  index: number,
+  length: number,
+  format: string,
+  value: unknown,
+  source?: EmitterSource,
+): NormalizedIndexLength;
+function overload(
+  index: number,
+  length: number,
+  format: Record<string, unknown>,
+  source?: EmitterSource,
+): NormalizedIndexLength;
+function overload(range: Range, source?: EmitterSource): NormalizedIndexLength;
+function overload(
+  range: Range,
+  format: string,
+  value: unknown,
+  source?: EmitterSource,
+): NormalizedIndexLength;
+function overload(
+  range: Range,
+  format: Record<string, unknown>,
+  source?: EmitterSource,
+): NormalizedIndexLength;
+function overload(
+  index: Range | number,
+  length?: number | string | Record<string, unknown> | EmitterSource,
+  name?: string | unknown | Record<string, unknown> | EmitterSource,
+  value?: unknown | EmitterSource,
+  source?: EmitterSource,
+): NormalizedIndexLength {
   let formats = {};
+  // @ts-expect-error
   if (typeof index.index === 'number' && typeof index.length === 'number') {
     // Allow for throwaway end (used by insertText/insertEmbed)
     if (typeof length !== 'number') {
+      // @ts-expect-error
       source = value;
       value = name;
       name = length;
+      // @ts-expect-error
       length = index.length; // eslint-disable-line prefer-destructuring
+      // @ts-expect-error
       index = index.index; // eslint-disable-line prefer-destructuring
     } else {
+      // @ts-expect-error
       length = index.length; // eslint-disable-line prefer-destructuring
+      // @ts-expect-error
       index = index.index; // eslint-disable-line prefer-destructuring
     }
   } else if (typeof length !== 'number') {
+    // @ts-expect-error
     source = value;
     value = name;
     name = length;
@@ -608,20 +741,23 @@ function overload(index, length, name, value, source) {
   // Handle format being object, two format name/value strings or excluded
   if (typeof name === 'object') {
     formats = name;
+    // @ts-expect-error
     source = value;
   } else if (typeof name === 'string') {
     if (value != null) {
       formats[name] = value;
     } else {
+      // @ts-expect-error
       source = name;
     }
   }
   // Handle optional source
   source = source || Emitter.sources.API;
+  // @ts-expect-error
   return [index, length, formats, source];
 }
 
-function shiftRange(range, index, length, source) {
+function shiftRange(range, index, length, source?: EmitterSource) {
   if (range == null) return null;
   let start;
   let end;

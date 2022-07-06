@@ -17,6 +17,7 @@ class IndentAttributor extends ClassAttributor {
     return super.canAdd(node, value) || super.canAdd(node, parseInt(value, 10));
   }
 
+  // @ts-expect-error TODO: ClassAttributor may support numbers
   value(node) {
     return parseInt(super.value(node), 10) || undefined; // Don't return NaN
   }
@@ -24,6 +25,7 @@ class IndentAttributor extends ClassAttributor {
 
 const IndentClass = new IndentAttributor('indent', 'ql-indent', {
   scope: Scope.BLOCK,
+  // @ts-expect-error
   whitelist: [1, 2, 3, 4, 5, 6, 7, 8],
 });
 
