@@ -34,12 +34,12 @@ textColor = #fff
     content: " "
     height: 0
     width: 0
-  a:not(.ql-close)::before, a::after
+  a:not(.ql-close)::before, a:not(.ql-close)::after
     left: 0
     margin-left: 50%
     position: absolute
     transform: translate(-50%, -100%)
     transition: visibility 0s ease 200ms
     visibility: hidden
-  a:not(.ql-close):hover::before, a:hover::after
+  a:not(.ql-close):hover::before, a:not(.ql-close):hover::after
     visibility: visible
