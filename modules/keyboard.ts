@@ -1,17 +1,335 @@
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import Delta, { AttributeMap } from 'quill-delta';
-import { EmbedBlot, Scope, TextBlot } from 'parchment';
+import { BlockBlot, EmbedBlot, Scope, TextBlot } from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
+import { Range } from '../core/selection';
+import { BlockEmbed } from '../blots/block';
 
 const debug = logger('quill:keyboard');
 
 const SHORTKEY = /Mac/i.test(navigator.platform) ? 'metaKey' : 'ctrlKey';
 
-class Keyboard extends Module {
-  static match(evt, binding) {
+interface Context {
+  collapsed: boolean;
+  empty: boolean;
+  offset: number;
+  prefix: string;
+  suffix: string;
+  format: Record<string, unknown>;
+  event: KeyboardEvent;
+  line: BlockEmbed | BlockBlot;
+}
+
+interface BindingObject
+  extends Partial<Omit<Context, 'prefix' | 'suffix' | 'format'>> {
+  key: number | string | string[];
+  shortKey?: boolean | null;
+  shiftKey?: boolean | null;
+  altKey?: boolean | null;
+  metaKey?: boolean | null;
+  ctrlKey?: boolean | null;
+  prefix?: RegExp;
+  suffix?: RegExp;
+  format?: Record<string, unknown> | string[];
+  handler?: (
+    this: { quill: Quill },
+    range: Range,
+    curContext: Context,
+    // eslint-disable-next-line no-use-before-define
+    binding: NormalizedBinding,
+  ) => boolean | void;
+}
+
+type Binding = BindingObject | string | number;
+
+interface NormalizedBinding extends Omit<BindingObject, 'key' | 'shortKey'> {
+  key: string | number;
+}
+
+interface KeyboardOptions {
+  bindings: Record<string, Binding>;
+}
+
+class Keyboard extends Module<KeyboardOptions> {
+  static DEFAULTS: KeyboardOptions = {
+    bindings: {
+      bold: makeFormatHandler('bold'),
+      italic: makeFormatHandler('italic'),
+      underline: makeFormatHandler('underline'),
+      indent: {
+        // highlight tab or tab at beginning of list, indent or blockquote
+        key: 'Tab',
+        format: ['blockquote', 'indent', 'list'],
+        handler(range, context) {
+          if (context.collapsed && context.offset !== 0) return true;
+          this.quill.format('indent', '+1', Quill.sources.USER);
+          return false;
+        },
+      },
+      outdent: {
+        key: 'Tab',
+        shiftKey: true,
+        format: ['blockquote', 'indent', 'list'],
+        // highlight tab or tab at beginning of list, indent or blockquote
+        handler(range, context) {
+          if (context.collapsed && context.offset !== 0) return true;
+          this.quill.format('indent', '-1', Quill.sources.USER);
+          return false;
+        },
+      },
+      'outdent backspace': {
+        key: 'Backspace',
+        collapsed: true,
+        shiftKey: null,
+        metaKey: null,
+        ctrlKey: null,
+        altKey: null,
+        format: ['indent', 'list'],
+        offset: 0,
+        handler(range, context) {
+          if (context.format.indent != null) {
+            this.quill.format('indent', '-1', Quill.sources.USER);
+          } else if (context.format.list != null) {
+            this.quill.format('list', false, Quill.sources.USER);
+          }
+        },
+      },
+      'indent code-block': makeCodeBlockHandler(true),
+      'outdent code-block': makeCodeBlockHandler(false),
+      'remove tab': {
+        key: 'Tab',
+        shiftKey: true,
+        collapsed: true,
+        prefix: /\t$/,
+        handler(range) {
+          this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
+        },
+      },
+      tab: {
+        key: 'Tab',
+        handler(range, context) {
+          if (context.format.table) return true;
+          this.quill.history.cutoff();
+          const delta = new Delta()
+            .retain(range.index)
+            .delete(range.length)
+            .insert('\t');
+          this.quill.updateContents(delta, Quill.sources.USER);
+          this.quill.history.cutoff();
+          this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+          return false;
+        },
+      },
+      'blockquote empty enter': {
+        key: 'Enter',
+        collapsed: true,
+        format: ['blockquote'],
+        empty: true,
+        handler() {
+          this.quill.format('blockquote', false, Quill.sources.USER);
+        },
+      },
+      'list empty enter': {
+        key: 'Enter',
+        collapsed: true,
+        format: ['list'],
+        empty: true,
+        handler(range, context) {
+          const formats: Record<string, unknown> = { list: false };
+          if (context.format.indent) {
+            formats.indent = false;
+          }
+          this.quill.formatLine(
+            range.index,
+            range.length,
+            formats,
+            Quill.sources.USER,
+          );
+        },
+      },
+      'checklist enter': {
+        key: 'Enter',
+        collapsed: true,
+        format: { list: 'checked' },
+        handler(range) {
+          const [line, offset] = this.quill.getLine(range.index);
+          const formats = {
+            ...line.formats(),
+            list: 'checked',
+          };
+          const delta = new Delta()
+            .retain(range.index)
+            .insert('\n', formats)
+            .retain(line.length() - offset - 1)
+            .retain(1, { list: 'unchecked' });
+          this.quill.updateContents(delta, Quill.sources.USER);
+          this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+          this.quill.scrollIntoView();
+        },
+      },
+      'header enter': {
+        key: 'Enter',
+        collapsed: true,
+        format: ['header'],
+        suffix: /^$/,
+        handler(range, context) {
+          const [line, offset] = this.quill.getLine(range.index);
+          const delta = new Delta()
+            .retain(range.index)
+            .insert('\n', context.format)
+            .retain(line.length() - offset - 1)
+            .retain(1, { header: null });
+          this.quill.updateContents(delta, Quill.sources.USER);
+          this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+          this.quill.scrollIntoView();
+        },
+      },
+      'table backspace': {
+        key: 'Backspace',
+        format: ['table'],
+        collapsed: true,
+        offset: 0,
+        handler() {},
+      },
+      'table delete': {
+        key: 'Delete',
+        format: ['table'],
+        collapsed: true,
+        suffix: /^$/,
+        handler() {},
+      },
+      'table enter': {
+        key: 'Enter',
+        shiftKey: null,
+        format: ['table'],
+        handler(range) {
+          const module = this.quill.getModule('table');
+          if (module) {
+            // @ts-expect-error
+            const [table, row, cell, offset] = module.getTable(range);
+            const shift = tableSide(table, row, cell, offset);
+            if (shift == null) return;
+            let index = table.offset();
+            if (shift < 0) {
+              const delta = new Delta().retain(index).insert('\n');
+              this.quill.updateContents(delta, Quill.sources.USER);
+              this.quill.setSelection(
+                range.index + 1,
+                range.length,
+                Quill.sources.SILENT,
+              );
+            } else if (shift > 0) {
+              index += table.length();
+              const delta = new Delta().retain(index).insert('\n');
+              this.quill.updateContents(delta, Quill.sources.USER);
+              this.quill.setSelection(index, Quill.sources.USER);
+            }
+          }
+        },
+      },
+      'table tab': {
+        key: 'Tab',
+        shiftKey: null,
+        format: ['table'],
+        handler(range, context) {
+          const { event, line: cell } = context;
+          const offset = cell.offset(this.quill.scroll);
+          if (event.shiftKey) {
+            this.quill.setSelection(offset - 1, Quill.sources.USER);
+          } else {
+            this.quill.setSelection(offset + cell.length(), Quill.sources.USER);
+          }
+        },
+      },
+      'list autofill': {
+        key: ' ',
+        shiftKey: null,
+        collapsed: true,
+        format: {
+          'code-block': false,
+          blockquote: false,
+          table: false,
+        },
+        prefix: /^\s*?(\d+\.|-|\*|\[ ?\]|\[x\])$/,
+        handler(range, context) {
+          if (this.quill.scroll.query('list') == null) return true;
+          const { length } = context.prefix;
+          const [line, offset] = this.quill.getLine(range.index);
+          if (offset > length) return true;
+          let value;
+          switch (context.prefix.trim()) {
+            case '[]':
+            case '[ ]':
+              value = 'unchecked';
+              break;
+            case '[x]':
+              value = 'checked';
+              break;
+            case '-':
+            case '*':
+              value = 'bullet';
+              break;
+            default:
+              value = 'ordered';
+          }
+          this.quill.insertText(range.index, ' ', Quill.sources.USER);
+          this.quill.history.cutoff();
+          const delta = new Delta()
+            .retain(range.index - offset)
+            .delete(length + 1)
+            .retain(line.length() - 2 - offset)
+            .retain(1, { list: value });
+          this.quill.updateContents(delta, Quill.sources.USER);
+          this.quill.history.cutoff();
+          this.quill.setSelection(range.index - length, Quill.sources.SILENT);
+          return false;
+        },
+      },
+      'code exit': {
+        key: 'Enter',
+        collapsed: true,
+        format: ['code-block'],
+        prefix: /^$/,
+        suffix: /^\s*$/,
+        handler(range) {
+          const [line, offset] = this.quill.getLine(range.index);
+          let numLines = 2;
+          let cur = line;
+          while (
+            cur != null &&
+            cur.length() <= 1 &&
+            cur.formats()['code-block']
+          ) {
+            // @ts-expect-error
+            cur = cur.prev;
+            numLines -= 1;
+            // Requisite prev lines are empty
+            if (numLines <= 0) {
+              const delta = new Delta()
+                .retain(range.index + line.length() - offset - 2)
+                .retain(1, { 'code-block': null })
+                .delete(1);
+              this.quill.updateContents(delta, Quill.sources.USER);
+              this.quill.setSelection(range.index - 1, Quill.sources.SILENT);
+              return false;
+            }
+          }
+          return true;
+        },
+      },
+      'embed left': makeEmbedArrowHandler('ArrowLeft', false),
+      'embed left shift': makeEmbedArrowHandler('ArrowLeft', true),
+      'embed right': makeEmbedArrowHandler('ArrowRight', false),
+      'embed right shift': makeEmbedArrowHandler('ArrowRight', true),
+      'table down': makeTableArrowHandler(false),
+      'table up': makeTableArrowHandler(true),
+    },
+  };
+
+  static match(evt: KeyboardEvent, binding) {
     if (
       ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'].some(key => {
         return !!binding[key] !== evt[key] && binding[key] !== null;
@@ -22,9 +340,10 @@ class Keyboard extends Module {
     return binding.key === evt.key || binding.key === evt.which;
   }
 
-  constructor(quill, options) {
+  bindings: Record<string, NormalizedBinding[]> = {};
+
+  constructor(quill: Quill, options: KeyboardOptions) {
     super(quill, options);
-    this.bindings = {};
     Object.keys(this.options.bindings).forEach(name => {
       if (this.options.bindings[name]) {
         this.addBinding(this.options.bindings[name]);
@@ -83,7 +402,15 @@ class Keyboard extends Module {
     this.listen();
   }
 
-  addBinding(keyBinding, context = {}, handler = {}) {
+  addBinding(
+    keyBinding: Binding,
+    context:
+      | Required<BindingObject['handler']>
+      | Partial<Omit<BindingObject, 'key' | 'handler'>> = {},
+    handler:
+      | Required<BindingObject['handler']>
+      | Partial<Omit<BindingObject, 'key' | 'handler'>> = {},
+  ) {
     const binding = normalize(keyBinding);
     if (binding == null) {
       debug.warn('Attempted to add invalid keyboard binding', binding);
@@ -116,6 +443,7 @@ class Keyboard extends Module {
       );
       const matches = bindings.filter(binding => Keyboard.match(evt, binding));
       if (matches.length === 0) return;
+      // @ts-expect-error
       const blot = Quill.find(evt.target, true);
       if (blot && blot.scroll !== this.quill.scroll) return;
       const range = this.quill.getSelection();
@@ -132,7 +460,7 @@ class Keyboard extends Module {
           : '';
       const suffixText =
         leafEnd instanceof TextBlot ? leafEnd.value().slice(offsetEnd) : '';
-      const curContext = {
+      const curContext: Context = {
         collapsed: range.length === 0,
         empty: range.length === 0 && line.length() <= 1,
         format: this.quill.getFormat(range),
@@ -188,7 +516,7 @@ class Keyboard extends Module {
     });
   }
 
-  handleBackspace(range, context) {
+  handleBackspace(range: Range, context: Context) {
     // Check for astral symbols
     const length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix)
       ? 2
@@ -273,292 +601,18 @@ class Keyboard extends Module {
   }
 }
 
-Keyboard.DEFAULTS = {
-  bindings: {
-    bold: makeFormatHandler('bold'),
-    italic: makeFormatHandler('italic'),
-    underline: makeFormatHandler('underline'),
-    indent: {
-      // highlight tab or tab at beginning of list, indent or blockquote
-      key: 'Tab',
-      format: ['blockquote', 'indent', 'list'],
-      handler(range, context) {
-        if (context.collapsed && context.offset !== 0) return true;
-        this.quill.format('indent', '+1', Quill.sources.USER);
-        return false;
-      },
-    },
-    outdent: {
-      key: 'Tab',
-      shiftKey: true,
-      format: ['blockquote', 'indent', 'list'],
-      // highlight tab or tab at beginning of list, indent or blockquote
-      handler(range, context) {
-        if (context.collapsed && context.offset !== 0) return true;
-        this.quill.format('indent', '-1', Quill.sources.USER);
-        return false;
-      },
-    },
-    'outdent backspace': {
-      key: 'Backspace',
-      collapsed: true,
-      shiftKey: null,
-      metaKey: null,
-      ctrlKey: null,
-      altKey: null,
-      format: ['indent', 'list'],
-      offset: 0,
-      handler(range, context) {
-        if (context.format.indent != null) {
-          this.quill.format('indent', '-1', Quill.sources.USER);
-        } else if (context.format.list != null) {
-          this.quill.format('list', false, Quill.sources.USER);
-        }
-      },
-    },
-    'indent code-block': makeCodeBlockHandler(true),
-    'outdent code-block': makeCodeBlockHandler(false),
-    'remove tab': {
-      key: 'Tab',
-      shiftKey: true,
-      collapsed: true,
-      prefix: /\t$/,
-      handler(range) {
-        this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
-      },
-    },
-    tab: {
-      key: 'Tab',
-      handler(range, context) {
-        if (context.format.table) return true;
-        this.quill.history.cutoff();
-        const delta = new Delta()
-          .retain(range.index)
-          .delete(range.length)
-          .insert('\t');
-        this.quill.updateContents(delta, Quill.sources.USER);
-        this.quill.history.cutoff();
-        this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-        return false;
-      },
-    },
-    'blockquote empty enter': {
-      key: 'Enter',
-      collapsed: true,
-      format: ['blockquote'],
-      empty: true,
-      handler() {
-        this.quill.format('blockquote', false, Quill.sources.USER);
-      },
-    },
-    'list empty enter': {
-      key: 'Enter',
-      collapsed: true,
-      format: ['list'],
-      empty: true,
-      handler(range, context) {
-        const formats = { list: false };
-        if (context.format.indent) {
-          formats.indent = false;
-        }
-        this.quill.formatLine(
-          range.index,
-          range.length,
-          formats,
-          Quill.sources.USER,
-        );
-      },
-    },
-    'checklist enter': {
-      key: 'Enter',
-      collapsed: true,
-      format: { list: 'checked' },
-      handler(range) {
-        const [line, offset] = this.quill.getLine(range.index);
-        const formats = {
-          ...line.formats(),
-          list: 'checked',
-        };
-        const delta = new Delta()
-          .retain(range.index)
-          .insert('\n', formats)
-          .retain(line.length() - offset - 1)
-          .retain(1, { list: 'unchecked' });
-        this.quill.updateContents(delta, Quill.sources.USER);
-        this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-        this.quill.scrollIntoView();
-      },
-    },
-    'header enter': {
-      key: 'Enter',
-      collapsed: true,
-      format: ['header'],
-      suffix: /^$/,
-      handler(range, context) {
-        const [line, offset] = this.quill.getLine(range.index);
-        const delta = new Delta()
-          .retain(range.index)
-          .insert('\n', context.format)
-          .retain(line.length() - offset - 1)
-          .retain(1, { header: null });
-        this.quill.updateContents(delta, Quill.sources.USER);
-        this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-        this.quill.scrollIntoView();
-      },
-    },
-    'table backspace': {
-      key: 'Backspace',
-      format: ['table'],
-      collapsed: true,
-      offset: 0,
-      handler() {},
-    },
-    'table delete': {
-      key: 'Delete',
-      format: ['table'],
-      collapsed: true,
-      suffix: /^$/,
-      handler() {},
-    },
-    'table enter': {
-      key: 'Enter',
-      shiftKey: null,
-      format: ['table'],
-      handler(range) {
-        const module = this.quill.getModule('table');
-        if (module) {
-          const [table, row, cell, offset] = module.getTable(range);
-          const shift = tableSide(table, row, cell, offset);
-          if (shift == null) return;
-          let index = table.offset();
-          if (shift < 0) {
-            const delta = new Delta().retain(index).insert('\n');
-            this.quill.updateContents(delta, Quill.sources.USER);
-            this.quill.setSelection(
-              range.index + 1,
-              range.length,
-              Quill.sources.SILENT,
-            );
-          } else if (shift > 0) {
-            index += table.length();
-            const delta = new Delta().retain(index).insert('\n');
-            this.quill.updateContents(delta, Quill.sources.USER);
-            this.quill.setSelection(index, Quill.sources.USER);
-          }
-        }
-      },
-    },
-    'table tab': {
-      key: 'Tab',
-      shiftKey: null,
-      format: ['table'],
-      handler(range, context) {
-        const { event, line: cell } = context;
-        const offset = cell.offset(this.quill.scroll);
-        if (event.shiftKey) {
-          this.quill.setSelection(offset - 1, Quill.sources.USER);
-        } else {
-          this.quill.setSelection(offset + cell.length(), Quill.sources.USER);
-        }
-      },
-    },
-    'list autofill': {
-      key: ' ',
-      shiftKey: null,
-      collapsed: true,
-      format: {
-        'code-block': false,
-        blockquote: false,
-        table: false,
-      },
-      prefix: /^\s*?(\d+\.|-|\*|\[ ?\]|\[x\])$/,
-      handler(range, context) {
-        if (this.quill.scroll.query('list') == null) return true;
-        const { length } = context.prefix;
-        const [line, offset] = this.quill.getLine(range.index);
-        if (offset > length) return true;
-        let value;
-        switch (context.prefix.trim()) {
-          case '[]':
-          case '[ ]':
-            value = 'unchecked';
-            break;
-          case '[x]':
-            value = 'checked';
-            break;
-          case '-':
-          case '*':
-            value = 'bullet';
-            break;
-          default:
-            value = 'ordered';
-        }
-        this.quill.insertText(range.index, ' ', Quill.sources.USER);
-        this.quill.history.cutoff();
-        const delta = new Delta()
-          .retain(range.index - offset)
-          .delete(length + 1)
-          .retain(line.length() - 2 - offset)
-          .retain(1, { list: value });
-        this.quill.updateContents(delta, Quill.sources.USER);
-        this.quill.history.cutoff();
-        this.quill.setSelection(range.index - length, Quill.sources.SILENT);
-        return false;
-      },
-    },
-    'code exit': {
-      key: 'Enter',
-      collapsed: true,
-      format: ['code-block'],
-      prefix: /^$/,
-      suffix: /^\s*$/,
-      handler(range) {
-        const [line, offset] = this.quill.getLine(range.index);
-        let numLines = 2;
-        let cur = line;
-        while (
-          cur != null &&
-          cur.length() <= 1 &&
-          cur.formats()['code-block']
-        ) {
-          cur = cur.prev;
-          numLines -= 1;
-          // Requisite prev lines are empty
-          if (numLines <= 0) {
-            const delta = new Delta()
-              .retain(range.index + line.length() - offset - 2)
-              .retain(1, { 'code-block': null })
-              .delete(1);
-            this.quill.updateContents(delta, Quill.sources.USER);
-            this.quill.setSelection(range.index - 1, Quill.sources.SILENT);
-            return false;
-          }
-        }
-        return true;
-      },
-    },
-    'embed left': makeEmbedArrowHandler('ArrowLeft', false),
-    'embed left shift': makeEmbedArrowHandler('ArrowLeft', true),
-    'embed right': makeEmbedArrowHandler('ArrowRight', false),
-    'embed right shift': makeEmbedArrowHandler('ArrowRight', true),
-    'table down': makeTableArrowHandler(false),
-    'table up': makeTableArrowHandler(true),
-  },
-};
-
-function makeCodeBlockHandler(indent) {
+function makeCodeBlockHandler(indent: boolean): BindingObject {
   return {
     key: 'Tab',
     shiftKey: !indent,
     format: { 'code-block': true },
     handler(range, { event }) {
       const CodeBlock = this.quill.scroll.query('code-block');
+      // @ts-expect-error
+      const TAB = CodeBlock.TAB as string;
       if (range.length === 0 && !event.shiftKey) {
-        this.quill.insertText(range.index, CodeBlock.TAB, Quill.sources.USER);
-        this.quill.setSelection(
-          range.index + CodeBlock.TAB.length,
-          Quill.sources.SILENT,
-        );
+        this.quill.insertText(range.index, TAB, Quill.sources.USER);
+        this.quill.setSelection(range.index + TAB.length, Quill.sources.SILENT);
         return;
       }
 
@@ -569,18 +623,18 @@ function makeCodeBlockHandler(indent) {
       let { index, length } = range;
       lines.forEach((line, i) => {
         if (indent) {
-          line.insertAt(0, CodeBlock.TAB);
+          line.insertAt(0, TAB);
           if (i === 0) {
-            index += CodeBlock.TAB.length;
+            index += TAB.length;
           } else {
-            length += CodeBlock.TAB.length;
+            length += TAB.length;
           }
-        } else if (line.domNode.textContent.startsWith(CodeBlock.TAB)) {
-          line.deleteAt(0, CodeBlock.TAB.length);
+        } else if (line.domNode.textContent.startsWith(TAB)) {
+          line.deleteAt(0, TAB.length);
           if (i === 0) {
-            index -= CodeBlock.TAB.length;
+            index -= TAB.length;
           } else {
-            length -= CodeBlock.TAB.length;
+            length -= TAB.length;
           }
         }
       });
@@ -631,7 +685,7 @@ function makeEmbedArrowHandler(key, shiftKey) {
   };
 }
 
-function makeFormatHandler(format) {
+function makeFormatHandler(format: string): Binding {
   return {
     key: format[0],
     shortKey: true,
@@ -687,19 +741,20 @@ function makeTableArrowHandler(up) {
   };
 }
 
-function normalize(binding) {
+function normalize(binding: Binding): BindingObject {
+  let normalizedBinding: BindingObject;
   if (typeof binding === 'string' || typeof binding === 'number') {
-    binding = { key: binding };
+    normalizedBinding = { key: binding };
   } else if (typeof binding === 'object') {
-    binding = cloneDeep(binding);
+    normalizedBinding = cloneDeep(binding);
   } else {
     return null;
   }
-  if (binding.shortKey) {
-    binding[SHORTKEY] = binding.shortKey;
-    delete binding.shortKey;
+  if (typeof normalizedBinding === 'object' && normalizedBinding.shortKey) {
+    normalizedBinding[SHORTKEY] = normalizedBinding.shortKey;
+    delete normalizedBinding.shortKey;
   }
-  return binding;
+  return normalizedBinding;
 }
 
 // TODO: Move into quill.ts or editor.ts

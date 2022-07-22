@@ -149,11 +149,11 @@ class BlockEmbed extends EmbedBlot {
     }
   }
 
-  formatAt(index, length, name, value) {
+  formatAt(index: number, length: number, name: string, value: unknown) {
     this.format(name, value);
   }
 
-  insertAt(index, value, def) {
+  insertAt(index: number, value: string, def?: unknown) {
     if (typeof value === 'string' && value.endsWith('\n')) {
       const block = this.scroll.create(Block.blotName);
       this.parent.insertBefore(block, index === 0 ? this : this.next);

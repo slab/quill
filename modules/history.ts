@@ -1,12 +1,22 @@
-import { Scope } from 'parchment';
-import Quill from '../core/quill';
+import { Scope, ScrollBlot } from 'parchment';
+import Delta from 'quill-delta';
 import Module from '../core/module';
+import Quill from '../core/quill';
 
-class History extends Module {
-  constructor(quill, options) {
+interface HistoryOptions {
+  userOnly: boolean;
+  delay: number;
+  maxStack: number;
+}
+
+class History extends Module<HistoryOptions> {
+  lastRecorded = 0;
+  ignoreChange = false;
+
+  stack: { undo: Delta[]; redo: Delta[] };
+
+  constructor(quill: Quill, options: HistoryOptions) {
     super(quill, options);
-    this.lastRecorded = 0;
-    this.ignoreChange = false;
     this.clear();
     this.quill.on(
       Quill.events.EDITOR_CHANGE,
@@ -45,7 +55,7 @@ class History extends Module {
     });
   }
 
-  change(source, dest) {
+  change(source: 'redo' | 'undo', dest: 'undo' | 'redo') {
     if (this.stack[source].length === 0) return;
     const delta = this.stack[source].pop();
     const base = this.quill.getContents();
@@ -107,7 +117,7 @@ History.DEFAULTS = {
   userOnly: false,
 };
 
-function transformStack(stack, delta) {
+function transformStack(stack: Delta[], delta: Delta) {
   let remoteDelta = delta;
   for (let i = stack.length - 1; i >= 0; i -= 1) {
     const oldDelta = stack[i];
@@ -119,7 +129,7 @@ function transformStack(stack, delta) {
   }
 }
 
-function endsWithNewlineChange(scroll, delta) {
+function endsWithNewlineChange(scroll: ScrollBlot, delta: Delta) {
   const lastOp = delta.ops[delta.ops.length - 1];
   if (lastOp == null) return false;
   if (lastOp.insert != null) {
@@ -133,7 +143,7 @@ function endsWithNewlineChange(scroll, delta) {
   return false;
 }
 
-function getLastChangeIndex(scroll, delta) {
+function getLastChangeIndex(scroll: ScrollBlot, delta: Delta) {
   const deleteLength = delta.reduce((length, op) => {
     return length + (op.delete || 0);
   }, 0);

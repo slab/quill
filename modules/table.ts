@@ -9,7 +9,7 @@ import {
   tableId,
 } from '../formats/table';
 
-class Table extends Module {
+class Table extends Module<{}> {
   static register() {
     Quill.register(TableCell);
     Quill.register(TableRow);
@@ -17,13 +17,15 @@ class Table extends Module {
     Quill.register(TableContainer);
   }
 
-  constructor(...args) {
-    super(...args);
+  constructor(quill: Quill, options: {}) {
+    super(quill, options);
     this.listenBalanceCells();
   }
 
   balanceTables() {
+    // @ts-expect-error
     this.quill.scroll.descendants(TableContainer).forEach(table => {
+      // @ts-expect-error
       table.balanceCells();
     });
   }
@@ -51,7 +53,9 @@ class Table extends Module {
     this.quill.setSelection(offset, Quill.sources.SILENT);
   }
 
-  getTable(range = this.quill.getSelection()) {
+  getTable(
+    range = this.quill.getSelection(),
+  ): [TableContainer | null, TableRow | null, TableCell | null, number] {
     if (range == null) return [null, null, null, -1];
     const [cell, offset] = this.quill.getLine(range.index);
     if (cell == null || cell.statics.blotName !== TableCell.blotName) {
@@ -59,6 +63,7 @@ class Table extends Module {
     }
     const row = cell.parent;
     const table = row.parent.parent;
+    // @ts-expect-error
     return [table, row, cell, offset];
   }
 
@@ -114,7 +119,7 @@ class Table extends Module {
     this.insertRow(1);
   }
 
-  insertTable(rows, columns) {
+  insertTable(rows: number, columns: number) {
     const range = this.quill.getSelection();
     if (range == null) return;
     const delta = new Array(rows).fill(0).reduce(memo => {

@@ -280,7 +280,7 @@ class Quill {
     this.scrollIntoView();
   }
 
-  format(name, value, source = Emitter.sources.API) {
+  format(name, value, source: EmitterSource = Emitter.sources.API) {
     return modify.call(
       this,
       () => {
@@ -306,12 +306,32 @@ class Quill {
     );
   }
 
-  formatLine(index, length, name, value, source) {
+  formatLine(
+    index: number,
+    length: number,
+    formats: Record<string, unknown>,
+    source: EmitterSource,
+  );
+  formatLine(
+    index: number,
+    length: number,
+    name: string,
+    value: unknown,
+    source: EmitterSource,
+  );
+  formatLine(
+    index: number,
+    length: number,
+    name: string | Record<string, unknown>,
+    value: unknown,
+    source?: EmitterSource,
+  ) {
     let formats;
     // eslint-disable-next-line prefer-const
     [index, length, formats, source] = overload(
       index,
       length,
+      // @ts-expect-error
       name,
       value,
       source,
@@ -372,9 +392,14 @@ class Quill {
     return this.editor.getContents(index, length);
   }
 
-  getFormat(index = this.getSelection(true), length = 0) {
+  getFormat(range: Range): Record<string, unknown>;
+  getFormat(index: number, length: number): Record<string, unknown>;
+  getFormat(
+    index: number | Range = this.getSelection(true),
+    length?: number,
+  ): Record<string, unknown> {
     if (typeof index === 'number') {
-      return this.editor.getFormat(index, length);
+      return this.editor.getFormat(index, length === undefined ? 0 : length);
     }
     return this.editor.getFormat(index.index, index.length);
   }
@@ -417,14 +442,28 @@ class Quill {
     return this.selection.getRange()[0];
   }
 
-  getSemanticHTML(index = 0, length = this.getLength() - index) {
-    [index, length] = overload(index, length);
-    return this.editor.getHTML(index, length);
+  getSemanticHTML(range: Range): string;
+  getSemanticHTML(index: number, length: number): string;
+  getSemanticHTML(index: number | Range = 0, length?: number): string {
+    if (typeof index === 'number') {
+      return this.editor.getHTML(
+        index,
+        length === undefined ? this.getLength() - index : length,
+      );
+    }
+    return this.editor.getHTML(index.index, index.length);
   }
 
-  getText(index = 0, length = this.getLength() - index) {
-    [index, length] = overload(index, length);
-    return this.editor.getText(index, length);
+  getText(range: Range): string;
+  getText(index: number, length: number): string;
+  getText(index: number | Range = 0, length?: number): string {
+    if (typeof index === 'number') {
+      return this.editor.getText(
+        index,
+        length === undefined ? this.getLength() - index : length,
+      );
+    }
+    return this.editor.getText(index.index, index.length);
   }
 
   hasFocus() {
@@ -442,7 +481,21 @@ class Quill {
     );
   }
 
-  insertText(index, text, name, value, source) {
+  insertText(index: number, text: string, source: EmitterSource);
+  insertText(
+    index: number,
+    text: string,
+    name: string,
+    value: unknown,
+    source: EmitterSource,
+  );
+  insertText(
+    index: number,
+    text: string,
+    name: string,
+    value?: unknown,
+    source?: EmitterSource,
+  ) {
     let formats;
     // eslint-disable-next-line prefer-const
     [index, , formats, source] = overload(index, 0, name, value, source);
@@ -507,6 +560,7 @@ class Quill {
     );
   }
   setSelection(range: Range | null, source?: EmitterSource): void;
+  setSelection(index: number, source?: EmitterSource): void;
   setSelection(index: number, length: number, source?: EmitterSource): void;
   setSelection(
     index: Range | null | number,
@@ -538,7 +592,10 @@ class Quill {
     return change;
   }
 
-  updateContents(delta: Delta | Op[], source = Emitter.sources.API) {
+  updateContents(
+    delta: Delta | Op[],
+    source: EmitterSource = Emitter.sources.API,
+  ) {
     return modify.call(
       this,
       () => {

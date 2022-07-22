@@ -6,6 +6,7 @@ import {
   Scope,
   StyleAttributor,
   BlockBlot,
+  ScrollBlot,
 } from 'parchment';
 import { BlockEmbed } from '../blots/block';
 import Quill from '../core/quill';
@@ -20,10 +21,14 @@ import { DirectionAttribute, DirectionStyle } from '../formats/direction';
 import { FontStyle } from '../formats/font';
 import { SizeStyle } from '../formats/size';
 import { deleteRange } from './keyboard';
+import { Range } from '../core/selection';
 
 const debug = logger('quill:clipboard');
 
-const CLIPBOARD_CONFIG = [
+type Selector = string | number;
+type Matcher = (node: Node, delta: Delta, scroll: ScrollBlot) => Delta;
+
+const CLIPBOARD_CONFIG: [Selector, Matcher][] = [
   [Node.TEXT_NODE, matchText],
   [Node.TEXT_NODE, matchNewline],
   ['br', matchBreak],
@@ -61,8 +66,14 @@ const STYLE_ATTRIBUTORS = [
   return memo;
 }, {});
 
-class Clipboard extends Module {
-  constructor(quill, options) {
+interface ClipboardOptions {
+  matchers: [Selector, Matcher][];
+}
+
+class Clipboard extends Module<ClipboardOptions> {
+  matchers: [Selector, Matcher][] = [];
+
+  constructor(quill: Quill, options: ClipboardOptions) {
     super(quill, options);
     this.quill.root.addEventListener('copy', e => this.onCaptureCopy(e, false));
     this.quill.root.addEventListener('cut', e => this.onCaptureCopy(e, true));
@@ -79,7 +90,7 @@ class Clipboard extends Module {
     this.matchers.push([selector, matcher]);
   }
 
-  convert({ html, text }, formats = {}) {
+  convert({ html, text }, formats: Record<string, unknown> = {}) {
     if (formats[CodeBlock.blotName]) {
       return new Delta().insert(text, {
         [CodeBlock.blotName]: formats[CodeBlock.blotName],
@@ -99,7 +110,7 @@ class Clipboard extends Module {
     return delta;
   }
 
-  convertHTML(html) {
+  convertHTML(html: string) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
     const container = doc.body;
     const nodeMatches = new WeakMap();
@@ -144,7 +155,7 @@ class Clipboard extends Module {
     }
   }
 
-  onCapturePaste(e) {
+  onCapturePaste(e: ClipboardEvent) {
     if (e.defaultPrevented || !this.quill.isEnabled()) return;
     e.preventDefault();
     const range = this.quill.getSelection(true);
@@ -169,7 +180,8 @@ class Clipboard extends Module {
     this.onPaste(range, { html, text });
   }
 
-  onCopy(range) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onCopy(range: Range, isCut = false) {
     const text = this.quill.getText(range);
     const html = this.quill.getSemanticHTML(range);
     return { html, text };
@@ -187,6 +199,7 @@ class Clipboard extends Module {
     // range.length contributes to delta.length()
     this.quill.setSelection(
       delta.length() - range.length,
+      0,
       Quill.sources.SILENT,
     );
     this.quill.scrollIntoView();
@@ -223,7 +236,11 @@ Clipboard.DEFAULTS = {
   matchers: [],
 };
 
-function applyFormat(delta, format, value) {
+function applyFormat(
+  delta: Delta,
+  format: Record<string, unknown> | string,
+  value?: unknown,
+) {
   if (typeof format === 'object') {
     return Object.keys(format).reduce((newDelta, key) => {
       return applyFormat(newDelta, key, format[key]);
@@ -305,7 +322,13 @@ function isPre(node) {
   return preNodes.get(node);
 }
 
-function traverse(scroll, node, elementMatchers, textMatchers, nodeMatches) {
+function traverse(
+  scroll: ScrollBlot,
+  node: Node,
+  elementMatchers: Matcher[],
+  textMatchers: Matcher[],
+  nodeMatches: WeakMap<Node, Matcher[]>,
+) {
   // Post-order
   if (node.nodeType === node.TEXT_NODE) {
     return textMatchers.reduce((delta, matcher) => {
@@ -436,12 +459,12 @@ function matchIndent(node, delta, scroll) {
   }, new Delta());
 }
 
-function matchList(node, delta) {
+function matchList(node: Element, delta: Delta) {
   const list = node.tagName === 'OL' ? 'ordered' : 'bullet';
   return applyFormat(delta, 'list', list);
 }
 
-function matchNewline(node, delta, scroll) {
+function matchNewline(node: Node, delta: Delta, scroll: ScrollBlot) {
   if (!deltaEndsWith(delta, '\n')) {
     if (isLine(node)) {
       return delta.insert('\n');
@@ -453,6 +476,7 @@ function matchNewline(node, delta, scroll) {
           return delta.insert('\n');
         }
         const match = scroll.query(nextSibling);
+        // @ts-expect-error
         if (match && match.prototype instanceof BlockEmbed) {
           return delta.insert('\n');
         }
@@ -463,9 +487,9 @@ function matchNewline(node, delta, scroll) {
   return delta;
 }
 
-function matchStyles(node, delta) {
-  const formats = {};
-  const style = node.style || {};
+function matchStyles(node: HTMLElement, delta: Delta) {
+  const formats: Record<string, unknown> = {};
+  const style: Partial<CSSStyleDeclaration> = node.style || {};
   if (style.fontStyle === 'italic') {
     formats.italic = true;
   }
@@ -484,15 +508,16 @@ function matchStyles(node, delta) {
   if (Object.keys(formats).length > 0) {
     delta = applyFormat(delta, formats);
   }
-  if (parseFloat(style.textIndent || 0) > 0) {
+  if (parseFloat(style.textIndent || '0') > 0) {
     // Could be 0.5in
     return new Delta().insert('\t').concat(delta);
   }
   return delta;
 }
 
-function matchTable(node, delta) {
+function matchTable(node: HTMLTableRowElement, delta: Delta) {
   const table =
+    // @ts-expect-error
     node.parentNode.tagName === 'TABLE'
       ? node.parentNode
       : node.parentNode.parentNode;
