@@ -1,5 +1,6 @@
 import merge from 'lodash.merge';
 import Emitter from '../core/emitter';
+import { Range } from '../core/selection';
 import Theme from '../core/theme';
 import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
@@ -53,6 +54,9 @@ const HEADERS = ['1', '2', '3', false];
 const SIZES = ['small', false, 'large', 'huge'];
 
 class BaseTheme extends Theme {
+  pickers: Picker[];
+  tooltip?: Tooltip;
+
   constructor(quill, options) {
     super(quill, options);
     const listener = e => {
@@ -63,6 +67,7 @@ class BaseTheme extends Theme {
       if (
         this.tooltip != null &&
         !this.tooltip.root.contains(e.target) &&
+        // @ts-expect-error
         document.activeElement !== this.tooltip.textbox &&
         !this.quill.hasFocus()
       ) {
@@ -79,15 +84,17 @@ class BaseTheme extends Theme {
     quill.emitter.listenDOM('click', document.body, listener);
   }
 
-  addModule(name) {
+  // @ts-expect-error
+  addModule(name: string): unknown {
     const module = super.addModule(name);
     if (name === 'toolbar') {
+      // @ts-expect-error
       this.extendToolbar(module);
     }
     return module;
   }
 
-  buildButtons(buttons, icons) {
+  buildButtons(buttons: HTMLButtonElement[], icons) {
     Array.from(buttons).forEach(button => {
       const className = button.getAttribute('class') || '';
       className.split(/\s+/).forEach(name => {
@@ -108,7 +115,7 @@ class BaseTheme extends Theme {
     });
   }
 
-  buildPickers(selects, icons) {
+  buildPickers(selects: HTMLElement[], icons) {
     this.pickers = Array.from(selects).map(select => {
       if (select.classList.contains('ql-align')) {
         if (select.querySelector('option') == null) {
@@ -127,6 +134,7 @@ class BaseTheme extends Theme {
           fillSelect(
             select,
             COLORS,
+            // @ts-expect-error
             format === 'background' ? '#ffffff' : '#000000',
           );
         }
@@ -188,6 +196,9 @@ BaseTheme.DEFAULTS = merge({}, Theme.DEFAULTS, {
 });
 
 class BaseTooltip extends Tooltip {
+  textbox: HTMLInputElement | null;
+  linkRange?: Range;
+
   constructor(quill, boundsContainer) {
     super(quill, boundsContainer);
     this.textbox = this.root.querySelector('input[type="text"]');
