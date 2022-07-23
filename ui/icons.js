@@ -13,6 +13,10 @@ import directionRightToLeftIcon from '../assets/icons/direction-rtl.svg';
 import formulaIcon from '../assets/icons/formula.svg';
 import headerIcon from '../assets/icons/header.svg';
 import header2Icon from '../assets/icons/header-2.svg';
+import header3Icon from '../assets/icons/header-3.svg';
+import header4Icon from '../assets/icons/header-4.svg';
+import header5Icon from '../assets/icons/header-5.svg';
+import header6Icon from '../assets/icons/header-6.svg';
 import italicIcon from '../assets/icons/italic.svg';
 import imageIcon from '../assets/icons/image.svg';
 import indentIcon from '../assets/icons/indent.svg';
@@ -50,6 +54,10 @@ export default {
   header: {
     '1': headerIcon,
     '2': header2Icon,
+    '3': header3Icon,
+    '4': header4Icon,
+    '5': header5Icon,
+    '6': header6Icon,
   },
   italic: italicIcon,
   image: imageIcon,
