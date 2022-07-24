@@ -130,7 +130,7 @@ class BaseTheme extends Theme {
             format === 'background' ? '#ffffff' : '#000000',
           );
         }
-        return new ColorPicker(select, icons[format]);
+        return new ColorPicker(select, icons[format], format);
       }
       if (select.querySelector('option') == null) {
         if (select.classList.contains('ql-font')) {
