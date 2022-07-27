@@ -116,6 +116,8 @@ class Keyboard extends Module {
       );
       const matches = bindings.filter(binding => Keyboard.match(evt, binding));
       if (matches.length === 0) return;
+      const blot = Quill.find(evt.target, true);
+      if (blot && blot.scroll !== this.quill.scroll) return;
       const range = this.quill.getSelection();
       if (range == null || !this.quill.hasFocus()) return;
       const [line, offset] = this.quill.getLine(range.index);
@@ -244,18 +246,7 @@ class Keyboard extends Module {
   }
 
   handleDeleteRange(range) {
-    const lines = this.quill.getLines(range);
-    let formats = {};
-    if (lines.length > 1) {
-      const firstFormats = lines[0].formats();
-      const lastFormats = lines[lines.length - 1].formats();
-      formats = AttributeMap.diff(lastFormats, firstFormats) || {};
-    }
-    this.quill.deleteText(range, Quill.sources.USER);
-    if (Object.keys(formats).length > 0) {
-      this.quill.formatLine(range.index, 1, formats, Quill.sources.USER);
-    }
-    this.quill.setSelection(range.index, Quill.sources.SILENT);
+    deleteRange({ range, quill: this.quill });
     this.quill.focus();
   }
 
@@ -279,13 +270,6 @@ class Keyboard extends Module {
     this.quill.updateContents(delta, Quill.sources.USER);
     this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
     this.quill.focus();
-
-    Object.keys(context.format).forEach(name => {
-      if (lineFormats[name] != null) return;
-      if (Array.isArray(context.format[name])) return;
-      if (name === 'code' || name === 'link') return;
-      this.quill.format(name, context.format[name], Quill.sources.USER);
-    });
   }
 }
 
@@ -483,10 +467,8 @@ Keyboard.DEFAULTS = {
       shiftKey: null,
       collapsed: true,
       format: {
-        list: false,
         'code-block': false,
         blockquote: false,
-        header: false,
         table: false,
       },
       prefix: /^\s*?(\d+\.|-|\*|\[ ?\]|\[x\])$/,
@@ -569,8 +551,17 @@ function makeCodeBlockHandler(indent) {
     key: 'Tab',
     shiftKey: !indent,
     format: { 'code-block': true },
-    handler(range) {
+    handler(range, { event }) {
       const CodeBlock = this.quill.scroll.query('code-block');
+      if (range.length === 0 && !event.shiftKey) {
+        this.quill.insertText(range.index, CodeBlock.TAB, Quill.sources.USER);
+        this.quill.setSelection(
+          range.index + CodeBlock.TAB.length,
+          Quill.sources.SILENT,
+        );
+        return;
+      }
+
       const lines =
         range.length === 0
           ? this.quill.getLines(range.index, 1)
@@ -711,6 +702,22 @@ function normalize(binding) {
   return binding;
 }
 
+// TODO: Move into quill.ts or editor.ts
+function deleteRange({ quill, range }) {
+  const lines = quill.getLines(range);
+  let formats = {};
+  if (lines.length > 1) {
+    const firstFormats = lines[0].formats();
+    const lastFormats = lines[lines.length - 1].formats();
+    formats = AttributeMap.diff(lastFormats, firstFormats) || {};
+  }
+  quill.deleteText(range, Quill.sources.USER);
+  if (Object.keys(formats).length > 0) {
+    quill.formatLine(range.index, 1, formats, Quill.sources.USER);
+  }
+  quill.setSelection(range.index, Quill.sources.SILENT);
+}
+
 function tableSide(table, row, cell, offset) {
   if (row.prev == null && row.next == null) {
     if (cell.prev == null && cell.next == null) {
@@ -727,4 +734,4 @@ function tableSide(table, row, cell, offset) {
   return null;
 }
 
-export { Keyboard as default, SHORTKEY, normalize };
+export { Keyboard as default, SHORTKEY, normalize, deleteRange };

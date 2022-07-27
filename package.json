@@ -20,8 +20,8 @@
     "dist/quill.core.js",
     "dist/quill.min.js.map",
     "dist/quill.min.js",
-    "core.js",
-    "quill.js"
+    "core.ts",
+    "quill.ts"
   ],
   "config": {
     "ports": {
@@ -36,24 +36,26 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.5.0",
-    "parchment": "2.0.0-dev.2",
-    "quill-delta": "4.2.2"
+    "parchment": "^2.0.0",
+    "quill-delta": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
+    "@types/eventemitter3": "^2.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-istanbul": "^6.0.0",
     "css-loader": "^3.5.1",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb": "^18.1.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^6.10.1",
     "eslint-import-resolver-webpack": "~0.12.1",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-react-hooks": "^3.0.0",
     "highlight.js": "^9.18.1",
     "html-loader": "~1.1.0",
     "http-proxy": "^1.18.0",
@@ -72,7 +74,8 @@
     "stylus": "~0.54.7",
     "stylus-loader": "^3.0.2",
     "ts-loader": "^6.2.2",
-    "typescript": "^3.8.3",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.6.4",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
@@ -85,65 +88,6 @@
   "bugs": {
     "url": "https://github.com/quilljs/quill/issues"
   },
-  "eslintConfig": {
-    "extends": [
-      "airbnb",
-      "prettier"
-    ],
-    "env": {
-      "browser": true,
-      "commonjs": true,
-      "es6": true
-    },
-    "plugins": [
-      "prettier"
-    ],
-    "settings": {
-      "import/resolver": {
-        "webpack": {
-          "config": "_develop/webpack.config.js"
-        }
-      }
-    },
-    "rules": {
-      "arrow-body-style": [
-        "off"
-      ],
-      "class-methods-use-this": [
-        "off"
-      ],
-      "import/no-extraneous-dependencies": [
-        "error",
-        {
-          "devDependencies": [
-            "_develop/*.js",
-            "test/**/*.js"
-          ]
-        }
-      ],
-      "no-param-reassign": [
-        "off"
-      ],
-      "no-use-before-define": [
-        "error",
-        {
-          "functions": false
-        }
-      ],
-      "import/named": [
-        "error"
-      ],
-      "max-classes-per-file": [
-        "off"
-      ],
-      "prettier/prettier": "error"
-    }
-  },
-  "eslintIgnore": [
-    "dist/",
-    "docs/",
-    "node_modules/"
-  ],
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all"
@@ -153,12 +97,13 @@
     "build:webpack": "webpack --config _develop/webpack.config.js; rm dist/quill.core dist/quill.bubble dist/quill.snow",
     "build:release": "./_develop/scripts/release.sh",
     "develop": "npm run start",
-    "lint": "eslint blots core formats modules themes ui test",
+    "lint": "eslint .",
     "start": "npm run build:webpack; bundle exec foreman start -f _develop/procfile",
-    "test": "npm run test:unit",
-    "test:all": "npm run test:unit; npm run test:functional",
+    "test": "npm run test:unit; npm run test:random",
+    "test:all": "npm run test:unit; npm run test:functional; npm run test:random",
     "test:functional": "./_develop/scripts/puppeteer.sh",
     "test:unit": "npm run build; karma start _develop/karma.config.js",
+    "test:random": "ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/jasmine test/random.js",
     "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage",
     "travis": "npm run lint && karma start _develop/karma.config.js --reporters dots,saucelabs"
   },

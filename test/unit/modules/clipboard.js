@@ -31,12 +31,16 @@ describe('Clipboard', function() {
         }, 2);
       });
 
+      // Copying from Word includes both html and files
       it('pastes html data if present with file', function(done) {
         const upload = spyOn(this.quill.uploader, 'upload');
-        this.quill.clipboard.onCapturePaste(
-          // eslint-disable-next-line prefer-object-spread
-          Object.assign({}, this.clipboardEvent, { files: ['file '] }),
-        );
+        this.quill.clipboard.onCapturePaste({
+          ...this.clipboardEvent,
+          clipboardData: {
+            ...this.clipboardEvent.clipboardData,
+            files: ['file'],
+          },
+        });
         setTimeout(() => {
           expect(upload).not.toHaveBeenCalled();
           expect(this.quill.root).toEqualHTML(
@@ -47,12 +51,57 @@ describe('Clipboard', function() {
         }, 2);
       });
 
+      it('pastes image file if present with image only html', function(done) {
+        const upload = spyOn(this.quill.uploader, 'upload');
+        this.quill.clipboard.onCapturePaste({
+          ...this.clipboardEvent,
+          clipboardData: {
+            getData: type =>
+              type === 'text/html'
+                ? `<meta charset='utf-8'><img src="/assets/favicon.png"/>`
+                : '|',
+            files: ['file'],
+          },
+        });
+        setTimeout(() => {
+          expect(upload).toHaveBeenCalled();
+          done();
+        }, 2);
+      });
+
       it('does not fire selection-change', function(done) {
         const change = jasmine.createSpy('change');
         this.quill.on('selection-change', change);
         this.quill.clipboard.onCapturePaste(this.clipboardEvent);
         setTimeout(function() {
           expect(change).not.toHaveBeenCalled();
+          done();
+        }, 2);
+      });
+    });
+
+    describe('cut', () => {
+      beforeEach(function() {
+        this.clipboardData = {};
+        this.clipboardEvent = {
+          clipboardData: {
+            setData: (type, data) => {
+              this.clipboardData[type] = data;
+            },
+          },
+          preventDefault: () => {},
+        };
+      });
+
+      it('keeps formats of first line', function(done) {
+        this.quill.clipboard.onCaptureCopy(this.clipboardEvent, true);
+        setTimeout(() => {
+          expect(this.quill.root).toEqualHTML('<h1>01<em>7</em>8</h1>');
+          expect(this.quill.getSelection()).toEqual(new Range(2));
+          expect(this.clipboardData['text/plain']).toEqual('23\n56');
+          expect(this.clipboardData['text/html']).toEqual(
+            '<h1>23</h1><p>5<em>6</em></p>',
+          );
           done();
         }, 2);
       });

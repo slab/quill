@@ -19,6 +19,7 @@ import { ColorStyle } from '../formats/color';
 import { DirectionAttribute, DirectionStyle } from '../formats/direction';
 import { FontStyle } from '../formats/font';
 import { SizeStyle } from '../formats/size';
+import { deleteRange } from './keyboard';
 
 const debug = logger('quill:clipboard');
 
@@ -87,20 +88,7 @@ class Clipboard extends Module {
     if (!html) {
       return new Delta().insert(text || '');
     }
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    const container = doc.body;
-    const nodeMatches = new WeakMap();
-    const [elementMatchers, textMatchers] = this.prepareMatching(
-      container,
-      nodeMatches,
-    );
-    const delta = traverse(
-      this.quill.scroll,
-      container,
-      elementMatchers,
-      textMatchers,
-      nodeMatches,
-    );
+    const delta = this.convertHTML(html);
     // Remove trailing newline
     if (
       deltaEndsWith(delta, '\n') &&
@@ -109,6 +97,23 @@ class Clipboard extends Module {
       return delta.compose(new Delta().retain(delta.length() - 1).delete(1));
     }
     return delta;
+  }
+
+  convertHTML(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const container = doc.body;
+    const nodeMatches = new WeakMap();
+    const [elementMatchers, textMatchers] = this.prepareMatching(
+      container,
+      nodeMatches,
+    );
+    return traverse(
+      this.quill.scroll,
+      container,
+      elementMatchers,
+      textMatchers,
+      nodeMatches,
+    );
   }
 
   dangerouslyPasteHTML(index, html, source = Quill.sources.API) {
@@ -135,7 +140,7 @@ class Clipboard extends Module {
     e.clipboardData.setData('text/plain', text);
     e.clipboardData.setData('text/html', html);
     if (isCut) {
-      this.quill.deleteText(range, Quill.sources.USER);
+      deleteRange({ range, quill: this.quill });
     }
   }
 
@@ -149,9 +154,19 @@ class Clipboard extends Module {
     const files = Array.from(e.clipboardData.files || []);
     if (!html && files.length > 0) {
       this.quill.uploader.upload(range, files);
-    } else {
-      this.onPaste(range, { html, text });
+      return;
     }
+    if (html && files.length > 0) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      if (
+        doc.body.childElementCount === 1 &&
+        doc.body.firstElementChild.tagName === 'IMG'
+      ) {
+        this.quill.uploader.upload(range, files);
+        return;
+      }
+    }
+    this.onPaste(range, { html, text });
   }
 
   onCopy(range) {

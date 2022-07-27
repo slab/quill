@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import Quill from '../quill.js';
+import Quill from '../quill.ts';
 import CodeBlock, { CodeBlockContainer } from '../formats/code';
 
 import './helpers/unit';
@@ -30,6 +30,7 @@ import './unit/modules/history';
 import './unit/modules/keyboard';
 import './unit/modules/syntax';
 import './unit/modules/table';
+import './unit/modules/tableEmbed';
 import './unit/modules/toolbar';
 
 import './unit/ui/picker';

@@ -5,7 +5,7 @@ permalink: /docs/quickstart/
 redirect_from: /docs/
 ---
 
-The best way to get started is try a simple example. Quill is initialized with a DOM element to contain the editor. The contents of that element will become the initial contents of Quill.
+The best way to get started is to try a simple example. Quill is initialized with a DOM element to contain the editor. The contents of that element will become the initial contents of Quill.
 
 ```html
 <!-- Include stylesheet -->

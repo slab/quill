@@ -441,6 +441,40 @@ describe('Selection', function() {
         <p>01<em><span class="ql-cursor">${Cursor.CONTENTS}</span></em>23</p>
       `);
     });
+
+    describe('unlink cursor', function() {
+      const cursorHTML = `<span class="ql-cursor">${Cursor.CONTENTS}</span>`;
+
+      it('one level', function() {
+        this.setup(
+          '<p><strong><a href="https://example.com">link</a></strong></p><p><br></p>',
+          4,
+        );
+        this.selection.format('bold', false);
+        expect(this.container).toEqualHTML(`
+          <p><strong><a href="https://example.com">link</a></strong>${cursorHTML}</p><p><br></p>
+        `);
+      });
+
+      it('nested formats', function() {
+        this.setup(
+          '<p><strong><em><a href="https://example.com">bold</a></em></strong></p><p><br></p>',
+          4,
+        );
+        this.selection.format('italic', false);
+        expect(this.container).toEqualHTML(`
+          <p><strong><em><a href="https://example.com">bold</a></em>${cursorHTML}</strong></p><p><br></p>
+        `);
+      });
+
+      it('ignore link format', function() {
+        this.setup('<p><strong>bold</strong></p><p><br></p>', 4);
+        this.selection.format('link', 'https://example.com');
+        expect(this.container).toEqualHTML(`
+          <p><strong>bold${cursorHTML}</strong></p><p><br></p>
+        `);
+      });
+    });
   });
 
   describe('getBounds()', function() {

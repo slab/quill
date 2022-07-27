@@ -17,8 +17,8 @@ const constantPack = new webpack.DefinePlugin({
 });
 
 const source = [
-  'quill.js',
-  'core.js',
+  'quill.ts',
+  'core.ts',
   'blots',
   'core',
   'formats',
@@ -80,28 +80,15 @@ const stylRules = {
 
 const tsRules = {
   test: /\.ts$/,
-  use: [
-    {
-      loader: 'ts-loader',
-      options: {
-        compilerOptions: {
-          declaration: false,
-          module: 'es6',
-          sourceMap: true,
-          target: 'es6',
-        },
-        transpileOnly: true,
-      },
-    },
-  ],
+  use: [{ loader: 'ts-loader' }],
 };
 
 const baseConfig = {
   mode: 'development',
   context: path.resolve(__dirname, '..'),
   entry: {
-    'quill.js': ['./quill.js'],
-    'quill.core.js': ['./core.js'],
+    'quill.js': ['./quill.ts'],
+    'quill.core.js': ['./core.ts'],
     'quill.core': './assets/core.styl',
     'quill.bubble': './assets/bubble.styl',
     'quill.snow': './assets/snow.styl',
@@ -115,12 +102,6 @@ const baseConfig = {
     path: path.resolve(__dirname, '../dist/'),
   },
   resolve: {
-    alias: {
-      parchment: path.resolve(
-        __dirname,
-        '../node_modules/parchment/src/parchment',
-      ),
-    },
     extensions: ['.js', '.styl', '.ts'],
   },
   module: {
@@ -153,7 +134,7 @@ module.exports = env => {
     return {
       ...prodConfig,
       mode: 'production',
-      entry: { 'quill.min.js': './quill.js' },
+      entry: { 'quill.min.js': './quill.ts' },
       devtool: 'source-map',
     };
   }

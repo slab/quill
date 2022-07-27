@@ -57,7 +57,10 @@ resets(arr)
     margin: 0
     padding: 0
   p, h1, h2, h3, h4, h5, h6
-    counter-reset: resets(0..MAX_INDENT)
+    @supports (counter-set: none)
+      counter-set: resets(0..MAX_INDENT)
+    @supports not (counter-set: none)
+      counter-reset: resets(0..MAX_INDENT)
   table
     border-collapse: collapse
   td
@@ -69,6 +72,7 @@ resets(arr)
     list-style-type: none
     padding-left: LIST_STYLE_OUTER_WIDTH
     position: relative
+
     > .ql-ui:before
       display: inline-block
       margin-left: -1*LIST_STYLE_OUTER_WIDTH
@@ -76,6 +80,12 @@ resets(arr)
       text-align: right
       white-space: nowrap
       width: LIST_STYLE_WIDTH
+
+  @supports (display: contents)
+    li[data-list=bullet],
+    li[data-list=ordered]
+      > .ql-ui
+        display: contents
 
   li[data-list=checked],
   li[data-list=unchecked]
@@ -89,11 +99,13 @@ resets(arr)
   li[data-list=unchecked] > .ql-ui:before
     content: '\2610'
 
-  li[data-list=ordered]
+  li[data-list]
     @supports (counter-set: none)
       counter-set: resets(1..MAX_INDENT)
     @supports not (counter-set: none)
       counter-reset: resets(1..MAX_INDENT)
+
+  li[data-list=ordered]
     counter-increment: list-0
     > .ql-ui:before
       content: unquote('counter(list-0, ' + LIST_STYLE[0] + ')') '. '
@@ -103,7 +115,7 @@ resets(arr)
       > .ql-ui:before
         content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
     if (num < MAX_INDENT)
-      li[data-list=ordered].ql-indent-{num}
+      li[data-list].ql-indent-{num}
         @supports (counter-set: none)
           counter-set: resets((num+1)..MAX_INDENT)
         @supports not (counter-set: none)

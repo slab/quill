@@ -141,9 +141,8 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
       ? SyntaxCodeBlock.formats(codeBlock.domNode)
       : 'plain';
 
-    return `<pre data-language="${language}">\n${this.code(
-      index,
-      length,
+    return `<pre data-language="${language}">\n${escapeText(
+      this.code(index, length),
     )}\n</pre>`;
   }
 
