@@ -531,6 +531,7 @@ class Quill {
   }
   setSelection(range: Range | null, source?: EmitterSource): void;
   setSelection(index: number, length?: number, source?: EmitterSource): void;
+  setSelection(index: number, source?: EmitterSource): void;
   setSelection(
     index: Range | null | number,
     length?: EmitterSource | number,

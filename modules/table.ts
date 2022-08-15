@@ -9,7 +9,7 @@ import {
   tableId,
 } from '../formats/table';
 
-class Table extends Module {
+class Table extends Module<{}> {
   static register() {
     Quill.register(TableCell);
     Quill.register(TableRow);
@@ -18,12 +18,15 @@ class Table extends Module {
   }
 
   constructor(...args) {
+    // @ts-expect-error
     super(...args);
     this.listenBalanceCells();
   }
 
   balanceTables() {
+    // @ts-expect-error
     this.quill.scroll.descendants(TableContainer).forEach(table => {
+      // @ts-expect-error
       table.balanceCells();
     });
   }
@@ -31,6 +34,7 @@ class Table extends Module {
   deleteColumn() {
     const [table, , cell] = this.getTable();
     if (cell == null) return;
+    // @ts-expect-error
     table.deleteColumn(cell.cellOffset());
     this.quill.update(Quill.sources.USER);
   }
@@ -45,13 +49,17 @@ class Table extends Module {
   deleteTable() {
     const [table] = this.getTable();
     if (table == null) return;
+    // @ts-expect-error
     const offset = table.offset();
+    // @ts-expect-error
     table.remove();
     this.quill.update(Quill.sources.USER);
     this.quill.setSelection(offset, Quill.sources.SILENT);
   }
 
-  getTable(range = this.quill.getSelection()) {
+  getTable(
+    range = this.quill.getSelection(),
+  ): [null, null, null, -1] | [Table, TableRow, TableCell, number] {
     if (range == null) return [null, null, null, -1];
     const [cell, offset] = this.quill.getLine(range.index);
     if (cell == null || cell.statics.blotName !== TableCell.blotName) {
@@ -59,6 +67,7 @@ class Table extends Module {
     }
     const row = cell.parent;
     const table = row.parent.parent;
+    // @ts-expect-error
     return [table, row, cell, offset];
   }
 
