@@ -657,6 +657,8 @@ function modify(modifier, source, index, shift) {
       range = shiftRange(range, index, shift, source);
     }
     this.setSelection(range, Emitter.sources.SILENT);
+  } else {
+    this.selection.update(Emitter.sources.SILENT);
   }
   if (change.length() > 0) {
     const args = [Emitter.events.TEXT_CHANGE, change, oldDelta, source];
