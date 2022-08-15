@@ -1,14 +1,20 @@
 import Delta, { OpIterator } from 'quill-delta';
 import Module from '../core/module';
 
-const parseCellIdentity = identity => {
+type CellData = {
+  content?: Delta['ops'];
+  attributes?: Record<string, unknown>;
+};
+
+const parseCellIdentity = (identity: string) => {
   const parts = identity.split(':');
   return [Number(parts[0]) - 1, Number(parts[1]) - 1];
 };
 
-const stringifyCellIdentity = (row, column) => `${row + 1}:${column + 1}`;
+const stringifyCellIdentity = (row: number, column: number) =>
+  `${row + 1}:${column + 1}`;
 
-export const composePosition = (delta, index) => {
+export const composePosition = (delta: Delta, index: number) => {
   let newIndex = index;
   const thisIter = new OpIterator(delta.ops);
   let offset = 0;
@@ -36,7 +42,7 @@ export const composePosition = (delta, index) => {
 };
 
 const compactCellData = ({ content, attributes }) => {
-  const data = {};
+  const data: CellData = {};
   if (content.length() > 0) {
     data.content = content.ops;
   }
@@ -47,7 +53,11 @@ const compactCellData = ({ content, attributes }) => {
 };
 
 const compactTableData = ({ rows, columns, cells }) => {
-  const data = {};
+  const data: {
+    rows?: Delta['ops'];
+    columns?: Delta['ops'];
+    cells?: Record<string, CellData>;
+  } = {};
   if (rows.length() > 0) {
     data.rows = rows.ops;
   }
@@ -213,7 +223,7 @@ export const tableHandler = {
   },
 };
 
-class TableEmbed extends Module {
+class TableEmbed extends Module<{}> {
   static register() {
     Delta.registerEmbed('table-embed', tableHandler);
   }
