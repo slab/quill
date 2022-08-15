@@ -6,7 +6,7 @@ import { Range } from '../core/selection';
 
 interface UploaderOptions {
   mimetypes: string[];
-  handler: (range: Range, files: File[]) => void;
+  handler: (this: { quill: Quill }, range: Range, files: File[]) => void;
 }
 
 class Uploader extends Module<UploaderOptions> {
@@ -33,7 +33,7 @@ class Uploader extends Module<UploaderOptions> {
     });
   }
 
-  upload(range: Range, files: FileList) {
+  upload(range: Range, files: FileList | File[]) {
     const uploads = [];
     Array.from(files).forEach(file => {
       if (file && this.options.mimetypes.includes(file.type)) {

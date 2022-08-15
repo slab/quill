@@ -244,7 +244,14 @@ class Quill {
     this.selection.setRange(null);
   }
 
-  deleteText(index: number, length: number, source) {
+  deleteText(range: Range, source?: EmitterSource): Delta;
+  deleteText(index: number, length: number, source?: EmitterSource): Delta;
+  deleteText(
+    index: number | Range,
+    length?: number | EmitterSource,
+    source?: EmitterSource,
+  ): Delta {
+    // @ts-expect-error
     [index, length, , source] = overload(index, length, source);
     return modify.call(
       this,
@@ -310,12 +317,32 @@ class Quill {
     );
   }
 
-  formatLine(index, length, name, value, source) {
+  formatLine(
+    index: number,
+    length: number,
+    formats: Record<string, unknown>,
+    source?: EmitterSource,
+  );
+  formatLine(
+    index: number,
+    length: number,
+    name: string,
+    value?: unknown,
+    source?: EmitterSource,
+  );
+  formatLine(
+    index: number,
+    length: number,
+    name: string | Record<string, unknown>,
+    value?: unknown | EmitterSource,
+    source?: EmitterSource,
+  ) {
     let formats;
     // eslint-disable-next-line prefer-const
     [index, length, formats, source] = overload(
       index,
       length,
+      // @ts-expect-error
       name,
       value,
       source,
@@ -469,7 +496,21 @@ class Quill {
     );
   }
 
-  insertText(index, text, name, value, source) {
+  insertText(index: number, text: string, source: EmitterSource): Delta;
+  insertText(
+    index: number,
+    text: string,
+    name: string,
+    value: unknown,
+    source: EmitterSource,
+  ): Delta;
+  insertText(
+    index: number,
+    text: string,
+    name: string | EmitterSource,
+    value?: unknown,
+    source?: EmitterSource,
+  ): Delta {
     let formats;
     // eslint-disable-next-line prefer-const
     [index, , formats, source] = overload(index, 0, name, value, source);
