@@ -372,7 +372,12 @@ class Quill {
     return this.editor.getContents(index, length);
   }
 
-  getFormat(index = this.getSelection(true), length = 0) {
+  getFormat(index: number, length?: number);
+  getFormat(range: { index: number; length: number });
+  getFormat(
+    index: { index: number; length: number } | number = this.getSelection(true),
+    length = 0,
+  ) {
     if (typeof index === 'number') {
       return this.editor.getFormat(index, length);
     }
@@ -417,12 +422,30 @@ class Quill {
     return this.selection.getRange()[0];
   }
 
-  getSemanticHTML(index = 0, length = this.getLength() - index) {
+  getSemanticHTML(range: { index: number; length: number }): string;
+  getSemanticHTML(index: number, length?: number): string;
+  getSemanticHTML(
+    index: { index: number; length: number } | number = 0,
+    length?: number,
+  ) {
+    if (typeof index === 'number') {
+      length = this.getLength() - index;
+    }
+    // @ts-expect-error
     [index, length] = overload(index, length);
     return this.editor.getHTML(index, length);
   }
 
-  getText(index = 0, length = this.getLength() - index) {
+  getText(range: { index: number; length: number }): string;
+  getText(index: number, length?: number): string;
+  getText(
+    index: { index: number; length: number } | number = 0,
+    length?: number,
+  ): string {
+    if (typeof index === 'number') {
+      length = this.getLength() - index;
+    }
+    // @ts-expect-error
     [index, length] = overload(index, length);
     return this.editor.getText(index, length);
   }
@@ -538,7 +561,10 @@ class Quill {
     return change;
   }
 
-  updateContents(delta: Delta | Op[], source = Emitter.sources.API) {
+  updateContents(
+    delta: Delta | Op[],
+    source: EmitterSource = Emitter.sources.API,
+  ) {
     return modify.call(
       this,
       () => {

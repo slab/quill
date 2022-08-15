@@ -1,17 +1,19 @@
-import Delta from 'quill-delta';
 import {
   Attributor,
+  BlockBlot,
   ClassAttributor,
   EmbedBlot,
   Scope,
+  ScrollBlot,
   StyleAttributor,
-  BlockBlot,
 } from 'parchment';
+import Delta from 'quill-delta';
 import { BlockEmbed } from '../blots/block';
-import Quill from '../core/quill';
+import { EmitterSource } from '../core/emitter';
 import logger from '../core/logger';
 import Module from '../core/module';
-
+import Quill from '../core/quill';
+import { Range } from '../core/selection';
 import { AlignAttribute, AlignStyle } from '../formats/align';
 import { BackgroundStyle } from '../formats/background';
 import CodeBlock from '../formats/code';
@@ -61,8 +63,17 @@ const STYLE_ATTRIBUTORS = [
   return memo;
 }, {});
 
-class Clipboard extends Module {
-  constructor(quill, options) {
+type Matcher = (node: Node, delta: Delta, scroll: ScrollBlot) => Delta;
+type Selector = string | Node['TEXT_NODE'] | Node['ELEMENT_NODE'];
+
+interface ClipboardOptions {
+  matchers: Matcher[];
+}
+
+class Clipboard extends Module<ClipboardOptions> {
+  matchers: [Selector, Matcher][];
+
+  constructor(quill: Quill, options: Partial<ClipboardOptions>) {
     super(quill, options);
     this.quill.root.addEventListener('copy', e => this.onCaptureCopy(e, false));
     this.quill.root.addEventListener('cut', e => this.onCaptureCopy(e, true));
@@ -75,11 +86,14 @@ class Clipboard extends Module {
     );
   }
 
-  addMatcher(selector, matcher) {
+  addMatcher(selector: Selector, matcher: Matcher) {
     this.matchers.push([selector, matcher]);
   }
 
-  convert({ html, text }, formats = {}) {
+  convert(
+    { html, text }: { html: string; text: string },
+    formats: Record<string, unknown> = {},
+  ) {
     if (formats[CodeBlock.blotName]) {
       return new Delta().insert(text, {
         [CodeBlock.blotName]: formats[CodeBlock.blotName],
@@ -99,7 +113,7 @@ class Clipboard extends Module {
     return delta;
   }
 
-  convertHTML(html) {
+  convertHTML(html: string) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
     const container = doc.body;
     const nodeMatches = new WeakMap();
@@ -116,11 +130,16 @@ class Clipboard extends Module {
     );
   }
 
-  dangerouslyPasteHTML(index, html, source = Quill.sources.API) {
+  dangerouslyPasteHTML(
+    index: number,
+    html: string,
+    source: EmitterSource = Quill.sources.API,
+  ) {
     if (typeof index === 'string') {
       const delta = this.convert({ html: index, text: '' });
+      // @ts-expect-error
       this.quill.setContents(delta, html);
-      this.quill.setSelection(0, Quill.sources.SILENT);
+      this.quill.setSelection(0, 0, Quill.sources.SILENT);
     } else {
       const paste = this.convert({ html, text: '' });
       this.quill.updateContents(
@@ -131,11 +150,12 @@ class Clipboard extends Module {
     }
   }
 
-  onCaptureCopy(e, isCut = false) {
+  onCaptureCopy(e: ClipboardEvent, isCut = false) {
     if (e.defaultPrevented) return;
     e.preventDefault();
     const [range] = this.quill.selection.getRange();
     if (range == null) return;
+    // @ts-expect-error
     const { html, text } = this.onCopy(range, isCut);
     e.clipboardData.setData('text/plain', text);
     e.clipboardData.setData('text/html', html);
@@ -144,7 +164,7 @@ class Clipboard extends Module {
     }
   }
 
-  onCapturePaste(e) {
+  onCapturePaste(e: ClipboardEvent) {
     if (e.defaultPrevented || !this.quill.isEnabled()) return;
     e.preventDefault();
     const range = this.quill.getSelection(true);
@@ -169,13 +189,13 @@ class Clipboard extends Module {
     this.onPaste(range, { html, text });
   }
 
-  onCopy(range) {
+  onCopy(range: Range) {
     const text = this.quill.getText(range);
     const html = this.quill.getSemanticHTML(range);
     return { html, text };
   }
 
-  onPaste(range, { text, html }) {
+  onPaste(range: Range, { text, html }: { text: string; html: string }) {
     const formats = this.quill.getFormat(range.index);
     const pastedDelta = this.convert({ text, html }, formats);
     debug.log('onPaste', pastedDelta, { text, html });
@@ -187,12 +207,13 @@ class Clipboard extends Module {
     // range.length contributes to delta.length()
     this.quill.setSelection(
       delta.length() - range.length,
+      0,
       Quill.sources.SILENT,
     );
     this.quill.scrollIntoView();
   }
 
-  prepareMatching(container, nodeMatches) {
+  prepareMatching(container: Element, nodeMatches: WeakMap<Node, Matcher[]>) {
     const elementMatchers = [];
     const textMatchers = [];
     this.matchers.forEach(pair => {
@@ -205,6 +226,7 @@ class Clipboard extends Module {
           elementMatchers.push(matcher);
           break;
         default:
+          // @ts-expect-error
           Array.from(container.querySelectorAll(selector)).forEach(node => {
             if (nodeMatches.has(node)) {
               const matches = nodeMatches.get(node);
@@ -223,7 +245,13 @@ Clipboard.DEFAULTS = {
   matchers: [],
 };
 
-function applyFormat(delta, format, value) {
+function applyFormat(delta: Delta, formats: Record<string, unknown>): Delta;
+function applyFormat(delta: Delta, format: string, value: unknown): Delta;
+function applyFormat(
+  delta: Delta,
+  format: string | Record<string, unknown>,
+  value?: unknown,
+): Delta {
   if (typeof format === 'object') {
     return Object.keys(format).reduce((newDelta, key) => {
       return applyFormat(newDelta, key, format[key]);
@@ -238,7 +266,7 @@ function applyFormat(delta, format, value) {
   }, new Delta());
 }
 
-function deltaEndsWith(delta, text) {
+function deltaEndsWith(delta: Delta, text: string) {
   let endText = '';
   for (
     let i = delta.ops.length - 1;
@@ -252,7 +280,7 @@ function deltaEndsWith(delta, text) {
   return endText.slice(-1 * text.length) === text;
 }
 
-function isLine(node) {
+function isLine(node: Element) {
   if (node.childNodes.length === 0) return false; // Exclude embed blocks
   return [
     'address',
@@ -293,9 +321,10 @@ function isLine(node) {
 }
 
 const preNodes = new WeakMap();
-function isPre(node) {
+function isPre(node: Node) {
   if (node == null) return false;
   if (!preNodes.has(node)) {
+    // @ts-expect-error
     if (node.tagName === 'PRE') {
       preNodes.set(node, true);
     } else {
@@ -305,10 +334,16 @@ function isPre(node) {
   return preNodes.get(node);
 }
 
-function traverse(scroll, node, elementMatchers, textMatchers, nodeMatches) {
+function traverse(
+  scroll: ScrollBlot,
+  node: ChildNode,
+  elementMatchers: Matcher[],
+  textMatchers: Matcher[],
+  nodeMatches: WeakMap<Node, Matcher[]>,
+) {
   // Post-order
   if (node.nodeType === node.TEXT_NODE) {
-    return textMatchers.reduce((delta, matcher) => {
+    return textMatchers.reduce((delta: Delta, matcher) => {
       return matcher(node, delta, scroll);
     }, new Delta());
   }
@@ -323,7 +358,7 @@ function traverse(scroll, node, elementMatchers, textMatchers, nodeMatches) {
       );
       if (childNode.nodeType === node.ELEMENT_NODE) {
         childrenDelta = elementMatchers.reduce((reducedDelta, matcher) => {
-          return matcher(childNode, reducedDelta, scroll);
+          return matcher(childNode as HTMLElement, reducedDelta, scroll);
         }, childrenDelta);
         childrenDelta = (nodeMatches.get(childNode) || []).reduce(
           (reducedDelta, matcher) => {
@@ -338,11 +373,11 @@ function traverse(scroll, node, elementMatchers, textMatchers, nodeMatches) {
   return new Delta();
 }
 
-function matchAlias(format, node, delta) {
+function matchAlias(format: string, node: Element, delta: Delta) {
   return applyFormat(delta, format, true);
 }
 
-function matchAttributor(node, delta, scroll) {
+function matchAttributor(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
   const attributes = Attributor.keys(node);
   const classes = ClassAttributor.keys(node);
   const styles = StyleAttributor.keys(node);
@@ -351,7 +386,7 @@ function matchAttributor(node, delta, scroll) {
     .concat(classes)
     .concat(styles)
     .forEach(name => {
-      let attr = scroll.query(name, Scope.ATTRIBUTE);
+      let attr = scroll.query(name, Scope.ATTRIBUTE) as Attributor;
       if (attr != null) {
         formats[attr.attrName] = attr.value(node);
         if (formats[attr.attrName]) return;
@@ -372,28 +407,35 @@ function matchAttributor(node, delta, scroll) {
   return delta;
 }
 
-function matchBlot(node, delta, scroll) {
+function matchBlot(node: Node, delta: Delta, scroll: ScrollBlot) {
   const match = scroll.query(node);
   if (match == null) return delta;
+  // @ts-expect-error
   if (match.prototype instanceof EmbedBlot) {
     const embed = {};
+    // @ts-expect-error
     const value = match.value(node);
     if (value != null) {
+      // @ts-expect-error
       embed[match.blotName] = value;
+      // @ts-expect-error
       return new Delta().insert(embed, match.formats(node, scroll));
     }
   } else {
+    // @ts-expect-error
     if (match.prototype instanceof BlockBlot && !deltaEndsWith(delta, '\n')) {
       delta.insert('\n');
     }
+    // @ts-expect-error
     if (typeof match.formats === 'function') {
+      // @ts-expect-error
       return applyFormat(delta, match.blotName, match.formats(node, scroll));
     }
   }
   return delta;
 }
 
-function matchBreak(node, delta) {
+function matchBreak(node: Node, delta: Delta) {
   if (!deltaEndsWith(delta, '\n')) {
     delta.insert('\n');
   }
@@ -410,10 +452,11 @@ function matchIgnore() {
   return new Delta();
 }
 
-function matchIndent(node, delta, scroll) {
+function matchIndent(node: Node, delta: Delta, scroll: ScrollBlot) {
   const match = scroll.query(node);
   if (
     match == null ||
+    // @ts-expect-error
     match.blotName !== 'list' ||
     !deltaEndsWith(delta, '\n')
   ) {
@@ -422,6 +465,7 @@ function matchIndent(node, delta, scroll) {
   let indent = -1;
   let parent = node.parentNode;
   while (parent != null) {
+    // @ts-expect-error
     if (['OL', 'UL'].includes(parent.tagName)) {
       indent += 1;
     }
@@ -436,23 +480,27 @@ function matchIndent(node, delta, scroll) {
   }, new Delta());
 }
 
-function matchList(node, delta) {
+function matchList(node: Node, delta: Delta) {
+  // @ts-expect-error
   const list = node.tagName === 'OL' ? 'ordered' : 'bullet';
   return applyFormat(delta, 'list', list);
 }
 
-function matchNewline(node, delta, scroll) {
+function matchNewline(node: Node, delta: Delta, scroll: ScrollBlot) {
   if (!deltaEndsWith(delta, '\n')) {
+    // @ts-expect-error
     if (isLine(node)) {
       return delta.insert('\n');
     }
     if (delta.length() > 0 && node.nextSibling) {
       let { nextSibling } = node;
       while (nextSibling != null) {
+        // @ts-expect-error
         if (isLine(nextSibling)) {
           return delta.insert('\n');
         }
         const match = scroll.query(nextSibling);
+        // @ts-expect-error
         if (match && match.prototype instanceof BlockEmbed) {
           return delta.insert('\n');
         }
@@ -463,9 +511,9 @@ function matchNewline(node, delta, scroll) {
   return delta;
 }
 
-function matchStyles(node, delta) {
-  const formats = {};
-  const style = node.style || {};
+function matchStyles(node: HTMLElement, delta: Delta) {
+  const formats: Record<string, unknown> = {};
+  const style: Partial<CSSStyleDeclaration> = node.style || {};
   if (style.fontStyle === 'italic') {
     formats.italic = true;
   }
@@ -484,6 +532,7 @@ function matchStyles(node, delta) {
   if (Object.keys(formats).length > 0) {
     delta = applyFormat(delta, formats);
   }
+  // @ts-expect-error
   if (parseFloat(style.textIndent || 0) > 0) {
     // Could be 0.5in
     return new Delta().insert('\t').concat(delta);
