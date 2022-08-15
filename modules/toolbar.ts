@@ -6,8 +6,18 @@ import Module from '../core/module';
 
 const debug = logger('quill:toolbar');
 
-class Toolbar extends Module {
-  constructor(quill, options) {
+type Handler = () => void;
+
+interface ToolbarProps {
+  container: HTMLElement;
+}
+
+class Toolbar extends Module<ToolbarProps> {
+  container: HTMLElement;
+  controls: [string, HTMLElement][];
+  handlers: Record<string, Handler>;
+
+  constructor(quill: Quill, options: Partial<ToolbarProps>) {
     super(quill, options);
     if (Array.isArray(this.options.container)) {
       const container = document.createElement('div');
@@ -26,11 +36,14 @@ class Toolbar extends Module {
     this.container.classList.add('ql-toolbar');
     this.controls = [];
     this.handlers = {};
+    // @ts-expect-error
     Object.keys(this.options.handlers).forEach(format => {
+      // @ts-expect-error
       this.addHandler(format, this.options.handlers[format]);
     });
     Array.from(this.container.querySelectorAll('button, select')).forEach(
       input => {
+        // @ts-expect-error
         this.attach(input);
       },
     );
@@ -45,11 +58,11 @@ class Toolbar extends Module {
     });
   }
 
-  addHandler(format, handler) {
+  addHandler(format: string, handler: Handler) {
     this.handlers[format] = handler;
   }
 
-  attach(input) {
+  attach(input: HTMLElement) {
     let format = Array.from(input.classList).find(className => {
       return className.indexOf('ql-') === 0;
     });
@@ -69,7 +82,9 @@ class Toolbar extends Module {
     input.addEventListener(eventName, e => {
       let value;
       if (input.tagName === 'SELECT') {
+        // @ts-expect-error
         if (input.selectedIndex < 0) return;
+        // @ts-expect-error
         const selected = input.options[input.selectedIndex];
         if (selected.hasAttribute('selected')) {
           value = false;
@@ -80,6 +95,7 @@ class Toolbar extends Module {
         if (input.classList.contains('ql-active')) {
           value = false;
         } else {
+          // @ts-expect-error
           value = input.value || !input.hasAttribute('value');
         }
         e.preventDefault();
@@ -89,6 +105,7 @@ class Toolbar extends Module {
       if (this.handlers[format] != null) {
         this.handlers[format].call(this, value);
       } else if (
+        // @ts-expect-error
         this.quill.scroll.query(format).prototype instanceof EmbedBlot
       ) {
         value = prompt(`Enter ${format}`); // eslint-disable-line no-alert
@@ -126,7 +143,9 @@ class Toolbar extends Module {
           option = input.querySelector(`option[value="${value}"]`);
         }
         if (option == null) {
+          // @ts-expect-error
           input.value = ''; // TODO make configurable?
+          // @ts-expect-error
           input.selectedIndex = -1;
         } else {
           option.selected = true;
@@ -150,18 +169,20 @@ class Toolbar extends Module {
 }
 Toolbar.DEFAULTS = {};
 
-function addButton(container, format, value) {
+function addButton(container: HTMLElement, format: string, value?: unknown) {
   const input = document.createElement('button');
   input.setAttribute('type', 'button');
   input.classList.add(`ql-${format}`);
   if (value != null) {
+    // @ts-expect-error
     input.value = value;
   }
   container.appendChild(input);
 }
 
-function addControls(container, groups) {
+function addControls(container: HTMLElement, groups: string[][]) {
   if (!Array.isArray(groups[0])) {
+    // @ts-expect-error
     groups = [groups];
   }
   groups.forEach(controls => {

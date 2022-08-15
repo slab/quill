@@ -280,7 +280,11 @@ class Quill {
     this.scrollIntoView();
   }
 
-  format(name, value, source = Emitter.sources.API) {
+  format(
+    name: string,
+    value: unknown,
+    source: EmitterSource = Emitter.sources.API,
+  ) {
     return modify.call(
       this,
       () => {
