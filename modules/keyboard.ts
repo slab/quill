@@ -630,7 +630,6 @@ function makeCodeBlockHandler(indent: boolean): BindingObject {
       let { index, length } = range;
       lines.forEach((line, i) => {
         if (indent) {
-          // @ts-expect-error
           line.insertAt(0, TAB);
           if (i === 0) {
             index += TAB.length;

@@ -27,7 +27,7 @@ class Emitter extends EventEmitter<string> {
     SCROLL_EMBED_UPDATE: 'scroll-embed-update',
     SELECTION_CHANGE: 'selection-change',
     TEXT_CHANGE: 'text-change',
-  };
+  } as const;
 
   static sources = {
     API: 'api',

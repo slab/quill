@@ -1,10 +1,18 @@
 import Delta, { OpIterator } from 'quill-delta';
 import Module from '../core/module';
 
-type CellData = {
+export type CellData = {
   content?: Delta['ops'];
   attributes?: Record<string, unknown>;
 };
+
+export interface TableData {
+  rows?: Delta['ops'];
+  columns?: Delta['ops'];
+  cells?: {
+    [identity: string]: CellData;
+  };
+}
 
 const parseCellIdentity = (identity: string) => {
   const parts = identity.split(':');
@@ -90,7 +98,7 @@ const reindexCellIdentities = (cells, { rows, columns }) => {
 };
 
 export const tableHandler = {
-  compose(a, b, keepNull) {
+  compose(a: TableData, b: TableData, keepNull?: boolean) {
     const rows = new Delta(a.rows || []).compose(new Delta(b.rows || []));
     const columns = new Delta(a.columns || []).compose(
       new Delta(b.columns || []),
@@ -125,7 +133,7 @@ export const tableHandler = {
 
     return compactTableData({ rows, columns, cells });
   },
-  transform(a, b, priority) {
+  transform(a: TableData, b: TableData, priority: boolean) {
     const aDeltas = {
       rows: new Delta(a.rows || []),
       columns: new Delta(a.columns || []),
@@ -178,7 +186,7 @@ export const tableHandler = {
 
     return compactTableData({ rows, columns, cells });
   },
-  invert(change, base) {
+  invert(change: TableData, base: TableData) {
     const rows = new Delta(change.rows || []).invert(
       new Delta(base.rows || []),
     );

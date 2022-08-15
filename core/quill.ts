@@ -1,4 +1,3 @@
-import Delta, { Op } from 'quill-delta';
 import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
 import * as Parchment from 'parchment';
@@ -6,19 +5,20 @@ import {
   Blot,
   BlotConstructor,
 } from 'parchment/dist/typings/blot/abstract/blot';
-import Editor from './editor';
-import Emitter, { EmitterSource } from './emitter';
-import Module from './module';
-import Selection, { Range } from './selection';
-import instances from './instances';
-import logger from './logger';
-import Theme, { ThemeConstructor } from './theme';
+import Delta, { Op } from 'quill-delta';
 import Block, { BlockEmbed } from '../blots/block';
-import History from '../modules/history';
+import Scroll, { ScrollConstructor } from '../blots/scroll';
 import Clipboard from '../modules/clipboard';
+import History from '../modules/history';
 import Keyboard from '../modules/keyboard';
 import Uploader from '../modules/uploader';
-import Scroll, { ScrollConstructor } from '../blots/scroll';
+import Editor from './editor';
+import Emitter, { EmitterSource } from './emitter';
+import instances from './instances';
+import logger from './logger';
+import Module from './module';
+import Selection, { Range } from './selection';
+import Theme, { ThemeConstructor } from './theme';
 
 const debug = logger('quill');
 
@@ -78,6 +78,9 @@ class Quill {
     return instances.get(node) || globalRegistry.find(node, bubble);
   }
 
+  static import(name: 'core/module'): typeof Module;
+  static import(name: 'parchment'): typeof Parchment;
+  static import(name: string): unknown;
   static import(name: string) {
     if (this.imports[name] == null) {
       debug.error(`Cannot import ${name}. Are you sure it was registered?`);
@@ -432,7 +435,7 @@ class Quill {
   }
 
   getLines(index: { index: number; length: number }): (Block | BlockEmbed)[];
-  getLines(index: number, length: number): (Block | BlockEmbed)[];
+  getLines(index?: number, length?: number): (Block | BlockEmbed)[];
   getLines(
     index: { index: number; length: number } | number = 0,
     length = Number.MAX_VALUE,
@@ -447,6 +450,8 @@ class Quill {
     return this.theme.modules[name];
   }
 
+  getSelection(focus: true): Range;
+  getSelection(focus?: boolean): Range | null;
   getSelection(focus = false): Range | null {
     if (focus) this.focus();
     this.update(); // Make sure we access getRange with editor in consistent state
@@ -485,7 +490,12 @@ class Quill {
     return this.selection.hasFocus();
   }
 
-  insertEmbed(index, embed, value, source = Quill.sources.API) {
+  insertEmbed(
+    index: number,
+    embed: string,
+    value: unknown,
+    source: EmitterSource = Quill.sources.API,
+  ) {
     return modify.call(
       this,
       () => {
@@ -529,16 +539,41 @@ class Quill {
     return this.scroll.isEnabled();
   }
 
-  off(...args: Parameters<typeof this.emitter.off>) {
-    return this.emitter.off(...args);
+  off(event: string, ...args: unknown[]) {
+    // @ts-expect-error
+    return this.emitter.off(event, ...args);
   }
 
-  on(...args: Parameters<typeof this.emitter.on>) {
-    return this.emitter.on(...args);
+  on(
+    event: typeof Emitter['events']['TEXT_CHANGE'],
+    handler: (delta: Delta, oldContent: Delta, source: EmitterSource) => void,
+  ): this;
+  on(
+    event: typeof Emitter['events']['SELECTION_CHANGE'],
+    handler: (range: Range, oldRange: Range, source: EmitterSource) => void,
+  ): this;
+  on(
+    event: typeof Emitter['events']['EDITOR_CHANGE'],
+    handler: (
+      ...args:
+        | [typeof Emitter['events']['TEXT_CHANGE'], Delta, Delta, EmitterSource]
+        | [
+            typeof Emitter['events']['SELECTION_CHANGE'],
+            Range,
+            Range,
+            EmitterSource
+          ]
+    ) => void,
+  ): this;
+  on(event: string, ...args: unknown[]): this;
+  on(event: string, ...args: unknown[]): this {
+    // @ts-expect-error
+    return this.emitter.on(event, ...args);
   }
 
-  once(...args: Parameters<typeof this.emitter.once>) {
-    return this.emitter.once(...args);
+  once(event: string, ...args: unknown[]) {
+    // @ts-expect-error
+    return this.emitter.once(event, ...args);
   }
 
   removeFormat(...args: Parameters<typeof overload>) {
@@ -668,6 +703,7 @@ function expandConfig(
         `Cannot load ${name} module. Are you sure you registered it?`,
       );
     } else {
+      // @ts-expect-error
       config[name] = moduleClass.DEFAULTS || {};
     }
     return config;

@@ -91,7 +91,7 @@ class Clipboard extends Module<ClipboardOptions> {
   }
 
   convert(
-    { html, text }: { html: string; text: string },
+    { html, text }: { html?: string; text?: string },
     formats: Record<string, unknown> = {},
   ) {
     if (formats[CodeBlock.blotName]) {

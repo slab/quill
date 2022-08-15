@@ -16,14 +16,14 @@ const NEWLINE_LENGTH = 1;
 class Block extends BlockBlot {
   cache: { delta?: Delta | null; length?: number } = {};
 
-  delta() {
+  delta(): Delta {
     if (this.cache.delta == null) {
       this.cache.delta = blockDelta(this);
     }
     return this.cache.delta;
   }
 
-  deleteAt(index, length) {
+  deleteAt(index: number, length: number) {
     super.deleteAt(index, length);
     this.cache = {};
   }
@@ -153,7 +153,7 @@ class BlockEmbed extends EmbedBlot {
     this.format(name, value);
   }
 
-  insertAt(index, value, def) {
+  insertAt(index: number, value: string, def?: unknown) {
     if (typeof value === 'string' && value.endsWith('\n')) {
       const block = this.scroll.create(Block.blotName);
       this.parent.insertBefore(block, index === 0 ? this : this.next);

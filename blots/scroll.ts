@@ -181,6 +181,11 @@ class Scroll extends ScrollBlot {
     return getLines(this, index, length);
   }
 
+  optimize(context: { [key: string]: any }): void;
+  optimize(
+    mutations?: MutationRecord[],
+    context?: { [key: string]: any },
+  ): void;
   optimize(mutations = [], context = {}) {
     if (this.batch) return;
     super.optimize(mutations, context);
