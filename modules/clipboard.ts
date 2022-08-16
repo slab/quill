@@ -139,7 +139,7 @@ class Clipboard extends Module<ClipboardOptions> {
       const delta = this.convert({ html: index, text: '' });
       // @ts-expect-error
       this.quill.setContents(delta, html);
-      this.quill.setSelection(0, 0, Quill.sources.SILENT);
+      this.quill.setSelection(0, Quill.sources.SILENT);
     } else {
       const paste = this.convert({ html, text: '' });
       this.quill.updateContents(
@@ -207,7 +207,6 @@ class Clipboard extends Module<ClipboardOptions> {
     // range.length contributes to delta.length()
     this.quill.setSelection(
       delta.length() - range.length,
-      0,
       Quill.sources.SILENT,
     );
     this.quill.scrollIntoView();

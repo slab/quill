@@ -80,6 +80,7 @@ class Quill {
 
   static import(name: 'core/module'): typeof Module;
   static import(name: 'parchment'): typeof Parchment;
+  static import(name: 'delta'): Delta;
   static import(name: string): unknown;
   static import(name: string) {
     if (this.imports[name] == null) {
@@ -259,6 +260,7 @@ class Quill {
     return modify.call(
       this,
       () => {
+        // @ts-expect-error
         return this.editor.deleteText(index, length);
       },
       source,
@@ -394,6 +396,7 @@ class Quill {
     return modify.call(
       this,
       () => {
+        // @ts-expect-error
         return this.editor.formatText(index, length, formats);
       },
       source,
@@ -559,19 +562,19 @@ class Quill {
     return this.scroll.isEnabled();
   }
 
-  off(event: string, ...args: unknown[]) {
-    // @ts-expect-error
-    return this.emitter.off(event, ...args);
+  off(...args: Parameters<typeof Emitter['prototype']['off']>) {
+    return this.emitter.off(...args);
   }
 
   on(
     event: typeof Emitter['events']['TEXT_CHANGE'],
     handler: (delta: Delta, oldContent: Delta, source: EmitterSource) => void,
-  ): this;
+  ): Emitter;
   on(
     event: typeof Emitter['events']['SELECTION_CHANGE'],
     handler: (range: Range, oldRange: Range, source: EmitterSource) => void,
-  ): this;
+  ): Emitter;
+  // @ts-expect-error
   on(
     event: typeof Emitter['events']['EDITOR_CHANGE'],
     handler: (
@@ -584,16 +587,14 @@ class Quill {
             EmitterSource,
           ]
     ) => void,
-  ): this;
-  on(event: string, ...args: unknown[]): this;
-  on(event: string, ...args: unknown[]): this {
-    // @ts-expect-error
-    return this.emitter.on(event, ...args);
+  ): Emitter;
+  on(event: string, ...args: unknown[]): Emitter;
+  on(...args: Parameters<typeof Emitter['prototype']['on']>): Emitter {
+    return this.emitter.on(...args);
   }
 
-  once(event: string, ...args: unknown[]) {
-    // @ts-expect-error
-    return this.emitter.once(event, ...args);
+  once(...args: Parameters<typeof Emitter['prototype']['once']>) {
+    return this.emitter.once(...args);
   }
 
   removeFormat(...args: Parameters<typeof overload>) {
@@ -612,7 +613,10 @@ class Quill {
     this.selection.scrollIntoView(this.scrollingContainer);
   }
 
-  setContents(delta: Delta | Op[], source = Emitter.sources.API) {
+  setContents(
+    delta: Delta | Op[],
+    source: EmitterSource = Emitter.sources.API,
+  ) {
     return modify.call(
       this,
       () => {
@@ -630,6 +634,7 @@ class Quill {
     );
   }
   setSelection(range: Range | null, source?: EmitterSource): void;
+  setSelection(index: number, source?: EmitterSource): void;
   setSelection(index: number, length?: number, source?: EmitterSource): void;
   setSelection(index: number, source?: EmitterSource): void;
   setSelection(
@@ -650,7 +655,7 @@ class Quill {
     }
   }
 
-  setText(text, source = Emitter.sources.API) {
+  setText(text: string, source: EmitterSource = Emitter.sources.API) {
     const delta = new Delta().insert(text);
     return this.setContents(delta, source);
   }

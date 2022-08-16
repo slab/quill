@@ -69,7 +69,7 @@ class Keyboard extends Module<KeyboardOptions> {
     return binding.key === evt.key || binding.key === evt.which;
   }
 
-  bindings: Record<string, NormalizedBinding[]> = {};
+  bindings: Record<string, NormalizedBinding[]>;
 
   constructor(quill: Quill, options: Partial<KeyboardOptions>) {
     super(quill, options);

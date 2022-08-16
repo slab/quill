@@ -6,6 +6,5 @@
     "module": "es6",
     "moduleResolution": "node"
   },
-  "include": ["./**/*"],
-  "exclude": ["./**/*.d.ts"]
+  "include": ["./**/*"]
 }

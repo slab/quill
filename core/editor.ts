@@ -21,7 +21,7 @@ class Editor {
     this.delta = this.getDelta();
   }
 
-  applyDelta(delta: Delta) {
+  applyDelta(delta: Delta): Delta {
     this.scroll.update();
     let scrollLength = this.scroll.length();
     this.scroll.batchStart();
@@ -91,12 +91,16 @@ class Editor {
     return this.update(normalizedDelta);
   }
 
-  deleteText(index, length) {
+  deleteText(index: number, length: number): Delta {
     this.scroll.deleteAt(index, length);
     return this.update(new Delta().retain(index).delete(length));
   }
 
-  formatLine(index, length, formats = {}) {
+  formatLine(
+    index: number,
+    length: number,
+    formats: Record<string, unknown> = {},
+  ): Delta {
     this.scroll.update();
     Object.keys(formats).forEach(format => {
       this.scroll.lines(index, Math.max(length, 1)).forEach(line => {
@@ -108,7 +112,11 @@ class Editor {
     return this.update(delta);
   }
 
-  formatText(index, length, formats = {}) {
+  formatText(
+    index: number,
+    length: number,
+    formats: Record<string, unknown> = {},
+  ): Delta {
     Object.keys(formats).forEach(format => {
       this.scroll.formatAt(index, length, format, formats[format]);
     });
@@ -116,17 +124,17 @@ class Editor {
     return this.update(delta);
   }
 
-  getContents(index, length) {
+  getContents(index: number, length: number): Delta {
     return this.delta.slice(index, index + length);
   }
 
-  getDelta() {
+  getDelta(): Delta {
     return this.scroll.lines().reduce((delta, line) => {
       return delta.concat(line.delta());
     }, new Delta());
   }
 
-  getFormat(index, length = 0) {
+  getFormat(index: number, length = 0): Record<string, unknown> {
     let lines = [];
     let leaves = [];
     if (length === 0) {
@@ -156,7 +164,7 @@ class Editor {
     return { ...lines, ...leaves };
   }
 
-  getHTML(index, length) {
+  getHTML(index: number, length: number): string {
     const [line, lineOffset] = this.scroll.line(index);
     if (line.length() >= lineOffset + length) {
       return convertHTML(line, lineOffset, length, true);
@@ -164,19 +172,23 @@ class Editor {
     return convertHTML(this.scroll, index, length, true);
   }
 
-  getText(index, length) {
+  getText(index: number, length: number): string {
     return this.getContents(index, length)
       .filter(op => typeof op.insert === 'string')
       .map(op => op.insert)
       .join('');
   }
 
-  insertEmbed(index, embed, value) {
+  insertEmbed(index: number, embed: string, value: unknown): Delta {
     this.scroll.insertAt(index, embed, value);
     return this.update(new Delta().retain(index).insert({ [embed]: value }));
   }
 
-  insertText(index, text, formats = {}) {
+  insertText(
+    index: number,
+    text: string,
+    formats: Record<string, unknown> = {},
+  ): Delta {
     text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     this.scroll.insertAt(index, text);
     Object.keys(formats).forEach(format => {
@@ -187,7 +199,7 @@ class Editor {
     );
   }
 
-  isBlank() {
+  isBlank(): boolean {
     if (this.scroll.children.length === 0) return true;
     if (this.scroll.children.length > 1) return false;
     const blot = this.scroll.children.head;
@@ -197,7 +209,7 @@ class Editor {
     return block.children.head instanceof Break;
   }
 
-  removeFormat(index, length) {
+  removeFormat(index: number, length: number): Delta {
     const text = this.getText(index, length);
     const [line, offset] = this.scroll.line(index + length);
     let suffixLength = 0;
@@ -215,7 +227,7 @@ class Editor {
     return this.applyDelta(delta);
   }
 
-  update(change, mutations = [], selectionInfo = undefined) {
+  update(change: Delta, mutations = [], selectionInfo = undefined): Delta {
     const oldDelta = this.delta;
     if (
       mutations.length === 1 &&

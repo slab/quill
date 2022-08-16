@@ -5,7 +5,6 @@
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
   "main": "dist/quill.js",
-  "types": "dist/typings/quill.d.ts",
   "config": {
     "ports": {
       "proxy": "9000",
@@ -23,8 +22,9 @@
     "quill-delta": "^5.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
+    "@babel/core": "^7.18.10",
     "@babel/preset-env": "^7.9.5",
+    "@types/jasmine": "^4.0.3",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
     "babel-loader": "^8.1.0",
@@ -79,14 +79,16 @@
     "build:webpack": "webpack --config _develop/webpack.config.js; rm dist/quill.core dist/quill.bubble dist/quill.snow",
     "build:release": "./_develop/scripts/release.sh",
     "develop": "npm run start",
-    "lint": "eslint .",
+    "lint": "npm run lint:eslint && npm run lint:tsc",
+    "lint:eslint": "eslint .",
+    "lint:tsc": "tsc --noEmit --skipLibCheck",
     "prepare": "npm run build",
     "start": "npm run build:webpack; bundle exec foreman start -f _develop/procfile",
     "test": "npm run test:unit; npm run test:random",
     "test:all": "npm run test:unit; npm run test:functional; npm run test:random",
     "test:functional": "./_develop/scripts/puppeteer.sh",
     "test:unit": "npm run build; karma start _develop/karma.config.js",
-    "test:random": "ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/jasmine test/random.js",
+    "test:random": "ts-node --preferTsExts -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/jasmine test/random.ts",
     "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage",
     "travis": "npm run lint && karma start _develop/karma.config.js --reporters dots,saucelabs"
   },

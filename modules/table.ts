@@ -9,7 +9,7 @@ import {
   tableId,
 } from '../formats/table';
 
-class Table extends Module<{}> {
+class Table extends Module {
   static register() {
     Quill.register(TableCell);
     Quill.register(TableRow);

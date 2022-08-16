@@ -16,6 +16,7 @@ core/*.js
 formats/*.js
 modules/*.js
 themes/*.js
+ui/*.js
 
 core.js
 quill.js

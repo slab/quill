@@ -9,9 +9,7 @@ export type CellData = {
 export interface TableData {
   rows?: Delta['ops'];
   columns?: Delta['ops'];
-  cells?: {
-    [identity: string]: CellData;
-  };
+  cells?: Record<string, CellData>;
 }
 
 const parseCellIdentity = (identity: string) => {
@@ -61,11 +59,7 @@ const compactCellData = ({ content, attributes }) => {
 };
 
 const compactTableData = ({ rows, columns, cells }) => {
-  const data: {
-    rows?: Delta['ops'];
-    columns?: Delta['ops'];
-    cells?: Record<string, CellData>;
-  } = {};
+  const data: TableData = {};
   if (rows.length() > 0) {
     data.rows = rows.ops;
   }
@@ -231,7 +225,7 @@ export const tableHandler = {
   },
 };
 
-class TableEmbed extends Module<{}> {
+class TableEmbed extends Module {
   static register() {
     Delta.registerEmbed('table-embed', tableHandler);
   }
