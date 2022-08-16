@@ -21,7 +21,7 @@ interface UpdatableEmbed {
 }
 
 function isUpdatable(blot: Blot): blot is Blot & UpdatableEmbed {
-  return typeof ((blot as unknown) as any).updateContent === 'function';
+  return typeof (blot as unknown as any).updateContent === 'function';
 }
 
 class Scroll extends ScrollBlot {

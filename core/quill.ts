@@ -361,10 +361,30 @@ class Quill {
     );
   }
 
-  formatText(index, length, name, value, source) {
+  formatText(
+    range: { index: number; length: number },
+    name: string,
+    value: unknown,
+    source?: EmitterSource,
+  ): Delta;
+  formatText(
+    index: number,
+    length: number,
+    name: string,
+    value: unknown,
+    source: EmitterSource,
+  ): Delta;
+  formatText(
+    index: number | { index: number; length: number },
+    length: number | string,
+    name: string | unknown,
+    value?: unknown | EmitterSource,
+    source?: EmitterSource,
+  ): Delta {
     let formats;
     // eslint-disable-next-line prefer-const
     [index, length, formats, source] = overload(
+      // @ts-expect-error
       index,
       length,
       name,
@@ -561,7 +581,7 @@ class Quill {
             typeof Emitter['events']['SELECTION_CHANGE'],
             Range,
             Range,
-            EmitterSource
+            EmitterSource,
           ]
     ) => void,
   ): this;
@@ -780,7 +800,7 @@ type NormalizedIndexLength = [
   number,
   number,
   Record<string, unknown>,
-  EmitterSource
+  EmitterSource,
 ];
 function overload(index: number, source?: EmitterSource): NormalizedIndexLength;
 function overload(
