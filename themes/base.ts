@@ -6,6 +6,7 @@ import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
 import Tooltip from '../ui/tooltip';
+import { Range } from '../core/selection';
 
 const ALIGNS = [false, 'center', 'right', 'justify'];
 
@@ -66,6 +67,7 @@ class BaseTheme extends Theme {
       }
       if (
         this.tooltip != null &&
+        // @ts-expect-error
         !this.tooltip.root.contains(e.target) &&
         // @ts-expect-error
         document.activeElement !== this.tooltip.textbox &&
@@ -123,6 +125,7 @@ class BaseTheme extends Theme {
         if (select.querySelector('option') == null) {
           fillSelect(select, ALIGNS);
         }
+        // @ts-expect-error
         return new IconPicker(select, icons.align);
       }
       if (
@@ -150,6 +153,7 @@ class BaseTheme extends Theme {
           fillSelect(select, SIZES);
         }
       }
+      // @ts-expect-error
       return new Picker(select);
     });
     const update = () => {

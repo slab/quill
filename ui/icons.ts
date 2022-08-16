@@ -56,48 +56,48 @@ import tableIcon from '../assets/icons/table.svg';
 import underlineIcon from '../assets/icons/underline.svg';
 // @ts-expect-error
 import videoIcon from '../assets/icons/video.svg';
+
 export default {
-    align: {
-        '': alignLeftIcon,
-        center: alignCenterIcon,
-        right: alignRightIcon,
-        justify: alignJustifyIcon,
-    },
-    background: backgroundIcon,
-    blockquote: blockquoteIcon,
-    bold: boldIcon,
-    clean: cleanIcon,
-    code: codeIcon,
-    'code-block': codeIcon,
-    color: colorIcon,
-    direction: {
-        '': directionLeftToRightIcon,
-        rtl: directionRightToLeftIcon,
-    },
-    formula: formulaIcon,
-    header: {
-        '1': headerIcon,
-        '2': header2Icon,
-    },
-    italic: italicIcon,
-    image: imageIcon,
-    indent: {
-        '+1': indentIcon,
-        '-1': outdentIcon,
-    },
-    link: linkIcon,
-    list: {
-        bullet: listBulletIcon,
-        check: listCheckIcon,
-        ordered: listOrderedIcon,
-    },
-    script: {
-        sub: subscriptIcon,
-        super: superscriptIcon,
-    },
-    strike: strikeIcon,
-    table: tableIcon,
-    underline: underlineIcon,
-    video: videoIcon,
+  align: {
+    '': alignLeftIcon,
+    center: alignCenterIcon,
+    right: alignRightIcon,
+    justify: alignJustifyIcon,
+  },
+  background: backgroundIcon,
+  blockquote: blockquoteIcon,
+  bold: boldIcon,
+  clean: cleanIcon,
+  code: codeIcon,
+  'code-block': codeIcon,
+  color: colorIcon,
+  direction: {
+    '': directionLeftToRightIcon,
+    rtl: directionRightToLeftIcon,
+  },
+  formula: formulaIcon,
+  header: {
+    '1': headerIcon,
+    '2': header2Icon,
+  },
+  italic: italicIcon,
+  image: imageIcon,
+  indent: {
+    '+1': indentIcon,
+    '-1': outdentIcon,
+  },
+  link: linkIcon,
+  list: {
+    bullet: listBulletIcon,
+    check: listCheckIcon,
+    ordered: listOrderedIcon,
+  },
+  script: {
+    sub: subscriptIcon,
+    super: superscriptIcon,
+  },
+  strike: strikeIcon,
+  table: tableIcon,
+  underline: underlineIcon,
+  video: videoIcon,
 };
-//# sourceMappingURL=icons.js.map
