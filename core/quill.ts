@@ -482,7 +482,7 @@ class Quill {
   }
 
   getSemanticHTML(range: { index: number; length: number }): string;
-  getSemanticHTML(index: number, length?: number): string;
+  getSemanticHTML(index?: number, length?: number): string;
   getSemanticHTML(
     index: { index: number; length: number } | number = 0,
     length?: number,

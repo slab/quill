@@ -12,8 +12,8 @@ export type TableRowColumnOp = Omit<Op, 'insert'> & {
 };
 
 export interface TableData {
-  rows?: TableRowColumnOp[];
-  columns?: TableRowColumnOp[];
+  rows?: Delta['ops'];
+  columns?: Delta['ops'];
   cells?: Record<string, CellData>;
 }
 
