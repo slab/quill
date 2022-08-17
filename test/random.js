@@ -14,7 +14,7 @@ const getRandomRowColumnId = () => {
         .map(() => characters.charAt(Math.floor(Math.random() * characters.length)))
         .join('');
 };
-const attachAttributes = obj => {
+const attachAttributes = (obj) => {
     const getRandomAttributes = () => {
         const attributeCount = random([1, 4, 8]);
         const allowedAttributes = ['align', 'background', 'color', 'font'];
@@ -26,8 +26,10 @@ const attachAttributes = obj => {
         return attributes;
     };
     if (random([true, false])) {
+        // @ts-expect-error
         obj.attributes = getRandomAttributes();
     }
+    // @ts-expect-error
     return obj;
 };
 const getRandomCellContent = () => {
@@ -90,10 +92,10 @@ const getRandomChange = base => {
     });
     return new Delta([attachAttributes({ retain: { 'table-embed': table } })]);
 };
-const getRandomRowColumnInsert = count => {
-    return new Delta(new Array(count)
+const getRandomRowColumnInsert = (count) => {
+    return new Array(count)
         .fill(0)
-        .map(() => attachAttributes({ insert: { id: getRandomRowColumnId() } }))).ops;
+        .map(() => attachAttributes({ insert: { id: getRandomRowColumnId() } }));
 };
 const getRandomBase = () => {
     const rowCount = random([0, 1, 2, 3]);

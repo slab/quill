@@ -1,4 +1,5 @@
 import Delta, { OpIterator } from 'quill-delta';
+import Op from 'quill-delta/dist/Op';
 import Module from '../core/module';
 
 export type CellData = {
@@ -6,9 +7,13 @@ export type CellData = {
   attributes?: Record<string, unknown>;
 };
 
+export type TableRowColumnOp = Omit<Op, 'insert'> & {
+  insert?: { id: string };
+};
+
 export interface TableData {
-  rows?: Delta['ops'];
-  columns?: Delta['ops'];
+  rows?: TableRowColumnOp[];
+  columns?: TableRowColumnOp[];
   cells?: Record<string, CellData>;
 }
 
