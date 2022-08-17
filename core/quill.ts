@@ -457,7 +457,7 @@ class Quill {
     return this.scroll.line(index);
   }
 
-  getLines(index: { index: number; length: number }): (Block | BlockEmbed)[];
+  getLines(range: { index: number; length: number }): (Block | BlockEmbed)[];
   getLines(index?: number, length?: number): (Block | BlockEmbed)[];
   getLines(
     index: { index: number; length: number } | number = 0,
