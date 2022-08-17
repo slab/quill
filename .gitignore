@@ -17,6 +17,7 @@ formats/*.js
 modules/*.js
 themes/*.js
 ui/*.js
+test/random.js
 
 core.js
 quill.js
