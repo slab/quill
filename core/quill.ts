@@ -80,7 +80,7 @@ class Quill {
 
   static import(name: 'core/module'): typeof Module;
   static import(name: 'parchment'): typeof Parchment;
-  static import(name: 'delta'): Delta;
+  static import(name: 'delta'): typeof Delta;
   static import(name: string): unknown;
   static import(name: string) {
     if (this.imports[name] == null) {
