@@ -49,6 +49,10 @@ class Picker {
     item.classList.add('ql-picker-item');
     if (option.hasAttribute('value')) {
       item.setAttribute('data-value', option.getAttribute('value'));
+      item.setAttribute(
+        'aria-label',
+        this.getAriaLabel(option.getAttribute('value')),
+      );
     }
     if (option.textContent) {
       item.setAttribute('data-label', option.textContent);
@@ -71,6 +75,90 @@ class Picker {
     });
 
     return item;
+  }
+
+  getAriaLabel(value) {
+    if (value.startsWith('#')) {
+      return this.convertHexCodeToHumanReadableString(value);
+    }
+    return value;
+  }
+
+  convertHexCodeToHumanReadableString(value) {
+    switch (value) {
+      case '#e60000':
+        return 'Electric red';
+      case '#ff9900':
+        return 'Light orange';
+      case '#ffff00':
+        return 'Yellow';
+      case '#008a00':
+        return 'Green';
+      case '#0066cc':
+        return 'Navy blue';
+      case '#9933ff':
+        return 'Blue violet';
+      case '#ffffff':
+        return 'White';
+      case '#facccc':
+        return 'Light pink';
+      case '#ffebcc':
+        return 'Light yellow';
+      case '#ffffcc':
+        return 'Cream';
+      case '#cce8cc':
+        return 'Light sage';
+      case '#cce0f5':
+        return 'Light blue';
+      case '#ebd6ff':
+        return 'Light purple';
+      case '#bbbbbb':
+        return 'Silver';
+      case '#f06666':
+        return 'Salmon';
+      case '#ffc266':
+        return 'Light orange';
+      case '#ffff66':
+        return 'Lemon';
+      case '#66b966':
+        return 'Fern';
+      case '#66a3e0':
+        return 'Cornflower blue';
+      case '#c285ff':
+        return 'Purple';
+      case '#888888':
+        return 'Gray';
+      case '#a10000':
+        return 'Dark red';
+      case '#b26b00':
+        return 'Orange-brown';
+      case '#b2b200':
+        return 'Chartreuse';
+      case '#006100':
+        return 'Forest green';
+      case '#0047b2':
+        return 'Cobalt blue';
+      case '#6b24b2':
+        return 'Deep purple';
+      case '#444444':
+        return 'Dark gray';
+      case '#5c0000':
+        return 'Dark purple';
+      case '#663d00':
+        return 'Nutmeg brown';
+      case '#666600':
+        return 'Dark yellow-green';
+      case '#003700':
+        return 'Deep fir green';
+      case '#002966':
+        return 'Midnight blue';
+      case '#3d1466':
+        return 'Deepest purple';
+      case '#000000':
+        return 'Black';
+      default:
+        return '';
+    }
   }
 
   buildLabel() {

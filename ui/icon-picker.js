@@ -6,6 +6,9 @@ class IconPicker extends Picker {
     this.container.classList.add('ql-icon-picker');
     Array.from(this.container.querySelectorAll('.ql-picker-item')).forEach(
       item => {
+        if (item.getAttribute('data-value') === null) {
+          item.setAttribute('aria-label', 'Left');
+        }
         item.innerHTML = icons[item.getAttribute('data-value') || ''];
       },
     );

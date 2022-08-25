@@ -57,6 +57,18 @@ class Toolbar extends Module {
     format = format.slice('ql-'.length);
     if (input.tagName === 'BUTTON') {
       input.setAttribute('type', 'button');
+      input.setAttribute('aria-label', format);
+      if (input.value) {
+        input.setAttribute('aria-label', `${format} ${input.value}`);
+      }
+      if (format === 'direction') {
+        input.setAttribute(
+          'aria-label',
+          `Text ${format} ${
+            input.value === 'rtl' ? 'right to left' : 'left to right'
+          }`,
+        );
+      }
     }
     if (
       this.handlers[format] == null &&
@@ -153,9 +165,11 @@ Toolbar.DEFAULTS = {};
 function addButton(container, format, value) {
   const input = document.createElement('button');
   input.setAttribute('type', 'button');
+  input.setAttribute('aria-label', format);
   input.classList.add(`ql-${format}`);
   if (value != null) {
     input.value = value;
+    input.setAttribute('aria-label', `${value} ${format}`);
   }
   container.appendChild(input);
 }

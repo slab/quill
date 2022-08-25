@@ -111,6 +111,7 @@ class BaseTheme extends Theme {
   buildPickers(selects, icons) {
     this.pickers = Array.from(selects).map(select => {
       if (select.classList.contains('ql-align')) {
+        select.setAttribute('aria-label', 'Align text');
         if (select.querySelector('option') == null) {
           fillSelect(select, ALIGNS);
         }
@@ -120,6 +121,12 @@ class BaseTheme extends Theme {
         select.classList.contains('ql-background') ||
         select.classList.contains('ql-color')
       ) {
+        if (select.classList.contains('ql-background')) {
+          select.setAttribute('aria-label', 'Background color');
+        }
+        if (select.classList.contains('ql-color')) {
+          select.setAttribute('aria-label', 'Text color');
+        }
         const format = select.classList.contains('ql-background')
           ? 'background'
           : 'color';
@@ -134,10 +141,12 @@ class BaseTheme extends Theme {
       }
       if (select.querySelector('option') == null) {
         if (select.classList.contains('ql-font')) {
+          select.setAttribute('aria-label', 'Select a Font');
           fillSelect(select, FONTS);
         } else if (select.classList.contains('ql-header')) {
           fillSelect(select, HEADERS);
         } else if (select.classList.contains('ql-size')) {
+          select.setAttribute('aria-label', 'Select a font size');
           fillSelect(select, SIZES);
         }
       }
