@@ -20,7 +20,7 @@ describe('Picker', function() {
       this.container.querySelector('.ql-picker-item:not(.ql-selected)')
         .outerHTML,
     ).toEqualHTML(
-      '<span tabindex="0" role="button" class="ql-picker-item" data-value="1" data-label="1"></span>',
+      '<span tabindex="0" role="button" class="ql-picker-item" aria-label="1" data-value="1" data-label="1"></span>',
     );
   });
 

@@ -7,8 +7,8 @@ describe('Toolbar', function() {
       addControls(this.container, ['bold', 'italic']);
       expect(this.container).toEqualHTML(`
         <span class="ql-formats">
-          <button type="button" class="ql-bold"></button>
-          <button type="button" class="ql-italic"></button>
+          <button type="button" aria-label="bold" class="ql-bold"></button>
+          <button type="button" aria-label="italic" class="ql-italic"></button>
         </span>
       `);
     });
@@ -20,12 +20,12 @@ describe('Toolbar', function() {
       ]);
       expect(this.container).toEqualHTML(`
         <span class="ql-formats">
-          <button type="button" class="ql-bold"></button>
-          <button type="button" class="ql-italic"></button>
+          <button type="button" aria-label="bold" class="ql-bold"></button>
+          <button type="button" aria-label="italic" class="ql-italic"></button>
         </span>
         <span class="ql-formats">
-          <button type="button" class="ql-underline"></button>
-          <button type="button" class="ql-strike"></button>
+          <button type="button" aria-label="underline" class="ql-underline"></button>
+          <button type="button" aria-label="strike" class="ql-strike"></button>
         </span>
       `);
     });
@@ -34,8 +34,8 @@ describe('Toolbar', function() {
       addControls(this.container, ['bold', { header: '2' }]);
       expect(this.container).toEqualHTML(`
         <span class="ql-formats">
-          <button type="button" class="ql-bold"></button>
-          <button type="button" class="ql-header" value="2"></button>
+          <button type="button" aria-label="bold" class="ql-bold"></button>
+          <button type="button" aria-label="2 header" class="ql-header" value="2"></button>
         </span>
       `);
     });
@@ -83,14 +83,14 @@ describe('Toolbar', function() {
           </select>
         </span>
         <span class="ql-formats">
-          <button type="button" class="ql-bold"></button>
-          <button type="button" class="ql-italic"></button>
-          <button type="button" class="ql-underline"></button>
-          <button type="button" class="ql-strike"></button>
+          <button type="button" aria-label="bold" class="ql-bold"></button>
+          <button type="button" aria-label="italic" class="ql-italic"></button>
+          <button type="button" aria-label="underline" class="ql-underline"></button>
+          <button type="button" aria-label="strike" class="ql-strike"></button>
         </span>
         <span class="ql-formats">
-          <button type="button" class="ql-list" value="ordered"></button>
-          <button type="button" class="ql-list" value="bullet"></button>
+          <button type="button" aria-label="ordered list" class="ql-list" value="ordered"></button>
+          <button type="button" aria-label="bullet list" class="ql-list" value="bullet"></button>
           <select class="ql-align">
             <option selected="selected"></option>
             <option value="center"></option>
@@ -99,8 +99,8 @@ describe('Toolbar', function() {
           </select>
         </span>
         <span class="ql-formats">
-          <button type="button" class="ql-link"></button>
-          <button type="button" class="ql-image"></button>
+          <button type="button" aria-label="link" class="ql-link"></button>
+          <button type="button" aria-label="image" class="ql-image"></button>
         </span>
       `);
     });
