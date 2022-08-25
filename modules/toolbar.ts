@@ -192,14 +192,16 @@ class Toolbar extends Module<ToolbarProps> {
 }
 Toolbar.DEFAULTS = {};
 
-function addButton(container: HTMLElement, format: string, value?: unknown) {
+function addButton(container: HTMLElement, format: string, value?: string) {
   const input = document.createElement('button');
   input.setAttribute('type', 'button');
   input.classList.add(`ql-${format}`);
   input.setAttribute('aria-pressed', 'false');
   if (value != null) {
-    // @ts-expect-error
     input.value = value;
+    input.setAttribute('aria-label', `${format}: ${value}`);
+  } else {
+    input.setAttribute('aria-label', format);
   }
   container.appendChild(input);
 }

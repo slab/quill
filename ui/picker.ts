@@ -54,9 +54,9 @@ class Picker {
     item.tabIndex = '0';
     item.setAttribute('role', 'button');
     item.classList.add('ql-picker-item');
-    if (option.hasAttribute('value')) {
-      // @ts-expect-error Fix me later
-      item.setAttribute('data-value', option.getAttribute('value'));
+    const value = option.getAttribute('value');
+    if (value) {
+      item.setAttribute('data-value', value);
     }
     if (option.textContent) {
       item.setAttribute('data-label', option.textContent);
