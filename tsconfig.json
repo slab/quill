@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "./dist",
     "allowSyntheticDefaultImports": true,
     "target": "es6",
     "sourceMap": true,
