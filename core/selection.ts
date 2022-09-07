@@ -236,7 +236,7 @@ class Selection {
     return [range, normalized];
   }
 
-  hasFocus() {
+  hasFocus(): boolean {
     return (
       document.activeElement === this.root ||
       contains(this.root, document.activeElement)

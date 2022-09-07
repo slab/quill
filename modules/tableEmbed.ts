@@ -1,14 +1,31 @@
 import Delta, { OpIterator } from 'quill-delta';
+import Op from 'quill-delta/dist/Op';
 import Module from '../core/module';
 
-const parseCellIdentity = identity => {
+export type CellData = {
+  content?: Delta['ops'];
+  attributes?: Record<string, unknown>;
+};
+
+export type TableRowColumnOp = Omit<Op, 'insert'> & {
+  insert?: { id: string };
+};
+
+export interface TableData {
+  rows?: Delta['ops'];
+  columns?: Delta['ops'];
+  cells?: Record<string, CellData>;
+}
+
+const parseCellIdentity = (identity: string) => {
   const parts = identity.split(':');
   return [Number(parts[0]) - 1, Number(parts[1]) - 1];
 };
 
-const stringifyCellIdentity = (row, column) => `${row + 1}:${column + 1}`;
+const stringifyCellIdentity = (row: number, column: number) =>
+  `${row + 1}:${column + 1}`;
 
-export const composePosition = (delta, index) => {
+export const composePosition = (delta: Delta, index: number) => {
   let newIndex = index;
   const thisIter = new OpIterator(delta.ops);
   let offset = 0;
@@ -36,7 +53,7 @@ export const composePosition = (delta, index) => {
 };
 
 const compactCellData = ({ content, attributes }) => {
-  const data = {};
+  const data: CellData = {};
   if (content.length() > 0) {
     data.content = content.ops;
   }
@@ -47,7 +64,7 @@ const compactCellData = ({ content, attributes }) => {
 };
 
 const compactTableData = ({ rows, columns, cells }) => {
-  const data = {};
+  const data: TableData = {};
   if (rows.length() > 0) {
     data.rows = rows.ops;
   }
@@ -80,7 +97,7 @@ const reindexCellIdentities = (cells, { rows, columns }) => {
 };
 
 export const tableHandler = {
-  compose(a, b, keepNull) {
+  compose(a: TableData, b: TableData, keepNull?: boolean) {
     const rows = new Delta(a.rows || []).compose(new Delta(b.rows || []));
     const columns = new Delta(a.columns || []).compose(
       new Delta(b.columns || []),
@@ -115,7 +132,7 @@ export const tableHandler = {
 
     return compactTableData({ rows, columns, cells });
   },
-  transform(a, b, priority) {
+  transform(a: TableData, b: TableData, priority: boolean) {
     const aDeltas = {
       rows: new Delta(a.rows || []),
       columns: new Delta(a.columns || []),
@@ -168,7 +185,7 @@ export const tableHandler = {
 
     return compactTableData({ rows, columns, cells });
   },
-  invert(change, base) {
+  invert(change: TableData, base: TableData) {
     const rows = new Delta(change.rows || []).invert(
       new Delta(base.rows || []),
     );

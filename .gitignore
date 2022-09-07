@@ -8,4 +8,16 @@
 /docs/_site
 /src
 *.d.ts
+*.js.map
 *.log
+
+blots/*.js
+core/*.js
+formats/*.js
+modules/*.js
+themes/*.js
+ui/*.js
+test/random.js
+
+core.js
+quill.js

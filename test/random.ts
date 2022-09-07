@@ -1,5 +1,9 @@
 import Delta from 'quill-delta';
-import TableEmbed from '../modules/tableEmbed';
+import TableEmbed, {
+  CellData,
+  TableData,
+  TableRowColumnOp,
+} from '../modules/tableEmbed';
 
 // Random testing in order to find unknown issues.
 
@@ -18,7 +22,9 @@ const getRandomRowColumnId = () => {
     .join('');
 };
 
-const attachAttributes = obj => {
+const attachAttributes = <T extends object>(
+  obj: T,
+): T & { attributes: Record<string, unknown> } => {
   const getRandomAttributes = () => {
     const attributeCount = random([1, 4, 8]);
     const allowedAttributes = ['align', 'background', 'color', 'font'];
@@ -30,8 +36,10 @@ const attachAttributes = obj => {
     return attributes;
   };
   if (random([true, false])) {
+    // @ts-expect-error
     obj.attributes = getRandomAttributes();
   }
+  // @ts-expect-error
   return obj;
 };
 
@@ -52,7 +60,7 @@ const getRandomCellContent = () => {
 };
 
 const getRandomChange = base => {
-  const table = {};
+  const table: TableData = {};
   const dimension = {
     rows: new Delta(base.ops[0].insert['table-embed'].rows || []).length(),
     columns: new Delta(
@@ -104,12 +112,12 @@ const getRandomChange = base => {
   return new Delta([attachAttributes({ retain: { 'table-embed': table } })]);
 };
 
-const getRandomRowColumnInsert = count => {
-  return new Delta(
-    new Array(count)
-      .fill(0)
-      .map(() => attachAttributes({ insert: { id: getRandomRowColumnId() } })),
-  ).ops;
+const getRandomRowColumnInsert = (count: number): TableRowColumnOp[] => {
+  return new Array(count)
+    .fill(0)
+    .map<TableRowColumnOp>(() =>
+      attachAttributes({ insert: { id: getRandomRowColumnId() } }),
+    );
 };
 
 const getRandomBase = () => {
@@ -117,7 +125,7 @@ const getRandomBase = () => {
   const columnCount = random([0, 1, 2]);
   const cellCount = random([0, 1, 2, 3, 4, 5]);
 
-  const table = {};
+  const table: TableData = {};
   if (rowCount) table.rows = getRandomRowColumnInsert(rowCount);
   if (columnCount) table.columns = getRandomRowColumnInsert(columnCount);
   if (cellCount) {
@@ -126,7 +134,7 @@ const getRandomBase = () => {
       const row = random(rowCount);
       const column = random(columnCount);
       const identity = `${row + 1}:${column + 1}`;
-      const cell = attachAttributes({});
+      const cell: CellData = attachAttributes({});
       if (random([true, false])) {
         cell.content = getRandomCellContent();
       }

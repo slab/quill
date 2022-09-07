@@ -10,6 +10,14 @@ const TOOLBAR_CONFIG = [
 ];
 
 class BubbleTooltip extends BaseTooltip {
+  static TEMPLATE = [
+    '<span class="ql-tooltip-arrow"></span>',
+    '<div class="ql-tooltip-editor">',
+    '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">',
+    '<a class="ql-close"></a>',
+    '</div>',
+  ].join('');
+
   constructor(quill, bounds) {
     super(quill, bounds);
     this.quill.on(
@@ -73,20 +81,15 @@ class BubbleTooltip extends BaseTooltip {
   position(reference) {
     const shift = super.position(reference);
     const arrow = this.root.querySelector('.ql-tooltip-arrow');
+    // @ts-expect-error
     arrow.style.marginLeft = '';
     if (shift !== 0) {
+      // @ts-expect-error
       arrow.style.marginLeft = `${-1 * shift - arrow.offsetWidth / 2}px`;
     }
     return shift;
   }
 }
-BubbleTooltip.TEMPLATE = [
-  '<span class="ql-tooltip-arrow"></span>',
-  '<div class="ql-tooltip-editor">',
-  '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">',
-  '<a class="ql-close"></a>',
-  '</div>',
-].join('');
 
 class BubbleTheme extends BaseTheme {
   constructor(quill, options) {
@@ -101,6 +104,7 @@ class BubbleTheme extends BaseTheme {
   }
 
   extendToolbar(toolbar) {
+    // @ts-expect-error
     this.tooltip = new BubbleTooltip(this.quill, this.options.bounds);
     this.tooltip.root.appendChild(toolbar.container);
     this.buildButtons(toolbar.container.querySelectorAll('button'), icons);

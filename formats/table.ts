@@ -205,9 +205,7 @@ TableRow.allowedChildren = [TableCell];
 TableCell.requiredContainer = TableRow;
 
 function tableId() {
-  const id = Math.random()
-    .toString(36)
-    .slice(2, 6);
+  const id = Math.random().toString(36).slice(2, 6);
   return `row-${id}`;
 }
 

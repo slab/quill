@@ -1,10 +1,12 @@
 import merge from 'lodash.merge';
+import Quill from '../core/quill';
 import Emitter from '../core/emitter';
 import Theme from '../core/theme';
 import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
 import Tooltip from '../ui/tooltip';
+import { Range } from '../core/selection';
 
 const ALIGNS = [false, 'center', 'right', 'justify'];
 
@@ -53,16 +55,21 @@ const HEADERS = ['1', '2', '3', false];
 const SIZES = ['small', false, 'large', 'huge'];
 
 class BaseTheme extends Theme {
-  constructor(quill, options) {
+  pickers: Picker[];
+  tooltip?: Tooltip;
+
+  constructor(quill: Quill, options) {
     super(quill, options);
-    const listener = e => {
+    const listener = (e: MouseEvent) => {
       if (!document.body.contains(quill.root)) {
         document.body.removeEventListener('click', listener);
         return;
       }
       if (
         this.tooltip != null &&
+        // @ts-expect-error
         !this.tooltip.root.contains(e.target) &&
+        // @ts-expect-error
         document.activeElement !== this.tooltip.textbox &&
         !this.quill.hasFocus()
       ) {
@@ -70,6 +77,7 @@ class BaseTheme extends Theme {
       }
       if (this.pickers != null) {
         this.pickers.forEach(picker => {
+          // @ts-expect-error
           if (!picker.container.contains(e.target)) {
             picker.close();
           }
@@ -79,15 +87,17 @@ class BaseTheme extends Theme {
     quill.emitter.listenDOM('click', document.body, listener);
   }
 
-  addModule(name) {
+  // @ts-expect-error
+  addModule(name: string) {
     const module = super.addModule(name);
     if (name === 'toolbar') {
+      // @ts-expect-error
       this.extendToolbar(module);
     }
     return module;
   }
 
-  buildButtons(buttons, icons) {
+  buildButtons(buttons: HTMLElement[], icons) {
     Array.from(buttons).forEach(button => {
       const className = button.getAttribute('class') || '';
       className.split(/\s+/).forEach(name => {
@@ -99,6 +109,7 @@ class BaseTheme extends Theme {
         } else if (typeof icons[name] === 'string') {
           button.innerHTML = icons[name];
         } else {
+          // @ts-expect-error
           const value = button.value || '';
           if (value != null && icons[name][value]) {
             button.innerHTML = icons[name][value];
@@ -108,12 +119,13 @@ class BaseTheme extends Theme {
     });
   }
 
-  buildPickers(selects, icons) {
+  buildPickers(selects: HTMLElement[], icons) {
     this.pickers = Array.from(selects).map(select => {
       if (select.classList.contains('ql-align')) {
         if (select.querySelector('option') == null) {
           fillSelect(select, ALIGNS);
         }
+        // @ts-expect-error
         return new IconPicker(select, icons.align);
       }
       if (
@@ -141,6 +153,7 @@ class BaseTheme extends Theme {
           fillSelect(select, SIZES);
         }
       }
+      // @ts-expect-error
       return new Picker(select);
     });
     const update = () => {
@@ -188,7 +201,10 @@ BaseTheme.DEFAULTS = merge({}, Theme.DEFAULTS, {
 });
 
 class BaseTooltip extends Tooltip {
-  constructor(quill, boundsContainer) {
+  textbox: HTMLInputElement | null;
+  linkRange?: Range;
+
+  constructor(quill: Quill, boundsContainer) {
     super(quill, boundsContainer);
     this.textbox = this.root.querySelector('input[type="text"]');
     this.listen();
@@ -299,7 +315,7 @@ function extractVideoUrl(url) {
   return url;
 }
 
-function fillSelect(select, values, defaultValue = false) {
+function fillSelect(select, values, defaultValue: unknown = false) {
   values.forEach(value => {
     const option = document.createElement('option');
     if (value === defaultValue) {

@@ -24,8 +24,10 @@ class ColorPicker extends Picker {
     const value = item ? item.getAttribute('data-value') || '' : '';
     if (colorLabel) {
       if (colorLabel.tagName === 'line') {
+        // @ts-expect-error
         colorLabel.style.stroke = value;
       } else {
+        // @ts-expect-error
         colorLabel.style.fill = value;
       }
     }

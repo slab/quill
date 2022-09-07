@@ -1,3 +1,4 @@
+// @ts-expect-error
 import DropdownIcon from '../assets/icons/dropdown.svg';
 
 let optionsCounter = 0;
@@ -10,7 +11,11 @@ function toggleAriaAttribute(element, attribute) {
 }
 
 class Picker {
-  constructor(select) {
+  select: HTMLSelectElement;
+  container: HTMLElement;
+  label: HTMLElement;
+
+  constructor(select: HTMLSelectElement) {
     this.select = select;
     this.container = document.createElement('span');
     this.buildPicker();
@@ -39,11 +44,13 @@ class Picker {
     this.container.classList.toggle('ql-expanded');
     // Toggle aria-expanded and aria-hidden to make the picker accessible
     toggleAriaAttribute(this.label, 'aria-expanded');
+    // @ts-expect-error
     toggleAriaAttribute(this.options, 'aria-hidden');
   }
 
-  buildItem(option) {
+  buildItem(option: HTMLOptionElement) {
     const item = document.createElement('span');
+    // @ts-expect-error
     item.tabIndex = '0';
     item.setAttribute('role', 'button');
     item.classList.add('ql-picker-item');
@@ -77,6 +84,7 @@ class Picker {
     const label = document.createElement('span');
     label.classList.add('ql-picker-label');
     label.innerHTML = DropdownIcon;
+    // @ts-expect-error
     label.tabIndex = '0';
     label.setAttribute('role', 'button');
     label.setAttribute('aria-expanded', 'false');
@@ -90,6 +98,7 @@ class Picker {
 
     // Don't want screen readers to read this until options are visible
     options.setAttribute('aria-hidden', 'true');
+    // @ts-expect-error
     options.tabIndex = '-1';
 
     // Need a unique id for aria-controls
@@ -97,6 +106,7 @@ class Picker {
     optionsCounter += 1;
     this.label.setAttribute('aria-controls', options.id);
 
+    // @ts-expect-error
     this.options = options;
 
     Array.from(this.select.options).forEach(option => {
@@ -129,10 +139,11 @@ class Picker {
   close() {
     this.container.classList.remove('ql-expanded');
     this.label.setAttribute('aria-expanded', 'false');
+    // @ts-expect-error
     this.options.setAttribute('aria-hidden', 'true');
   }
 
-  selectItem(item, trigger = false) {
+  selectItem(item: HTMLElement, trigger = false) {
     const selected = this.container.querySelector('.ql-selected');
     if (item === selected) return;
     if (selected != null) {
@@ -162,10 +173,12 @@ class Picker {
   update() {
     let option;
     if (this.select.selectedIndex > -1) {
-      const item = this.container.querySelector('.ql-picker-options').children[
-        this.select.selectedIndex
-      ];
+      const item =
+        this.container.querySelector('.ql-picker-options').children[
+          this.select.selectedIndex
+        ];
       option = this.select.options[this.select.selectedIndex];
+      // @ts-expect-error
       this.selectItem(item);
     } else {
       this.selectItem(null);

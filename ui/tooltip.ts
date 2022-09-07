@@ -1,8 +1,15 @@
+import Quill from '../core';
+
 class Tooltip {
-  constructor(quill, boundsContainer) {
+  quill: Quill;
+  boundsContainer: HTMLElement;
+  root: HTMLDivElement;
+
+  constructor(quill: Quill, boundsContainer: HTMLElement) {
     this.quill = quill;
     this.boundsContainer = boundsContainer || document.body;
     this.root = quill.addContainer('ql-tooltip');
+    // @ts-expect-error
     this.root.innerHTML = this.constructor.TEMPLATE;
     if (this.quill.root === this.quill.scrollingContainer) {
       this.quill.root.addEventListener('scroll', () => {

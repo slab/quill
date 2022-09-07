@@ -1,17 +1,64 @@
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import Delta, { AttributeMap } from 'quill-delta';
-import { EmbedBlot, Scope, TextBlot } from 'parchment';
+import { BlockBlot, EmbedBlot, Scope, TextBlot } from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
+import { BlockEmbed } from '../blots/block';
+import { Range } from '../core/selection';
 
 const debug = logger('quill:keyboard');
 
 const SHORTKEY = /Mac/i.test(navigator.platform) ? 'metaKey' : 'ctrlKey';
 
-class Keyboard extends Module {
-  static match(evt, binding) {
+interface Context {
+  collapsed: boolean;
+  empty: boolean;
+  offset: number;
+  prefix: string;
+  suffix: string;
+  format: Record<string, unknown>;
+  event: KeyboardEvent;
+  line: BlockEmbed | BlockBlot;
+}
+
+interface BindingObject
+  extends Partial<Omit<Context, 'prefix' | 'suffix' | 'format'>> {
+  key: number | string | string[];
+  shortKey?: boolean | null;
+  shiftKey?: boolean | null;
+  altKey?: boolean | null;
+  metaKey?: boolean | null;
+  ctrlKey?: boolean | null;
+  prefix?: RegExp;
+  suffix?: RegExp;
+  format?: Record<string, unknown> | string[];
+  handler?: (
+    this: { quill: Quill },
+    range: Range,
+    curContext: Context,
+    // eslint-disable-next-line no-use-before-define
+    binding: NormalizedBinding,
+  ) => boolean | void;
+}
+
+type Binding = BindingObject | string | number;
+
+interface NormalizedBinding extends Omit<BindingObject, 'key' | 'shortKey'> {
+  key: string | number;
+}
+
+interface KeyboardOptions {
+  bindings: Record<string, Binding>;
+}
+
+interface KeyboardOptions {
+  bindings: Record<string, Binding>;
+}
+
+class Keyboard extends Module<KeyboardOptions> {
+  static match(evt: KeyboardEvent, binding) {
     if (
       ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'].some(key => {
         return !!binding[key] !== evt[key] && binding[key] !== null;
@@ -22,7 +69,9 @@ class Keyboard extends Module {
     return binding.key === evt.key || binding.key === evt.which;
   }
 
-  constructor(quill, options) {
+  bindings: Record<string, NormalizedBinding[]>;
+
+  constructor(quill: Quill, options: Partial<KeyboardOptions>) {
     super(quill, options);
     this.bindings = {};
     Object.keys(this.options.bindings).forEach(name => {
@@ -83,7 +132,15 @@ class Keyboard extends Module {
     this.listen();
   }
 
-  addBinding(keyBinding, context = {}, handler = {}) {
+  addBinding(
+    keyBinding: Binding,
+    context:
+      | Required<BindingObject['handler']>
+      | Partial<Omit<BindingObject, 'key' | 'handler'>> = {},
+    handler:
+      | Required<BindingObject['handler']>
+      | Partial<Omit<BindingObject, 'key' | 'handler'>> = {},
+  ) {
     const binding = normalize(keyBinding);
     if (binding == null) {
       debug.warn('Attempted to add invalid keyboard binding', binding);
@@ -116,6 +173,7 @@ class Keyboard extends Module {
       );
       const matches = bindings.filter(binding => Keyboard.match(evt, binding));
       if (matches.length === 0) return;
+      // @ts-expect-error
       const blot = Quill.find(evt.target, true);
       if (blot && blot.scroll !== this.quill.scroll) return;
       const range = this.quill.getSelection();
@@ -188,7 +246,7 @@ class Keyboard extends Module {
     });
   }
 
-  handleBackspace(range, context) {
+  handleBackspace(range: Range, context: Context) {
     // Check for astral symbols
     const length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix)
       ? 2
@@ -221,7 +279,7 @@ class Keyboard extends Module {
     this.quill.focus();
   }
 
-  handleDelete(range, context) {
+  handleDelete(range: Range, context: Context) {
     // Check for astral symbols
     const length = /^[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(context.suffix)
       ? 2
@@ -245,12 +303,12 @@ class Keyboard extends Module {
     this.quill.focus();
   }
 
-  handleDeleteRange(range) {
+  handleDeleteRange(range: Range) {
     deleteRange({ range, quill: this.quill });
     this.quill.focus();
   }
 
-  handleEnter(range, context) {
+  handleEnter(range: Range, context: Context) {
     const lineFormats = Object.keys(context.format).reduce(
       (formats, format) => {
         if (
@@ -273,7 +331,7 @@ class Keyboard extends Module {
   }
 }
 
-Keyboard.DEFAULTS = {
+const defaultOptions: KeyboardOptions = {
   bindings: {
     bold: makeFormatHandler('bold'),
     italic: makeFormatHandler('italic'),
@@ -357,7 +415,7 @@ Keyboard.DEFAULTS = {
       format: ['list'],
       empty: true,
       handler(range, context) {
-        const formats = { list: false };
+        const formats: Record<string, unknown> = { list: false };
         if (context.format.indent) {
           formats.indent = false;
         }
@@ -427,6 +485,7 @@ Keyboard.DEFAULTS = {
       handler(range) {
         const module = this.quill.getModule('table');
         if (module) {
+          // @ts-expect-error
           const [table, row, cell, offset] = module.getTable(range);
           const shift = tableSide(table, row, cell, offset);
           if (shift == null) return;
@@ -521,6 +580,7 @@ Keyboard.DEFAULTS = {
           cur.length() <= 1 &&
           cur.formats()['code-block']
         ) {
+          // @ts-expect-error
           cur = cur.prev;
           numLines -= 1;
           // Requisite prev lines are empty
@@ -546,19 +606,20 @@ Keyboard.DEFAULTS = {
   },
 };
 
-function makeCodeBlockHandler(indent) {
+Keyboard.DEFAULTS = defaultOptions;
+
+function makeCodeBlockHandler(indent: boolean): BindingObject {
   return {
     key: 'Tab',
     shiftKey: !indent,
     format: { 'code-block': true },
     handler(range, { event }) {
       const CodeBlock = this.quill.scroll.query('code-block');
+      // @ts-expect-error
+      const { TAB } = CodeBlock;
       if (range.length === 0 && !event.shiftKey) {
-        this.quill.insertText(range.index, CodeBlock.TAB, Quill.sources.USER);
-        this.quill.setSelection(
-          range.index + CodeBlock.TAB.length,
-          Quill.sources.SILENT,
-        );
+        this.quill.insertText(range.index, TAB, Quill.sources.USER);
+        this.quill.setSelection(range.index + TAB.length, Quill.sources.SILENT);
         return;
       }
 
@@ -569,18 +630,18 @@ function makeCodeBlockHandler(indent) {
       let { index, length } = range;
       lines.forEach((line, i) => {
         if (indent) {
-          line.insertAt(0, CodeBlock.TAB);
+          line.insertAt(0, TAB);
           if (i === 0) {
-            index += CodeBlock.TAB.length;
+            index += TAB.length;
           } else {
-            length += CodeBlock.TAB.length;
+            length += TAB.length;
           }
-        } else if (line.domNode.textContent.startsWith(CodeBlock.TAB)) {
-          line.deleteAt(0, CodeBlock.TAB.length);
+        } else if (line.domNode.textContent.startsWith(TAB)) {
+          line.deleteAt(0, TAB.length);
           if (i === 0) {
-            index -= CodeBlock.TAB.length;
+            index -= TAB.length;
           } else {
-            length -= CodeBlock.TAB.length;
+            length -= TAB.length;
           }
         }
       });
@@ -590,7 +651,10 @@ function makeCodeBlockHandler(indent) {
   };
 }
 
-function makeEmbedArrowHandler(key, shiftKey) {
+function makeEmbedArrowHandler(
+  key: string,
+  shiftKey: boolean | null,
+): BindingObject {
   const where = key === 'ArrowLeft' ? 'prefix' : 'suffix';
   return {
     key,
@@ -631,7 +695,7 @@ function makeEmbedArrowHandler(key, shiftKey) {
   };
 }
 
-function makeFormatHandler(format) {
+function makeFormatHandler(format: string): BindingObject {
   return {
     key: format[0],
     shortKey: true,
@@ -641,7 +705,7 @@ function makeFormatHandler(format) {
   };
 }
 
-function makeTableArrowHandler(up) {
+function makeTableArrowHandler(up: boolean): BindingObject {
   return {
     key: up ? 'ArrowUp' : 'ArrowDown',
     collapsed: true,
@@ -653,9 +717,11 @@ function makeTableArrowHandler(up) {
       const targetRow = cell.parent[key];
       if (targetRow != null) {
         if (targetRow.statics.blotName === 'table-row') {
+          // @ts-expect-error
           let targetCell = targetRow.children.head;
           let cur = cell;
           while (cur.prev != null) {
+            // @ts-expect-error
             cur = cur.prev;
             targetCell = targetCell.next;
           }
@@ -665,6 +731,7 @@ function makeTableArrowHandler(up) {
           this.quill.setSelection(index, 0, Quill.sources.USER);
         }
       } else {
+        // @ts-expect-error
         const targetLine = cell.table()[key];
         if (targetLine != null) {
           if (up) {
@@ -687,7 +754,7 @@ function makeTableArrowHandler(up) {
   };
 }
 
-function normalize(binding) {
+function normalize(binding: Binding): BindingObject {
   if (typeof binding === 'string' || typeof binding === 'number') {
     binding = { key: binding };
   } else if (typeof binding === 'object') {
@@ -695,15 +762,19 @@ function normalize(binding) {
   } else {
     return null;
   }
+  // @ts-expect-error
   if (binding.shortKey) {
+    // @ts-expect-error
     binding[SHORTKEY] = binding.shortKey;
+    // @ts-expect-error
     delete binding.shortKey;
   }
+  // @ts-expect-error
   return binding;
 }
 
 // TODO: Move into quill.ts or editor.ts
-function deleteRange({ quill, range }) {
+function deleteRange({ quill, range }: { quill: Quill; range: Range }) {
   const lines = quill.getLines(range);
   let formats = {};
   if (lines.length > 1) {

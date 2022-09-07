@@ -1,7 +1,9 @@
 import Picker from './picker';
 
 class IconPicker extends Picker {
-  constructor(select, icons) {
+  defaultItem: HTMLElement;
+
+  constructor(select: HTMLSelectElement, icons: Record<string, string>) {
     super(select);
     this.container.classList.add('ql-icon-picker');
     Array.from(this.container.querySelectorAll('.ql-picker-item')).forEach(
@@ -10,6 +12,7 @@ class IconPicker extends Picker {
       },
     );
     this.defaultItem = this.container.querySelector('.ql-selected');
+    // @ts-expect-error
     this.selectItem(this.defaultItem);
   }
 

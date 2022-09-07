@@ -1,4 +1,3 @@
-import Delta, { Op } from 'quill-delta';
 import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
 import * as Parchment from 'parchment';
@@ -6,19 +5,20 @@ import {
   Blot,
   BlotConstructor,
 } from 'parchment/dist/typings/blot/abstract/blot';
-import Editor from './editor';
-import Emitter, { EmitterSource } from './emitter';
-import Module from './module';
-import Selection, { Range } from './selection';
-import instances from './instances';
-import logger from './logger';
-import Theme, { ThemeConstructor } from './theme';
+import Delta, { Op } from 'quill-delta';
 import Block, { BlockEmbed } from '../blots/block';
-import History from '../modules/history';
+import Scroll, { ScrollConstructor } from '../blots/scroll';
 import Clipboard from '../modules/clipboard';
+import History from '../modules/history';
 import Keyboard from '../modules/keyboard';
 import Uploader from '../modules/uploader';
-import Scroll, { ScrollConstructor } from '../blots/scroll';
+import Editor from './editor';
+import Emitter, { EmitterSource } from './emitter';
+import instances from './instances';
+import logger from './logger';
+import Module from './module';
+import Selection, { Range } from './selection';
+import Theme, { ThemeConstructor } from './theme';
 
 const debug = logger('quill');
 
@@ -78,6 +78,10 @@ class Quill {
     return instances.get(node) || globalRegistry.find(node, bubble);
   }
 
+  static import(name: 'core/module'): typeof Module;
+  static import(name: 'parchment'): typeof Parchment;
+  static import(name: 'delta'): typeof Delta;
+  static import(name: string): unknown;
   static import(name: string) {
     if (this.imports[name] == null) {
       debug.error(`Cannot import ${name}. Are you sure it was registered?`);
@@ -244,11 +248,19 @@ class Quill {
     this.selection.setRange(null);
   }
 
-  deleteText(index: number, length: number, source) {
+  deleteText(range: Range, source?: EmitterSource): Delta;
+  deleteText(index: number, length: number, source?: EmitterSource): Delta;
+  deleteText(
+    index: number | Range,
+    length?: number | EmitterSource,
+    source?: EmitterSource,
+  ): Delta {
+    // @ts-expect-error
     [index, length, , source] = overload(index, length, source);
     return modify.call(
       this,
       () => {
+        // @ts-expect-error
         return this.editor.deleteText(index, length);
       },
       source,
@@ -280,7 +292,11 @@ class Quill {
     this.scrollIntoView();
   }
 
-  format(name, value, source = Emitter.sources.API) {
+  format(
+    name: string,
+    value: unknown,
+    source: EmitterSource = Emitter.sources.API,
+  ) {
     return modify.call(
       this,
       () => {
@@ -306,12 +322,32 @@ class Quill {
     );
   }
 
-  formatLine(index, length, name, value, source) {
+  formatLine(
+    index: number,
+    length: number,
+    formats: Record<string, unknown>,
+    source?: EmitterSource,
+  );
+  formatLine(
+    index: number,
+    length: number,
+    name: string,
+    value?: unknown,
+    source?: EmitterSource,
+  );
+  formatLine(
+    index: number,
+    length: number,
+    name: string | Record<string, unknown>,
+    value?: unknown | EmitterSource,
+    source?: EmitterSource,
+  ) {
     let formats;
     // eslint-disable-next-line prefer-const
     [index, length, formats, source] = overload(
       index,
       length,
+      // @ts-expect-error
       name,
       value,
       source,
@@ -327,10 +363,30 @@ class Quill {
     );
   }
 
-  formatText(index, length, name, value, source) {
+  formatText(
+    range: { index: number; length: number },
+    name: string,
+    value: unknown,
+    source?: EmitterSource,
+  ): Delta;
+  formatText(
+    index: number,
+    length: number,
+    name: string,
+    value: unknown,
+    source: EmitterSource,
+  ): Delta;
+  formatText(
+    index: number | { index: number; length: number },
+    length: number | string,
+    name: string | unknown,
+    value?: unknown | EmitterSource,
+    source?: EmitterSource,
+  ): Delta {
     let formats;
     // eslint-disable-next-line prefer-const
     [index, length, formats, source] = overload(
+      // @ts-expect-error
       index,
       length,
       name,
@@ -340,6 +396,7 @@ class Quill {
     return modify.call(
       this,
       () => {
+        // @ts-expect-error
         return this.editor.formatText(index, length, formats);
       },
       source,
@@ -372,7 +429,12 @@ class Quill {
     return this.editor.getContents(index, length);
   }
 
-  getFormat(index = this.getSelection(true), length = 0) {
+  getFormat(index: number, length?: number);
+  getFormat(range: { index: number; length: number });
+  getFormat(
+    index: { index: number; length: number } | number = this.getSelection(true),
+    length = 0,
+  ) {
     if (typeof index === 'number') {
       return this.editor.getFormat(index, length);
     }
@@ -395,8 +457,8 @@ class Quill {
     return this.scroll.line(index);
   }
 
-  getLines(index: { index: number; length: number }): (Block | BlockEmbed)[];
-  getLines(index: number, length: number): (Block | BlockEmbed)[];
+  getLines(range: { index: number; length: number }): (Block | BlockEmbed)[];
+  getLines(index?: number, length?: number): (Block | BlockEmbed)[];
   getLines(
     index: { index: number; length: number } | number = 0,
     length = Number.MAX_VALUE,
@@ -411,18 +473,38 @@ class Quill {
     return this.theme.modules[name];
   }
 
+  getSelection(focus: true): Range;
+  getSelection(focus?: boolean): Range | null;
   getSelection(focus = false): Range | null {
     if (focus) this.focus();
     this.update(); // Make sure we access getRange with editor in consistent state
     return this.selection.getRange()[0];
   }
 
-  getSemanticHTML(index = 0, length = this.getLength() - index) {
+  getSemanticHTML(range: { index: number; length: number }): string;
+  getSemanticHTML(index?: number, length?: number): string;
+  getSemanticHTML(
+    index: { index: number; length: number } | number = 0,
+    length?: number,
+  ) {
+    if (typeof index === 'number') {
+      length = this.getLength() - index;
+    }
+    // @ts-expect-error
     [index, length] = overload(index, length);
     return this.editor.getHTML(index, length);
   }
 
-  getText(index = 0, length = this.getLength() - index) {
+  getText(range: { index: number; length: number }): string;
+  getText(index: number, length?: number): string;
+  getText(
+    index: { index: number; length: number } | number = 0,
+    length?: number,
+  ): string {
+    if (typeof index === 'number') {
+      length = this.getLength() - index;
+    }
+    // @ts-expect-error
     [index, length] = overload(index, length);
     return this.editor.getText(index, length);
   }
@@ -431,7 +513,12 @@ class Quill {
     return this.selection.hasFocus();
   }
 
-  insertEmbed(index, embed, value, source = Quill.sources.API) {
+  insertEmbed(
+    index: number,
+    embed: string,
+    value: unknown,
+    source: EmitterSource = Quill.sources.API,
+  ) {
     return modify.call(
       this,
       () => {
@@ -442,7 +529,21 @@ class Quill {
     );
   }
 
-  insertText(index, text, name, value, source) {
+  insertText(index: number, text: string, source: EmitterSource): Delta;
+  insertText(
+    index: number,
+    text: string,
+    name: string,
+    value: unknown,
+    source: EmitterSource,
+  ): Delta;
+  insertText(
+    index: number,
+    text: string,
+    name: string | EmitterSource,
+    value?: unknown,
+    source?: EmitterSource,
+  ): Delta {
     let formats;
     // eslint-disable-next-line prefer-const
     [index, , formats, source] = overload(index, 0, name, value, source);
@@ -461,15 +562,38 @@ class Quill {
     return this.scroll.isEnabled();
   }
 
-  off(...args: Parameters<typeof this.emitter.off>) {
+  off(...args: Parameters<typeof Emitter['prototype']['off']>) {
     return this.emitter.off(...args);
   }
 
-  on(...args: Parameters<typeof this.emitter.on>) {
+  on(
+    event: typeof Emitter['events']['TEXT_CHANGE'],
+    handler: (delta: Delta, oldContent: Delta, source: EmitterSource) => void,
+  ): Emitter;
+  on(
+    event: typeof Emitter['events']['SELECTION_CHANGE'],
+    handler: (range: Range, oldRange: Range, source: EmitterSource) => void,
+  ): Emitter;
+  // @ts-expect-error
+  on(
+    event: typeof Emitter['events']['EDITOR_CHANGE'],
+    handler: (
+      ...args:
+        | [typeof Emitter['events']['TEXT_CHANGE'], Delta, Delta, EmitterSource]
+        | [
+            typeof Emitter['events']['SELECTION_CHANGE'],
+            Range,
+            Range,
+            EmitterSource,
+          ]
+    ) => void,
+  ): Emitter;
+  on(event: string, ...args: unknown[]): Emitter;
+  on(...args: Parameters<typeof Emitter['prototype']['on']>): Emitter {
     return this.emitter.on(...args);
   }
 
-  once(...args: Parameters<typeof this.emitter.once>) {
+  once(...args: Parameters<typeof Emitter['prototype']['once']>) {
     return this.emitter.once(...args);
   }
 
@@ -489,7 +613,10 @@ class Quill {
     this.selection.scrollIntoView(this.scrollingContainer);
   }
 
-  setContents(delta: Delta | Op[], source = Emitter.sources.API) {
+  setContents(
+    delta: Delta | Op[],
+    source: EmitterSource = Emitter.sources.API,
+  ) {
     return modify.call(
       this,
       () => {
@@ -507,7 +634,9 @@ class Quill {
     );
   }
   setSelection(range: Range | null, source?: EmitterSource): void;
-  setSelection(index: number, length: number, source?: EmitterSource): void;
+  setSelection(index: number, source?: EmitterSource): void;
+  setSelection(index: number, length?: number, source?: EmitterSource): void;
+  setSelection(index: number, source?: EmitterSource): void;
   setSelection(
     index: Range | null | number,
     length?: EmitterSource | number,
@@ -526,7 +655,7 @@ class Quill {
     }
   }
 
-  setText(text, source = Emitter.sources.API) {
+  setText(text: string, source: EmitterSource = Emitter.sources.API) {
     const delta = new Delta().insert(text);
     return this.setContents(delta, source);
   }
@@ -538,7 +667,10 @@ class Quill {
     return change;
   }
 
-  updateContents(delta: Delta | Op[], source = Emitter.sources.API) {
+  updateContents(
+    delta: Delta | Op[],
+    source: EmitterSource = Emitter.sources.API,
+  ) {
     return modify.call(
       this,
       () => {
@@ -596,6 +728,7 @@ function expandConfig(
         `Cannot load ${name} module. Are you sure you registered it?`,
       );
     } else {
+      // @ts-expect-error
       config[name] = moduleClass.DEFAULTS || {};
     }
     return config;
@@ -672,7 +805,7 @@ type NormalizedIndexLength = [
   number,
   number,
   Record<string, unknown>,
-  EmitterSource
+  EmitterSource,
 ];
 function overload(index: number, source?: EmitterSource): NormalizedIndexLength;
 function overload(

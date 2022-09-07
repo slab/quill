@@ -1,9 +1,23 @@
 import { Scope } from 'parchment';
-import Quill from '../core/quill';
+import Delta from 'quill-delta';
 import Module from '../core/module';
+import Quill from '../core/quill';
 
-class History extends Module {
-  constructor(quill, options) {
+interface HistoryOptions {
+  userOnly: boolean;
+  delay: number;
+  maxStack: number;
+}
+
+class History extends Module<HistoryOptions> {
+  lastRecorded: number;
+  ignoreChange: boolean;
+  stack: {
+    undo: Delta[];
+    redo: Delta[];
+  };
+
+  constructor(quill: Quill, options: Partial<HistoryOptions>) {
     super(quill, options);
     this.lastRecorded = 0;
     this.ignoreChange = false;

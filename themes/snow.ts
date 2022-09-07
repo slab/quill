@@ -13,10 +13,14 @@ const TOOLBAR_CONFIG = [
 ];
 
 class SnowTooltip extends BaseTooltip {
-  constructor(quill, bounds) {
-    super(quill, bounds);
-    this.preview = this.root.querySelector('a.ql-preview');
-  }
+  static TEMPLATE = [
+    '<a class="ql-preview" rel="noopener noreferrer" target="_blank" href="about:blank"></a>',
+    '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">',
+    '<a class="ql-action"></a>',
+    '<a class="ql-remove"></a>',
+  ].join('');
+
+  preview = this.root.querySelector('a.ql-preview');
 
   listen() {
     super.listen();
@@ -44,6 +48,7 @@ class SnowTooltip extends BaseTooltip {
         if (range == null) return;
         if (range.length === 0 && source === Emitter.sources.USER) {
           const [link, offset] = this.quill.scroll.descendant(
+            // @ts-expect-error
             LinkBlot,
             range.index,
           );
@@ -69,12 +74,6 @@ class SnowTooltip extends BaseTooltip {
     this.root.removeAttribute('data-mode');
   }
 }
-SnowTooltip.TEMPLATE = [
-  '<a class="ql-preview" rel="noopener noreferrer" target="_blank" href="about:blank"></a>',
-  '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">',
-  '<a class="ql-action"></a>',
-  '<a class="ql-remove"></a>',
-].join('');
 
 class SnowTheme extends BaseTheme {
   constructor(quill, options) {
@@ -92,6 +91,7 @@ class SnowTheme extends BaseTheme {
     toolbar.container.classList.add('ql-snow');
     this.buildButtons(toolbar.container.querySelectorAll('button'), icons);
     this.buildPickers(toolbar.container.querySelectorAll('select'), icons);
+    // @ts-expect-error
     this.tooltip = new SnowTooltip(this.quill, this.options.bounds);
     if (toolbar.container.querySelector('.ql-link')) {
       this.quill.keyboard.addBinding(

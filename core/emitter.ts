@@ -1,4 +1,4 @@
-import * as EventEmitter from 'eventemitter3';
+import EventEmitter from 'eventemitter3';
 import instances from './instances';
 import logger from './logger';
 
@@ -27,7 +27,7 @@ class Emitter extends EventEmitter<string> {
     SCROLL_EMBED_UPDATE: 'scroll-embed-update',
     SELECTION_CHANGE: 'selection-change',
     TEXT_CHANGE: 'text-change',
-  };
+  } as const;
 
   static sources = {
     API: 'api',
@@ -66,6 +66,7 @@ class Emitter extends EventEmitter<string> {
   }
 }
 
-export type EmitterSource = typeof Emitter.sources[keyof typeof Emitter.sources];
+export type EmitterSource =
+  typeof Emitter.sources[keyof typeof Emitter.sources];
 
 export default Emitter;
