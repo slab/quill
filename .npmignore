@@ -1,0 +1,11 @@
+*.ts
+!*.d.ts
+.*
+Gemfile
+Gemfile.lock
+_develop
+.github
+.vscode
+docs
+test
+tsconfig.json
