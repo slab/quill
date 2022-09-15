@@ -438,6 +438,23 @@ describe('Quill', function() {
     });
   });
 
+  describe('getText()', function() {
+    it('return all text by default', function() {
+      const quill = this.initialize(Quill, '<h1>Welcome</h1>');
+      expect(quill.getText()).toEqualHTML('Welcome');
+    });
+
+    it('works when only provide index', function() {
+      const quill = this.initialize(Quill, '<h1>Welcome</h1>');
+      expect(quill.getText(2)).toEqualHTML('lcome');
+    });
+
+    it('works with range', function() {
+      const quill = this.initialize(Quill, '<h1>Welcome</h1>');
+      expect(quill.getText({ index: 1, length: 2 })).toEqualHTML('el');
+    });
+  });
+
   describe('setText()', function() {
     it('overwrite', function() {
       const quill = this.initialize(Quill, '<h1>Welcome</h1>');

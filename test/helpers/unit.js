@@ -114,7 +114,6 @@ function compareNodes(node1, node2, ignoredAttributes = []) {
   return null;
 }
 
-/* eslint-disable-next-line react/no-this-in-sfc */
 function initialize(klass, html, container = this.container, options = {}) {
   if (typeof html === 'object') {
     container.innerHTML = html.html;
