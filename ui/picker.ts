@@ -1,4 +1,3 @@
-// @ts-expect-error
 import DropdownIcon from '../assets/icons/dropdown.svg';
 
 let optionsCounter = 0;
