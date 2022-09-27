@@ -9,6 +9,7 @@
 // TypeScript Version: 2.9
 
 import { Blot } from 'parchment/src/blot/abstract/blot';
+import * as Parchment from 'parchment';
 import Delta = require('quill-delta');
 
 /**
@@ -69,6 +70,7 @@ export interface QuillOptionsStatic {
     bounds?: HTMLElement | string;
     scrollingContainer?: HTMLElement | string;
     strict?: boolean;
+    registry?: Parchment.Registry;
 }
 
 export interface BoundsStatic {
