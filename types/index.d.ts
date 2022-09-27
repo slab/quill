@@ -24,6 +24,9 @@ export type Sources = 'api' | 'user' | 'silent';
 export interface Key {
     key: string | number;
     shortKey?: boolean;
+    ctrlKey?: boolean;
+    shiftKey?: boolean;
+    altKey?: boolean;
 }
 
 export interface StringMap {

@@ -1,13 +1,13 @@
 import Quill from './core';
 
-import Bold from './formats/bold';
-import Italic from './formats/italic';
-import Underline from './formats/underline';
-
 /**
- * This file defines which formatting modules should be included
- * into the final build of Quill.
- * Currently only Bold, Italic and Underline are allowed
+ * Quill by default registers all available formatting modules. See
+ * https://github.com/quilljs/quill/blob/develop/quill.js for the
+ * original implementation.
+ * 
+ * Quill is exported here without registering any formatting modules, because
+ * the registration is handled by frontend in our app.
+ * 
  * Disabling modules in the `formats` setting of Quill options
  * (client side) does not fully blocks their usage.
  * For example, having background color module registered here will allow
@@ -17,14 +17,5 @@ import Underline from './formats/underline';
  * For the full list of modules originally included with Quill
  * please see quill.reg.original.js
  */
-
-Quill.register(
-  {
-    'formats/bold': Bold,
-    'formats/italic': Italic,
-    'formats/underline': Underline,
-  },
-  true,
-);
 
 export default Quill;
