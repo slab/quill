@@ -18,7 +18,9 @@ Quill.debug('info');
 
 ### import
 
-Static method returning Quill library, format, module, or theme. In general the path should map exactly to Quill source code directory structure. Unless stated otherwise, modification of returned entities may break required Quill functionality and is strongly discouraged.
+Static method returning a library, format, module, or theme previously registered via [`Quill.register`](/docs/api/#register). Quill itself registers nearly all of its own objects and for these the path generally matches the Quill source code directory structure. Unless stated otherwise, modification of returned entities may break required Quill functionality and is strongly discouraged.
+
+(As a debugging aid, you can see all entries at a given time via `console.log(Quill.imports)`. This `.imports` field is unsupported — you are expected to use only the documented `.import()` and `.register()` methods in your code!)
 
 **Methods**
 
@@ -35,6 +37,8 @@ var Delta = Quill.import('delta');
 var Toolbar = Quill.import('modules/toolbar');
 var Link = Quill.import('formats/link');
 // Similar to ES6 syntax `import Link from 'quill/formats/link';`
+// Note that non-default exports are typically registered as subpaths.
+var BlockEmbed = Quill.import('blots/block/embed');
 ```
 
 ### register
