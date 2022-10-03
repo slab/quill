@@ -148,6 +148,15 @@ h2 + hr {
   margin-top: 0;
 }
 
+details summary { 
+  cursor: pointer;
+  display: list-item;
+}
+
+details summary > * {
+  display: inline;
+}
+
 /*** Global ***/
 
 svg .logo {
@@ -1287,10 +1296,50 @@ body:not(.home) .navbar-link:before {
 #content-container h6 {
   margin-top: 2em;
 }
+#content-container table {
+  border-collapse: collapse;
+}
+#content-container table tr th,
+#content-container table tr td {
+  border: 1px solid #d9dce1;
+  padding: 0.5em;
+}
+#content-container table tr td p:last-child {
+  margin-bottom: 0;
+}
+#content-container table tr td figure {
+  margin: 0;
+  margin-bottom: 1em;
+  vertical-align: middle;
+}
+#content-container table tr td figure:last-child {
+  margin-bottom: 0;
+}
+#content-container table tr td pre {
+  margin: 0;
+}
+#content-container table tr td pre > code {
+  padding: 0.5em;
+}
+#content-container table tr td details {
+  display: inline-block;
+}
+#content-container details {
+  border: 1px solid #f4f5f5;;
+}
+#content-container details summary {
+  font-weight: bold;
+  background: #f4f5f5;
+  padding: 0.5em 1em;
+}
+#content-container details table:last-child {
+  margin-bottom: 0;
+}
 #toolbar-toolbar {
   margin-bottom: 2em;
 }
-#toolbar-editor {
+#toolbar-editor,
+#toolbar-controls-editor {
   display: none;
 }
 
