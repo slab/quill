@@ -1,0 +1,31 @@
+{
+  "name": "ndocs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gatsby": "^4.24.4",
+    "gatsby-plugin-react-svg": "^3.1.0",
+    "gatsby-remark-embed-markdown": "^0.0.4"
+  },
+  "dependencies": {
+    "@mdx-js/react": "^2.1.5",
+    "gatsby-plugin-mdx": "^4.3.0",
+    "gatsby-source-filesystem": "^4.24.0",
+    "gatsby-transformer-remark": "^5.24.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0"
+  }
+}
