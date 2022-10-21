@@ -3,12 +3,10 @@ import DevelopersIcon from '../svg/features/developers.svg';
 import ScaleIcon from '../svg/features/scale.svg';
 import GitHub from '../components/GitHub';
 import CrossPlatformIcon from '../svg/features/cross-platform.svg';
-import '../styles/base.css';
-import '../styles/styles.css';
-import Layout from '../components/Layout';
+import Default from '../components/Default';
 
 const IndexPage = () => (
-  <Layout>
+  <Default>
     <div id="above-container">
       <div className="container">
         <div id="users-container">
@@ -283,7 +281,7 @@ const IndexPage = () => (
         </div>
       </div>
     </div>
-  </Layout>
+  </Default>
 );
 
 export default IndexPage;

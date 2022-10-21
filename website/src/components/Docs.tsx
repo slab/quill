@@ -5,7 +5,7 @@ import docsItems from '../data/docs';
 import guideItems from '../data/guides';
 import OctocatIcon from '../svg/octocat.svg';
 import usePageType from '../utils/usePageType';
-import Layout from './Layout';
+import Default from './Default';
 import OpenSource from './OpenSource';
 
 type Item = { title: string; url: string; children?: Item[] };
@@ -46,7 +46,7 @@ const SidebarItem = ({ item }: { item: Item }) => {
       {item.children && (
         <ul>
           {item.children.map(child => (
-            <SidebarItem item={child} />
+            <SidebarItem key={child.url} item={child} />
           ))}
         </ul>
       )}
@@ -62,7 +62,7 @@ const Docs = ({ permalink, title, children }) => {
   const { prev, next } = getPagination(permalink, items);
 
   return (
-    <Layout>
+    <Default>
       <div id="docs-wrapper" className="container">
         <div className="row">
           <div id="sidebar-container" className="three columns">
@@ -72,7 +72,7 @@ const Docs = ({ permalink, title, children }) => {
                 <input type="text" />
               </li>
               {items.map(item => (
-                <SidebarItem item={item} />
+                <SidebarItem key={item.url} item={item} />
               ))}
             </ul>
           </div>
@@ -126,7 +126,7 @@ const Docs = ({ permalink, title, children }) => {
 
         <OpenSource />
       </div>
-    </Layout>
+    </Default>
   );
 };
 

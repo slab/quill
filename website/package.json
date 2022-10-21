@@ -15,15 +15,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "eslint-plugin-mdx": "^2.0.5",
     "gatsby": "^4.24.4",
-    "gatsby-plugin-react-svg": "^3.1.0",
-    "gatsby-remark-embed-markdown": "^0.0.4"
+    "gatsby-plugin-react-svg": "^3.1.0"
   },
   "dependencies": {
     "@mdx-js/react": "^2.1.5",
     "gatsby-plugin-mdx": "^4.3.0",
     "gatsby-source-filesystem": "^4.24.0",
-    "gatsby-transformer-remark": "^5.24.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0"
