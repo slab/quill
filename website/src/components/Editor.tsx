@@ -1,27 +1,41 @@
-import { Script } from 'gatsby';
-import { HTMLAttributes, ReactNode, useLayoutEffect, useRef } from 'react';
-import useSite from '../utils/useSite';
-import useStyle from '../utils/useStyle';
+import { HTMLAttributes, ReactNode, useEffect, useRef } from 'react';
 
 interface EditorProps extends HTMLAttributes<HTMLDivElement> {
-  children?: ReactNode;
   config: unknown;
+  children?: ReactNode;
+  rootStyle?: CSSStyleDeclaration;
+  onSelectionChange?: () => void;
 }
 
-const Editor = ({ children, config, ...props }: EditorProps) => {
-  const site = useSite();
+const Editor = ({
+  children,
+  rootStyle,
+  config,
+  onSelectionChange,
+  ...props
+}: EditorProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
+  const rootStyleRef = useRef(rootStyle);
+  const onSelectionChangeRef = useRef(onSelectionChange);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    onSelectionChangeRef.current = onSelectionChange;
+  }, [onSelectionChange]);
+
+  useEffect(() => {
     // @ts-expect-error
-    new window.Quill(ref.current, config);
+    const quill = new window.Quill(ref.current, config);
+    if (rootStyleRef) {
+      Object.assign((quill.root as HTMLElement).style, rootStyleRef.current);
+    }
+    // @ts-expect-error
+    quill.on(window.Quill.events.SELECTION_CHANGE, () => {
+      onSelectionChangeRef.current?.();
+    });
   }, []);
 
   return (
     <>
-      <Script src={`${site.katex}/katex.min.js`} />
-      <Script src={`${site.highlightjs}/highlight.min.js`} />
-      <Script src={`${site.cdn}${site.version}/${site.quill}`} />
       <div ref={ref} {...props}>
         {children}
       </div>

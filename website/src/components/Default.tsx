@@ -4,9 +4,11 @@ import { graphql, useStaticQuery } from 'gatsby';
 import LogoIcon from '../svg/logo.svg';
 import GitHub from './GitHub';
 import usePageType from '../utils/usePageType';
-import Layout from './Layout';
+import { ReactNode, useState } from 'react';
 
-const Default = ({ children }) => {
+const Default = ({ children }: { children: ReactNode }) => {
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
   const data = useStaticQuery(graphql`
     query {
       site {
@@ -20,11 +22,16 @@ const Default = ({ children }) => {
   const pageType = usePageType();
 
   return (
-    <Layout>
-      <Helmet bodyAttributes={{ class: pageType }} />
+    <>
+      <Helmet
+        bodyAttributes={{ class: classNames(pageType, 'layout-default') }}
+      />
       <header>
-        <nav className="navbar-drop">
-          <button className="navbar-close"></button>
+        <nav className={classNames('navbar-drop', { active: isNavOpen })}>
+          <button
+            className="navbar-close"
+            onClick={() => setIsNavOpen(false)}
+          ></button>
           <ul>
             <li className="navbar-item">
               <a className="navbar-link" href="/docs/quickstart/">
@@ -101,7 +108,7 @@ const Default = ({ children }) => {
             </li>
           </ul>
         </nav>
-        <button className="navbar-open">
+        <button className="navbar-open" onClick={() => setIsNavOpen(true)}>
           <span></span>
           <span></span>
           <span></span>
@@ -128,7 +135,7 @@ const Default = ({ children }) => {
           </div>
         </div>
       </footer>
-    </Layout>
+    </>
   );
 };
 

@@ -1,12 +1,13 @@
 import { useLocation } from '@reach/router';
 import classNames from 'classnames';
-import { HeadFC } from 'gatsby';
 import docsItems from '../data/docs';
 import guideItems from '../data/guides';
 import OctocatIcon from '../svg/octocat.svg';
 import usePageType from '../utils/usePageType';
 import Default from './Default';
 import OpenSource from './OpenSource';
+import slug from '../utils/slug';
+import { ReactNode } from 'react';
 
 type Item = { title: string; url: string; children?: Item[] };
 
@@ -54,7 +55,15 @@ const SidebarItem = ({ item }: { item: Item }) => {
   );
 };
 
-const Docs = ({ permalink, title, children }) => {
+const Docs = ({
+  permalink,
+  title,
+  children,
+}: {
+  permalink: string;
+  title: string;
+  children: ReactNode;
+}) => {
   const pageType = usePageType();
   const category = pageType === 'guides' ? 'Guides' : 'Documentation';
 
@@ -94,7 +103,7 @@ const Docs = ({ permalink, title, children }) => {
             </div>
             <hr />
             <div id="content-container">
-              <h1 id="{{ page.title | slugify }}">{title}</h1>
+              <h1 id={slug(title)}>{title}</h1>
               {children}
             </div>
             <div className="row" id="pagination-container">
@@ -129,18 +138,5 @@ const Docs = ({ permalink, title, children }) => {
     </Default>
   );
 };
-
-export const Head: HeadFC = () => (
-  <>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Inconsolata"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css"
-    />
-  </>
-);
 
 export default Docs;

@@ -90,7 +90,7 @@ table {
   text-align: left;
 }
 
-button {
+.layout-default button {
   background-color: transparent;
   cursor: pointer;
   font-size: 11px;
@@ -189,67 +189,6 @@ svg .feat-3 {
 
 .center {
   text-align: center;
-}
-
-.github-button {
-  background-color: #1d1e30;
-  border: 3px solid #1d1e30;
-  display: inline-block;
-  font-family: 'Sofia Pro', sans-serif;
-  font-weight: bold;
-  letter-spacing: 0.15rem;
-  text-transform: uppercase;
-}
-
-.github-action {
-  color: #fff;
-  display: inline-block;
-  float: left;
-  font-size: 1.33rem;
-  line-height: 32px;
-  padding: 10px 22px;
-}
-
-.github-action:hover {
-  color: #fff;
-}
-
-.github-action svg {
-  float: left;
-  height: 32px;
-  margin-right: 12px;
-  width: 32px;
-}
-
-.github-action path {
-  fill: #fff;
-}
-
-.github-count {
-  background-color: #fff;
-  display: inline-block;
-  float: left;
-  font-size: 1.75rem;
-  line-height: 32px;
-  padding: 10px 30px;
-}
-
-.github-button.dark-bg {
-  background-color: #fff;
-  border: 3px solid #fff;
-}
-
-.github-button.dark-bg .github-action {
-  color: #1d1e30;
-}
-
-.github-button.dark-bg .github-action path {
-  fill: #1d1e30;
-}
-
-.github-button.dark-bg .github-count {
-  background-color: #1d1e30;
-  color: #fff;
 }
 
 .prev,
@@ -714,7 +653,6 @@ body.home .arrow .shaft {
 }
 #carousel-container {
   font-size: 1.5rem;
-  opacity: 0;
   margin-left: -100%;
   transition: margin 500ms ease-in-out 0s;
   width: 300%;

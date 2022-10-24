@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import OctocatIcon from '../svg/octocat.svg';
+import * as styles from './GitHub.module.scss';
 
 const placeholderCount = (33825).toLocaleString();
 
@@ -24,9 +25,9 @@ const GitHub = ({ dark = false }: GitHubProps) => {
   }, []);
 
   return (
-    <span className={classNames('github-button', { 'dark-bg': dark })}>
+    <span className={classNames(styles.button, { [styles.isDark]: dark })}>
       <a
-        className="github-action"
+        className={styles.action}
         target="_blank"
         title="Star Quill on Github"
         href="https://github.com/quilljs/quill/"
@@ -35,7 +36,7 @@ const GitHub = ({ dark = false }: GitHubProps) => {
         <span>Star</span>
       </a>
       <a
-        className="github-count"
+        className={styles.count}
         target="_blank"
         title="Quill Stargazers"
         href="https://github.com/quilljs/quill/stargazers"

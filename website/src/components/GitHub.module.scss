@@ -1,0 +1,60 @@
+.button {
+  background-color: #1d1e30;
+  border: 3px solid #1d1e30;
+  display: inline-block;
+  font-family: 'Sofia Pro', sans-serif;
+  font-weight: bold;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+}
+
+.action {
+  color: #fff;
+  display: inline-block;
+  float: left;
+  font-size: 1.33rem;
+  line-height: 32px;
+  padding: 10px 22px;
+}
+
+.action:hover {
+  color: #fff;
+}
+
+.action svg {
+  float: left;
+  height: 32px;
+  margin-right: 12px;
+  width: 32px;
+}
+
+.action path {
+  fill: #fff;
+}
+
+.count {
+  background-color: #fff;
+  display: inline-block;
+  float: left;
+  font-size: 1.75rem;
+  line-height: 32px;
+  padding: 10px 30px;
+}
+
+.button.isDark {
+  background-color: #fff;
+  border: 3px solid #fff;
+}
+
+.button.isDark .action {
+  color: #1d1e30;
+}
+
+.button.isDark .action path {
+  fill: #1d1e30;
+}
+
+.button.isDark .count {
+  background-color: #1d1e30;
+  color: #fff;
+}

@@ -1,7 +1,7 @@
 import Editor from '../Editor';
 
 const FullEditor = () => (
-  <div id="standalone-container">
+  <div id="standalone-container" style={{ margin: '50px auto', maxWidth: 720 }}>
     <div id="toolbar-container">
       <span className="ql-formats">
         <select className="ql-font"></select>

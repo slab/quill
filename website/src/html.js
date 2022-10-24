@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Script } from 'gatsby';
-import useSite from './utils/useSite';
+import config from '../gatsby-config';
 
 export default function HTML(props) {
-  const site = useSite();
-  console.log('====', site, props);
+  const site = config.siteMetadata;
 
   return (
     <html {...props.htmlAttributes}>
@@ -16,6 +14,8 @@ export default function HTML(props) {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
+        <link type="text/css" rel="stylesheet" href="/assets/css/base.css" />
+        <link type="text/css" rel="stylesheet" href="/assets/css/styles.css" />
         {props.headComponents}
         <script src={`${site.katex}/katex.min.js`} />
         <script src={`${site.highlightjs}/highlight.min.js`} />
@@ -44,6 +44,14 @@ export default function HTML(props) {
           type="text/css"
           rel="stylesheet"
           href={`${site.highlightjs}/styles/monokai-sublime.min.css`}
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Inconsolata"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css"
         />
       </head>
       <body {...props.bodyAttributes}>
