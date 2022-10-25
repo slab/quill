@@ -21,7 +21,7 @@
       }
     }
   },
-  "ignorePatterns": ["**/*.d.ts", "**/*.js"],
+  "ignorePatterns": ["**/*.d.ts", "**/*.js", "website/**/*"],
   "rules": {
     "arrow-parens": ["error", "as-needed"],
     "class-methods-use-this": "off",

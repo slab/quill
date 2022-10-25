@@ -7,5 +7,6 @@
     "module": "es6",
     "moduleResolution": "node"
   },
-  "include": ["./**/*"]
+  "include": ["./**/*"],
+  "exclude": ["./website/**/*"]
 }
