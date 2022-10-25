@@ -4,7 +4,7 @@ const httpProxy = require('http-proxy');
 const proxy = httpProxy.createProxyServer({});
 const ports = {
   proxy: parseInt(process.env.npm_package_config_ports_proxy, 10),
-  jekyll: parseInt(process.env.npm_package_config_ports_jekyll, 10),
+  jekyll: parseInt(process.env.npm_package_config_ports_gatsby, 10),
   karma: parseInt(process.env.npm_package_config_ports_karma, 10),
   webpack: parseInt(process.env.npm_package_config_ports_webpack, 10),
 };

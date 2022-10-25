@@ -10,8 +10,8 @@ const P1 =
 const P2 =
   'There now is your insular city of the Manhattoes, belted round by wharves as Indian isles by coral reefs—commerce surrounds it with her surf. Right and left, the streets take you waterward. Its extreme downtown is the battery, where that noble mole is washed by waves, and cooled by breezes, which a few hours previous were out of sight of land. Look at the crowds of water-gazers there.';
 
-describe('quill', function() {
-  it('compose an epic', async function() {
+describe('quill', function () {
+  it('compose an epic', async function () {
     const browser = await puppeteer.launch({
       headless: false,
     });
@@ -49,7 +49,7 @@ describe('quill', function() {
 
     // More than enough to get to top
     await Promise.all(
-      Array(20)
+      Array(40)
         .fill(0)
         .map(() => page.keyboard.press('ArrowUp')),
     );
@@ -243,12 +243,8 @@ describe('quill', function() {
 });
 
 function getSelectionInTextNode() {
-  const {
-    anchorNode,
-    anchorOffset,
-    focusNode,
-    focusOffset,
-  } = document.getSelection();
+  const { anchorNode, anchorOffset, focusNode, focusOffset } =
+    document.getSelection();
   return JSON.stringify([
     anchorNode.data,
     anchorOffset,

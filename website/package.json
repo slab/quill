@@ -1,0 +1,12 @@
+{
+  "name": "quill-website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gatsby-browser.js",
+  "keywords": [],
+  "author": "",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "gatsby": "^4.24.4"
+  }
+}

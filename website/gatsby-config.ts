@@ -1,8 +1,8 @@
 const siteMetadata = {
   version: '1.3.6',
-  cdn: '//cdn.quilljs.com/',
+  cdn: process.env.USE_LOCAL_FILE ? '/' : '//cdn.quilljs.com/',
   github: 'https://github.com/quilljs/quill/tree/develop/docs',
-  quill: 'quill.min.js',
+  quill: process.env.USE_LOCAL_FILE ? 'quill.js' : 'quill.min.js',
   highlightjs: '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0',
   katex: '//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1',
   url: 'https://quilljs.com',
