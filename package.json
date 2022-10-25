@@ -86,6 +86,8 @@
     "lint:tsc": "tsc --noEmit --skipLibCheck",
     "prepare": "npm run build",
     "start": "npm run build:webpack; bundle exec foreman start -f _develop/procfile",
+    "docs:build": "cd website && npm run build",
+    "docs:serve": "npm run docs:build && cd website && npm run serve -- --port $npm_package_config_ports_jekyll",
     "test": "npm run test:unit; npm run test:random",
     "test:all": "npm run test:unit; npm run test:functional; npm run test:random",
     "test:functional": "./_develop/scripts/puppeteer.sh",
