@@ -1,3 +1,3 @@
-import { wrapRootElement } from './root-wrapper';
+const { wrapRootElement } = require('./root-wrapper');
 
-export const wrapPageElement = wrapRootElement;
+exports.wrapPageElement = wrapRootElement;

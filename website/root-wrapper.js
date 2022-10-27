@@ -1,11 +1,6 @@
 import { MDXProvider } from '@mdx-js/react';
 import Highlight, { defaultProps } from 'prism-react-renderer';
-import { Helmet } from 'react-helmet';
 import CodePen from './src/components/CodePen';
-import Docs from './src/components/Docs';
-import Blog from './src/components/Blog';
-import Post from './src/components/Post';
-import Standalone from './src/components/Standalone';
 import Editor from './src/components/Editor';
 import {
   Heading1,
@@ -62,50 +57,10 @@ const components = {
   },
 };
 
-export const wrapRootElement = ({ element, props }) => {
-  const title = props.pageContext.frontmatter?.title;
-  const layout = props.pageContext.frontmatter?.layout;
-
-  return (
-    <>
-      <MDXProvider components={components}>
-        {title && (
-          <Helmet>
-            <title>{title} - Quill Rich Text Editor</title>
-          </Helmet>
-        )}
-        {layout !== 'standalone' && (
-          <Helmet>
-            <link
-              type="text/css"
-              rel="stylesheet"
-              href="/assets/css/styles.css"
-            />
-          </Helmet>
-        )}
-        {(() => {
-          if (layout === 'docs') {
-            return <Docs {...props.pageContext.frontmatter}>{element}</Docs>;
-          }
-          if (layout === 'blog') {
-            return <Blog {...props.pageContext.frontmatter}>{element}</Blog>;
-          }
-          if (layout === 'post') {
-            return <Post {...props.pageContext.frontmatter}>{element}</Post>;
-          }
-          if (layout === 'standalone') {
-            return (
-              <Standalone {...props.pageContext.frontmatter}>
-                {element}
-              </Standalone>
-            );
-          }
-          // props provide same data to Layout as Page element will get
-          // including location, data, etc - you don't need to pass it
-          return element;
-        })()}
-      </MDXProvider>
-      <Script>{`
+export const wrapRootElement = ({ element, props }) => (
+  <>
+    <MDXProvider components={components}>{element}</MDXProvider>
+    <Script>{`
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -113,6 +68,5 @@ export const wrapRootElement = ({ element, props }) => {
       ga('create', 'UA-19077541-2', 'auto');
       ga('send', 'pageview');
       `}</Script>
-    </>
-  );
-};
+  </>
+);

@@ -14,40 +14,26 @@ export default function HTML(props) {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-        <link type="text/css" rel="stylesheet" href="/assets/css/base.css" />
-        <link type="text/css" rel="stylesheet" href="/assets/css/styles.css" />
         <link
           type="application/atom+xml"
           rel="alternate"
           href={`${site.url}/feed.xml`}
-          title="Quill - Your powerful rich text editor"
+          title={site.title}
         />
         {props.headComponents}
         <script src={`${site.katex}/katex.min.js`} />
         <script src={`${site.highlightjs}/highlight.min.js`} />
         <script src={`${site.cdn}${site.version}/${site.quill}`} />
+        <link rel="stylesheet" href={`${site.katex}/katex.min.css`} />
         <link
-          type="text/css"
-          rel="stylesheet"
-          href={`${site.katex}/katex.min.css`}
-        />
-        <link
-          type="text/css"
-          rel="stylesheet"
-          href={`${site.highlightjs}/styles/monokai-sublime.min.css`}
-        />
-        <link
-          type="text/css"
           rel="stylesheet"
           href={`${site.cdn}${site.version}/quill.snow.css`}
         />
         <link
-          type="text/css"
           rel="stylesheet"
           href={`${site.cdn}${site.version}/quill.bubble.css`}
         />
         <link
-          type="text/css"
           rel="stylesheet"
           href={`${site.highlightjs}/styles/monokai-sublime.min.css`}
         />
