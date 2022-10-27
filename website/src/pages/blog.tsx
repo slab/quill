@@ -3,6 +3,7 @@ import BlogLayout from '../components/Blog';
 import { fromMarkdown } from 'mdast-util-from-markdown';
 import { toHast } from 'mdast-util-to-hast';
 import { toHtml } from 'hast-util-to-html';
+import * as styles from './blog.module.scss';
 
 const Blog = ({ data }: PageProps<Queries.BlogQuery>) => (
   <BlogLayout>
@@ -71,7 +72,12 @@ const Blog = ({ data }: PageProps<Queries.BlogQuery>) => (
               </a>
             </span>
           </div>
-          {excerpt && <div dangerouslySetInnerHTML={{ __html: excerpt }} />}
+          {excerpt && (
+            <div
+              className={styles.excerpt}
+              dangerouslySetInnerHTML={{ __html: excerpt }}
+            />
+          )}
           <a
             className="more-link"
             title="Read more"
@@ -94,7 +100,7 @@ export const query = graphql`
     ) {
       nodes {
         frontmatter {
-          date(formatString: "d MMM yyyy")
+          date(formatString: "DD MMM yyyy")
           title
           layout
           slug
