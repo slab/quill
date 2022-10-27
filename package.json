@@ -95,6 +95,7 @@
     "start:proxy": "node _develop/proxy.js",
     "website:build": "npm run build -w website",
     "website:serve": "npm run serve -w website -- --port $npm_package_config_ports_gatsby",
+    "website:develop": "npm run develop -w website -- --port $npm_package_config_ports_gatsby",
     "test": "npm run test:unit; npm run test:random",
     "test:all": "npm run test:unit; npm run test:functional; npm run test:random",
     "test:functional": "./_develop/scripts/puppeteer.sh",
