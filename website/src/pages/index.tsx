@@ -126,7 +126,6 @@ const IndexPage = () => {
       };
     }),
   );
-  console.log(selectedUsers);
 
   useEffect(() => {
     // @ts-expect-error

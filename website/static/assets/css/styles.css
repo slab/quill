@@ -284,11 +284,11 @@ header .action {
   display: inline;
   padding: 1em;
 }
-body:not(.home) header .logo {
+header:not(.home) .logo {
   width: 10em;
 }
-body:not(.home) header .logo circle,
-body:not(.home) header .logo path {
+header:not(.home) .logo circle,
+header:not(.home) .logo path {
   fill: #fff;
 }
 
@@ -469,19 +469,19 @@ footer .users.row h3 {
 
 /*** Home ***/
 
-body.home header {
+header.home {
   background-color: #f4f5f5;
   color: #1d1e30;
   padding-top: 2.8em;
 }
-body.home header a {
+header.home a {
   color: #1d1e30;
 }
-body.home header .action {
+header.home .action {
   background-color: transparent;
   border-color: #1d1e30;
 }
-body.home .navbar-open span {
+header.home .navbar-open span {
   background-color: #1d1e30;
 }
 body.home .arrow .shaft {

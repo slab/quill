@@ -26,7 +26,7 @@ const Default = ({ children }: { children: ReactNode }) => {
       <Helmet
         bodyAttributes={{ class: classNames(pageType, 'layout-default') }}
       />
-      <header>
+      <header className={pageType || undefined}>
         <nav className={classNames('navbar-drop', { active: isNavOpen })}>
           <button
             className="navbar-close"
