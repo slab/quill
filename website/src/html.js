@@ -45,6 +45,7 @@ export default function HTML(props) {
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css"
         />
+        <script src="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js" />
       </head>
       <body {...props.bodyAttributes}>
         {props.preBodyComponents}

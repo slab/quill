@@ -35,7 +35,11 @@ const SEO = ({ title, permalink }) => {
       <meta property="og:type" content="website" />
       <meta
         property="og:url"
-        content={permalink || data.site.siteMetadata.url}
+        content={
+          permalink
+            ? data.site.siteMetadata.url + permalink
+            : data.site.siteMetadata.url
+        }
       />
       <meta
         property="og:image"

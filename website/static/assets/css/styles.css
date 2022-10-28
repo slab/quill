@@ -90,7 +90,7 @@ table {
   text-align: left;
 }
 
-.layout-default button {
+button {
   background-color: transparent;
   cursor: pointer;
   font-size: 11px;
@@ -685,9 +685,9 @@ body.home .arrow .shaft {
   flex-flow: column;
   height: 100%;
 }
-#demo-container #snow-container .editor,
-#demo-container #full-container .editor,
-#demo-container #bubble-container .editor {
+#demo-container #snow-container .ql-container,
+#demo-container #full-container .ql-container,
+#demo-container #bubble-container .ql-container {
   flex: 2;
   overflow: hidden;
 }

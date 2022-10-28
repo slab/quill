@@ -1,7 +1,7 @@
 const siteMetadata = {
   version: '1.3.6',
   cdn: process.env.USE_LOCAL_FILE ? '/' : '//cdn.quilljs.com/',
-  github: 'https://github.com/quilljs/quill/tree/develop/docs',
+  github: 'https://github.com/quilljs/quill/tree/develop/website/content',
   quill: process.env.USE_LOCAL_FILE ? 'quill.js' : 'quill.min.js',
   highlightjs: '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0',
   katex: '//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1',
@@ -29,7 +29,7 @@ module.exports = {
     },
     {
       resolve: 'gatsby-source-filesystem',
-      options: { name: 'markdown', path: `${__dirname}/markdown` },
+      options: { name: 'content', path: `${__dirname}/content` },
     },
     {
       resolve: 'gatsby-plugin-mdx',

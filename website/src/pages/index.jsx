@@ -34,80 +34,38 @@ const userBuckets = [
 ];
 
 const Content = () => (
-  <>
-    <h1 className="ql-align-center">Quill Rich Text Editor</h1>
-    <p>
-      <br />
-    </p>
-    <p>
-      Quill is a free,{' '}
-      <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor
-      built for the modern web. With its{' '}
-      <a href="https://quilljs.com/docs/modules/">modular architecture</a> and
-      expressive <a href="https://quilljs.com/docs/api/">API</a>, it is
-      completely customizable to fit any need.
-    </p>
-    <p>
-      <br />
-    </p>
-    <iframe
-      className="ql-video ql-align-center"
-      src="https://player.vimeo.com/video/253905163"
-      width="500"
-      height="280"
-      allowFullScreen
-    ></iframe>
-    <p>
-      <br />
-    </p>
-    <h2 className="ql-align-center">Getting Started is Easy</h2>
-    <p>
-      <br />
-    </p>
-    <pre className="ql-syntax" spellCheck="false">
-      <span className="hljs-comment">
-        // &lt;link href="https://cdn.quilljs.com/1.2.6/quill.snow.css"
-        rel="stylesheet"&gt;
-      </span>
-      <span className="hljs-comment">
-        // &lt;script
-        src="https://cdn.quilljs.com/1.2.6/quill.min.js"&gt;&lt;/script&gt;
-      </span>
-      <span className="hljs-keyword">var</span> quill ={' '}
-      <span className="hljs-keyword">new</span> Quill(
-      <span className="hljs-string">'#editor'</span>
-      {`, {
+  <div
+    dangerouslySetInnerHTML={{
+      __html: `
+                <h1 class="ql-align-center">Quill Rich Text Editor</h1>
+                <p><br></p>
+                <p>Quill is a free, <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor built for the modern web. With its <a href="https://quilljs.com/docs/modules/">modular architecture</a> and expressive <a href="https://quilljs.com/docs/api/">API</a>, it is completely customizable to fit any need.</p>
+                <p><br></p>
+                <iframe class="ql-video ql-align-center" src="https://player.vimeo.com/video/253905163" width="500" height="280" allowfullscreen></iframe>
+                <p><br></p>
+                <h2 class="ql-align-center">Getting Started is Easy</h2>
+                <p><br></p>
+                <pre class="ql-syntax" spellcheck="false"><span class="hljs-comment">// &lt;link href="https://cdn.quilljs.com/1.2.6/quill.snow.css" rel="stylesheet"&gt;</span>
+<span class="hljs-comment">// &lt;script src="https://cdn.quilljs.com/1.2.6/quill.min.js"&gt;&lt;/script&gt;</span>
+
+<span class="hljs-keyword">var</span> quill = <span class="hljs-keyword">new</span> Quill(<span class="hljs-string">'#editor'</span>, {
   modules: {
-    toolbar: <span className="hljs-string">'#toolbar'</span>
+    toolbar: <span class="hljs-string">'#toolbar'</span>
   },
-  theme: <span className="hljs-string">'snow'</span>
+  theme: <span class="hljs-string">'snow'</span>
 });
 
-`}
-      <span className="hljs-comment">
-        // Open your browser's developer console to try out the API!
-      </span>
-    </pre>
+<span class="hljs-comment">// Open your browser's developer console to try out the API!</span>
+</pre>
+                <p><br></p>
+                <p><br></p>
+                <p class="ql-align-center"><strong>Built with</strong></p>
+                <p class="ql-align-center"><span class="ql-formula" data-value="x^2 + (y - \sqrt[3]{x^2})^2 = 1"></span></p>
+                <p><br></p>
 
-    <p>
-      <br />
-    </p>
-    <p>
-      <br />
-    </p>
-    <p className="ql-align-center">
-      <strong>Built with</strong>
-    </p>
-    <p className="ql-align-center">
-      <span
-        className="ql-formula"
-        data-value="x^2 + (y - \sqrt[3]{x^2})^2 = 1"
-      ></span>
-    </p>
-    <p>
-      <br />
-    </p>
-  </>
+`,
+    }}
+  />
 );
 
 const IndexPage = () => {
@@ -158,7 +116,7 @@ const IndexPage = () => {
   }, [activeIndex]);
 
   return (
-    <Default>
+    <Default pageType="home">
       <div
         id="above-container"
         className={classNames({ 'demo-active': isDemoActive })}
@@ -230,10 +188,9 @@ const IndexPage = () => {
               >
                 <div id="bubble-wrapper">
                   <div id="bubble-container">
-                    <div className="editor"></div>
                     <Editor
                       config={{
-                        bounds: '#bubble-container .editor',
+                        bounds: '#bubble-container .ql-container',
                         modules: {
                           syntax: true,
                         },
@@ -293,7 +250,7 @@ const IndexPage = () => {
                     </div>
                     <Editor
                       config={{
-                        bounds: '#snow-container .editor',
+                        bounds: '#snow-container .ql-container',
                         modules: {
                           syntax: true,
                           toolbar: '#snow-container .toolbar',
@@ -310,7 +267,7 @@ const IndexPage = () => {
                   <div id="full-container">
                     <Editor
                       config={{
-                        bounds: '#full-container .editor',
+                        bounds: '#full-container .ql-container',
                         modules: {
                           syntax: true,
                           toolbar: [

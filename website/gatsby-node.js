@@ -20,17 +20,17 @@ exports.onCreateNode = async ({ node, actions, getNode, reporter, cache }) => {
 
   const filePath = node.internal.contentFilePath;
   let pageType = 'unknown';
-  if (filePath.startsWith(path.resolve('markdown/guides'))) {
+  if (filePath.startsWith(path.resolve('content/guides'))) {
     pageType = 'guide';
-  } else if (filePath.startsWith(path.resolve('markdown/docs'))) {
+  } else if (filePath.startsWith(path.resolve('content/docs'))) {
     pageType = 'doc';
-  } else if (filePath.startsWith(path.resolve('markdown/blog'))) {
+  } else if (filePath.startsWith(path.resolve('content/blog'))) {
     pageType = 'blog';
-  } else if (filePath.startsWith(path.resolve('markdown/standalone'))) {
+  } else if (filePath.startsWith(path.resolve('content/standalone'))) {
     pageType = 'standalone';
   }
 
-  const relativePath = path.relative(path.resolve('markdown'), filePath);
+  const relativePath = path.relative(path.resolve('content'), filePath);
   const extension = path.extname(filePath);
   const slug = relativePath.replace(extension, '');
   createNodeField({
@@ -46,7 +46,7 @@ exports.onCreateNode = async ({ node, actions, getNode, reporter, cache }) => {
   createNodeField({
     node,
     name: `permalink`,
-    value: node.frontmatter.external || `${siteMetadata.url}/${slug}`,
+    value: node.frontmatter.external || `/${slug}`,
   });
 
   const fileNode = getNode(node.parent);

@@ -45,7 +45,7 @@ const Blog = ({ data }) => (
 );
 
 export const query = graphql`
-  query Blog {
+  query {
     allMdx(
       sort: { fields: frontmatter___date, order: DESC }
       filter: { fields: { pageType: { eq: "blog" } } }

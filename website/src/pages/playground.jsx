@@ -68,4 +68,10 @@ const Playground = () => {
 
 export default Playground;
 
-export const Head = () => <SEO title="Interactive Playground" />;
+export const Head = () => (
+  <>
+    <SEO title="Interactive Playground" />
+    <link rel="stylesheet" href="/assets/css/base.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+  </>
+);

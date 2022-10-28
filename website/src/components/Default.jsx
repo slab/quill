@@ -1,12 +1,11 @@
 import classNames from 'classnames';
-import { graphql, useStaticQuery } from 'gatsby';
+import { graphql, Link, useStaticQuery } from 'gatsby';
 import { useState } from 'react';
 import Helmet from 'react-helmet';
 import LogoIcon from '../svg/logo.svg';
-import usePageType from '../utils/usePageType';
 import GitHub from './GitHub';
 
-const Default = ({ children }) => {
+const Default = ({ children, pageType }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   const data = useStaticQuery(graphql`
@@ -18,8 +17,6 @@ const Default = ({ children }) => {
       }
     }
   `);
-
-  const pageType = usePageType();
 
   return (
     <>
@@ -34,24 +31,24 @@ const Default = ({ children }) => {
           ></button>
           <ul>
             <li className="navbar-item">
-              <a className="navbar-link" href="/docs/quickstart/">
+              <Link className="navbar-link" to="/docs/quickstart/">
                 Documentation
-              </a>
+              </Link>
             </li>
             <li className="navbar-item">
-              <a className="navbar-link" href="/guides/why-quill/">
+              <Link className="navbar-link" to="/guides/why-quill/">
                 Guides
-              </a>
+              </Link>
             </li>
             <li className="navbar-item">
-              <a className="navbar-link" href="/playground/">
+              <Link className="navbar-link" to="/playground/">
                 Playground
-              </a>
+              </Link>
             </li>
             <li className="navbar-item">
-              <a className="navbar-link" href="/blog/">
+              <Link className="navbar-link" to="/blog/">
                 Blog
-              </a>
+              </Link>
             </li>
             <li className="navbar-item">
               <GitHub dark />
@@ -65,46 +62,46 @@ const Default = ({ children }) => {
                 active: pageType === 'docs',
               })}
             >
-              <a className="navbar-link" href="/docs/quickstart/">
+              <Link className="navbar-link" to="/docs/quickstart/">
                 Documentation
-              </a>
+              </Link>
             </li>
             <li
               className={classNames('navbar-item', {
                 active: pageType === 'guides',
               })}
             >
-              <a className="navbar-link" href="/guides/why-quill/">
+              <Link className="navbar-link" to="/guides/why-quill/">
                 Guides
-              </a>
+              </Link>
             </li>
             <li className="logo-item">
-              <a className="logo" href="/">
+              <Link className="logo" to="/">
                 <LogoIcon />
-              </a>
+              </Link>
             </li>
             <li
               className={classNames('navbar-item', {
                 active: pageType === 'playground',
               })}
             >
-              <a className="navbar-link" href="/playground/">
+              <Link className="navbar-link" to="/playground/">
                 Playground
-              </a>
+              </Link>
             </li>
             <li
               className={classNames('navbar-item', {
                 active: pageType === 'blog',
               })}
             >
-              <a className="navbar-link" href="/blog/">
+              <Link className="navbar-link" to="/blog/">
                 Blog
-              </a>
+              </Link>
             </li>
             <li className="download-item">
-              <a className="action" href="/docs/download/">
+              <Link className="action" to="/docs/download/">
                 Download
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
@@ -122,13 +119,13 @@ const Default = ({ children }) => {
           </div>
           <h1>Your powerful rich text editor.</h1>
           <div className="actions row">
-            <a href="/docs/" className="action documentation">
+            <Link to="/docs/" className="action documentation">
               Documentation
-            </a>
-            <a href="/docs/download/" className="action">
+            </Link>
+            <Link to="/docs/download/" className="action">
               Download v
               {data?.site.siteMetadata.version.split('.').slice(0, 2).join('.')}
-            </a>
+            </Link>
           </div>
           <div className="users row">
             <h3>Trusted By</h3>
