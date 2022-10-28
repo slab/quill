@@ -119,7 +119,7 @@ const Default = ({ children, pageType }) => {
           </div>
           <h1>Your powerful rich text editor.</h1>
           <div className="actions row">
-            <a href="/docs/" className="action documentation">
+            <a href="/docs/quickstart/" className="action documentation">
               Documentation
             </a>
             <a href="/docs/download/" className="action">

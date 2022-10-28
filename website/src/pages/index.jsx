@@ -350,7 +350,7 @@ const IndexPage = () => {
                   through a simple API. Works consistently and deterministically
                   with JSON as both input and output.
                 </span>
-                <a className="action-link" href="/docs/">
+                <a className="action-link" href="/docs/quickstart/">
                   View documentation
                 </a>
               </div>
@@ -390,7 +390,7 @@ const IndexPage = () => {
                 simple with the Quill core then easily customize or add your own
                 extensions later if your product needs grow.
               </span>
-              <a className="action-link" href="/docs/">
+              <a className="action-link" href="/docs/quickstart/">
                 Learn More
               </a>
             </div>

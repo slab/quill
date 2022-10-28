@@ -52,7 +52,7 @@ To realize the full benefits of 1.0, it is encouraged to take a fresh view of Qu
 
 ### Deltas
 
-The default [Delta](/guides/working-with-deltas/) representation of some content has changed. In all cases the old format is still supported in methods using Deltas as in input, such as `setContents` and `updateContents`. But outputted Deltas, such as the ones reported by `text-change` and `getContents` will be in the new form. Since [Parchment](https://github.com/quilljs/parchment) now allows custom content and formats, it is possible to customize these Delta representations entirely.
+The default [Delta](/docs/delta/) representation of some content has changed. In all cases the old format is still supported in methods using Deltas as in input, such as `setContents` and `updateContents`. But outputted Deltas, such as the ones reported by `text-change` and `getContents` will be in the new form. Since [Parchment](https://github.com/quilljs/parchment) now allows custom content and formats, it is possible to customize these Delta representations entirely.
 
 ```javascript
 var newImage = {
