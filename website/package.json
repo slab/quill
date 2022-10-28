@@ -14,10 +14,6 @@
   "dependencies": {
     "@mdx-js/react": "^2.1.5",
     "babel-preset-gatsby": "^2.24.0",
-    "date-fns": "^2.29.3",
-    "hast-util-to-html": "^8.0.3",
-    "mdast-util-from-markdown": "^1.2.0",
-    "mdast-util-to-hast": "^12.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",

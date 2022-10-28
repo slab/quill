@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { graphql } from 'gatsby';
 import Default from '../components/Default';
 import SEO from '../components/SEO';
@@ -9,10 +8,7 @@ const Post = ({ data, children }) => (
       <div className="post">
         <h1>{data.mdx?.frontmatter?.title}</h1>
         <div className="post-meta">
-          <time>
-            {data.mdx?.frontmatter?.date &&
-              format(new Date(data.mdx.frontmatter.date), 'd MMM yyyy')}
-          </time>
+          <time>{data.mdx.frontmatter.date}</time>
           <span>
             {' - '}
             <a href="https://twitter.com/jhchen" title="Jason Chen">
@@ -34,7 +30,7 @@ export const query = graphql`
       }
       frontmatter {
         title
-        date(formatString: "MMMM D, YYYY")
+        date(formatString: "DD MMM yyyy")
       }
     }
   }

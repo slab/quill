@@ -1,5 +1,8 @@
 const path = require(`path`);
 const { siteMetadata } = require('./gatsby-config');
+const runtime = require('react/jsx-runtime');
+const { compileMDX } = require('gatsby-plugin-mdx');
+const { renderToStaticMarkup } = require('react-dom/server');
 
 // https://github.com/gatsbyjs/gatsby/issues/28657
 exports.onCreateBabelConfig = ({ actions }) => {
@@ -11,40 +14,70 @@ exports.onCreateBabelConfig = ({ actions }) => {
   });
 };
 
-exports.onCreateNode = ({ node, actions }) => {
+exports.onCreateNode = async ({ node, actions, getNode, reporter, cache }) => {
   const { createNodeField } = actions;
-  if (node.internal.type === `Mdx`) {
-    const filePath = node.internal.contentFilePath;
-    let pageType = 'unknown';
-    if (filePath.startsWith(path.resolve('markdown/guides'))) {
-      pageType = 'guide';
-    } else if (filePath.startsWith(path.resolve('markdown/docs'))) {
-      pageType = 'doc';
-    } else if (filePath.startsWith(path.resolve('markdown/blog'))) {
-      pageType = 'blog';
-    } else if (filePath.startsWith(path.resolve('markdown/standalone'))) {
-      pageType = 'standalone';
-    }
+  if (node.internal.type !== `Mdx`) return;
 
-    const relativePath = path.relative(path.resolve('markdown'), filePath);
-    const extension = path.extname(filePath);
-    const slug = relativePath.replace(extension, '');
-    createNodeField({
-      node,
-      name: `pageType`,
-      value: pageType,
-    });
-    createNodeField({
-      node,
-      name: `slug`,
-      value: slug,
-    });
-    createNodeField({
-      node,
-      name: `permalink`,
-      value:
-        node.frontmatter.external || `${siteMetadata.url}/${pageType}/${slug}`,
-    });
+  const filePath = node.internal.contentFilePath;
+  let pageType = 'unknown';
+  if (filePath.startsWith(path.resolve('markdown/guides'))) {
+    pageType = 'guide';
+  } else if (filePath.startsWith(path.resolve('markdown/docs'))) {
+    pageType = 'doc';
+  } else if (filePath.startsWith(path.resolve('markdown/blog'))) {
+    pageType = 'blog';
+  } else if (filePath.startsWith(path.resolve('markdown/standalone'))) {
+    pageType = 'standalone';
+  }
+
+  const relativePath = path.relative(path.resolve('markdown'), filePath);
+  const extension = path.extname(filePath);
+  const slug = relativePath.replace(extension, '');
+  createNodeField({
+    node,
+    name: `pageType`,
+    value: pageType,
+  });
+  createNodeField({
+    node,
+    name: `slug`,
+    value: slug,
+  });
+  createNodeField({
+    node,
+    name: `permalink`,
+    value: node.frontmatter.external || `${siteMetadata.url}/${slug}`,
+  });
+
+  const fileNode = getNode(node.parent);
+  if (fileNode && pageType === 'blog') {
+    const result = await compileMDX(
+      {
+        source: node.body.split('{/* more */}')[0],
+        path: node.internal.contentFilePath,
+      },
+      {
+        // These options are requried to allow rendering to string
+        outputFormat: `function-body`,
+        useDynamicImport: true,
+        // Add any custom options or plugins here
+      },
+      cache,
+      reporter,
+    );
+    if (result && result.processedMDX) {
+      const { run } = await import('@mdx-js/mdx');
+      const args = {
+        ...runtime,
+      };
+      const { default: Content } = await run(result.processedMDX, args);
+      const value = renderToStaticMarkup(Content(args));
+      createNodeField({
+        node,
+        name: `excerpt`,
+        value,
+      });
+    }
   }
 };
 
