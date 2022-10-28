@@ -2,9 +2,10 @@
 !.eslintrc.json
 !.eslintignore
 !.npmignore
+!.gitignore
 
 /dist
-node_modules
+/node_modules
 /selenium
 /docs/_site
 /src
@@ -22,6 +23,3 @@ test/random.js
 
 core.js
 quill.js
-
-/website/.cache/
-/website/public
