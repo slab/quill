@@ -1,5 +1,4 @@
 ---
-layout: docs
 title: Toolbar Module
 ---
 
@@ -64,10 +63,10 @@ var quill = new Quill('#editor', {
     toolbar: {
       container: '#toolbar', // Selector for toolbar container
       handlers: {
-        bold: customBoldHandler,
-      },
-    },
-  },
+        bold: customBoldHandler
+      }
+    }
+  }
 });
 ```
 
@@ -77,8 +76,8 @@ Because the `container` option is so common, a top level shorthand is also allow
 var quill = new Quill('#editor', {
   modules: {
     // Equivalent to { toolbar: { container: '#toolbar' }}
-    toolbar: '#toolbar',
-  },
+    toolbar: '#toolbar'
+  }
 });
 ```
 
@@ -93,18 +92,15 @@ var toolbarOptions = ['bold', 'italic', 'underline', 'strike'];
 
 var quill = new Quill('#editor', {
   modules: {
-    toolbar: toolbarOptions,
-  },
+    toolbar: toolbarOptions
+  }
 });
 ```
 
 Controls can also be grouped by one level of nesting an array. This will wrap controls in a `<span>` with class name `ql-formats`, providing structure for themes to utilize. For example [Snow](/docs/themes/#snow/) adds extra spacing between control groups.
 
 ```javascript
-var toolbarOptions = [
-  ['bold', 'italic'],
-  ['link', 'image'],
-];
+var toolbarOptions = [['bold', 'italic'], ['link', 'image']];
 ```
 
 Buttons with custom values can be specified with an Object with the name of the format as its only key.
@@ -180,8 +176,8 @@ For use cases requiring even more customization, you can manually create a toolb
 <script>
   var quill = new Quill('#editor', {
     modules: {
-      toolbar: '#toolbar',
-    },
+      toolbar: '#toolbar'
+    }
   });
 </script>
 ```
@@ -230,14 +226,14 @@ var toolbarOptions = {
       } else {
         this.quill.format('link', false);
       }
-    },
-  },
+    }
+  }
 };
 
 var quill = new Quill('#editor', {
   modules: {
-    toolbar: toolbarOptions,
-  },
+    toolbar: toolbarOptions
+  }
 });
 
 // Handlers can also be added post initialization

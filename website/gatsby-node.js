@@ -120,7 +120,6 @@ exports.createPages = ({ graphql, actions }) => {
       throw result.errors;
     }
 
-    // Create blog post pages.
     result.data.allMdx.edges.forEach(({ node }) => {
       const filePath = node.internal.contentFilePath;
       const { pageType, slug } = node.fields;

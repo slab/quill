@@ -45,7 +45,7 @@ const SEO = ({ title, permalink }) => {
         property="og:image"
         content="https://quilljs.com/assets/images/brand-asset.png"
       />
-      <meta property="og:title" content="Blog - Quill" />
+      <meta property="og:title" content={pageTitle} />
       <meta property="og:site_name" content="Quill" />
       <title>{pageTitle}</title>
       <meta name="description" content={data.site.siteMetadata.description} />

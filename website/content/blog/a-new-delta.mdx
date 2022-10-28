@@ -27,12 +27,15 @@ var oldFormat = {
   endLength: 2,
   ops: [
     { start: 0, end: 1 },
-    { start: 2, end: 3 },
-  ],
+    { start: 2, end: 3 }
+  ]
 };
 
 var newFormat = {
-  ops: [{ retain: 1 }, { delete: 1 }],
+  ops: [
+    { retain: 1 },
+    { delete: 1 }
+  ]
 };
 ```
 
@@ -46,21 +49,16 @@ The new Delta format provides native support for embeds, which can be used to re
 var oldFormat = {
   startLength: 0,
   endLength: 1,
-  ops: [
-    {
-      text: '!',
-      attributes: { image: 'https://octodex.github.com/images/labtocat.png' },
-    },
-  ],
+  ops: [{
+    text: '!',
+    attributes: { image: 'https://octodex.github.com/images/labtocat.png' }
+  }]
 };
 
 var newFormat = {
-  ops: [
-    {
-      insert: 1,
-      attributes: { image: 'https://octodex.github.com/images/labtocat.png' },
-    },
-  ],
+  ops: [{
+    insert: 1, attributes: { image: 'https://octodex.github.com/images/labtocat.png' }
+  }]
 };
 ```
 

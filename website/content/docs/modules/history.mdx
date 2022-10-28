@@ -1,5 +1,4 @@
 ---
-layout: docs
 title: History Module
 ---
 
@@ -35,10 +34,10 @@ var quill = new Quill('#editor', {
     history: {
       delay: 2000,
       maxStack: 500,
-      userOnly: true,
+      userOnly: true
     },
   },
-  theme: 'snow',
+  theme: 'snow'
 });
 ```
 
@@ -51,7 +50,7 @@ Clears the history stack.
 **Methods**
 
 ```js
-clear();
+clear()
 ```
 
 **Examples**
@@ -67,7 +66,7 @@ Normally changes made in short succession (configured by `delay`) are merged as 
 **Methods**
 
 ```js
-cutoff();
+cutoff()
 ```
 
 **Examples**
@@ -83,7 +82,7 @@ Undo last change.
 **Methods**
 
 ```js
-undo();
+undo()
 ```
 
 **Examples**
@@ -99,7 +98,7 @@ If last change was an undo, redo this undo. Otherwise does nothing.
 **Methods**
 
 ```js
-redo();
+redo()
 ```
 
 **Examples**

@@ -1,5 +1,4 @@
 ---
-layout: docs
 title: Cloning Medium with Parchment
 ---
 
@@ -171,7 +170,7 @@ class ImageBlot extends BlockEmbed {
   static value(node) {
     return {
       alt: node.getAttribute('alt'),
-      url: node.getAttribute('src'),
+      url: node.getAttribute('src')
     };
   }
 }
@@ -236,17 +235,15 @@ Note if you open your console and call [`getContents`](/docs/api/#getcontents), 
 
 ```js
 {
-  ops: [
-    {
-      insert: {
-        video: 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0',
-      },
-      attributes: {
-        height: '170',
-        width: '400',
-      },
+  ops: [{
+    insert: {
+      video: 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0'
     },
-  ];
+    attributes: {
+      height: '170',
+      width: '400'
+    }
+  }]
 }
 ```
 
