@@ -107,5 +107,9 @@
     "editor",
     "rich text",
     "wysiwyg"
-  ]
+  ],
+  "engines": {
+    "npm": ">=8.2.3"
+  },
+  "engineStrict": true
 }
