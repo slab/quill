@@ -62,6 +62,8 @@ class Block extends BlockBlot {
       }
       this.cache = {};
     }
+    // TODO: Fix this next time the file is edited.
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let block: Blot | this = this;
     lines.reduce((lineIndex, line) => {
       block = block.split(lineIndex, true);
