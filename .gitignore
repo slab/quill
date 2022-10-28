@@ -3,6 +3,7 @@
 !.eslintignore
 !.npmignore
 !.gitignore
+!.github
 
 /dist
 /node_modules

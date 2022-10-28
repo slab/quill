@@ -1,0 +1,38 @@
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [
+            mac-chrome-latest,
+            mac-firefox-latest,
+            mac-safari-latest,
+            windows-chrome-latest,
+            windows-firefox-latest,
+            windows-edge-latest,
+            ios-latest,
+            # android-latest,
+          ]
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+          cache: npm
+
+      - run: npm ci
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+      - run: npm run lint
+      - run: npm run test:unit:ci
+        env:
+          BROWSER: ${{ matrix.browser }}
+      - run: npm run test:random

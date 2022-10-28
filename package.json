@@ -99,9 +99,9 @@
     "test:all": "npm run test:unit; npm run test:functional; npm run test:random",
     "test:functional": "./_develop/scripts/puppeteer.sh",
     "test:unit": "npm run build; karma start _develop/karma.config.js",
+    "test:unit:ci": "npm run build; karma start _develop/karma.config.js --reporters dots,saucelabs",
     "test:random": "ts-node --preferTsExts -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/jasmine test/random.ts",
-    "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage",
-    "travis": "npm run lint && karma start _develop/karma.config.js --reporters dots,saucelabs"
+    "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage"
   },
   "keywords": [
     "editor",
