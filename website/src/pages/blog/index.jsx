@@ -59,7 +59,6 @@ export const query = graphql`
         frontmatter {
           date(formatString: "DD MMM yyyy")
           title
-          layout
         }
         id
         body
