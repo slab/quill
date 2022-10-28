@@ -18,6 +18,13 @@ module.exports = {
   siteMetadata,
   graphqlTypegen: true,
   plugins: [
+    {
+      resolve: 'gatsby-plugin-google-analytics',
+      options: {
+        trackingId: 'UA-19077541-2',
+        head: true,
+      },
+    },
     'gatsby-plugin-sass',
     {
       resolve: 'gatsby-plugin-react-svg',
@@ -67,8 +74,8 @@ module.exports = {
                 return Object.assign({}, node.frontmatter, {
                   description: node.excerpt,
                   date: node.frontmatter.date,
-                  url: site.siteMetadata.url + node.frontmatter.slug,
-                  guid: site.siteMetadata.url + node.frontmatter.slug,
+                  url: site.siteMetadata.url + node.fields.permalink,
+                  guid: site.siteMetadata.url + node.fields.permalink,
                 });
               });
             },
@@ -76,13 +83,15 @@ module.exports = {
               {
                 allMdx(
                   sort: { fields: frontmatter___date, order: DESC }
-                  filter: { frontmatter: { layout: { eq: "post" } } }
+                  filter: { fields: { pageType: { eq: "blog" } } }
                 ) {
                   nodes {
                     frontmatter {
                       date(formatString: "DD MMM yyyy")
                       title
-                      slug
+                    }
+                    fields {
+                      permalink
                     }
                     id
                     body

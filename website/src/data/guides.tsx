@@ -27,10 +27,10 @@ const items = [
     title: 'Comparison with Other Rich Text Editors',
     url: '/guides/comparison-with-other-rich-text-editors/',
   },
-  {
-    title: 'Upgrading to 2.0',
-    url: '/guides/upgrading-to-2-0/',
-  },
+  // {
+  //   title: 'Upgrading to 2.0',
+  //   url: '/guides/upgrading-to-2-0/',
+  // },
   {
     title: 'Upgrading to 1.0',
     url: '/guides/upgrading-to-1-0/',

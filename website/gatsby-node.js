@@ -46,7 +46,7 @@ exports.onCreateNode = async ({ node, actions, getNode, reporter, cache }) => {
   createNodeField({
     node,
     name: `permalink`,
-    value: node.frontmatter.external || `/${slug}`,
+    value: node.frontmatter.external || `/${slug}/`,
   });
 
   const fileNode = getNode(node.parent);

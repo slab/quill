@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { graphql, Link, useStaticQuery } from 'gatsby';
+import { graphql, useStaticQuery } from 'gatsby';
 import { useState } from 'react';
 import Helmet from 'react-helmet';
 import LogoIcon from '../svg/logo.svg';
@@ -31,24 +31,24 @@ const Default = ({ children, pageType }) => {
           ></button>
           <ul>
             <li className="navbar-item">
-              <Link className="navbar-link" to="/docs/quickstart/">
+              <a className="navbar-link" href="/docs/quickstart/">
                 Documentation
-              </Link>
+              </a>
             </li>
             <li className="navbar-item">
-              <Link className="navbar-link" to="/guides/why-quill/">
+              <a className="navbar-link" href="/guides/why-quill/">
                 Guides
-              </Link>
+              </a>
             </li>
             <li className="navbar-item">
-              <Link className="navbar-link" to="/playground/">
+              <a className="navbar-link" href="/playground/">
                 Playground
-              </Link>
+              </a>
             </li>
             <li className="navbar-item">
-              <Link className="navbar-link" to="/blog/">
+              <a className="navbar-link" href="/blog/">
                 Blog
-              </Link>
+              </a>
             </li>
             <li className="navbar-item">
               <GitHub dark />
@@ -62,46 +62,46 @@ const Default = ({ children, pageType }) => {
                 active: pageType === 'docs',
               })}
             >
-              <Link className="navbar-link" to="/docs/quickstart/">
+              <a className="navbar-link" href="/docs/quickstart/">
                 Documentation
-              </Link>
+              </a>
             </li>
             <li
               className={classNames('navbar-item', {
                 active: pageType === 'guides',
               })}
             >
-              <Link className="navbar-link" to="/guides/why-quill/">
+              <a className="navbar-link" href="/guides/why-quill/">
                 Guides
-              </Link>
+              </a>
             </li>
             <li className="logo-item">
-              <Link className="logo" to="/">
+              <a className="logo" href="/">
                 <LogoIcon />
-              </Link>
+              </a>
             </li>
             <li
               className={classNames('navbar-item', {
                 active: pageType === 'playground',
               })}
             >
-              <Link className="navbar-link" to="/playground/">
+              <a className="navbar-link" href="/playground/">
                 Playground
-              </Link>
+              </a>
             </li>
             <li
               className={classNames('navbar-item', {
                 active: pageType === 'blog',
               })}
             >
-              <Link className="navbar-link" to="/blog/">
+              <a className="navbar-link" href="/blog/">
                 Blog
-              </Link>
+              </a>
             </li>
             <li className="download-item">
-              <Link className="action" to="/docs/download/">
+              <a className="action" href="/docs/download/">
                 Download
-              </Link>
+              </a>
             </li>
           </ul>
         </nav>
@@ -119,13 +119,13 @@ const Default = ({ children, pageType }) => {
           </div>
           <h1>Your powerful rich text editor.</h1>
           <div className="actions row">
-            <Link to="/docs/" className="action documentation">
+            <a href="/docs/" className="action documentation">
               Documentation
-            </Link>
-            <Link to="/docs/download/" className="action">
+            </a>
+            <a href="/docs/download/" className="action">
               Download v
               {data?.site.siteMetadata.version.split('.').slice(0, 2).join('.')}
-            </Link>
+            </a>
           </div>
           <div className="users row">
             <h3>Trusted By</h3>

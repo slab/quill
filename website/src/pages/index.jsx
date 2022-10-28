@@ -91,6 +91,29 @@ const IndexPage = () => {
     Font.whitelist = fonts;
     // @ts-expect-error
     Quill.register(Font, true);
+
+    function loadFonts() {
+      window.WebFontConfig = {
+        google: {
+          families: [
+            'Inconsolata::latin',
+            'Ubuntu+Mono::latin',
+            'Slabo+27px::latin',
+            'Roboto+Slab::latin',
+          ],
+        },
+      };
+      (function () {
+        var wf = document.createElement('script');
+        wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+        wf.type = 'text/javascript';
+        wf.async = 'true';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(wf, s);
+      })();
+    }
+
+    loadFonts();
   }, []);
 
   useEffect(() => {

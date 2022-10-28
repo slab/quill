@@ -1,6 +1,6 @@
 import { useLocation } from '@reach/router';
 import classNames from 'classnames';
-import { graphql, Link } from 'gatsby';
+import { graphql } from 'gatsby';
 import SEO from '../components/SEO';
 import docsItems from '../data/docs';
 import guideItems from '../data/guides';
@@ -42,7 +42,7 @@ const SidebarItem = ({ item }) => {
 
   return (
     <li className={classNames({ active: pathname.includes(item.url) })}>
-      <Link to={item.url}>{item.title}</Link>
+      <a href={item.url}>{item.title}</a>
       {item.children && (
         <ul>
           {item.children.map(child => (
@@ -59,7 +59,7 @@ const Doc = ({ data, location, children }) => {
   const { permalink, pageType } = data.mdx.fields;
   const category = pageType === 'guide' ? 'Guides' : 'Documentation';
 
-  const items = pageType === 'guides' ? guideItems : docsItems;
+  const items = pageType === 'guide' ? guideItems : docsItems;
   const { prev, next } = getPagination(permalink, items);
 
   useEffect(() => {
@@ -109,22 +109,22 @@ const Doc = ({ data, location, children }) => {
             </div>
             <div className="row" id="pagination-container">
               {prev && (
-                <Link className="prev" to={prev.url}>
+                <a className="prev" href={prev.url}>
                   <span className="label">{prev.title}</span>
                   <span className="arrow">
                     <span className="tip"></span>
                     <span className="shaft"></span>
                   </span>
-                </Link>
+                </a>
               )}
               {next && (
-                <Link className="next" to={next.url}>
+                <a className="next" href={next.url}>
                   <span className="label">{next.title}</span>
                   <span className="arrow">
                     <span className="tip"></span>
                     <span className="shaft"></span>
                   </span>
-                </Link>
+                </a>
               )}
             </div>
           </div>

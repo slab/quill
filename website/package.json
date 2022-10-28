@@ -14,6 +14,7 @@
   "dependencies": {
     "@mdx-js/react": "^2.1.5",
     "babel-preset-gatsby": "^2.24.0",
+    "gatsby-plugin-google-analytics": "^4.24.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",

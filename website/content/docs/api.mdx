@@ -181,12 +181,11 @@ updateContents(delta: Delta, source: String = 'api'): Delta
 
 ```javascript
 // Assuming editor currently contains [{ insert: 'Hello World!' }]
-quill.updateContents(
-  new Delta()
-    .retain(6) // Keep 'Hello '
-    .delete(5) // 'World' is deleted
-    .insert('Quill')
-    .retain(1, { bold: true }), // Apply bold to exclamation mark
+quill.updateContents(new Delta()
+  .retain(6)                  // Keep 'Hello '
+  .delete(5)                  // 'World' is deleted
+  .insert('Quill')
+  .retain(1, { bold: true })  // Apply bold to exclamation mark
 );
 // Editor should now be [
 //  { insert: 'Hello Quill' },
@@ -232,8 +231,8 @@ formatLine(index: Number, length: Number, formats: { [String]: any },
 ```javascript
 quill.setText('Hello\nWorld!\n');
 
-quill.formatLine(1, 2, 'align', 'right'); // right aligns the first line
-quill.formatLine(4, 4, 'align', 'center'); // center aligns both lines
+quill.formatLine(1, 2, 'align', 'right');   // right aligns the first line
+quill.formatLine(4, 4, 'align', 'center');  // center aligns both lines
 ```
 
 ### formatText
@@ -255,15 +254,14 @@ formatText(index: Number, length: Number, formats: { [String]: any },
 ```javascript
 quill.setText('Hello\nWorld!\n');
 
-quill.formatText(0, 5, 'bold', true); // bolds 'hello'
+quill.formatText(0, 5, 'bold', true);      // bolds 'hello'
 
-quill.formatText(0, 5, {
-  // unbolds 'hello' and set its color to blue
-  bold: false,
-  color: 'rgb(0, 0, 255)',
+quill.formatText(0, 5, {                   // unbolds 'hello' and set its color to blue
+  'bold': false,
+  'color': 'rgb(0, 0, 255)'
 });
 
-quill.formatText(5, 1, 'align', 'right'); // right aligns the 'hello' line
+quill.formatText(5, 1, 'align', 'right');  // right aligns the 'hello' line
 ```
 
 ### getFormat
@@ -283,22 +281,22 @@ getFormat(index: Number, length: Number = 0): { [String]: any }
 quill.setText('Hello World!');
 quill.formatText(0, 2, 'bold', true);
 quill.formatText(1, 2, 'italic', true);
-quill.getFormat(0, 2); // { bold: true }
-quill.getFormat(1, 1); // { bold: true, italic: true }
+quill.getFormat(0, 2);   // { bold: true }
+quill.getFormat(1, 1);   // { bold: true, italic: true }
 
 quill.formatText(0, 2, 'color', 'red');
 quill.formatText(2, 1, 'color', 'blue');
-quill.getFormat(0, 3); // { color: ['red', 'blue'] }
+quill.getFormat(0, 3);   // { color: ['red', 'blue'] }
 
 quill.setSelection(3);
-quill.getFormat(); // { italic: true, color: 'blue' }
+quill.getFormat();       // { italic: true, color: 'blue' }
 
 quill.format('strike', true);
-quill.getFormat(); // { italic: true, color: 'blue', strike: true }
+quill.getFormat();       // { italic: true, color: 'blue', strike: true }
 
 quill.formatLine(0, 1, 'align', 'right');
-quill.getFormat(); // { italic: true, color: 'blue', strike: true,
-//   align: 'right' }
+quill.getFormat();       // { italic: true, color: 'blue', strike: true,
+                         //   align: 'right' }
 ```
 
 ### removeFormat
@@ -434,7 +432,7 @@ enable(((enabled: boolean) = true));
 
 ```javascript
 quill.enable();
-quill.enable(false); // Disables user input
+quill.enable(false);   // Disables user input
 ```
 
 ### focus
