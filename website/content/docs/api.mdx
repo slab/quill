@@ -1,0 +1,837 @@
+---
+title: API
+---
+
+import api from '../../src/data/api';
+
+<div className="table-of-contents">
+  {api.map(({ hashes, title }) => (
+    <nav key={title}>
+      <h4 anchor="off">{title}</h4>
+      <ul>
+        {hashes.map(hash => (
+          <li key={hash}>
+            <a href={`#${hash.toLowerCase()}`}>
+              {hash.replace('-experimental', '')}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  ))}
+</div>
+
+## Content
+
+### deleteText
+
+Deletes text from the editor, returning a [Delta](/docs/delta/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+
+**Methods**
+
+```javascript
+deleteText(index: Number, length: Number, source: String = 'api'): Delta
+```
+
+**Examples**
+
+```javascript
+quill.deleteText(6, 4);
+```
+
+### getContents
+
+Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/delta/) object.
+
+**Methods**
+
+```javascript
+getContents(index: Number = 0, length: Number = remaining): Delta
+```
+
+**Examples**
+
+```javascript
+var delta = quill.getContents();
+```
+
+### getLength
+
+Retrieves the length of the editor contents. Note even when Quill is empty, there is still a blank line represented by '\n', so `getLength` will return 1.
+
+**Methods**
+
+```javascript
+getLength(): Number
+```
+
+**Examples**
+
+```javascript
+var length = quill.getLength();
+```
+
+### getText
+
+Retrieves the string contents of the editor. Non-string content are omitted, so the returned string's length may be shorter than the editor's as returned by [`getLength`](#getlength). Note even when Quill is empty, there is still a blank line in the editor, so in these cases `getText` will return '\n'.
+
+The `length` parameter defaults to the length of the remaining document.
+
+**Methods**
+
+```javascript
+getText(index: Number = 0, length: Number = remaining): String
+```
+
+**Examples**
+
+```javascript
+var text = quill.getText(0, 10);
+```
+
+### insertEmbed
+
+Insert embedded content into the editor, returning a [Delta](/docs/delta/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+
+**Methods**
+
+```javascript
+insertEmbed(index: Number, type: String, value: any, source: String = 'api'): Delta
+```
+
+**Examples**
+
+```javascript
+quill.insertEmbed(10, 'image', 'https://quilljs.com/images/cloud.png');
+```
+
+### insertText
+
+Inserts text into the editor, optionally with a specified format or multiple [formats](/docs/formats/). Returns a [Delta](/docs/delta/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+
+**Methods**
+
+```javascript
+insertText(index: Number, text: String, source: String = 'api'): Delta
+insertText(index: Number, text: String, format: String, value: any,
+           source: String = 'api'): Delta
+insertText(index: Number, text: String, formats: { [String]: any },
+           source: String = 'api'): Delta
+```
+
+**Examples**
+
+```javascript
+quill.insertText(0, 'Hello', 'bold', true);
+
+quill.insertText(5, 'Quill', {
+  color: '#ffff00',
+  italic: true,
+});
+```
+
+### setContents
+
+Overwrites editor with given contents. Contents should end with a [newline](/docs/delta/#line-formatting). Returns a Delta representing the change. This will be the same as the Delta passed in, if given Delta had no invalid operations. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+
+**Methods**
+
+```javascript
+setContents(delta: Delta, source: String = 'api'): Delta
+```
+
+**Examples**
+
+```javascript
+quill.setContents([
+  { insert: 'Hello ' },
+  { insert: 'World!', attributes: { bold: true } },
+  { insert: '\n' },
+]);
+```
+
+### setText
+
+Sets contents of editor with given text, returning a [Delta](/docs/delta/) representing the change. Note Quill documents must end with a newline so one will be added for you if omitted. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+
+**Methods**
+
+```javascript
+setText(text: String, source: String = 'api'): Delta
+```
+
+**Examples**
+
+```javascript
+quill.setText('Hello\n');
+```
+
+### updateContents
+
+Applies Delta to editor contents, returning a [Delta](/docs/delta/) representing the change. These Deltas will be the same if the Delta passed in had no invalid operations. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+
+**Methods**
+
+```javascript
+updateContents(delta: Delta, source: String = 'api'): Delta
+```
+
+**Examples**
+
+```javascript
+// Assuming editor currently contains [{ insert: 'Hello World!' }]
+quill.updateContents(new Delta()
+  .retain(6)                  // Keep 'Hello '
+  .delete(5)                  // 'World' is deleted
+  .insert('Quill')
+  .retain(1, { bold: true })  // Apply bold to exclamation mark
+);
+// Editor should now be [
+//  { insert: 'Hello Quill' },
+//  { insert: '!', attributes: { bold: true} }
+// ]
+```
+
+## Formatting
+
+### format
+
+Format text at user's current selection, returning a [Delta](/docs/delta/) representing the change. If the user's selection length is 0, i.e. it is a cursor, the format will be set active, so the next character the user types will have that formatting. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+
+**Methods**
+
+```javascript
+format(name: String, value: any, source: String = 'api'): Delta
+```
+
+**Examples**
+
+```javascript
+quill.format('color', 'red');
+quill.format('align', 'right');
+```
+
+### formatLine
+
+Formats all lines in given range, returning a [Delta](/docs/delta/) representing the change. See [formats](/docs/formats/) for a list of available formats. Has no effect when called with inline formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+
+**Methods**
+
+```javascript
+formatLine(index: Number, length: Number, source: String = 'api'): Delta
+formatLine(index: Number, length: Number, format: String, value: any,
+           source: String = 'api'): Delta
+formatLine(index: Number, length: Number, formats: { [String]: any },
+           source: String = 'api'): Delta
+```
+
+**Examples**
+
+```javascript
+quill.setText('Hello\nWorld!\n');
+
+quill.formatLine(1, 2, 'align', 'right');   // right aligns the first line
+quill.formatLine(4, 4, 'align', 'center');  // center aligns both lines
+```
+
+### formatText
+
+Formats text in the editor, returning a [Delta](/docs/delta/) representing the change. For line level formats, such as text alignment, target the newline character or use the [`formatLine`](#formatline) helper. See [formats](/docs/formats/) for a list of available formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+
+**Methods**
+
+```javascript
+formatText(index: Number, length: Number, source: String = 'api'): Delta
+formatText(index: Number, length: Number, format: String, value: any,
+           source: String = 'api'): Delta
+formatText(index: Number, length: Number, formats: { [String]: any },
+           source: String = 'api'): Delta
+```
+
+**Examples**
+
+```javascript
+quill.setText('Hello\nWorld!\n');
+
+quill.formatText(0, 5, 'bold', true);      // bolds 'hello'
+
+quill.formatText(0, 5, {                   // unbolds 'hello' and set its color to blue
+  'bold': false,
+  'color': 'rgb(0, 0, 255)'
+});
+
+quill.formatText(5, 1, 'align', 'right');  // right aligns the 'hello' line
+```
+
+### getFormat
+
+Retrieves common formatting of the text in the given range. For a format to be reported, all text within the range must have a truthy value. If there are different truthy values, an array with all truthy values will be reported. If no range is supplied, the user's current selection range is used. May be used to show which formats have been set on the cursor. If called with no arguments, the user's current selection range will be used.
+
+**Methods**
+
+```javascript
+getFormat(range: Range = current): { [String]: any }
+getFormat(index: Number, length: Number = 0): { [String]: any }
+```
+
+**Examples**
+
+```javascript
+quill.setText('Hello World!');
+quill.formatText(0, 2, 'bold', true);
+quill.formatText(1, 2, 'italic', true);
+quill.getFormat(0, 2);   // { bold: true }
+quill.getFormat(1, 1);   // { bold: true, italic: true }
+
+quill.formatText(0, 2, 'color', 'red');
+quill.formatText(2, 1, 'color', 'blue');
+quill.getFormat(0, 3);   // { color: ['red', 'blue'] }
+
+quill.setSelection(3);
+quill.getFormat();       // { italic: true, color: 'blue' }
+
+quill.format('strike', true);
+quill.getFormat();       // { italic: true, color: 'blue', strike: true }
+
+quill.formatLine(0, 1, 'align', 'right');
+quill.getFormat();       // { italic: true, color: 'blue', strike: true,
+                         //   align: 'right' }
+```
+
+### removeFormat
+
+Removes all formatting and embeds within given range, returning a [Delta](/docs/delta/) representing the change. Line formatting will be removed if any part of the line is included in the range. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+
+**Methods**
+
+```javascript
+removeFormat(index: Number, length: Number, source: String = 'api'): Delta
+```
+
+**Examples**
+
+```javascript
+quill.setContents([
+  { insert: 'Hello', { bold: true } },
+  { insert: '\n', { align: 'center' } },
+  { insert: { formula: 'x^2' } },
+  { insert: '\n', { align: 'center' } },
+  { insert: 'World', { italic: true }},
+  { insert: '\n', { align: 'center' } }
+]);
+
+quill.removeFormat(3, 7);
+// Editor contents are now
+// [
+//   { insert: 'Hel', { bold: true } },
+//   { insert: 'lo\n\nWo' },
+//   { insert: 'rld', { italic: true }},
+//   { insert: '\n', { align: 'center' } }
+// ]
+
+```
+
+## Selection
+
+### getBounds
+
+Retrieves the pixel position (relative to the editor container) and dimensions of a selection at a given location. The user's current selection need not be at that index. Useful for calculating where to place tooltips.
+
+**Methods**
+
+```javascript
+getBounds(index: Number, length: Number = 0):
+  { left: Number, top: Number, height: Number, width: Number }
+```
+
+**Examples**
+
+```javascript
+quill.setText('Hello\nWorld\n');
+quill.getBounds(7); // Returns { height: 15, width: 0, left: 27, top: 31 }
+```
+
+### getSelection
+
+Retrieves the user's selection range, optionally to focus the editor first. Otherwise `null` may be returned if editor does not have focus.
+
+**Methods**
+
+```javascript
+getSelection(focus = false): { index: Number, length: Number }
+```
+
+**Examples**
+
+```javascript
+var range = quill.getSelection();
+if (range) {
+  if (range.length == 0) {
+    console.log('User cursor is at index', range.index);
+  } else {
+    var text = quill.getText(range.index, range.length);
+    console.log('User has highlighted: ', text);
+  }
+} else {
+  console.log('User cursor is not in editor');
+}
+```
+
+### setSelection
+
+Sets user selection to given range, which will also focus the editor. Providing `null` as the selection range will blur the editor. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+
+**Methods**
+
+```javascript
+setSelection(index: Number, length: Number = 0, source: String = 'api')
+setSelection(range: { index: Number, length: Number },
+             source: String = 'api')
+```
+
+**Examples**
+
+```javascript
+quill.setSelection(0, 5);
+```
+
+## Editor
+
+### blur
+
+Removes focus from the editor.
+
+**Methods**
+
+```javascript
+blur();
+```
+
+**Examples**
+
+```javascript
+quill.blur();
+```
+
+### disable
+
+Shorthand for [`enable(false)`](#enable).
+
+### enable
+
+Set ability for user to edit, via input devices like the mouse or keyboard. Does not affect capabilities of API calls, when the `source` is `"api"` or `"silent".
+
+**Methods**
+
+```javascript
+enable(((enabled: boolean) = true));
+```
+
+**Examples**
+
+```javascript
+quill.enable();
+quill.enable(false);   // Disables user input
+```
+
+### focus
+
+Focuses the editor and restores its last range.
+
+**Methods**
+
+```javascript
+focus();
+```
+
+**Examples**
+
+```javascript
+quill.focus();
+```
+
+### hasFocus
+
+Checks if editor has focus. Note focus on toolbar, tooltips, does not count as the editor.
+
+**Methods**
+
+```javascript
+hasFocus(): Boolean
+```
+
+**Examples**
+
+```javascript
+quill.hasFocus();
+```
+
+### update
+
+Synchronously check editor for user updates and fires events, if changes have occurred. Useful for collaborative use cases during conflict resolution requiring the latest up to date state. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+
+**Methods**
+
+```javascript
+update(((source: String) = 'user'));
+```
+
+**Examples**
+
+```javascript
+quill.update();
+```
+
+## Events
+
+### text-change
+
+Emitted when the contents of Quill have changed. Details of the change, representation of the editor contents before the change, along with the source of the change are provided. The source will be `"user"` if it originates from the users. For example:
+
+- User types into the editor
+- User formats text using the toolbar
+- User uses a hotkey to undo
+- User uses OS spelling correction
+
+Changes may occur through an API but as long as they originate from the user, the provided source should still be `"user"`. For example, when a user clicks on the toolbar, technically the toolbar module calls a Quill API to effect the change. But source is still `"user"` since the origin of the change was the user's click.
+
+APIs causing text to change may also be called with a `"silent"` source, in which case `text-change` will not be emitted. This is not recommended as it will likely break the undo stack and other functions that rely on a full record of text changes.
+
+Changes to text may cause changes to the selection (ex. typing advances the cursor), however during the `text-change` handler, the selection is not yet updated, and native browser behavior may place it in an inconsistent state. Use [`selection-change`](#selection-change) or [`editor-change`](#editor-change) for reliable selection updates.
+
+**Callback Signature**
+
+```javascript
+handler(delta: Delta, oldContents: Delta, source: String)
+```
+
+**Examples**
+
+```javascript
+quill.on('text-change', function (delta, oldDelta, source) {
+  if (source == 'api') {
+    console.log('An API call triggered this change.');
+  } else if (source == 'user') {
+    console.log('A user action triggered this change.');
+  }
+});
+```
+
+### selection-change
+
+Emitted when a user or API causes the selection to change, with a range representing the selection boundaries. A null range indicates selection loss (usually caused by loss of focus from the editor). You can also use this event as a focus change event by just checking if the emitted range is null or not.
+
+APIs causing the selection to change may also be called with a `"silent"` source, in which case `selection-change` will not be emitted. This is useful if `selection-change` is a side effect. For example, typing causes the selection to change but would be very noisy to also emit a `selection-change` event on every character.
+
+**Callback Signature**
+
+```javascript
+handler(range: { index: Number, length: Number },
+        oldRange: { index: Number, length: Number },
+        source: String)
+```
+
+**Examples**
+
+```javascript
+quill.on('selection-change', function (range, oldRange, source) {
+  if (range) {
+    if (range.length == 0) {
+      console.log('User cursor is on', range.index);
+    } else {
+      var text = quill.getText(range.index, range.length);
+      console.log('User has highlighted', text);
+    }
+  } else {
+    console.log('Cursor not in the editor');
+  }
+});
+```
+
+### editor-change
+
+Emitted when either `text-change` or `selection-change` would be emitted, even when the source is `"silent"`. The first parameter is the event name, either `text-change` or `selection-change`, followed by the arguments normally passed to those respective handlers.
+
+**Callback Signature**
+
+```javascript
+handler(name: String, ...args)
+```
+
+**Examples**
+
+```javascript
+quill.on('editor-change', function (eventName, ...args) {
+  if (eventName === 'text-change') {
+    // args[0] will be delta
+  } else if (eventName === 'selection-change') {
+    // args[0] will be old range
+  }
+});
+```
+
+### on
+
+Adds event handler. See [text-change](#text-change) or [selection-change](#selection-change) for more details on the events themselves.
+
+**Methods**
+
+```javascript
+on(name: String, handler: Function): Quill
+```
+
+**Examples**
+
+```javascript
+quill.on('text-change', function () {
+  console.log('Text change!');
+});
+```
+
+### once
+
+Adds handler for one emission of an event. See [text-change](#text-change) or [selection-change](#selection-change) for more details on the events themselves.
+
+**Methods**
+
+```javascript
+once(name: String, handler: Function): Quill
+```
+
+**Examples**
+
+```javascript
+quill.once('text-change', function () {
+  console.log('First text change!');
+});
+```
+
+### off
+
+Removes event handler.
+
+**Methods**
+
+```javascript
+off(name: String, handler: Function): Quill
+```
+
+**Examples**
+
+```javascript
+function handler() {
+  console.log('Hello!');
+}
+
+quill.on('text-change', handler);
+quill.off('text-change', handler);
+```
+
+## Model
+
+### find #experimental
+
+Static method returning the Quill or [Blot](https://github.com/quilljs/parchment) instance for the given DOM node. In the latter case, passing in true for the `bubble` parameter will search up the given DOM's ancestors until it finds a corresponding [Blot](https://github.com/quilljs/parchment).
+
+**Methods**
+
+```javascript
+Quill.find(domNode: Node, bubble: boolean = false): Blot | Quill
+```
+
+**Examples**
+
+```javascript
+var container = document.querySelector('#container');
+var quill = new Quill(container);
+console.log(Quill.find(container) === quill); // Should be true
+
+quill.insertText(0, 'Hello', 'link', 'https://world.com');
+var linkNode = document.querySelector('#container a');
+var linkBlot = Quill.find(linkNode);
+```
+
+### getIndex #experimental
+
+Returns the distance between the beginning of document to the occurrence of the given [Blot](https://github.com/quilljs/parchment).
+
+**Methods**
+
+```javascript
+getIndex(blot: Blot): Number
+```
+
+**Examples**
+
+```javascript
+let [line, offset] = quill.getLine(10);
+let index = quill.getIndex(line); // index + offset should == 10
+```
+
+### getLeaf #experimental
+
+Returns the leaf [Blot](https://github.com/quilljs/parchment) at the specified index within the document.
+
+**Methods**
+
+```javascript
+getLeaf(index: Number): Blot
+```
+
+**Examples**
+
+```javascript
+quill.setText('Hello Good World!');
+quill.formatText(6, 4, 'bold', true);
+
+let [leaf, offset] = quill.getLeaf(7);
+// leaf should be a Text Blot with value "Good"
+// offset should be 1, since the returned leaf started at index 6
+```
+
+### getLine #experimental
+
+Returns the line [Blot](https://github.com/quilljs/parchment) at the specified index within the document.
+
+**Methods**
+
+```javascript
+getLine(index: Number): [Blot, Number]
+```
+
+**Examples**
+
+```javascript
+quill.setText('Hello\nWorld!');
+
+let [line, offset] = quill.getLine(7);
+// line should be a Block Blot representing the 2nd "World!" line
+// offset should be 1, since the returned line started at index 6
+```
+
+### getLines #experimental
+
+Returns the lines contained within the specified location.
+
+**Methods**
+
+```javascript
+getLines(index: Number = 0, length: Number = remaining): Blot[]
+getLines(range: Range): Blot[]
+```
+
+**Examples**
+
+```javascript
+quill.setText('Hello\nGood\nWorld!');
+quill.formatLine(1, 1, 'list', 'bullet');
+
+let lines = quill.getLines(2, 5);
+// array with a ListItem and Block Blot,
+// representing the first two lines
+```
+
+## Extension
+
+### debug
+
+Static method enabling logging messages at a given level: `'error'`, `'warn'`, `'log'`, or `'info'`. Passing `true` is equivalent to passing `'log'`. Passing `false` disables all messages.
+
+**Methods**
+
+```javascript
+Quill.debug(level: String | Boolean)
+```
+
+**Examples**
+
+```javascript
+Quill.debug('info');
+```
+
+### import
+
+Static method returning Quill library, format, module, or theme. In general the path should map exactly to Quill source code directory structure. Unless stated otherwise, modification of returned entities may break required Quill functionality and is strongly discouraged.
+
+**Methods**
+
+```javascript
+Quill.import(path): any
+```
+
+**Examples**
+
+```javascript
+var Parchment = Quill.import('parchment');
+var Delta = Quill.import('delta');
+
+var Toolbar = Quill.import('modules/toolbar');
+var Link = Quill.import('formats/link');
+// Similar to ES6 syntax `import Link from 'quill/formats/link';`
+```
+
+### register
+
+Registers a module, theme, or format(s), making them available to be added to an editor. Can later be retrieved with [`Quill.import`](/docs/api/#import). Use the path prefix of `'formats/'`, `'modules/'`, or `'themes/'` for registering formats, modules or themes, respectively. For formats specifically there is a shorthand to just pass in the format directly and the path will be autogenerated. Will overwrite existing definitions with the same path.
+
+**Methods**
+
+```javascript
+Quill.register(format: Attributor | BlotDefinintion, supressWarning: Boolean = false)
+Quill.register(path: String, def: any, supressWarning: Boolean = false)
+Quill.register(defs: { [String]: any }, supressWarning: Boolean = false)
+```
+
+**Examples**
+
+```javascript
+var Module = Quill.import('core/module');
+
+class CustomModule extends Module {}
+
+Quill.register('modules/custom-module', CustomModule);
+```
+
+```javascript
+Quill.register({
+  'formats/custom-format': CustomFormat,
+  'modules/custom-module-a': CustomModuleA,
+  'modules/custom-module-b': CustomModuleB,
+});
+
+Quill.register(CustomFormat);
+// You cannot do Quill.register(CustomModuleA); as CustomModuleA is not a format
+```
+
+### addContainer
+
+Adds and returns a container element inside the Quill container, sibling to the editor itself. By convention, Quill modules should have a class name prefixed with `ql-`. Optionally include a refNode where container should be inserted before.
+
+**Methods**
+
+```javascript
+addContainer(className: String, refNode?: Node): Element
+addContainer(domNode: Node, refNode?: Node): Element
+```
+
+**Examples**
+
+```javascript
+var container = quill.addContainer('ql-custom');
+```
+
+### getModule
+
+Retrieves a module that has been added to the editor.
+
+**Methods**
+
+```javascript
+getModule(name: String): any
+```
+
+**Examples**
+
+```javascript
+var toolbar = quill.getModule('toolbar');
+```

@@ -1,0 +1,39 @@
+---
+title: Building a Custom Module
+---
+
+Quill's core strength as an editor is its rich API and powerful customization capabilities. As you implement functionality on top of Quill's API, it may be convenient to organize this as a module. For the purpose of this guide, we will walk through one way to build a word counter module, a commonly found feature in many word processors.
+
+_Note: Internally modules are how much of Quill's functionality is organized. You can overwrite these default [modules](/docs/modules/) by implementing your own and registering it with the same name._
+
+### Counting Words
+
+At its core a word counter simply counts the number of words in the editor and displays this value in some UI. Thus we need to:
+
+1. Listen for text changes in Quill.
+1. Count the number of words.
+1. Display this value.
+
+Let's jump straight in with a complete example!
+
+<CodePen height="379" hash="bZkWKA" />
+
+That's all it takes to add a custom module to Quill! A function can be [registered](/docs/api/#quillregistermodule/) as a module and it will be passed the corresponding Quill editor object along with any options.
+
+### Using Options
+
+Modules are passed an options object that can be used to fine tune the desired behavior. We can use this to accept a selector for the counter container instead of a hard-coded string. Let's also customize the counter to either count words or characters:
+
+<CodePen height="430" hash="OXqmEp" />
+
+### Constructors
+
+Since any function can be registered as a Quill module, we could have implemented our counter as an ES5 constructor or ES6 class. This allows us to access and utilize the module directly.
+
+<CodePen height="688" hash="BzbRVR" />
+
+### Wrapping It All Up
+
+Now let's polish off the module in ES6 and fix a few pesky bugs. That's all there is to it!
+
+<CodePen height="772" hash="wWOdXZ" />

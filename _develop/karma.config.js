@@ -54,7 +54,7 @@ module.exports = config => {
   });
 
   /* eslint-disable no-param-reassign */
-  if (process.env.TRAVIS) {
+  if (process.env.GITHUB_ACTION) {
     config.transports = ['polling'];
     config.browsers = [process.env.BROWSER];
     config.browserDisconnectTimeout = 10000;

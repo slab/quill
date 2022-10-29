@@ -1,7 +1,7 @@
 #!/bin/bash
 
 npm start &
-sleep 20s
+sleep 20
 ./node_modules/.bin/jasmine test/functional/epic.js
 EXIT_CODE=$?
 

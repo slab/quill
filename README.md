@@ -18,8 +18,8 @@ Note: This branch and README covers the upcoming 2.0 release. View [1.x docs her
   <a title="Interactive Playground" href="https://quilljs.com/playground/"><strong>Interactive Playground</strong></a>
 </p>
 <p align="center">
-  <a href="https://travis-ci.org/quilljs/quill" title="Build Status">
-    <img src="https://app.travis-ci.com/quilljs/quill.svg?branch=develop" alt="Build Status">
+  <a href="https://github.com/quilljs/quill/actions" title="Build Status">
+    <img src="https://github.com/quilljs/quill/actions/workflows/main.yml/badge.svg" alt="Build Status">
   </a>
   <a href="https://npmjs.com/package/quill" title="Version">
     <img src="https://img.shields.io/npm/v/quill.svg" alt="Version">
