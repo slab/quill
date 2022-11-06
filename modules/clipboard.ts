@@ -25,7 +25,10 @@ import { deleteRange } from './keyboard';
 
 const debug = logger('quill:clipboard');
 
-const CLIPBOARD_CONFIG = [
+type Selector = string | Node['TEXT_NODE'] | Node['ELEMENT_NODE'];
+type Matcher = (node: Node, delta: Delta, scroll: ScrollBlot) => Delta;
+
+const CLIPBOARD_CONFIG: [Selector, Matcher][] = [
   [Node.TEXT_NODE, matchText],
   [Node.TEXT_NODE, matchNewline],
   ['br', matchBreak],
@@ -63,11 +66,8 @@ const STYLE_ATTRIBUTORS = [
   return memo;
 }, {});
 
-type Matcher = (node: Node, delta: Delta, scroll: ScrollBlot) => Delta;
-type Selector = string | Node['TEXT_NODE'] | Node['ELEMENT_NODE'];
-
 interface ClipboardOptions {
-  matchers: Matcher[];
+  matchers: [Selector, Matcher][];
 }
 
 class Clipboard extends Module<ClipboardOptions> {
@@ -155,7 +155,6 @@ class Clipboard extends Module<ClipboardOptions> {
     e.preventDefault();
     const [range] = this.quill.selection.getRange();
     if (range == null) return;
-    // @ts-expect-error
     const { html, text } = this.onCopy(range, isCut);
     e.clipboardData.setData('text/plain', text);
     e.clipboardData.setData('text/html', html);
@@ -189,6 +188,7 @@ class Clipboard extends Module<ClipboardOptions> {
     this.onPaste(range, { html, text });
   }
 
+  onCopy(range: Range, isCut: boolean): { html: string; text: string };
   onCopy(range: Range) {
     const text = this.quill.getText(range);
     const html = this.quill.getSemanticHTML(range);
