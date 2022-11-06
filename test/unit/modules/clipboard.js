@@ -215,6 +215,14 @@ describe('Clipboard', function() {
       );
     });
 
+    it('pre with \\n node', function() {
+      const html = '<pre><span> 01 </span>\n<span> 23 </span></pre>';
+      const delta = this.clipboard.convert({ html });
+      expect(delta).toEqual(
+        new Delta().insert(' 01 \n 23 \n', { 'code-block': true }),
+      );
+    });
+
     it('nested list', function() {
       const delta = this.clipboard.convert({
         html: '<ol><li>One</li><li class="ql-indent-1">Alpha</li></ol>',

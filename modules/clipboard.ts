@@ -555,10 +555,10 @@ function matchText(node, delta) {
   if (node.parentNode.tagName === 'O:P') {
     return delta.insert(text.trim());
   }
-  if (text.trim().length === 0 && text.includes('\n')) {
-    return delta;
-  }
   if (!isPre(node)) {
+    if (text.trim().length === 0 && text.includes('\n')) {
+      return delta;
+    }
     const replacer = (collapse, match) => {
       const replaced = match.replace(/[^\u00a0]/g, ''); // \u00a0 is nbsp;
       return replaced.length < 1 && collapse ? ' ' : replaced;
