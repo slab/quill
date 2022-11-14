@@ -9,5 +9,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    uses: ./.github/workflows/test.yml
+  unit:
+    uses: ./.github/workflows/_unit.yml
+  e2e:
+    uses: ./.github/workflows/_e2e.yml
