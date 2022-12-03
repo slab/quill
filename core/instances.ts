@@ -1,1 +1,3 @@
-export default new WeakMap();
+import type Quill from '../core';
+
+export default new WeakMap<Node, Quill>();
