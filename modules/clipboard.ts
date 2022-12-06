@@ -563,7 +563,7 @@ function matchText(node, delta) {
       const replaced = match.replace(/[^\u00a0]/g, ''); // \u00a0 is nbsp;
       return replaced.length < 1 && collapse ? ' ' : replaced;
     };
-    text = text.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
+    text = text.replace(/\t/g, ' '.repeat(4)).replace(/\r\n/g, ' ').replace(/\n/g, ' ');
     text = text.replace(/\s\s+/g, replacer.bind(replacer, true)); // collapse whitespace
     if (
       (node.previousSibling == null && isLine(node.parentNode)) ||
