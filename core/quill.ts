@@ -660,8 +660,8 @@ class Quill {
     return this.setContents(delta, source);
   }
 
-  setPlaceholder(placeholder) {
-    if (placeholder && placeholder.length > 0) {
+  setPlaceholder(placeholder: string | null) {
+    if (placeholder) {
       this.root.setAttribute('data-placeholder', placeholder);
       this.root.setAttribute('aria-placeholder', placeholder);
     } else {
