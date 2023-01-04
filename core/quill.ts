@@ -650,7 +650,7 @@ class Quill {
       [index, length, , source] = overload(index, length, source);
       this.selection.setRange(new Range(Math.max(0, index), length), source);
       if (source !== Emitter.sources.SILENT) {
-        this.selection.scrollIntoView(this.scrollingContainer);
+        this.scrollIntoView();
       }
     }
   }
