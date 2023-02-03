@@ -130,8 +130,14 @@ class Clipboard extends Module<ClipboardOptions> {
     );
   }
 
+  dangerouslyPasteHTML(html: string, source?: EmitterSource): void;
   dangerouslyPasteHTML(
     index: number,
+    html: string,
+    source?: EmitterSource,
+  ): void;
+  dangerouslyPasteHTML(
+    index: number | string,
     html: string,
     source: EmitterSource = Quill.sources.API,
   ) {
