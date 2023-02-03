@@ -431,8 +431,8 @@ class Quill {
     return this.editor.getContents(index, length);
   }
 
-  getFormat(index: number, length?: number);
-  getFormat(range: { index: number; length: number });
+  getFormat(index?: number, length?: number);
+  getFormat(range?: { index: number; length: number });
   getFormat(
     index: { index: number; length: number } | number = this.getSelection(true),
     length = 0,
