@@ -58,6 +58,8 @@ interface KeyboardOptions {
 }
 
 class Keyboard extends Module<KeyboardOptions> {
+  static DEFAULTS: KeyboardOptions;
+
   static match(evt: KeyboardEvent, binding) {
     if (
       ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'].some(key => {

@@ -10,6 +10,8 @@ interface UploaderOptions {
 }
 
 class Uploader extends Module<UploaderOptions> {
+  static DEFAULTS: UploaderOptions;
+
   constructor(quill: Quill, options: Partial<UploaderOptions>) {
     super(quill, options);
     quill.root.addEventListener('drop', e => {
@@ -61,7 +63,7 @@ Uploader.DEFAULTS = {
     Promise.all(promises).then(images => {
       const update = images.reduce((delta: Delta, image) => {
         return delta.insert({ image });
-      }, new Delta().retain(range.index).delete(range.length));
+      }, new Delta().retain(range.index).delete(range.length)) as Delta;
       this.quill.updateContents(update, Emitter.sources.USER);
       this.quill.setSelection(
         range.index + images.length,

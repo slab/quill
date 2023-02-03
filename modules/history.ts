@@ -10,6 +10,8 @@ interface HistoryOptions {
 }
 
 class History extends Module<HistoryOptions> {
+  static DEFAULTS: HistoryOptions;
+
   lastRecorded: number;
   ignoreChange: boolean;
   stack: {
