@@ -9,10 +9,13 @@ const debug = logger('quill:toolbar');
 type Handler = (value: any) => void;
 
 interface ToolbarProps {
-  container: HTMLElement;
+  container?: HTMLElement;
+  handlers?: Record<string, Handler>;
 }
 
 class Toolbar extends Module<ToolbarProps> {
+  static DEFAULTS: ToolbarProps;
+
   container: HTMLElement;
   controls: [string, HTMLElement][];
   handlers: Record<string, Handler>;
@@ -36,9 +39,7 @@ class Toolbar extends Module<ToolbarProps> {
     this.container.classList.add('ql-toolbar');
     this.controls = [];
     this.handlers = {};
-    // @ts-expect-error
     Object.keys(this.options.handlers).forEach(format => {
-      // @ts-expect-error
       this.addHandler(format, this.options.handlers[format]);
     });
     Array.from(this.container.querySelectorAll('button, select')).forEach(

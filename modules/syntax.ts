@@ -193,6 +193,8 @@ interface SyntaxOptions {
 }
 
 class Syntax extends Module<SyntaxOptions> {
+  static DEFAULTS: SyntaxOptions & { hljs: any };
+
   static register() {
     Quill.register(CodeToken, true);
     // @ts-expect-error

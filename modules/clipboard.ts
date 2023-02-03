@@ -71,6 +71,8 @@ interface ClipboardOptions {
 }
 
 class Clipboard extends Module<ClipboardOptions> {
+  static DEFAULTS: ClipboardOptions;
+
   matchers: [Selector, Matcher][];
 
   constructor(quill: Quill, options: Partial<ClipboardOptions>) {
