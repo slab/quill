@@ -88,7 +88,7 @@ class Block extends BlockBlot {
     return this.cache.length;
   }
 
-  moveChildren(target, ref) {
+  moveChildren(target, ref?) {
     super.moveChildren(target, ref);
     this.cache = {};
   }
