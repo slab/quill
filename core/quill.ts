@@ -497,8 +497,8 @@ class Quill {
     return this.editor.getHTML(index, length);
   }
 
-  getText(range: { index: number; length: number }): string;
-  getText(index: number, length?: number): string;
+  getText(range?: { index: number; length: number }): string;
+  getText(index?: number, length?: number): string;
   getText(
     index: { index: number; length: number } | number = 0,
     length?: number,
