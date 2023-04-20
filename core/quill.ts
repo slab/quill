@@ -30,10 +30,10 @@ interface Options {
   debug?: string | boolean;
   registry?: Parchment.Registry;
   readOnly?: boolean;
-  container?: HTMLElement;
+  container?: HTMLElement | string;
   placeholder?: string;
-  bounds?: HTMLElement | null;
-  scrollingContainer?: HTMLElement | null;
+  bounds?: HTMLElement | string | null;
+  scrollingContainer?: HTMLElement | string | null;
   modules?: Record<string, unknown>;
 }
 
@@ -42,6 +42,8 @@ interface ExpandedOptions extends Omit<Options, 'theme'> {
   registry: Parchment.Registry;
   container: HTMLElement;
   modules: Record<string, unknown>;
+  bounds?: HTMLElement | null;
+  scrollingContainer?: HTMLElement | null;
 }
 
 class Quill {
@@ -147,7 +149,7 @@ class Quill {
 
   options: ExpandedOptions;
 
-  constructor(container: HTMLElement, options: Options = {}) {
+  constructor(container: HTMLElement | string, options: Options = {}) {
     this.options = expandConfig(container, options);
     this.container = this.options.container;
     if (this.container == null) {
@@ -684,7 +686,7 @@ class Quill {
 }
 
 function expandConfig(
-  container: HTMLElement,
+  container: HTMLElement | string,
   userConfig: Options,
 ): ExpandedOptions {
   let expandedConfig = merge(
