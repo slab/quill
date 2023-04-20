@@ -6,7 +6,7 @@ import Module from '../core/module';
 
 const debug = logger('quill:toolbar');
 
-type Handler = () => void;
+type Handler = (value: any) => void;
 
 interface ToolbarProps {
   container: HTMLElement;
