@@ -30,7 +30,7 @@ interface Options {
   debug?: string | boolean;
   registry?: Parchment.Registry;
   readOnly?: boolean;
-  container?: HTMLElement|string;
+  container?: HTMLElement | string;
   placeholder?: string;
   bounds?: HTMLElement | string | null;
   scrollingContainer?: HTMLElement | string | null;
@@ -149,7 +149,7 @@ class Quill {
 
   options: ExpandedOptions;
 
-  constructor(container: HTMLElement|string, options: Options = {}) {
+  constructor(container: HTMLElement | string, options: Options = {}) {
     this.options = expandConfig(container, options);
     this.container = this.options.container;
     if (this.container == null) {
@@ -686,7 +686,7 @@ class Quill {
 }
 
 function expandConfig(
-  container: HTMLElement|string,
+  container: HTMLElement | string,
   userConfig: Options,
 ): ExpandedOptions {
   let expandedConfig = merge(
