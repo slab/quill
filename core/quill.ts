@@ -626,11 +626,10 @@ class Quill {
         const length = this.getLength();
         // Quill will set empty editor to \n
         const delete1 = this.editor.deleteText(0, length);
-        // delta always applied before existing content
-        const applied = this.editor.applyDelta(delta);
+        const appended = this.editor.appendContents(delta);
         // Remove extra \n from empty editor initialization
-        const delete2 = this.editor.deleteText(this.getLength() - 1, 1);
-        return delete1.compose(applied).compose(delete2);
+        const delete2 = this.editor.deleteText(0, 1);
+        return delete1.compose(appended).compose(delete2);
       },
       source,
     );

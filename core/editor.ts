@@ -91,6 +91,126 @@ class Editor {
     return this.update(normalizedDelta);
   }
 
+  appendContents(delta: Delta): Delta {
+    this.scroll.update();
+    this.scroll.batchStart();
+
+    const normalizedDelta = normalizeDelta(delta);
+    const lines: (
+      | {
+          type: 'blockEmbed';
+          attributes: AttributeMap;
+          key: string;
+          value: unknown;
+        }
+      | { type: 'block'; attributes: AttributeMap; delta: Delta }
+    )[] = [];
+    let currentLine = new Delta();
+    for (let i = 0; i < normalizedDelta.ops.length; i += 1) {
+      const op = normalizedDelta.ops[i];
+      const insert = op?.insert;
+      if (!insert) continue;
+      if (typeof insert === 'string') {
+        const splitted = insert.split('\n');
+        splitted.slice(0, -1).forEach(text => {
+          currentLine.insert(text, op.attributes);
+          lines.push({
+            type: 'block',
+            delta: currentLine,
+            attributes: op.attributes ?? {},
+          });
+          currentLine = new Delta();
+        });
+        const last = splitted[splitted.length - 1];
+        if (last) {
+          currentLine.insert(last, op.attributes);
+        }
+      } else {
+        const key = Object.keys(insert)[0];
+        if (!key) continue;
+        if (this.scroll.query(key, Scope.INLINE)) {
+          currentLine.push(op);
+        } else {
+          if (currentLine.length()) {
+            lines.push({ type: 'block', delta: currentLine, attributes: {} });
+          }
+          currentLine = new Delta();
+          lines.push({
+            type: 'blockEmbed',
+            key,
+            value: insert[key],
+            attributes: op.attributes ?? {},
+          });
+        }
+      }
+    }
+    if (currentLine.length()) {
+      lines.push({ type: 'block', delta: currentLine, attributes: {} });
+    }
+
+    lines.forEach(line => {
+      if (line.type === 'blockEmbed') {
+        const blockEmbed = this.scroll.create(line.key, line.value);
+        const blockEmbedLength = blockEmbed.length();
+        Object.keys(line.attributes).forEach(key => {
+          blockEmbed.formatAt(0, blockEmbedLength, key, line.attributes[key]);
+        });
+        this.scroll.appendChild(blockEmbed);
+      } else {
+        const blockBlotAttributes = Object.keys(line.attributes).filter(
+          key =>
+            this.scroll.query(
+              key,
+              // eslint-disable-next-line no-bitwise
+              Scope.BLOCK & Scope.BLOT,
+            ) != null,
+        );
+        const blockBlotAttribute =
+          blockBlotAttributes[blockBlotAttributes.length - 1];
+        const block = this.scroll.create(
+          blockBlotAttribute || this.scroll.statics.defaultChild.blotName,
+          blockBlotAttribute ? line.attributes[blockBlotAttribute] : undefined,
+        );
+        this.scroll.appendChild(block);
+        Object.keys(line.attributes).forEach(key => {
+          if (!blockBlotAttributes.includes(key)) {
+            block.formatAt(0, block.length(), key, line.attributes[key]);
+          }
+        });
+
+        line.delta.reduce((index, op) => {
+          const length = Op.length(op);
+          let attributes = op.attributes || {};
+          if (op.insert != null) {
+            if (typeof op.insert === 'string') {
+              const text = op.insert;
+              block.insertAt(index, text);
+              // @ts-expect-error
+              const [leaf] = block.descendant(LeafBlot, index);
+              const formats = bubbleFormats(leaf);
+              attributes = AttributeMap.diff(formats, attributes) || {};
+            } else if (typeof op.insert === 'object') {
+              const key = Object.keys(op.insert)[0]; // There should only be one key
+              if (key == null) return index;
+              block.insertAt(index, key, op.insert[key]);
+              // @ts-expect-error
+              const [leaf] = block.descendant(LeafBlot, index);
+              const formats = bubbleFormats(leaf);
+              attributes = AttributeMap.diff(formats, attributes) || {};
+            }
+          }
+          Object.keys(attributes).forEach(name => {
+            block.formatAt(index, length, name, attributes[name]);
+          });
+          return index + length;
+        }, 0);
+      }
+    });
+    this.scroll.batchEnd();
+    this.scroll.optimize();
+    return this.update(normalizedDelta);
+  }
+
   deleteText(index: number, length: number): Delta {
     this.scroll.deleteAt(index, length);
     return this.update(new Delta().retain(index).delete(length));
