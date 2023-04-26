@@ -762,14 +762,10 @@ function normalize(binding: Binding): BindingObject {
   } else {
     return null;
   }
-  // @ts-expect-error
   if (binding.shortKey) {
-    // @ts-expect-error
     binding[SHORTKEY] = binding.shortKey;
-    // @ts-expect-error
     delete binding.shortKey;
   }
-  // @ts-expect-error
   return binding;
 }
 

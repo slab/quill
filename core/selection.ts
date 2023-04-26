@@ -331,13 +331,6 @@ class Selection {
     if (range == null) return;
     const bounds = this.getBounds(range.index, range.length);
     if (bounds == null) return;
-    const limit = this.scroll.length() - 1;
-    const [first] = this.scroll.line(Math.min(range.index, limit));
-    let last = first;
-    if (range.length > 0) {
-      [last] = this.scroll.line(Math.min(range.index + range.length, limit));
-    }
-    if (first == null || last == null) return;
     const scrollBounds = scrollingContainer.getBoundingClientRect();
     if (bounds.top < scrollBounds.top) {
       scrollingContainer.scrollTop -= scrollBounds.top - bounds.top;
