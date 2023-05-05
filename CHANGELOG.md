@@ -2,6 +2,7 @@
 
 - Fix toolbar button state not updated in some cases
 - Narrower `BubbleTheme.tooltip` type
+- Fix `Selection.getBounds()` when starting range at end of text node
 
 # 2.0.0-rc.1
 

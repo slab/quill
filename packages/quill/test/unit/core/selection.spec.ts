@@ -598,6 +598,22 @@ describe('Selection', () => {
       );
     });
 
+    test('selection starting at end of text node', () => {
+      const { reference, container } = setup();
+      container.style.width = `${reference.width * 4}px`;
+      const selection = createSelection(
+        `
+        <p>
+          0000
+          <b>0000</b>
+          0000
+        </p>`,
+        container,
+      );
+      const bounds = selection.getBounds(4, 1);
+      expect(bounds?.width).approximately(reference.width, 1);
+    });
+
     test('multiple lines', () => {
       const { reference, container } = setup();
       const selection = createSelection(
