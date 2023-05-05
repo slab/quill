@@ -183,6 +183,17 @@ class Selection {
     let node: Node;
     let [leaf, offset] = this.scroll.leaf(index);
     if (leaf == null) return null;
+    if (length > 0 && offset === leaf.length()) {
+      const [next] = this.scroll.leaf(index + 1);
+      if (next) {
+        const [line] = this.scroll.line(index);
+        const [nextLine] = this.scroll.line(index + 1);
+        if (line === nextLine) {
+          leaf = next;
+          offset = 0;
+        }
+      }
+    }
     [node, offset] = leaf.position(offset, true);
     const range = document.createRange();
     if (length > 0) {
