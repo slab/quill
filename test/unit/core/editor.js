@@ -603,22 +603,87 @@ describe('Editor', function() {
       );
     });
 
-    it('improper block embed insert', function() {
-      const editor = this.initialize(Editor, '<p>0123</p>');
-      editor.applyDelta(new Delta().retain(2).insert({ video: '#' }));
-      expect(this.container).toEqualHTML(
-        '<p>01</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe><p>23</p>',
-      );
-    });
+    describe('block embed', function() {
+      it('improper block embed insert', function() {
+        const editor = this.initialize(Editor, '<p>0123</p>');
+        editor.applyDelta(new Delta().retain(2).insert({ video: '#' }));
+        expect(this.container).toEqualHTML(
+          '<p>01</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe><p>23</p>',
+        );
+      });
 
-    it('append formatted block embed', function() {
-      const editor = this.initialize(Editor, '<p>0123</p><p><br></p>');
-      editor.applyDelta(
-        new Delta().retain(5).insert({ video: '#' }, { align: 'right' }),
-      );
-      expect(this.container).toEqualHTML(
-        '<p>0123</p><iframe src="#" class="ql-video ql-align-right" frameborder="0" allowfullscreen="true"></iframe><p><br></p>',
-      );
+      describe('insert and delete', function() {
+        it('prepend', function() {
+          const editor = this.initialize(Editor, '<p>0123</p>');
+          editor.applyDelta(new Delta().insert({ video: '#' }).delete(2));
+          expect(this.container).toEqualHTML(
+            '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe><p>23</p>',
+          );
+        });
+
+
+        it('insert to the middle of text', function() {
+          const editor = this.initialize(Editor, `<p>abc</p>`);
+          editor.applyDelta(
+            new Delta()
+              .retain(1)
+              .insert({ video: '#' })
+              .delete(2),
+          );
+          expect(this.container).toEqualHTML(
+            '<p>a</p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p><br></p>',
+          );
+        });
+
+        it('insert after \\n', function() {
+          const editor = this.initialize(Editor, `<p>a</p><p>cda</p>`);
+          editor.applyDelta(
+            new Delta()
+              .retain(2)
+              .insert({ video: '#' })
+              .delete(2),
+          );
+          expect(this.container).toEqualHTML(
+            '<p>a</p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p>a</p>',
+          );
+        });
+
+        it('insert after an inline embed', function() {
+          const editor = this.initialize(Editor, `<p><img src="/assets/favicon.png"></p><p>abc</p>`);
+          editor.applyDelta(
+            new Delta()
+              .retain(1)
+              .insert({ video: '#' })
+              .delete(2),
+          );
+          expect(this.container).toEqualHTML(
+            '<p><img src="/assets/favicon.png"></p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p>bc</p>',
+          );
+        });
+
+        it('insert after a block embed', function() {
+          const editor = this.initialize(Editor, `<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p>abc</p>`);
+          editor.applyDelta(
+            new Delta()
+              .retain(1)
+              .insert({ video: '#' })
+              .delete(2),
+          );
+          expect(this.container).toEqualHTML(
+            '<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p>c</p>',
+          );
+        });
+      });
+
+      it('append formatted block embed', function() {
+        const editor = this.initialize(Editor, '<p>0123</p><p><br></p>');
+        editor.applyDelta(
+          new Delta().retain(5).insert({ video: '#' }, { align: 'right' }),
+        );
+        expect(this.container).toEqualHTML(
+          '<p>0123</p><iframe src="#" class="ql-video ql-align-right" frameborder="0" allowfullscreen="true"></iframe><p><br></p>',
+        );
+      });
     });
 
     it('append', function() {
