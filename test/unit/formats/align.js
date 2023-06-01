@@ -1,8 +1,8 @@
 import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
 
-describe('Align', function() {
-  it('add', function() {
+describe('Align', function () {
+  it('add', function () {
     const editor = this.initialize(Editor, '<p>0123</p>');
     editor.formatText(4, 1, { align: 'center' });
     expect(editor.getDelta()).toEqual(
@@ -13,7 +13,7 @@ describe('Align', function() {
     );
   });
 
-  it('remove', function() {
+  it('remove', function () {
     const editor = this.initialize(
       Editor,
       '<p class="ql-align-center">0123</p>',
@@ -23,7 +23,7 @@ describe('Align', function() {
     expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
   });
 
-  it('whitelist', function() {
+  it('whitelist', function () {
     const editor = this.initialize(
       Editor,
       '<p class="ql-align-center">0123</p>',
@@ -36,7 +36,7 @@ describe('Align', function() {
     expect(editor.scroll.domNode).toEqualHTML(initial);
   });
 
-  it('invalid scope', function() {
+  it('invalid scope', function () {
     const editor = this.initialize(Editor, '<p>0123</p>');
     const initial = editor.scroll.domNode.innerHTML;
     editor.formatText(1, 2, { align: 'center' });

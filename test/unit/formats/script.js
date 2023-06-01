@@ -1,7 +1,7 @@
 import Editor from '../../../core/editor';
 
-describe('Script', function() {
-  it('add', function() {
+describe('Script', function () {
+  it('add', function () {
     const editor = this.initialize(
       Editor,
       '<p>a<sup>2</sup> + b2 = c<sup>2</sup></p>',
@@ -12,7 +12,7 @@ describe('Script', function() {
     );
   });
 
-  it('remove', function() {
+  it('remove', function () {
     const editor = this.initialize(
       Editor,
       '<p>a<sup>2</sup> + b<sup>2</sup></p>',
@@ -21,7 +21,7 @@ describe('Script', function() {
     expect(editor.scroll.domNode).toEqualHTML('<p>a2 + b<sup>2</sup></p>');
   });
 
-  it('replace', function() {
+  it('replace', function () {
     const editor = this.initialize(
       Editor,
       '<p>a<sup>2</sup> + b<sup>2</sup></p>',

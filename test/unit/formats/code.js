@@ -1,8 +1,8 @@
 import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
 
-describe('Code', function() {
-  it('format newline', function() {
+describe('Code', function () {
+  it('format newline', function () {
     const editor = this.initialize(Editor, '<p><br></p>');
     editor.formatLine(0, 1, { 'code-block': true });
     expect(editor.scroll.domNode).toEqualHTML(
@@ -12,7 +12,7 @@ describe('Code', function() {
     );
   });
 
-  it('format lines', function() {
+  it('format lines', function () {
     const editor = this.initialize(Editor, '<p><em>0123</em></p><p>5678</p>');
     editor.formatLine(2, 5, { 'code-block': true });
     expect(editor.getDelta()).toEqual(
@@ -30,7 +30,7 @@ describe('Code', function() {
     );
   });
 
-  it('remove format', function() {
+  it('remove format', function () {
     const editor = this.initialize(
       Editor,
       '<div class="ql-code-block-container" spellcheck="false"><div class="ql-code-block">0123</div></div>',
@@ -40,7 +40,7 @@ describe('Code', function() {
     expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
   });
 
-  it('delete last', function() {
+  it('delete last', function () {
     const editor = this.initialize(
       Editor,
       '<p>0123</p><div class="ql-code-block-container" spellcheck="false"><div class="ql-code-block"><br></div></div><p>5678</p>',
@@ -57,7 +57,7 @@ describe('Code', function() {
     );
   });
 
-  it('delete merge before', function() {
+  it('delete merge before', function () {
     const editor = this.initialize(
       Editor,
       '<h1>0123</h1><div class="ql-code-block-container" spellcheck="false"><div class="ql-code-block">4567</div></div>',
@@ -71,7 +71,7 @@ describe('Code', function() {
     );
   });
 
-  it('delete merge after', function() {
+  it('delete merge after', function () {
     const editor = this.initialize(
       Editor,
       '<div class="ql-code-block-container" spellcheck="false"><div class="ql-code-block">0123</div></div><h1>4567</h1>',
@@ -83,7 +83,7 @@ describe('Code', function() {
     expect(editor.scroll.domNode).toEqualHTML('<h1>01234567</h1>');
   });
 
-  it('delete across before partial merge', function() {
+  it('delete across before partial merge', function () {
     const editor = this.initialize(
       Editor,
       `<div class="ql-code-block-container" spellcheck="false">
@@ -112,7 +112,7 @@ describe('Code', function() {
     );
   });
 
-  it('delete across before no merge', function() {
+  it('delete across before no merge', function () {
     const editor = this.initialize(
       Editor,
       `<div class="ql-code-block-container" spellcheck="false">
@@ -134,7 +134,7 @@ describe('Code', function() {
     );
   });
 
-  it('delete across after', function() {
+  it('delete across after', function () {
     const editor = this.initialize(
       Editor,
       `<h1>0123</h1>
@@ -159,7 +159,7 @@ describe('Code', function() {
     `);
   });
 
-  it('replace', function() {
+  it('replace', function () {
     const editor = this.initialize(
       Editor,
       '<div class="ql-code-block-container" spellcheck="false"><div class="ql-code-block">0123</div></div>',
@@ -171,7 +171,7 @@ describe('Code', function() {
     expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
   });
 
-  it('replace multiple', function() {
+  it('replace multiple', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -192,7 +192,7 @@ describe('Code', function() {
     expect(editor.scroll.domNode).toEqualHTML('<h1>01</h1><h1>23</h1>');
   });
 
-  it('format imprecise bounds', function() {
+  it('format imprecise bounds', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -218,7 +218,7 @@ describe('Code', function() {
     );
   });
 
-  it('format without newline', function() {
+  it('format without newline', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -248,7 +248,7 @@ describe('Code', function() {
     `);
   });
 
-  it('format line', function() {
+  it('format line', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -280,7 +280,7 @@ describe('Code', function() {
     `);
   });
 
-  it('ignore formatAt', function() {
+  it('ignore formatAt', function () {
     const editor = this.initialize(
       Editor,
       '<div class="ql-code-block-container" spellcheck="false"><div class="ql-code-block">0123</div></div>',
@@ -294,7 +294,7 @@ describe('Code', function() {
     );
   });
 
-  it('partial block modification applyDelta', function() {
+  it('partial block modification applyDelta', function () {
     const editor = this.initialize(
       Editor,
       `<div class="ql-code-block-container" spellcheck="false">

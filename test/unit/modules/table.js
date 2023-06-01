@@ -1,9 +1,9 @@
 import Delta from 'quill-delta';
 import Quill from '../../../core/quill';
 
-describe('Table Module', function() {
-  describe('insert table', function() {
-    it('empty', function() {
+describe('Table Module', function () {
+  describe('insert table', function () {
+    it('empty', function () {
       const quill = this.initialize(Quill, '<p><br></p>', this.container, {
         modules: {
           table: true,
@@ -23,7 +23,7 @@ describe('Table Module', function() {
       `);
     });
 
-    it('split', function() {
+    it('split', function () {
       const quill = this.initialize(Quill, '<p>0123</p>', this.container, {
         modules: {
           table: true,
@@ -44,8 +44,8 @@ describe('Table Module', function() {
     });
   });
 
-  describe('modify table', function() {
-    beforeEach(function() {
+  describe('modify table', function () {
+    beforeEach(function () {
       const tableHTML = `
         <table>
           <tbody>
@@ -62,7 +62,7 @@ describe('Table Module', function() {
       this.table = this.quill.getModule('table');
     });
 
-    it('insertRowAbove', function() {
+    it('insertRowAbove', function () {
       this.quill.setSelection(0);
       this.table.insertRowAbove();
       expect(this.quill.root).toEqualHTML(`
@@ -76,7 +76,7 @@ describe('Table Module', function() {
       `);
     });
 
-    it('insertRowBelow', function() {
+    it('insertRowBelow', function () {
       this.quill.setSelection(0);
       this.table.insertRowBelow();
       expect(this.quill.root).toEqualHTML(`
@@ -90,7 +90,7 @@ describe('Table Module', function() {
       `);
     });
 
-    it('insertColumnLeft', function() {
+    it('insertColumnLeft', function () {
       this.quill.setSelection(0);
       this.table.insertColumnLeft();
       expect(this.quill.root).toEqualHTML(`
@@ -103,7 +103,7 @@ describe('Table Module', function() {
       `);
     });
 
-    it('insertColumnRight', function() {
+    it('insertColumnRight', function () {
       this.quill.setSelection(0);
       this.table.insertColumnRight();
       expect(this.quill.root).toEqualHTML(`
@@ -116,7 +116,7 @@ describe('Table Module', function() {
       `);
     });
 
-    it('deleteRow', function() {
+    it('deleteRow', function () {
       this.quill.setSelection(0);
       this.table.deleteRow();
       expect(this.quill.root).toEqualHTML(`
@@ -128,7 +128,7 @@ describe('Table Module', function() {
       `);
     });
 
-    it('deleteColumn', function() {
+    it('deleteColumn', function () {
       this.quill.setSelection(0);
       this.table.deleteColumn();
       expect(this.quill.root).toEqualHTML(`
@@ -141,7 +141,7 @@ describe('Table Module', function() {
       `);
     });
 
-    it('insertText before', function() {
+    it('insertText before', function () {
       this.quill.updateContents(new Delta().insert('\n'));
       expect(this.quill.root).toEqualHTML(`
         <p><br></p>
@@ -154,7 +154,7 @@ describe('Table Module', function() {
       `);
     });
 
-    it('insertText after', function() {
+    it('insertText after', function () {
       this.quill.updateContents(new Delta().retain(18).insert('\n'));
       expect(this.quill.root).toEqualHTML(`
         <table>

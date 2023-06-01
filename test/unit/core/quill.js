@@ -6,33 +6,33 @@ import Toolbar from '../../../modules/toolbar';
 import Snow from '../../../themes/snow';
 import { Range } from '../../../core/selection';
 
-describe('Quill', function() {
-  it('imports', function() {
-    Object.keys(Quill.imports).forEach(function(path) {
+describe('Quill', function () {
+  it('imports', function () {
+    Object.keys(Quill.imports).forEach(function (path) {
       expect(Quill.import(path)).toBeTruthy();
     });
   });
 
-  describe('construction', function() {
-    it('empty', function() {
+  describe('construction', function () {
+    it('empty', function () {
       const quill = this.initialize(Quill, '');
       expect(quill.getContents()).toEqual(new Delta().insert('\n'));
       expect(quill.root).toEqualHTML('<p><br></p>');
     });
 
-    it('text', function() {
+    it('text', function () {
       const quill = this.initialize(Quill, '0123');
       expect(quill.getContents()).toEqual(new Delta().insert('0123\n'));
       expect(quill.root).toEqualHTML('<p>0123</p>');
     });
 
-    it('newlines', function() {
+    it('newlines', function () {
       const quill = this.initialize(Quill, '<p><br></p><p><br></p><p><br></p>');
       expect(quill.getContents()).toEqual(new Delta().insert('\n\n\n'));
       expect(quill.root).toEqualHTML('<p><br></p><p><br></p><p><br></p>');
     });
 
-    it('formatted ending', function() {
+    it('formatted ending', function () {
       const quill = this.initialize(
         Quill,
         '<p class="ql-align-center">Test</p>',
@@ -44,14 +44,14 @@ describe('Quill', function() {
     });
   });
 
-  describe('api', function() {
-    beforeEach(function() {
+  describe('api', function () {
+    beforeEach(function () {
       this.quill = this.initialize(Quill, '<p>0123<em>45</em>67</p>');
       this.oldDelta = this.quill.getContents();
       spyOn(this.quill.emitter, 'emit').and.callThrough();
     });
 
-    it('deleteText()', function() {
+    it('deleteText()', function () {
       this.quill.deleteText(3, 2);
       const change = new Delta().retain(3).delete(2);
       expect(this.quill.root).toEqualHTML('<p>012<em>5</em>67</p>');
@@ -63,7 +63,7 @@ describe('Quill', function() {
       );
     });
 
-    it('format()', function() {
+    it('format()', function () {
       this.quill.setSelection(3, 2);
       this.quill.format('bold', true);
       const change = new Delta().retain(3).retain(2, { bold: true });
@@ -79,7 +79,7 @@ describe('Quill', function() {
       expect(this.quill.getSelection()).toEqual(new Range(3, 2));
     });
 
-    it('formatLine()', function() {
+    it('formatLine()', function () {
       this.quill.formatLine(1, 1, 'header', 2);
       const change = new Delta().retain(8).retain(1, { header: 2 });
       expect(this.quill.root).toEqualHTML('<h2>0123<em>45</em>67</h2>');
@@ -91,7 +91,7 @@ describe('Quill', function() {
       );
     });
 
-    it('formatText()', function() {
+    it('formatText()', function () {
       this.quill.formatText(3, 2, 'bold', true);
       const change = new Delta().retain(3).retain(2, { bold: true });
       expect(this.quill.root).toEqualHTML(
@@ -105,7 +105,7 @@ describe('Quill', function() {
       );
     });
 
-    it('insertEmbed()', function() {
+    it('insertEmbed()', function () {
       this.quill.insertEmbed(5, 'image', '/assets/favicon.png');
       const change = new Delta()
         .retain(5)
@@ -121,7 +121,7 @@ describe('Quill', function() {
       );
     });
 
-    it('insertText()', function() {
+    it('insertText()', function () {
       this.quill.insertText(5, '|', 'bold', true);
       const change = new Delta()
         .retain(5)
@@ -137,34 +137,34 @@ describe('Quill', function() {
       );
     });
 
-    it('enable/disable', function() {
+    it('enable/disable', function () {
       this.quill.disable();
       expect(this.quill.root.getAttribute('contenteditable')).toEqual('false');
       this.quill.enable();
       expect(this.quill.root.getAttribute('contenteditable')).toBeTruthy();
     });
 
-    it('getBounds() index', function() {
+    it('getBounds() index', function () {
       expect(this.quill.getBounds(1)).toBeTruthy();
     });
 
-    it('getBounds() range', function() {
+    it('getBounds() range', function () {
       expect(this.quill.getBounds(new Range(3, 4))).toBeTruthy();
     });
 
-    it('getFormat()', function() {
+    it('getFormat()', function () {
       const formats = this.quill.getFormat(5);
       expect(formats).toEqual({ italic: true });
     });
 
-    it('getSelection()', function() {
+    it('getSelection()', function () {
       expect(this.quill.getSelection()).toEqual(null);
       const range = new Range(1, 2);
       this.quill.setSelection(range);
       expect(this.quill.getSelection()).toEqual(range);
     });
 
-    it('removeFormat()', function() {
+    it('removeFormat()', function () {
       this.quill.removeFormat(5, 1);
       const change = new Delta().retain(5).retain(1, { italic: null });
       expect(this.quill.root).toEqualHTML('<p>0123<em>4</em>567</p>');
@@ -176,7 +176,7 @@ describe('Quill', function() {
       );
     });
 
-    it('updateContents() delta', function() {
+    it('updateContents() delta', function () {
       const delta = new Delta().retain(5).insert('|');
       this.quill.updateContents(delta);
       expect(this.quill.root).toEqualHTML('<p>0123<em>4</em>|<em>5</em>67</p>');
@@ -188,7 +188,7 @@ describe('Quill', function() {
       );
     });
 
-    it('updateContents() ops array', function() {
+    it('updateContents() ops array', function () {
       const delta = new Delta().retain(5).insert('|');
       this.quill.updateContents(delta.ops);
       expect(this.quill.root).toEqualHTML('<p>0123<em>4</em>|<em>5</em>67</p>');
@@ -201,15 +201,15 @@ describe('Quill', function() {
     });
   });
 
-  describe('events', function() {
-    beforeEach(function() {
+  describe('events', function () {
+    beforeEach(function () {
       this.quill = this.initialize(Quill, '<p>0123</p>');
       this.quill.update();
       spyOn(this.quill.emitter, 'emit').and.callThrough();
       this.oldDelta = this.quill.getContents();
     });
 
-    it('api text insert', function() {
+    it('api text insert', function () {
       this.quill.insertText(2, '!');
       const delta = new Delta().retain(2).insert('!');
       expect(this.quill.emitter.emit).toHaveBeenCalledWith(
@@ -220,7 +220,7 @@ describe('Quill', function() {
       );
     });
 
-    it('user text insert', function(done) {
+    it('user text insert', function (done) {
       this.container.firstChild.firstChild.firstChild.data = '01!23';
       const delta = new Delta().retain(2).insert('!');
       setTimeout(() => {
@@ -241,7 +241,7 @@ describe('Quill', function() {
       newSelection,
       expectedDelta,
     ) {
-      return function(done) {
+      return function (done) {
         this.quill.setText(`${oldText}\n`);
         this.quill.setSelection(oldSelection); // number or Range
         this.quill.update();
@@ -277,7 +277,7 @@ describe('Quill', function() {
       };
     }
 
-    describe('insert a in aaaa', function() {
+    describe('insert a in aaaa', function () {
       it(
         'at index 0',
         editTest('aaaa', 0, 'aaaaa', 1, new Delta().insert('a')),
@@ -296,7 +296,7 @@ describe('Quill', function() {
       );
     });
 
-    describe('insert a in xaa', function() {
+    describe('insert a in xaa', function () {
       it(
         'at index 1',
         editTest('xaa', 1, 'xaaa', 2, new Delta().retain(1).insert('a')),
@@ -311,7 +311,7 @@ describe('Quill', function() {
       );
     });
 
-    describe('insert aa in ax', function() {
+    describe('insert aa in ax', function () {
       it('at index 0', editTest('ax', 0, 'aaax', 2, new Delta().insert('aa')));
       it(
         'at index 1',
@@ -319,7 +319,7 @@ describe('Quill', function() {
       );
     });
 
-    describe('delete a in xaa', function() {
+    describe('delete a in xaa', function () {
       it(
         'at index 1',
         editTest('xaa', 2, 'xa', 1, new Delta().retain(1).delete(1)),
@@ -330,7 +330,7 @@ describe('Quill', function() {
       );
     });
 
-    describe('forward-delete a in xaa', function() {
+    describe('forward-delete a in xaa', function () {
       it(
         'at index 1',
         editTest('xaa', 1, 'xa', 1, new Delta().retain(1).delete(1)),
@@ -353,8 +353,8 @@ describe('Quill', function() {
     );
   });
 
-  describe('setContents()', function() {
-    it('empty', function() {
+  describe('setContents()', function () {
+    it('empty', function () {
       const quill = this.initialize(Quill, '');
       const delta = new Delta().insert('\n');
       quill.setContents(delta);
@@ -362,7 +362,7 @@ describe('Quill', function() {
       expect(quill.root).toEqualHTML('<p><br></p>');
     });
 
-    it('single line', function() {
+    it('single line', function () {
       const quill = this.initialize(Quill, '');
       const delta = new Delta().insert('Hello World!\n');
       quill.setContents(delta);
@@ -370,7 +370,7 @@ describe('Quill', function() {
       expect(quill.root).toEqualHTML('<p>Hello World!</p>');
     });
 
-    it('multiple lines', function() {
+    it('multiple lines', function () {
       const quill = this.initialize(Quill, '');
       const delta = new Delta().insert('Hello\n\nWorld!\n');
       quill.setContents(delta);
@@ -378,7 +378,7 @@ describe('Quill', function() {
       expect(quill.root).toEqualHTML('<p>Hello</p><p><br></p><p>World!</p>');
     });
 
-    it('basic formats', function() {
+    it('basic formats', function () {
       const quill = this.initialize(Quill, '');
       const delta = new Delta()
         .insert('Welcome')
@@ -396,7 +396,7 @@ describe('Quill', function() {
       `);
     });
 
-    it('array of operations', function() {
+    it('array of operations', function () {
       const quill = this.initialize(Quill, '');
       const delta = new Delta()
         .insert('test')
@@ -406,20 +406,20 @@ describe('Quill', function() {
       expect(quill.getContents()).toEqual(delta);
     });
 
-    it('json', function() {
+    it('json', function () {
       const quill = this.initialize(Quill, '');
       const delta = { ops: [{ insert: 'test\n' }] };
       quill.setContents(delta);
       expect(quill.getContents()).toEqual(new Delta(delta));
     });
 
-    it('no trailing newline', function() {
+    it('no trailing newline', function () {
       const quill = this.initialize(Quill, '<h1>Welcome</h1>');
       quill.setContents(new Delta().insert('0123'));
       expect(quill.getContents()).toEqual(new Delta().insert('0123\n'));
     });
 
-    it('inline formatting', function() {
+    it('inline formatting', function () {
       const quill = this.initialize(
         Quill,
         '<p><strong>Bold</strong></p><p>Not bold</p>',
@@ -430,7 +430,7 @@ describe('Quill', function() {
       expect(delta).toEqual(contents.delete(contents.length()));
     });
 
-    it('block embed', function() {
+    it('block embed', function () {
       const quill = this.initialize(Quill, '<p>Hello World!</p>');
       const contents = new Delta().insert({ video: '#' });
       quill.setContents(contents);
@@ -438,63 +438,63 @@ describe('Quill', function() {
     });
   });
 
-  describe('getText()', function() {
-    it('return all text by default', function() {
+  describe('getText()', function () {
+    it('return all text by default', function () {
       const quill = this.initialize(Quill, '<h1>Welcome</h1>');
       expect(quill.getText()).toEqualHTML('Welcome');
     });
 
-    it('works when only provide index', function() {
+    it('works when only provide index', function () {
       const quill = this.initialize(Quill, '<h1>Welcome</h1>');
       expect(quill.getText(2)).toEqualHTML('lcome');
     });
 
-    it('works with range', function() {
+    it('works with range', function () {
       const quill = this.initialize(Quill, '<h1>Welcome</h1>');
       expect(quill.getText({ index: 1, length: 2 })).toEqualHTML('el');
     });
   });
 
-  describe('setText()', function() {
-    it('overwrite', function() {
+  describe('setText()', function () {
+    it('overwrite', function () {
       const quill = this.initialize(Quill, '<h1>Welcome</h1>');
       quill.setText('abc');
       expect(quill.root).toEqualHTML('<p>abc</p>');
     });
 
-    it('set to newline', function() {
+    it('set to newline', function () {
       const quill = this.initialize(Quill, '<h1>Welcome</h1>');
       quill.setText('\n');
       expect(quill.root).toEqualHTML('<p><br></p>');
     });
 
-    it('multiple newlines', function() {
+    it('multiple newlines', function () {
       const quill = this.initialize(Quill, '<h1>Welcome</h1>');
       quill.setText('\n\n');
       expect(quill.root).toEqualHTML('<p><br></p><p><br></p>');
     });
 
-    it('content with trailing newline', function() {
+    it('content with trailing newline', function () {
       const quill = this.initialize(Quill, '<h1>Welcome</h1>');
       quill.setText('abc\n');
       expect(quill.root).toEqualHTML('<p>abc</p>');
     });
 
-    it('return carriage', function() {
+    it('return carriage', function () {
       const quill = this.initialize(Quill, '<p>Test</p>');
       quill.setText('\r');
       expect(quill.root).toEqualHTML('<p><br></p>');
     });
 
-    it('return carriage newline', function() {
+    it('return carriage newline', function () {
       const quill = this.initialize(Quill, '<p>Test</p>');
       quill.setText('\r\n');
       expect(quill.root).toEqualHTML('<p><br></p>');
     });
   });
 
-  describe('expandConfig', function() {
-    it('user overwrite quill', function() {
+  describe('expandConfig', function () {
+    it('user overwrite quill', function () {
       const config = expandConfig('#test-container', {
         placeholder: 'Test',
         readOnly: true,
@@ -503,7 +503,7 @@ describe('Quill', function() {
       expect(config.readOnly).toEqual(true);
     });
 
-    it('convert css selectors', function() {
+    it('convert css selectors', function () {
       const config = expandConfig('#test-container', {
         bounds: '#test-container',
       });
@@ -513,7 +513,7 @@ describe('Quill', function() {
       );
     });
 
-    xit('convert module true to {}', function() {
+    xit('convert module true to {}', function () {
       Quill.debug(0);
       const oldModules = Theme.DEFAULTS.modules;
       Theme.DEFAULTS.modules = {
@@ -533,8 +533,8 @@ describe('Quill', function() {
       Theme.DEFAULTS.modules = oldModules;
     });
 
-    describe('theme defaults', function() {
-      it('for Snow', function() {
+    describe('theme defaults', function () {
+      it('for Snow', function () {
         const config = expandConfig('#test-container', {
           modules: {
             toolbar: true,
@@ -547,21 +547,21 @@ describe('Quill', function() {
         );
       });
 
-      it('for false', function() {
+      it('for false', function () {
         const config = expandConfig('#test-container', {
           theme: false,
         });
         expect(config.theme).toEqual(Theme);
       });
 
-      it('for undefined', function() {
+      it('for undefined', function () {
         const config = expandConfig('#test-container', {
           theme: undefined,
         });
         expect(config.theme).toEqual(Theme);
       });
 
-      it('for null', function() {
+      it('for null', function () {
         const config = expandConfig('#test-container', {
           theme: null,
         });
@@ -569,7 +569,7 @@ describe('Quill', function() {
       });
     });
 
-    it('quill < module < theme < user', function() {
+    it('quill < module < theme < user', function () {
       const oldTheme = Theme.DEFAULTS.modules;
       const oldToolbar = Toolbar.DEFAULTS;
       Toolbar.DEFAULTS = {
@@ -600,7 +600,7 @@ describe('Quill', function() {
       Toolbar.DEFAULTS = oldToolbar;
     });
 
-    it('toolbar default', function() {
+    it('toolbar default', function () {
       const config = expandConfig('#test-container', {
         modules: {
           toolbar: true,
@@ -609,7 +609,7 @@ describe('Quill', function() {
       expect(config.modules.toolbar).toEqual(Toolbar.DEFAULTS);
     });
 
-    it('toolbar disabled', function() {
+    it('toolbar disabled', function () {
       const config = expandConfig('#test-container', {
         modules: {
           toolbar: false,
@@ -619,7 +619,7 @@ describe('Quill', function() {
       expect(config.modules.toolbar).toBe(undefined);
     });
 
-    it('toolbar selector', function() {
+    it('toolbar selector', function () {
       const config = expandConfig('#test-container', {
         modules: {
           toolbar: {
@@ -633,7 +633,7 @@ describe('Quill', function() {
       });
     });
 
-    it('toolbar container shorthand', function() {
+    it('toolbar container shorthand', function () {
       const config = expandConfig('#test-container', {
         modules: {
           toolbar: document.querySelector('#test-container'),
@@ -645,7 +645,7 @@ describe('Quill', function() {
       });
     });
 
-    it('toolbar format array', function() {
+    it('toolbar format array', function () {
       const config = expandConfig('#test-container', {
         modules: {
           toolbar: ['bold'],
@@ -657,8 +657,8 @@ describe('Quill', function() {
       });
     });
 
-    it('toolbar custom handler, default container', function() {
-      const handler = function() {}; // eslint-disable-line func-style
+    it('toolbar custom handler, default container', function () {
+      const handler = function () {}; // eslint-disable-line func-style
       const config = expandConfig('#test-container', {
         modules: {
           toolbar: {
@@ -676,8 +676,8 @@ describe('Quill', function() {
     });
   });
 
-  describe('overload', function() {
-    it('(index:number, length:number)', function() {
+  describe('overload', function () {
+    it('(index:number, length:number)', function () {
       const [index, length, formats, source] = overload(0, 1);
       expect(index).toBe(0);
       expect(length).toBe(1);
@@ -685,7 +685,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.API);
     });
 
-    it('(index:number, length:number, format:string, value:boolean, source:string)', function() {
+    it('(index:number, length:number, format:string, value:boolean, source:string)', function () {
       const [index, length, formats, source] = overload(
         0,
         1,
@@ -699,7 +699,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(index:number, length:number, format:string, value:string, source:string)', function() {
+    it('(index:number, length:number, format:string, value:string, source:string)', function () {
       const [index, length, formats, source] = overload(
         0,
         1,
@@ -713,7 +713,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(index:number, length:number, format:string, value:string)', function() {
+    it('(index:number, length:number, format:string, value:string)', function () {
       const [index, length, formats, source] = overload(
         0,
         1,
@@ -726,7 +726,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.API);
     });
 
-    it('(index:number, length:number, format:object)', function() {
+    it('(index:number, length:number, format:object)', function () {
       const [index, length, formats, source] = overload(0, 1, { bold: true });
       expect(index).toBe(0);
       expect(length).toBe(1);
@@ -734,7 +734,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.API);
     });
 
-    it('(index:number, length:number, format:object, source:string)', function() {
+    it('(index:number, length:number, format:object, source:string)', function () {
       const [index, length, formats, source] = overload(
         0,
         1,
@@ -747,7 +747,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(index:number, length:number, source:string)', function() {
+    it('(index:number, length:number, source:string)', function () {
       const [index, length, formats, source] = overload(
         0,
         1,
@@ -759,7 +759,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(index:number, source:string)', function() {
+    it('(index:number, source:string)', function () {
       const [index, length, formats, source] = overload(0, Quill.sources.USER);
       expect(index).toBe(0);
       expect(length).toBe(0);
@@ -767,7 +767,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(range:range)', function() {
+    it('(range:range)', function () {
       const [index, length, formats, source] = overload(new Range(0, 1));
       expect(index).toBe(0);
       expect(length).toBe(1);
@@ -775,7 +775,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.API);
     });
 
-    it('(range:range, format:string, value:boolean, source:string)', function() {
+    it('(range:range, format:string, value:boolean, source:string)', function () {
       const [index, length, formats, source] = overload(
         new Range(0, 1),
         'bold',
@@ -788,7 +788,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(range:range, format:string, value:string, source:string)', function() {
+    it('(range:range, format:string, value:string, source:string)', function () {
       const [index, length, formats, source] = overload(
         new Range(0, 1),
         'color',
@@ -801,7 +801,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(range:range, format:string, value:string)', function() {
+    it('(range:range, format:string, value:string)', function () {
       const [index, length, formats, source] = overload(
         new Range(0, 1),
         'color',
@@ -813,7 +813,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.API);
     });
 
-    it('(range:range, format:object)', function() {
+    it('(range:range, format:object)', function () {
       const [index, length, formats, source] = overload(new Range(0, 1), {
         bold: true,
       });
@@ -823,7 +823,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.API);
     });
 
-    it('(range:range, format:object, source:string)', function() {
+    it('(range:range, format:object, source:string)', function () {
       const [index, length, formats, source] = overload(
         new Range(0, 1),
         { bold: true },
@@ -835,7 +835,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(range:range, source:string)', function() {
+    it('(range:range, source:string)', function () {
       const [index, length, formats, source] = overload(
         new Range(0, 1),
         Quill.sources.USER,
@@ -846,7 +846,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(range:range)', function() {
+    it('(range:range)', function () {
       const [index, length, formats, source] = overload(new Range(0, 1));
       expect(index).toBe(0);
       expect(length).toBe(1);
@@ -854,7 +854,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.API);
     });
 
-    it('(range:range, dummy:number)', function() {
+    it('(range:range, dummy:number)', function () {
       const [index, length, formats, source] = overload(new Range(10, 1), 0);
       expect(index).toBe(10);
       expect(length).toBe(1);
@@ -862,7 +862,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.API);
     });
 
-    it('(range:range, dummy:number, format:string, value:boolean)', function() {
+    it('(range:range, dummy:number, format:string, value:boolean)', function () {
       const [index, length, formats, source] = overload(
         new Range(10, 1),
         0,
@@ -875,7 +875,7 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.API);
     });
 
-    it('(range:range, dummy:number, format:object, source:string)', function() {
+    it('(range:range, dummy:number, format:object, source:string)', function () {
       const [index, length, formats, source] = overload(
         new Range(10, 1),
         0,
@@ -889,8 +889,8 @@ describe('Quill', function() {
     });
   });
 
-  describe('placeholder', function() {
-    beforeEach(function() {
+  describe('placeholder', function () {
+    beforeEach(function () {
       this.initialize(HTMLElement, '<div><p></p></div>');
       this.quill = new Quill(this.container.firstChild, {
         placeholder: 'a great day to be a placeholder',
@@ -898,19 +898,19 @@ describe('Quill', function() {
       this.original = this.quill.getContents();
     });
 
-    it('blank editor', function() {
+    it('blank editor', function () {
       expect(this.quill.root.dataset.placeholder).toEqual(
         'a great day to be a placeholder',
       );
       expect(this.quill.root.classList).toContain('ql-blank');
     });
 
-    it('with text', function() {
+    it('with text', function () {
       this.quill.setText('test');
       expect(this.quill.root.classList).not.toContain('ql-blank');
     });
 
-    it('formatted line', function() {
+    it('formatted line', function () {
       this.quill.formatLine(0, 1, 'list', 'ordered');
       expect(this.quill.root.classList).not.toContain('ql-blank');
     });
