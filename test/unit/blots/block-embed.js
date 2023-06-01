@@ -1,7 +1,7 @@
 import Scroll from '../../../blots/scroll';
 
-describe('Block Embed', function() {
-  it('insert', function() {
+describe('Block Embed', function () {
+  it('insert', function () {
     const scroll = this.initialize(Scroll, '<p>0123</p>');
     scroll.insertAt(2, 'video', '#');
     expect(scroll.domNode).toEqualHTML(`
@@ -11,7 +11,7 @@ describe('Block Embed', function() {
     `);
   });
 
-  it('split newline', function() {
+  it('split newline', function () {
     const scroll = this.initialize(Scroll, '<p>0123</p>');
     scroll.insertAt(4, 'video', '#');
     expect(scroll.domNode).toEqualHTML(`
@@ -21,7 +21,7 @@ describe('Block Embed', function() {
     `);
   });
 
-  it('insert end of document', function() {
+  it('insert end of document', function () {
     const scroll = this.initialize(Scroll, '<p>0123</p>');
     scroll.insertAt(5, 'video', '#');
     expect(scroll.domNode).toEqualHTML(`
@@ -30,7 +30,7 @@ describe('Block Embed', function() {
     `);
   });
 
-  it('insert text before', function() {
+  it('insert text before', function () {
     const scroll = this.initialize(
       Scroll,
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
@@ -42,7 +42,7 @@ describe('Block Embed', function() {
     `);
   });
 
-  it('insert text after', function() {
+  it('insert text after', function () {
     const scroll = this.initialize(
       Scroll,
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
@@ -54,7 +54,7 @@ describe('Block Embed', function() {
     `);
   });
 
-  it('insert inline embed before', function() {
+  it('insert inline embed before', function () {
     const scroll = this.initialize(
       Scroll,
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
@@ -66,7 +66,7 @@ describe('Block Embed', function() {
     `);
   });
 
-  it('insert inline embed after', function() {
+  it('insert inline embed after', function () {
     const scroll = this.initialize(
       Scroll,
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
@@ -78,7 +78,7 @@ describe('Block Embed', function() {
     `);
   });
 
-  it('insert block embed before', function() {
+  it('insert block embed before', function () {
     const scroll = this.initialize(
       Scroll,
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
@@ -90,7 +90,7 @@ describe('Block Embed', function() {
     `);
   });
 
-  it('insert block embed after', function() {
+  it('insert block embed after', function () {
     const scroll = this.initialize(
       Scroll,
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
@@ -102,7 +102,7 @@ describe('Block Embed', function() {
     `);
   });
 
-  it('insert newline before', function() {
+  it('insert newline before', function () {
     const scroll = this.initialize(
       Scroll,
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
@@ -115,7 +115,7 @@ describe('Block Embed', function() {
     `);
   });
 
-  it('insert newline after', function() {
+  it('insert newline after', function () {
     const scroll = this.initialize(
       Scroll,
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
@@ -128,7 +128,7 @@ describe('Block Embed', function() {
     `);
   });
 
-  it('delete preceding newline', function() {
+  it('delete preceding newline', function () {
     const scroll = this.initialize(
       Scroll,
       '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',

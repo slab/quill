@@ -1,8 +1,8 @@
 import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
 
-describe('List', function() {
-  it('add', function() {
+describe('List', function () {
+  it('add', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -24,7 +24,7 @@ describe('List', function() {
     `);
   });
 
-  it('checklist', function() {
+  it('checklist', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -53,7 +53,7 @@ describe('List', function() {
     `);
   });
 
-  it('remove', function() {
+  it('remove', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -71,7 +71,7 @@ describe('List', function() {
     `);
   });
 
-  it('replace', function() {
+  it('replace', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -94,7 +94,7 @@ describe('List', function() {
     `);
   });
 
-  it('replace checklist with bullet', function() {
+  it('replace checklist with bullet', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -112,7 +112,7 @@ describe('List', function() {
     `);
   });
 
-  it('replace with attributes', function() {
+  it('replace with attributes', function () {
     const editor = this.initialize(
       Editor,
       '<ol><li data-list="ordered" class="ql-align-center">0123</li></ol>',
@@ -128,7 +128,7 @@ describe('List', function() {
     );
   });
 
-  it('format merge', function() {
+  it('format merge', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -155,7 +155,7 @@ describe('List', function() {
       </ol>`);
   });
 
-  it('delete merge', function() {
+  it('delete merge', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -178,7 +178,7 @@ describe('List', function() {
       </ol>`);
   });
 
-  it('merge checklist', function() {
+  it('merge checklist', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -205,7 +205,7 @@ describe('List', function() {
       </ol>`);
   });
 
-  it('empty line interop', function() {
+  it('empty line interop', function () {
     const editor = this.initialize(
       Editor,
       '<ol><li data-list="ordered"><br></li></ol>',
@@ -220,7 +220,7 @@ describe('List', function() {
     );
   });
 
-  it('delete multiple items', function() {
+  it('delete multiple items', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -238,7 +238,7 @@ describe('List', function() {
       </ol>`);
   });
 
-  it('delete across last item', function() {
+  it('delete across last item', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -249,7 +249,7 @@ describe('List', function() {
     expect(this.container).toEqualHTML('<p>0178</p>');
   });
 
-  it('delete partial', function() {
+  it('delete partial', function () {
     const editor = this.initialize(
       Editor,
       '<p>0123</p><ol><li data-list="ordered">5678</li></ol>',
@@ -260,7 +260,7 @@ describe('List', function() {
     );
   });
 
-  it('nested list replacement', function() {
+  it('nested list replacement', function () {
     const editor = this.initialize(
       Editor,
       `
@@ -281,7 +281,7 @@ describe('List', function() {
     `);
   });
 
-  it('copy atttributes', function() {
+  it('copy atttributes', function () {
     const editor = this.initialize(
       Editor,
       '<p class="ql-align-center">Test</p>',
@@ -292,7 +292,7 @@ describe('List', function() {
     );
   });
 
-  it('insert block embed', function() {
+  it('insert block embed', function () {
     const editor = this.initialize(
       Editor,
       '<ol><li data-list="ordered">Test</li></ol>',
@@ -309,7 +309,7 @@ describe('List', function() {
     `);
   });
 
-  it('insert block embed at beginning', function() {
+  it('insert block embed at beginning', function () {
     const editor = this.initialize(
       Editor,
       '<ol><li data-list="ordered">Test</li></ol>',
@@ -325,7 +325,7 @@ describe('List', function() {
     `);
   });
 
-  it('insert block embed at end', function() {
+  it('insert block embed at end', function () {
     const editor = this.initialize(
       Editor,
       '<ol><li data-list="ordered">Test</li></ol>',

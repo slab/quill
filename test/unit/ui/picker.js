@@ -1,14 +1,14 @@
 import Picker from '../../../ui/picker';
 
-describe('Picker', function() {
-  beforeEach(function() {
+describe('Picker', function () {
+  beforeEach(function () {
     this.container.innerHTML =
       '<select><option selected>0</option><option value="1">1</option></select>';
     this.pickerSelectorInstance = new Picker(this.container.firstChild);
     this.pickerSelector = this.container.querySelector('.ql-picker');
   });
 
-  it('initialization', function() {
+  it('initialization', function () {
     expect(this.container.querySelector('.ql-picker')).toBeTruthy();
     expect(this.container.querySelector('.ql-active')).toBeFalsy();
     expect(
@@ -24,7 +24,7 @@ describe('Picker', function() {
     );
   });
 
-  it('escape charcters', function() {
+  it('escape charcters', function () {
     const select = document.createElement('select');
     const option = document.createElement('option');
     this.container.appendChild(select);
@@ -35,14 +35,14 @@ describe('Picker', function() {
     expect(select.querySelector(`option[value="${value}"]`)).toEqual(option);
   });
 
-  it('label is initialized with the correct aria attributes', function() {
+  it('label is initialized with the correct aria attributes', function () {
     expect(
       this.pickerSelector
         .querySelector('.ql-picker-label')
         .getAttribute('aria-expanded'),
     ).toEqual('false');
-    const optionsId = this.pickerSelector.querySelector('.ql-picker-options')
-      .id;
+    const optionsId =
+      this.pickerSelector.querySelector('.ql-picker-options').id;
     expect(
       this.pickerSelector
         .querySelector('.ql-picker-label')
@@ -50,7 +50,7 @@ describe('Picker', function() {
     ).toEqual(optionsId);
   });
 
-  it('options container is initialized with the correct aria attributes', function() {
+  it('options container is initialized with the correct aria attributes', function () {
     expect(
       this.pickerSelector
         .querySelector('.ql-picker-options')
@@ -68,7 +68,7 @@ describe('Picker', function() {
     ).toEqual(-1);
   });
 
-  it('aria attributes toggle correctly when the picker is opened via enter key', function() {
+  it('aria attributes toggle correctly when the picker is opened via enter key', function () {
     const pickerLabel = this.pickerSelector.querySelector('.ql-picker-label');
     pickerLabel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     expect(pickerLabel.getAttribute('aria-expanded')).toEqual('true');
@@ -79,7 +79,7 @@ describe('Picker', function() {
     ).toEqual('false');
   });
 
-  it('aria attributes toggle correctly when the picker is opened via mousedown', function() {
+  it('aria attributes toggle correctly when the picker is opened via mousedown', function () {
     const pickerLabel = this.pickerSelector.querySelector('.ql-picker-label');
     pickerLabel.dispatchEvent(
       new Event('mousedown', {
@@ -96,7 +96,7 @@ describe('Picker', function() {
     ).toEqual('false');
   });
 
-  it('aria attributes toggle correctly when an item is selected via click', function() {
+  it('aria attributes toggle correctly when an item is selected via click', function () {
     const pickerLabel = this.pickerSelector.querySelector('.ql-picker-label');
     pickerLabel.click();
 
@@ -114,7 +114,7 @@ describe('Picker', function() {
     );
   });
 
-  it('aria attributes toggle correctly when an item is selected via enter', function() {
+  it('aria attributes toggle correctly when an item is selected via enter', function () {
     const pickerLabel = this.pickerSelector.querySelector('.ql-picker-label');
     pickerLabel.click();
     const pickerItem = this.pickerSelector.querySelector('.ql-picker-item');
@@ -130,7 +130,7 @@ describe('Picker', function() {
     );
   });
 
-  it('aria attributes toggle correctly when the picker is closed via clicking on the label again', function() {
+  it('aria attributes toggle correctly when the picker is closed via clicking on the label again', function () {
     const pickerLabel = this.pickerSelector.querySelector('.ql-picker-label');
     pickerLabel.click();
     pickerLabel.click();
@@ -142,7 +142,7 @@ describe('Picker', function() {
     ).toEqual('true');
   });
 
-  it('aria attributes toggle correctly when the picker is closed via escaping out of it', function() {
+  it('aria attributes toggle correctly when the picker is closed via escaping out of it', function () {
     const pickerLabel = this.pickerSelector.querySelector('.ql-picker-label');
     pickerLabel.click();
     pickerLabel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
@@ -154,7 +154,7 @@ describe('Picker', function() {
     ).toEqual('true');
   });
 
-  afterEach(function() {
+  afterEach(function () {
     this.pickerSelectorInstance = null;
   });
 });

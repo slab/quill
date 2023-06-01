@@ -1,19 +1,11 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
-  ],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "env": {
     "browser": true,
     "commonjs": true,
     "es6": true
   },
-  "plugins": ["prettier", "@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
   "settings": {
     "import/resolver": {
       "webpack": {
@@ -21,14 +13,33 @@
       }
     }
   },
-  "ignorePatterns": ["**/*.d.ts", "**/*.js", "website/**/*"],
+  "ignorePatterns": [
+    "website/**/*",
+    "*.js",
+    "!test/helpers/**/*.js",
+    "!test/unit/**/*.js"
+  ],
   "rules": {
     "arrow-parens": ["error", "as-needed"],
-    "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/no-empty-function": "off",
-    "@typescript-eslint/ban-types": "off",
-    "@typescript-eslint/no-explicit-any": "off",
     "no-use-before-define": ["error", { "functions": false, "classes": false }],
     "prettier/prettier": "error"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["test/helpers/**/*.js", "test/unit/**/*.js"],
+      "plugins": ["prettier"]
+    },
+    {
+      "files": ["**/*.ts"],
+      "extends": ["plugin:@typescript-eslint/recommended"],
+      "excludedFiles": "*.d.ts",
+      "plugins": ["prettier", "@typescript-eslint"],
+      "rules": {
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ]
 }

@@ -1,8 +1,8 @@
 import Keyboard, { SHORTKEY, normalize } from '../../../modules/keyboard';
 
-describe('Keyboard', function() {
-  describe('match', function() {
-    it('no modifiers', function() {
+describe('Keyboard', function () {
+  describe('match', function () {
+    it('no modifiers', function () {
       const binding = normalize({
         key: 'a',
       });
@@ -32,7 +32,7 @@ describe('Keyboard', function() {
       ).toBe(false);
     });
 
-    it('simple modifier', function() {
+    it('simple modifier', function () {
       const binding = normalize({
         key: 'a',
         altKey: true,
@@ -63,7 +63,7 @@ describe('Keyboard', function() {
       ).toBe(true);
     });
 
-    it('optional modifier', function() {
+    it('optional modifier', function () {
       const binding = normalize({
         key: 'a',
         altKey: null,
@@ -94,7 +94,7 @@ describe('Keyboard', function() {
       ).toBe(true);
     });
 
-    it('shortkey modifier', function() {
+    it('shortkey modifier', function () {
       const binding = normalize({
         key: 'a',
         shortKey: true,
@@ -126,7 +126,7 @@ describe('Keyboard', function() {
       ).toBe(true);
     });
 
-    it('native shortkey modifier', function() {
+    it('native shortkey modifier', function () {
       const binding = normalize({
         key: 'a',
         [SHORTKEY]: true,

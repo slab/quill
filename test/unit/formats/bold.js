@@ -1,7 +1,7 @@
 import Scroll from '../../../blots/scroll';
 
-describe('Bold', function() {
-  it('optimize and merge', function() {
+describe('Bold', function () {
+  it('optimize and merge', function () {
     const scroll = this.initialize(
       Scroll,
       '<p><strong>a</strong>b<strong>c</strong></p>',

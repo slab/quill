@@ -2,8 +2,8 @@ import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
 import Link from '../../../formats/link';
 
-describe('Link', function() {
-  it('add', function() {
+describe('Link', function () {
+  it('add', function () {
     const editor = this.initialize(Editor, '<p>0123</p>');
     editor.formatText(1, 2, { link: 'https://quilljs.com' });
     expect(editor.getDelta()).toEqual(
@@ -17,7 +17,7 @@ describe('Link', function() {
     );
   });
 
-  it('add invalid', function() {
+  it('add invalid', function () {
     const editor = this.initialize(Editor, '<p>0123</p>');
     editor.formatText(1, 2, { link: 'javascript:alert(0);' }); // eslint-disable-line no-script-url
     expect(editor.getDelta()).toEqual(
@@ -28,7 +28,7 @@ describe('Link', function() {
     );
   });
 
-  it('add non-whitelisted protocol', function() {
+  it('add non-whitelisted protocol', function () {
     const editor = this.initialize(Editor, '<p>0123</p>');
     editor.formatText(1, 2, { link: 'gopher://quilljs.com' });
     expect(editor.getDelta()).toEqual(
@@ -42,7 +42,7 @@ describe('Link', function() {
     );
   });
 
-  it('change', function() {
+  it('change', function () {
     const editor = this.initialize(
       Editor,
       '<p>0<a href="https://github.com" target="_blank" rel="noopener noreferrer">12</a>3</p>',
@@ -59,7 +59,7 @@ describe('Link', function() {
     );
   });
 
-  it('remove', function() {
+  it('remove', function () {
     const editor = this.initialize(
       Editor,
       '<p>0<a class="ql-size-large" href="https://quilljs.com" target="_blank" rel="noopener noreferrer">12</a>3</p>',

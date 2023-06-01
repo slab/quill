@@ -3,69 +3,63 @@ import Quill from '../../../core';
 import { globalRegistry } from '../../../core/quill';
 import { getLastChangeIndex } from '../../../modules/history';
 
-describe('History', function() {
-  describe('getLastChangeIndex', function() {
-    it('delete', function() {
+describe('History', function () {
+  describe('getLastChangeIndex', function () {
+    it('delete', function () {
       const delta = new Delta().retain(4).delete(2);
       expect(getLastChangeIndex(globalRegistry, delta)).toEqual(4);
     });
 
-    it('delete with inserts', function() {
-      const delta = new Delta()
-        .retain(4)
-        .insert('test')
-        .delete(2);
+    it('delete with inserts', function () {
+      const delta = new Delta().retain(4).insert('test').delete(2);
       expect(getLastChangeIndex(globalRegistry, delta)).toEqual(8);
     });
 
-    it('insert text', function() {
+    it('insert text', function () {
       const delta = new Delta().retain(4).insert('testing');
       expect(getLastChangeIndex(globalRegistry, delta)).toEqual(11);
     });
 
-    it('insert embed', function() {
+    it('insert embed', function () {
       const delta = new Delta().retain(4).insert({ image: true });
       expect(getLastChangeIndex(globalRegistry, delta)).toEqual(5);
     });
 
-    it('insert with deletes', function() {
-      const delta = new Delta()
-        .retain(4)
-        .delete(3)
-        .insert('!');
+    it('insert with deletes', function () {
+      const delta = new Delta().retain(4).delete(3).insert('!');
       expect(getLastChangeIndex(globalRegistry, delta)).toEqual(5);
     });
 
-    it('format', function() {
+    it('format', function () {
       const delta = new Delta().retain(4).retain(3, { bold: true });
       expect(getLastChangeIndex(globalRegistry, delta)).toEqual(7);
     });
 
-    it('format newline', function() {
+    it('format newline', function () {
       const delta = new Delta().retain(4).retain(1, { align: 'left' });
       expect(getLastChangeIndex(globalRegistry, delta)).toEqual(4);
     });
 
-    it('format mixed', function() {
+    it('format mixed', function () {
       const delta = new Delta()
         .retain(4)
         .retain(1, { align: 'left', bold: true });
       expect(getLastChangeIndex(globalRegistry, delta)).toEqual(4);
     });
 
-    it('insert newline', function() {
+    it('insert newline', function () {
       const delta = new Delta().retain(4).insert('a\n');
       expect(getLastChangeIndex(globalRegistry, delta)).toEqual(5);
     });
 
-    it('mutliple newline inserts', function() {
+    it('mutliple newline inserts', function () {
       const delta = new Delta().retain(4).insert('ab\n\n');
       expect(getLastChangeIndex(globalRegistry, delta)).toEqual(7);
     });
   });
 
-  describe('undo/redo', function() {
-    beforeEach(function() {
+  describe('undo/redo', function () {
+    beforeEach(function () {
       this.initialize(HTMLElement, '<div><p>The lazy fox</p></div>');
       this.quill = new Quill(this.container.firstChild, {
         modules: {
@@ -75,19 +69,19 @@ describe('History', function() {
       this.original = this.quill.getContents();
     });
 
-    it('limits undo stack size', function() {
+    it('limits undo stack size', function () {
       const quill = new Quill(this.container.firstChild, {
         modules: {
           history: { delay: 0, maxStack: 2 },
         },
       });
-      ['A', 'B', 'C'].forEach(function(text) {
+      ['A', 'B', 'C'].forEach(function (text) {
         quill.insertText(0, text);
       });
       expect(quill.history.stack.undo.length).toEqual(2);
     });
 
-    it('user change', function() {
+    it('user change', function () {
       this.quill.root.firstChild.innerHTML = 'The lazy foxes';
       this.quill.update();
       const changed = this.quill.getContents();
@@ -98,7 +92,7 @@ describe('History', function() {
       expect(this.quill.getContents()).toEqual(changed);
     });
 
-    it('merge changes', function() {
+    it('merge changes', function () {
       expect(this.quill.history.stack.undo.length).toEqual(0);
       this.quill.updateContents(new Delta().retain(12).insert('e'));
       expect(this.quill.history.stack.undo.length).toEqual(1);
@@ -109,7 +103,7 @@ describe('History', function() {
       expect(this.quill.history.stack.undo.length).toEqual(0);
     });
 
-    it('dont merge changes', function(done) {
+    it('dont merge changes', function (done) {
       expect(this.quill.history.stack.undo.length).toEqual(0);
       this.quill.updateContents(new Delta().retain(12).insert('e'));
       expect(this.quill.history.stack.undo.length).toEqual(1);
@@ -120,7 +114,7 @@ describe('History', function() {
       }, this.quill.history.options.delay * 1.25);
     });
 
-    it('multiple undos', function(done) {
+    it('multiple undos', function (done) {
       expect(this.quill.history.stack.undo.length).toEqual(0);
       this.quill.updateContents(new Delta().retain(12).insert('e'));
       const contents = this.quill.getContents();
@@ -134,7 +128,7 @@ describe('History', function() {
       }, this.quill.history.options.delay * 1.25);
     });
 
-    it('transform api change', function() {
+    it('transform api change', function () {
       this.quill.history.options.userOnly = true;
       this.quill.updateContents(
         new Delta().retain(12).insert('es'),
@@ -165,7 +159,7 @@ describe('History', function() {
       );
     });
 
-    it('transform preserve intention', function() {
+    it('transform preserve intention', function () {
       const url = 'https://www.google.com/';
       this.quill.history.options.userOnly = true;
       this.quill.updateContents(
@@ -196,7 +190,7 @@ describe('History', function() {
       );
     });
 
-    it('ignore remote changes', function() {
+    it('ignore remote changes', function () {
       this.quill.history.options.delay = 0;
       this.quill.history.options.userOnly = true;
       this.quill.setText('\n');
@@ -215,7 +209,7 @@ describe('History', function() {
       expect(this.quill.getText()).toEqual('abcd\n');
     });
 
-    it('correctly transform against remote changes', function() {
+    it('correctly transform against remote changes', function () {
       this.quill.history.options.delay = 0;
       this.quill.history.options.userOnly = true;
       this.quill.setText('b\n');
@@ -233,7 +227,7 @@ describe('History', function() {
       expect(this.quill.getText()).toEqual('abcd\n');
     });
 
-    it('correctly transform against remote changes breaking up an insert', function() {
+    it('correctly transform against remote changes breaking up an insert', function () {
       this.quill.history.options.delay = 0;
       this.quill.history.options.userOnly = true;
       this.quill.setText('\n');

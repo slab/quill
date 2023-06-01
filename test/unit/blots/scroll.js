@@ -3,13 +3,13 @@ import Selection, { Range } from '../../../core/selection';
 import Cursor from '../../../blots/cursor';
 import Scroll from '../../../blots/scroll';
 
-describe('Scroll', function() {
-  it('initialize empty document', function() {
+describe('Scroll', function () {
+  it('initialize empty document', function () {
     const scroll = this.initialize(Scroll, '');
     expect(scroll.domNode).toEqualHTML('<p><br></p>');
   });
 
-  it('api change', function() {
+  it('api change', function () {
     const scroll = this.initialize(Scroll, '<p>Hello World!</p>');
     spyOn(scroll.emitter, 'emit').and.callThrough();
     scroll.insertAt(5, '!');
@@ -20,11 +20,11 @@ describe('Scroll', function() {
     );
   });
 
-  it('user change', function(done) {
+  it('user change', function (done) {
     const scroll = this.initialize(Scroll, '<p>Hello World!</p>');
     spyOn(scroll.emitter, 'emit').and.callThrough();
     scroll.domNode.firstChild.appendChild(document.createTextNode('!'));
-    setTimeout(function() {
+    setTimeout(function () {
       expect(scroll.emitter.emit).toHaveBeenCalledWith(
         Emitter.events.SCROLL_OPTIMIZE,
         jasmine.any(Array),
@@ -39,7 +39,7 @@ describe('Scroll', function() {
     }, 1);
   });
 
-  it('prevent dragstart', function() {
+  it('prevent dragstart', function () {
     const scroll = this.initialize(Scroll, '<p>Hello World!</p>');
     const dragstart = new Event('dragstart');
     spyOn(dragstart, 'preventDefault');
@@ -47,15 +47,15 @@ describe('Scroll', function() {
     expect(dragstart.preventDefault).toHaveBeenCalled();
   });
 
-  describe('leaf()', function() {
-    it('text', function() {
+  describe('leaf()', function () {
+    it('text', function () {
       const scroll = this.initialize(Scroll, '<p>Tests</p>');
       const [leaf, offset] = scroll.leaf(2);
       expect(leaf.value()).toEqual('Tests');
       expect(offset).toEqual(2);
     });
 
-    it('precise', function() {
+    it('precise', function () {
       const scroll = this.initialize(
         Scroll,
         '<p><u>0</u><s>1</s><u>2</u><s>3</s><u>4</u></p>',
@@ -65,14 +65,14 @@ describe('Scroll', function() {
       expect(offset).toEqual(1);
     });
 
-    it('newline', function() {
+    it('newline', function () {
       const scroll = this.initialize(Scroll, '<p>0123</p><p>5678</p>');
       const [leaf, offset] = scroll.leaf(4);
       expect(leaf.value()).toEqual('0123');
       expect(offset).toEqual(4);
     });
 
-    it('cursor', function() {
+    it('cursor', function () {
       const selection = this.initialize(Selection, '<p><u>0</u>1<u>2</u></p>');
       selection.setRange(new Range(2));
       selection.format('strike', true);
@@ -81,7 +81,7 @@ describe('Scroll', function() {
       expect(offset).toEqual(0);
     });
 
-    it('beyond document', function() {
+    it('beyond document', function () {
       const scroll = this.initialize(Scroll, '<p>Test</p>');
       const [leaf, offset] = scroll.leaf(10);
       expect(leaf).toEqual(null);
