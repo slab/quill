@@ -517,6 +517,16 @@ describe('Editor', function () {
       );
     });
 
+    it('insert inline embed to the middle of formatted content', function () {
+      const editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
+      editor.applyDelta(
+        new Delta().retain(2).insert({ image: '/assets/favicon.png' }),
+      );
+      expect(this.container).toEqualHTML(
+        '<p><strong>01</strong><img src="/assets/favicon.png"><strong>23</strong></p>',
+      );
+    });
+
     it('insert block embed with delete before block embed', function () {
       const editor = this.initialize(
         Editor,
