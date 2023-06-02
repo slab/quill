@@ -45,7 +45,7 @@ class Block extends BlockBlot {
     this.cache = {};
   }
 
-  insertAt(index, value, def?: unknown) {
+  insertAt(index: number, value: string, def?: unknown) {
     if (def != null) {
       super.insertAt(index, value, def);
       this.cache = {};
@@ -156,12 +156,23 @@ class BlockEmbed extends EmbedBlot {
   }
 
   insertAt(index: number, value: string, def?: unknown) {
-    if (typeof value === 'string' && value.endsWith('\n')) {
-      const block = this.scroll.create(Block.blotName);
-      this.parent.insertBefore(block, index === 0 ? this : this.next);
-      block.insertAt(0, value.slice(0, -1));
-    } else {
+    if (def != null) {
       super.insertAt(index, value, def);
+      return;
+    }
+    const lines = value.split('\n');
+    const text = lines.pop();
+    const blocks = lines.map(line => {
+      const block = this.scroll.create(Block.blotName);
+      block.insertAt(0, line);
+      return block;
+    });
+    const ref = this.split(index);
+    blocks.forEach(block => {
+      this.parent.insertBefore(block, ref);
+    });
+    if (text) {
+      this.parent.insertBefore(this.scroll.create('text', text), ref);
     }
   }
 }
