@@ -115,6 +115,21 @@ describe('Block Embed', function () {
     `);
   });
 
+  it('insert multiple newlines before', function () {
+    const scroll = this.initialize(
+      Scroll,
+      '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+    );
+    scroll.insertAt(0, '\n\n\n');
+    scroll.optimize();
+    expect(scroll.domNode).toEqualHTML(`
+      <p><br></p>
+      <p><br></p>
+      <p><br></p>
+      <iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>
+    `);
+  });
+
   it('insert newline after', function () {
     const scroll = this.initialize(
       Scroll,

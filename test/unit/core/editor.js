@@ -387,6 +387,19 @@ describe('Editor', function () {
       );
     });
 
+    it('insert formatted lines before block embed', function () {
+      const editor = this.initialize(
+        Editor,
+        '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+      editor.applyDelta(
+        new Delta().retain(5).insert('a\nb').insert('\n', { header: 1 }),
+      );
+      expect(this.container).toEqualHTML(
+        '<p>0123</p><p>a</p><h1>b</h1><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
+      );
+    });
+
     it('insert attributed text with newline before block embed', function () {
       const editor = this.initialize(
         Editor,
