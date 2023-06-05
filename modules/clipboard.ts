@@ -231,7 +231,6 @@ class Clipboard extends Module<ClipboardOptions> {
           elementMatchers.push(matcher);
           break;
         default:
-          // @ts-expect-error
           Array.from(container.querySelectorAll(selector)).forEach(node => {
             if (nodeMatches.has(node)) {
               const matches = nodeMatches.get(node);
