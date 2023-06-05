@@ -83,7 +83,9 @@ class Scroll extends ScrollBlot {
       }
       const ref =
         last.children.head instanceof Break ? null : last.children.head;
+      // @ts-expect-error
       first.moveChildren(last, ref);
+      // @ts-expect-error
       first.remove();
     }
     this.optimize();
@@ -162,7 +164,7 @@ class Scroll extends ScrollBlot {
       blotIndex: number,
       blotLength: number,
     ) => {
-      let lines = [];
+      let lines: (Block | BlockEmbed)[] = [];
       let lengthLeft = blotLength;
       blot.children.forEachAt(
         blotIndex,
@@ -181,7 +183,7 @@ class Scroll extends ScrollBlot {
     return getLines(this, index, length);
   }
 
-  optimize(context: { [key: string]: any }): void;
+  optimize(context?: { [key: string]: any }): void;
   optimize(
     mutations?: MutationRecord[],
     context?: { [key: string]: any },

@@ -1,7 +1,7 @@
 import Picker from './picker';
 
 class IconPicker extends Picker {
-  defaultItem: HTMLElement;
+  defaultItem: HTMLElement | null;
 
   constructor(select: HTMLSelectElement, icons: Record<string, string>) {
     super(select);

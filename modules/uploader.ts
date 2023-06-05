@@ -16,7 +16,7 @@ class Uploader extends Module<UploaderOptions> {
     super(quill, options);
     quill.root.addEventListener('drop', e => {
       e.preventDefault();
-      let native: ReturnType<typeof document.createRange>;
+      let native: ReturnType<typeof document.createRange> | null = null;
       if (document.caretRangeFromPoint) {
         native = document.caretRangeFromPoint(e.clientX, e.clientY);
         // @ts-expect-error
@@ -26,23 +26,29 @@ class Uploader extends Module<UploaderOptions> {
         native = document.createRange();
         native.setStart(position.offsetNode, position.offset);
         native.setEnd(position.offsetNode, position.offset);
-      } else {
-        return;
       }
-      const normalized = quill.selection.normalizeNative(native);
-      const range = quill.selection.normalizedToRange(normalized);
-      this.upload(range, e.dataTransfer.files);
+
+      const normalized = native && quill.selection.normalizeNative(native);
+      if (normalized) {
+        const range = quill.selection.normalizedToRange(normalized);
+        if (e.dataTransfer?.files) {
+          this.upload(range, e.dataTransfer.files);
+        }
+      }
     });
   }
 
   upload(range: Range, files: FileList | File[]) {
     const uploads = [];
     Array.from(files).forEach(file => {
+      // @ts-expect-error Fix me later
       if (file && this.options.mimetypes.includes(file.type)) {
+        // @ts-expect-error Fix me later
         uploads.push(file);
       }
     });
     if (uploads.length > 0) {
+      // @ts-expect-error Fix me later
       this.options.handler.call(this, range, uploads);
     }
   }
@@ -55,6 +61,7 @@ Uploader.DEFAULTS = {
       return new Promise(resolve => {
         const reader = new FileReader();
         reader.onload = e => {
+          // @ts-expect-error Fix me later
           resolve(e.target.result);
         };
         reader.readAsDataURL(file);

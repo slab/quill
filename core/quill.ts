@@ -15,7 +15,7 @@ import Uploader from '../modules/uploader';
 import Editor from './editor';
 import Emitter, { EmitterSource } from './emitter';
 import instances from './instances';
-import logger from './logger';
+import logger, { DebugLevel } from './logger';
 import Module from './module';
 import Selection, { Range } from './selection';
 import Theme, { ThemeConstructor } from './theme';
@@ -27,7 +27,7 @@ Parchment.ParentBlot.uiClass = 'ql-ui';
 
 interface Options {
   theme?: string;
-  debug?: string | boolean;
+  debug?: DebugLevel | boolean;
   registry?: Parchment.Registry;
   readOnly?: boolean;
   container?: HTMLElement | string;
@@ -69,7 +69,7 @@ class Quill {
     'core/theme': Theme,
   };
 
-  static debug(limit: string | boolean) {
+  static debug(limit: DebugLevel | boolean) {
     if (limit === true) {
       limit = 'log';
     }
@@ -231,11 +231,11 @@ class Quill {
     this.allowReadOnlyEdits = false;
   }
 
-  addContainer(container: string, refNode?: Node): HTMLDivElement;
-  addContainer(container: HTMLElement, refNode?: Node): HTMLElement;
+  addContainer(container: string, refNode?: Node | null): HTMLDivElement;
+  addContainer(container: HTMLElement, refNode?: Node | null): HTMLElement;
   addContainer(
     container: string | HTMLElement,
-    refNode = null,
+    refNode: Node | null = null,
   ): HTMLDivElement | HTMLElement {
     if (typeof container === 'string') {
       const className = container;
@@ -875,6 +875,7 @@ function overload(
   }
   // Handle format being object, two format name/value strings or excluded
   if (typeof name === 'object') {
+    // @ts-expect-error Fix me later
     formats = name;
     // @ts-expect-error
     source = value;

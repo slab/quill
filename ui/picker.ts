@@ -19,6 +19,7 @@ class Picker {
     this.container = document.createElement('span');
     this.buildPicker();
     this.select.style.display = 'none';
+    // @ts-expect-error Fix me later
     this.select.parentNode.insertBefore(this.container, this.select);
 
     this.label.addEventListener('mousedown', () => {
@@ -54,6 +55,7 @@ class Picker {
     item.setAttribute('role', 'button');
     item.classList.add('ql-picker-item');
     if (option.hasAttribute('value')) {
+      // @ts-expect-error Fix me later
       item.setAttribute('data-value', option.getAttribute('value'));
     }
     if (option.textContent) {
@@ -142,7 +144,7 @@ class Picker {
     this.options.setAttribute('aria-hidden', 'true');
   }
 
-  selectItem(item: HTMLElement, trigger = false) {
+  selectItem(item: HTMLElement | null, trigger = false) {
     const selected = this.container.querySelector('.ql-selected');
     if (item === selected) return;
     if (selected != null) {
@@ -150,15 +152,18 @@ class Picker {
     }
     if (item == null) return;
     item.classList.add('ql-selected');
+    // @ts-expect-error Fix me later
     this.select.selectedIndex = Array.from(item.parentNode.children).indexOf(
       item,
     );
     if (item.hasAttribute('data-value')) {
+      // @ts-expect-error Fix me later
       this.label.setAttribute('data-value', item.getAttribute('data-value'));
     } else {
       this.label.removeAttribute('data-value');
     }
     if (item.hasAttribute('data-label')) {
+      // @ts-expect-error Fix me later
       this.label.setAttribute('data-label', item.getAttribute('data-label'));
     } else {
       this.label.removeAttribute('data-label');
@@ -173,6 +178,7 @@ class Picker {
     let option;
     if (this.select.selectedIndex > -1) {
       const item =
+        // @ts-expect-error Fix me later
         this.container.querySelector('.ql-picker-options').children[
           this.select.selectedIndex
         ];
