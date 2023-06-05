@@ -9,14 +9,14 @@ const debug = logger('quill:toolbar');
 type Handler = (value: any) => void;
 
 interface ToolbarProps {
-  container?: HTMLElement;
+  container?: HTMLElement | null;
   handlers?: Record<string, Handler>;
 }
 
 class Toolbar extends Module<ToolbarProps> {
   static DEFAULTS: ToolbarProps;
 
-  container: HTMLElement;
+  container?: HTMLElement | null;
   controls: [string, HTMLElement][];
   handlers: Record<string, Handler>;
 
@@ -25,7 +25,7 @@ class Toolbar extends Module<ToolbarProps> {
     if (Array.isArray(this.options.container)) {
       const container = document.createElement('div');
       addControls(container, this.options.container);
-      quill.container.parentNode.insertBefore(container, quill.container);
+      quill.container?.parentNode?.insertBefore(container, quill.container);
       this.container = container;
     } else if (typeof this.options.container === 'string') {
       this.container = document.querySelector(this.options.container);
@@ -39,9 +39,14 @@ class Toolbar extends Module<ToolbarProps> {
     this.container.classList.add('ql-toolbar');
     this.controls = [];
     this.handlers = {};
-    Object.keys(this.options.handlers).forEach(format => {
-      this.addHandler(format, this.options.handlers[format]);
-    });
+    if (this.options.handlers) {
+      Object.keys(this.options.handlers).forEach(format => {
+        const handler = this.options.handlers?.[format];
+        if (handler) {
+          this.addHandler(format, handler);
+        }
+      });
+    }
     Array.from(this.container.querySelectorAll('button, select')).forEach(
       input => {
         // @ts-expect-error
@@ -103,7 +108,9 @@ class Toolbar extends Module<ToolbarProps> {
       }
       this.quill.focus();
       const [range] = this.quill.selection.getRange();
+      // @ts-expect-error Fix me later
       if (this.handlers[format] != null) {
+        // @ts-expect-error Fix me later
         this.handlers[format].call(this, value);
       } else if (
         // @ts-expect-error
@@ -113,12 +120,16 @@ class Toolbar extends Module<ToolbarProps> {
         if (!value) return;
         this.quill.updateContents(
           new Delta()
+            // @ts-expect-error Fix me later
             .retain(range.index)
+            // @ts-expect-error Fix me later
             .delete(range.length)
+            // @ts-expect-error Fix me later
             .insert({ [format]: value }),
           Quill.sources.USER,
         );
       } else {
+        // @ts-expect-error Fix me later
         this.quill.format(format, value, Quill.sources.USER);
       }
       this.update(range);

@@ -65,10 +65,15 @@ class TableRow extends Container {
   next: this | null;
 
   checkMerge() {
+    // @ts-expect-error
     if (super.checkMerge() && this.next.children.head != null) {
+      // @ts-expect-error
       const thisHead = this.children.head.formats();
+      // @ts-expect-error
       const thisTail = this.children.tail.formats();
+      // @ts-expect-error
       const nextHead = this.next.children.head.formats();
+      // @ts-expect-error
       const nextTail = this.next.children.tail.formats();
       return (
         thisHead.table === thisTail.table &&
@@ -168,6 +173,7 @@ class TableContainer extends Container {
     if (body == null || body.children.head == null) return;
     body.children.forEach(row => {
       const ref = row.children.at(index);
+      // @ts-expect-error
       const value = TableCell.formats(row.children.head.domNode);
       const cell = this.scroll.create(TableCell.blotName, value);
       row.insertBefore(cell, ref);

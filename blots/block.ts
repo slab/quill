@@ -53,7 +53,7 @@ class Block extends BlockBlot {
     }
     if (value.length === 0) return;
     const lines = value.split('\n');
-    const text = lines.shift();
+    const text = lines.shift() as string;
     if (text.length > 0) {
       if (index < this.length() - 1 || this.children.tail == null) {
         super.insertAt(Math.min(index, this.length() - 1), text);
@@ -66,6 +66,7 @@ class Block extends BlockBlot {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let block: Blot | this = this;
     lines.reduce((lineIndex, line) => {
+      // @ts-expect-error Fix me later
       block = block.split(lineIndex, true);
       block.insertAt(0, line);
       return line.length;
@@ -114,6 +115,7 @@ class Block extends BlockBlot {
         this.parent.insertBefore(clone, this);
         return this;
       }
+      // @ts-expect-error Fix me later
       this.parent.insertBefore(clone, this.next);
       return clone;
     }
@@ -169,9 +171,11 @@ class BlockEmbed extends EmbedBlot {
     });
     const ref = this.split(index);
     blocks.forEach(block => {
+      // @ts-expect-error Fix me later
       this.parent.insertBefore(block, ref);
     });
     if (text) {
+      // @ts-expect-error Fix me later
       this.parent.insertBefore(this.scroll.create('text', text), ref);
     }
   }

@@ -57,6 +57,7 @@ class Embed extends EmbedBlot {
         };
       } else {
         textNode = document.createTextNode(text);
+        // @ts-expect-error Fix me later
         this.parent.insertBefore(this.scroll.create(textNode), this.next);
         range = {
           startNode: textNode,

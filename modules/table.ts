@@ -71,8 +71,9 @@ class Table extends Module {
     return [table, row, cell, offset];
   }
 
-  insertColumn(offset) {
+  insertColumn(offset: number) {
     const range = this.quill.getSelection();
+    if (!range) return;
     const [table, row, cell] = this.getTable(range);
     if (cell == null) return;
     const column = cell.cellOffset();
@@ -97,8 +98,9 @@ class Table extends Module {
     this.insertColumn(1);
   }
 
-  insertRow(offset) {
+  insertRow(offset: number) {
     const range = this.quill.getSelection();
+    if (!range) return;
     const [table, row, cell] = this.getTable(range);
     if (cell == null) return;
     const index = row.rowOffset();
@@ -123,7 +125,7 @@ class Table extends Module {
     this.insertRow(1);
   }
 
-  insertTable(rows, columns) {
+  insertTable(rows: number, columns: number) {
     const range = this.quill.getSelection();
     if (range == null) return;
     const delta = new Array(rows).fill(0).reduce(memo => {

@@ -12,6 +12,11 @@ import { Range } from './selection';
 
 const ASCII = /^[ -~]*$/;
 
+type SelectionInfo = {
+  newRange: Range;
+  oldRange: Range;
+};
+
 class Editor {
   scroll: Scroll;
   delta: Delta;
@@ -158,8 +163,8 @@ class Editor {
   }
 
   getFormat(index: number, length = 0): Record<string, unknown> {
-    let lines = [];
-    let leaves = [];
+    let lines: (Block | BlockEmbed)[] = [];
+    let leaves: LeafBlot[] = [];
     if (length === 0) {
       this.scroll.path(index).forEach(path => {
         const [blot] = path;
@@ -189,10 +194,13 @@ class Editor {
 
   getHTML(index: number, length: number): string {
     const [line, lineOffset] = this.scroll.line(index);
-    if (line.length() >= lineOffset + length) {
-      return convertHTML(line, lineOffset, length, true);
+    if (line) {
+      if (line.length() >= lineOffset + length) {
+        return convertHTML(line, lineOffset, length, true);
+      }
+      return convertHTML(this.scroll, index, length, true);
     }
-    return convertHTML(this.scroll, index, length, true);
+    return '';
   }
 
   getText(index: number, length: number): string {
@@ -226,7 +234,7 @@ class Editor {
     if (this.scroll.children.length === 0) return true;
     if (this.scroll.children.length > 1) return false;
     const blot = this.scroll.children.head;
-    if (blot.statics.blotName !== Block.blotName) return false;
+    if (blot?.statics.blotName !== Block.blotName) return false;
     const block = blot as Block;
     if (block.children.length > 1) return false;
     return block.children.head instanceof Break;
@@ -250,18 +258,25 @@ class Editor {
     return this.applyDelta(delta);
   }
 
-  update(change: Delta, mutations = [], selectionInfo = undefined): Delta {
+  update(
+    change: Delta | null,
+    mutations: MutationRecord[] = [],
+    selectionInfo: SelectionInfo | undefined = undefined,
+  ): Delta {
     const oldDelta = this.delta;
     if (
       mutations.length === 1 &&
       mutations[0].type === 'characterData' &&
+      // @ts-expect-error Fix me later
       mutations[0].target.data.match(ASCII) &&
       this.scroll.find(mutations[0].target)
     ) {
       // Optimization for character changes
       const textBlot = this.scroll.find(mutations[0].target);
       const formats = bubbleFormats(textBlot);
+      // @ts-expect-error Fix me later
       const index = textBlot.offset(this.scroll);
+      // @ts-expect-error Fix me later
       const oldValue = mutations[0].oldValue.replace(CursorBlot.CONTENTS, '');
       const oldText = new Delta().insert(oldValue);
       // @ts-expect-error
@@ -333,7 +348,7 @@ function convertHTML(blot, index, length, isRoot = false) {
   if (blot.children) {
     // TODO fix API
     if (blot.statics.blotName === 'list-container') {
-      const items = [];
+      const items: any[] = [];
       blot.children.forEachAt(index, length, (child, offset, childLength) => {
         const formats = child.formats();
         items.push({
@@ -346,7 +361,7 @@ function convertHTML(blot, index, length, isRoot = false) {
       });
       return convertListHTML(items, -1, []);
     }
-    const parts = [];
+    const parts: string[] = [];
     blot.children.forEachAt(index, length, (child, offset, childLength) => {
       parts.push(convertHTML(child, offset, childLength));
     });
@@ -405,10 +420,7 @@ function normalizeDelta(delta: Delta) {
   }, new Delta());
 }
 
-function shiftRange(
-  { index, length }: { index: number; length: number },
-  amount: number,
-) {
+function shiftRange({ index, length }: Range, amount: number) {
   return new Range(index + amount, length);
 }
 

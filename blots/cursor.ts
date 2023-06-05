@@ -67,6 +67,7 @@ class Cursor extends EmbedBlot {
 
   remove() {
     super.remove();
+    // @ts-expect-error Fix me later
     this.parent = null;
   }
 
@@ -79,6 +80,7 @@ class Cursor extends EmbedBlot {
       this.domNode.lastChild != null &&
       this.domNode.lastChild !== this.textNode
     ) {
+      // @ts-expect-error Fix me later
       this.domNode.parentNode.insertBefore(
         this.domNode.lastChild,
         this.domNode,
@@ -171,6 +173,7 @@ class Cursor extends EmbedBlot {
   // And then "x" will be inserted after `<a/>`:
   //    <span class="ql-cursor"><a>\uFEFF</a>d{I}</span>
   optimize(context?: unknown) {
+    // @ts-expect-error Fix me later
     super.optimize(context);
 
     let { parent } = this;

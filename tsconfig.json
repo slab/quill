@@ -5,7 +5,9 @@
     "sourceMap": true,
     "declaration": true,
     "module": "es6",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "strictNullChecks": true,
+    "noUnusedLocals": true
   },
   "include": ["./**/*"]
 }

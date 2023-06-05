@@ -76,8 +76,11 @@ class Keyboard extends Module<KeyboardOptions> {
   constructor(quill: Quill, options: Partial<KeyboardOptions>) {
     super(quill, options);
     this.bindings = {};
+    // @ts-expect-error Fix me later
     Object.keys(this.options.bindings).forEach(name => {
+      // @ts-expect-error Fix me later
       if (this.options.bindings[name]) {
+        // @ts-expect-error Fix me later
         this.addBinding(this.options.bindings[name]);
       }
     });
@@ -194,6 +197,7 @@ class Keyboard extends Module<KeyboardOptions> {
         leafEnd instanceof TextBlot ? leafEnd.value().slice(offsetEnd) : '';
       const curContext = {
         collapsed: range.length === 0,
+        // @ts-expect-error Fix me later
         empty: range.length === 0 && line.length() <= 1,
         format: this.quill.getFormat(range),
         line,
@@ -224,10 +228,13 @@ class Keyboard extends Module<KeyboardOptions> {
           // all formats must match
           if (
             !Object.keys(binding.format).every(name => {
+              // @ts-expect-error Fix me later
               if (binding.format[name] === true)
                 return curContext.format[name] != null;
+              // @ts-expect-error Fix me later
               if (binding.format[name] === false)
                 return curContext.format[name] == null;
+              // @ts-expect-error Fix me later
               return isEqual(binding.format[name], curContext.format[name]);
             })
           ) {
@@ -240,6 +247,7 @@ class Keyboard extends Module<KeyboardOptions> {
         if (binding.suffix != null && !binding.suffix.test(curContext.suffix)) {
           return false;
         }
+        // @ts-expect-error Fix me later
         return binding.handler.call(this, range, curContext, binding) !== true;
       });
       if (prevented) {
@@ -264,12 +272,14 @@ class Keyboard extends Module<KeyboardOptions> {
         const isPrevLineEmpty =
           prev.statics.blotName === 'block' && prev.length() <= 1;
         if (!isPrevLineEmpty) {
+          // @ts-expect-error Fix me later
           const curFormats = line.formats();
           const prevFormats = this.quill.getFormat(range.index - 1, 1);
           formats = AttributeMap.diff(curFormats, prevFormats) || {};
           if (Object.keys(formats).length > 0) {
             // line.length() - 1 targets \n in line, another -1 for newline being deleted
             const formatDelta = new Delta()
+              // @ts-expect-error Fix me later
               .retain(range.index + line.length() - 2)
               .retain(1, formats);
             delta = delta.compose(formatDelta);
@@ -290,9 +300,11 @@ class Keyboard extends Module<KeyboardOptions> {
     let formats = {};
     const [line] = this.quill.getLine(range.index);
     let delta = new Delta().retain(range.index).delete(length);
+    // @ts-expect-error Fix me later
     if (context.offset >= line.length() - 1) {
       const [next] = this.quill.getLine(range.index + 1);
       if (next) {
+        // @ts-expect-error Fix me later
         const curFormats = line.formats();
         const nextFormats = this.quill.getFormat(range.index, 1);
         formats = AttributeMap.diff(curFormats, nextFormats) || {};
@@ -436,12 +448,14 @@ const defaultOptions: KeyboardOptions = {
       handler(range) {
         const [line, offset] = this.quill.getLine(range.index);
         const formats = {
+          // @ts-expect-error Fix me later
           ...line.formats(),
           list: 'checked',
         };
         const delta = new Delta()
           .retain(range.index)
           .insert('\n', formats)
+          // @ts-expect-error Fix me later
           .retain(line.length() - offset - 1)
           .retain(1, { list: 'unchecked' });
         this.quill.updateContents(delta, Quill.sources.USER);
@@ -459,6 +473,7 @@ const defaultOptions: KeyboardOptions = {
         const delta = new Delta()
           .retain(range.index)
           .insert('\n', context.format)
+          // @ts-expect-error Fix me later
           .retain(line.length() - offset - 1)
           .retain(1, { header: null });
         this.quill.updateContents(delta, Quill.sources.USER);
@@ -559,6 +574,7 @@ const defaultOptions: KeyboardOptions = {
         const delta = new Delta()
           .retain(range.index - offset)
           .delete(length + 1)
+          // @ts-expect-error Fix me later
           .retain(line.length() - 2 - offset)
           .retain(1, { list: value });
         this.quill.updateContents(delta, Quill.sources.USER);
@@ -588,6 +604,7 @@ const defaultOptions: KeyboardOptions = {
           // Requisite prev lines are empty
           if (numLines <= 0) {
             const delta = new Delta()
+              // @ts-expect-error Fix me later
               .retain(range.index + line.length() - offset - 2)
               .retain(1, { 'code-block': null })
               .delete(1);
@@ -638,6 +655,7 @@ function makeCodeBlockHandler(indent: boolean): BindingObject {
           } else {
             length += TAB.length;
           }
+          // @ts-expect-error Fix me later
         } else if (line.domNode.textContent.startsWith(TAB)) {
           line.deleteAt(0, TAB.length);
           if (i === 0) {
@@ -756,7 +774,7 @@ function makeTableArrowHandler(up: boolean): BindingObject {
   };
 }
 
-function normalize(binding: Binding): BindingObject {
+function normalize(binding: Binding): BindingObject | null {
   if (typeof binding === 'string' || typeof binding === 'number') {
     binding = { key: binding };
   } else if (typeof binding === 'object') {
