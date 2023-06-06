@@ -67,10 +67,6 @@ class Editor {
             ) {
               isImplicitNewlineAppended = true;
             }
-            // @ts-expect-error
-            const [leaf] = this.scroll.descendant(LeafBlot, index);
-            const formats = merge({}, bubbleFormats(leaf));
-            attributes = AttributeMap.diff(formats, attributes) || {};
           } else if (index > 0) {
             // @ts-expect-error
             const [leaf, offset] = this.scroll.descendant(LeafBlot, index - 1);
@@ -87,6 +83,13 @@ class Editor {
             }
           }
           this.scroll.insertAt(index, key, op.insert[key]);
+
+          if (isInlineEmbed) {
+            // @ts-expect-error
+            const [leaf] = this.scroll.descendant(LeafBlot, index);
+            const formats = merge({}, bubbleFormats(leaf));
+            attributes = AttributeMap.diff(formats, attributes) || {};
+          }
         }
         scrollLength += length;
       } else {
