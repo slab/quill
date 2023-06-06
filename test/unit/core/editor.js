@@ -540,6 +540,14 @@ describe('Editor', function () {
       );
     });
 
+    it('insert inline embed between plain text and formatted content', function () {
+      const editor = this.initialize(Editor, '<p>a<strong>b</strong></p>');
+      editor.applyDelta(new Delta().retain(1).insert({ image: '#' }));
+      expect(this.container).toEqualHTML(
+        '<p>a<img src="#"><strong>b</strong></p>',
+      );
+    });
+
     it('insert block embed with delete before block embed', function () {
       const editor = this.initialize(
         Editor,
