@@ -548,6 +548,14 @@ describe('Editor', function () {
       );
     });
 
+    it('prepend inline embed to another inline embed with same attributes', function () {
+      const editor = this.initialize(Editor, '<p><img src="#" alt="hi"/></p>');
+      editor.applyDelta(new Delta().insert({ image: '#' }, { alt: 'hi' }));
+      expect(this.container).toEqualHTML(
+        '<p><img src="#" alt="hi"><img src="#" alt="hi"></p>',
+      );
+    });
+
     it('insert block embed with delete before block embed', function () {
       const editor = this.initialize(
         Editor,
