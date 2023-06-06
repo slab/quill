@@ -32,7 +32,6 @@ jobs:
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
       - run: npm run lint
-      - run: npm run test:unit:ci
+      - run: npm run test:unit
         env:
           BROWSER: ${{ matrix.browser }}
-      - run: npm run test:random
