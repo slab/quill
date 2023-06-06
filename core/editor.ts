@@ -67,7 +67,8 @@ class Editor {
             ) {
               isImplicitNewlineAppended = true;
             }
-            const [leaf] = this.scroll.leaf(index);
+            // @ts-expect-error
+            const [leaf] = this.scroll.descendant(LeafBlot, index);
             const formats = merge({}, bubbleFormats(leaf));
             attributes = AttributeMap.diff(formats, attributes) || {};
           } else if (index > 0) {
