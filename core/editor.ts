@@ -184,7 +184,7 @@ class Editor {
       // @ts-expect-error
       leaves = this.scroll.descendants(LeafBlot, index, length);
     }
-    [lines, leaves] = [lines, leaves].map(blots => {
+    const [lineFormats, leafFormats] = [lines, leaves].map(blots => {
       if (blots.length === 0) return {};
       let formats = bubbleFormats(blots.shift());
       while (Object.keys(formats).length > 0) {
@@ -194,7 +194,7 @@ class Editor {
       }
       return formats;
     });
-    return { ...lines, ...leaves };
+    return { ...lineFormats, ...leafFormats };
   }
 
   getHTML(index: number, length: number): string {
