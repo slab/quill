@@ -429,8 +429,8 @@ function shiftRange({ index, length }: Range, amount: number) {
   return new Range(index + amount, length);
 }
 
-function splitOpLines(ops) {
-  const split = [];
+function splitOpLines(ops: Op[]) {
+  const split: Op[] = [];
   ops.forEach(op => {
     if (typeof op.insert === 'string') {
       const lines = op.insert.split('\n');
