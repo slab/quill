@@ -1,5 +1,4 @@
-import { EmbedBlot, Scope, ScrollBlot } from 'parchment';
-import { Parent } from 'parchment/dist/typings/blot/abstract/blot';
+import { EmbedBlot, Parent, Scope, ScrollBlot } from 'parchment';
 import Selection from '../core/selection';
 import TextBlot from './text';
 

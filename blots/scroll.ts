@@ -1,12 +1,13 @@
 import {
-  Scope,
-  ScrollBlot,
+  Blot,
   ContainerBlot,
   LeafBlot,
+  Parent,
   ParentBlot,
   Registry,
+  Scope,
+  ScrollBlot,
 } from 'parchment';
-import { Blot, Parent } from 'parchment/dist/typings/blot/abstract/blot';
 import Emitter, { EmitterSource } from '../core/emitter';
 import Block, { BlockEmbed } from './block';
 import Break from './break';

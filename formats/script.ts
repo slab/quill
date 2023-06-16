@@ -1,6 +1,5 @@
 import Inline from '../blots/inline';
 
-// @ts-expect-error TODO: Inline.tagName should be string[] | string
 class Script extends Inline {
   static blotName = 'script';
   static tagName = ['SUB', 'SUP'];

@@ -266,8 +266,7 @@ class Syntax extends Module<SyntaxOptions> {
     const range = this.quill.getSelection();
     const blots =
       blot == null
-        ? // @ts-expect-error
-          this.quill.scroll.descendants(SyntaxCodeBlockContainer)
+        ? this.quill.scroll.descendants(SyntaxCodeBlockContainer)
         : [blot];
     blots.forEach(container => {
       container.highlight(this.highlightBlot, force);

@@ -1,10 +1,6 @@
 import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
 import * as Parchment from 'parchment';
-import {
-  Blot,
-  BlotConstructor,
-} from 'parchment/dist/typings/blot/abstract/blot';
 import Delta, { Op } from 'quill-delta';
 import Block, { BlockEmbed } from '../blots/block';
 import Scroll, { ScrollConstructor } from '../blots/scroll';
@@ -94,10 +90,10 @@ class Quill {
   static register(
     path:
       | string
-      | BlotConstructor
+      | Parchment.BlotConstructor
       | Parchment.Attributor
       | Record<string, unknown>,
-    target?: BlotConstructor | Parchment.Attributor | boolean,
+    target?: Parchment.BlotConstructor | Parchment.Attributor | boolean,
     overwrite = false,
   ) {
     if (typeof path !== 'string') {
@@ -443,7 +439,7 @@ class Quill {
     return this.editor.getFormat(index.index, index.length);
   }
 
-  getIndex(blot: Blot) {
+  getIndex(blot: Parchment.Blot) {
     return blot.offset(this.scroll);
   }
 
