@@ -1,11 +1,11 @@
 import {
   AttributorStore,
   BlockBlot,
+  Blot,
   EmbedBlot,
   LeafBlot,
   Scope,
 } from 'parchment';
-import { Blot } from 'parchment/dist/typings/blot/abstract/blot';
 import Delta from 'quill-delta';
 import Break from './break';
 import Inline from './inline';
@@ -184,18 +184,15 @@ BlockEmbed.scope = Scope.BLOCK_BLOT;
 // It is important for cursor behavior BlockEmbeds use tags that are block level elements
 
 function blockDelta(blot: BlockBlot, filter = true) {
-  return (
-    blot
-      // @ts-expect-error
-      .descendants(LeafBlot)
-      .reduce((delta, leaf: LeafBlot) => {
-        if (leaf.length() === 0) {
-          return delta;
-        }
-        return delta.insert(leaf.value(), bubbleFormats(leaf, {}, filter));
-      }, new Delta())
-      .insert('\n', bubbleFormats(blot))
-  );
+  return blot
+    .descendants(LeafBlot)
+    .reduce((delta, leaf) => {
+      if (leaf.length() === 0) {
+        return delta;
+      }
+      return delta.insert(leaf.value(), bubbleFormats(leaf, {}, filter));
+    }, new Delta())
+    .insert('\n', bubbleFormats(blot));
 }
 
 function bubbleFormats(blot, formats = {}, filter = true) {

@@ -1,4 +1,4 @@
-import LinkedList from 'parchment/dist/typings/collection/linked-list';
+import { LinkedList } from 'parchment';
 import Block from '../blots/block';
 import Container from '../blots/container';
 
@@ -132,8 +132,7 @@ class TableContainer extends Container {
   children: LinkedList<TableBody>;
 
   balanceCells() {
-    // @ts-expect-error TODO: fix signature of ParentBlot.descendants
-    const rows = this.descendants(TableRow) as TableRow[];
+    const rows = this.descendants(TableRow);
     const maxColumns = rows.reduce((max, row) => {
       return Math.max(row.children.length, max);
     }, 0);

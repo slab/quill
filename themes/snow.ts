@@ -51,7 +51,6 @@ class SnowTooltip extends BaseTooltip {
         if (range == null) return;
         if (range.length === 0 && source === Emitter.sources.USER) {
           const [link, offset] = this.quill.scroll.descendant(
-            // @ts-expect-error
             LinkBlot,
             range.index,
           );

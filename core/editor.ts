@@ -45,13 +45,11 @@ class Editor {
           isImplicitNewlineAppended =
             !text.endsWith('\n') &&
             (scrollLength <= index ||
-              // @ts-expect-error
               !!this.scroll.descendant(BlockEmbed, index)[0]);
           this.scroll.insertAt(index, text);
           const [line, offset] = this.scroll.line(index);
           let formats = merge({}, bubbleFormats(line));
           if (line instanceof Block) {
-            // @ts-expect-error
             const [leaf] = line.descendant(LeafBlot, offset);
             formats = merge(formats, bubbleFormats(leaf));
           }
@@ -63,13 +61,11 @@ class Editor {
           if (isInlineEmbed) {
             if (
               scrollLength <= index ||
-              // @ts-expect-error
               !!this.scroll.descendant(BlockEmbed, index)[0]
             ) {
               isImplicitNewlineAppended = true;
             }
           } else if (index > 0) {
-            // @ts-expect-error
             const [leaf, offset] = this.scroll.descendant(LeafBlot, index - 1);
             if (leaf instanceof TextBlot) {
               const text = leaf.value();
@@ -86,7 +82,6 @@ class Editor {
           this.scroll.insertAt(index, key, op.insert[key]);
 
           if (isInlineEmbed) {
-            // @ts-expect-error
             const [leaf] = this.scroll.descendant(LeafBlot, index);
             const formats = merge({}, bubbleFormats(leaf));
             attributes = AttributeMap.diff(formats, attributes) || {};
@@ -181,7 +176,6 @@ class Editor {
       });
     } else {
       lines = this.scroll.lines(index, length);
-      // @ts-expect-error
       leaves = this.scroll.descendants(LeafBlot, index, length);
     }
     const [lineFormats, leafFormats] = [lines, leaves].map(blots => {

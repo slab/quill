@@ -24,9 +24,7 @@ class Table extends Module {
   }
 
   balanceTables() {
-    // @ts-expect-error
     this.quill.scroll.descendants(TableContainer).forEach(table => {
-      // @ts-expect-error
       table.balanceCells();
     });
   }
