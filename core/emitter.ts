@@ -27,6 +27,10 @@ class Emitter extends EventEmitter<string> {
     SCROLL_EMBED_UPDATE: 'scroll-embed-update',
     SELECTION_CHANGE: 'selection-change',
     TEXT_CHANGE: 'text-change',
+    COMPOSITION_BEFORE_START: 'composition-before-start',
+    COMPOSITION_START: 'composition-start',
+    COMPOSITION_BEFORE_END: 'composition-before-end',
+    COMPOSITION_END: 'composition-end',
   } as const;
 
   static sources = {
