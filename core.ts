@@ -14,6 +14,7 @@ import History from './modules/history';
 import Keyboard from './modules/keyboard';
 import Uploader from './modules/uploader';
 import Delta, { Op, OpIterator, AttributeMap } from 'quill-delta';
+import Input from './modules/input';
 
 export { Delta, Op, OpIterator, AttributeMap };
 
@@ -32,6 +33,7 @@ Quill.register({
   'modules/history': History,
   'modules/keyboard': Keyboard,
   'modules/uploader': Uploader,
+  'modules/input': Input,
 });
 
 export default Quill;

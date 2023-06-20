@@ -8,7 +8,7 @@ import Scroll from '../blots/scroll';
 
 const debug = logger('quill:selection');
 
-type NativeRange = ReturnType<Document['createRange']>;
+type NativeRange = AbstractRange;
 
 interface NormalizedRange {
   start: {
@@ -95,12 +95,10 @@ class Selection {
   }
 
   handleComposition() {
-    this.root.addEventListener('compositionstart', () => {
+    this.emitter.on(Emitter.events.COMPOSITION_BEFORE_START, () => {
       this.composing = true;
-      this.scroll.batchStart();
     });
-    this.root.addEventListener('compositionend', () => {
-      this.scroll.batchEnd();
+    this.emitter.on(Emitter.events.COMPOSITION_END, () => {
       this.composing = false;
       if (this.cursor.parent) {
         const range = this.cursor.restore();
