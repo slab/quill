@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "target": "es6",
+    "target": "ES2020",
     "sourceMap": true,
     "declaration": true,
-    "module": "es6",
+    "module": "ES2020",
     "moduleResolution": "node",
     "strictNullChecks": true,
     "noUnusedLocals": true
