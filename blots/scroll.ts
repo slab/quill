@@ -8,6 +8,7 @@ import {
   Scope,
   ScrollBlot,
 } from 'parchment';
+import Delta, { AttributeMap } from 'quill-delta';
 import Emitter, { EmitterSource } from '../core/emitter';
 import Block, { BlockEmbed } from './block';
 import Break from './break';
@@ -23,6 +24,20 @@ interface UpdatableEmbed {
 
 function isUpdatable(blot: Blot): blot is Blot & UpdatableEmbed {
   return typeof (blot as unknown as any).updateContent === 'function';
+}
+
+function deltaToLines(delta: Delta) {
+  const lines: { delta: Delta; attributes: AttributeMap }[] = [];
+  // eachLine can't tell if we end in newline or not
+  // add trailing newline to differentiate
+  // 'hello\nworld' -> ['hello', 'world']
+  // 'hello\nworld\n' -> ['hello', 'world', '']
+
+  // TODO: insert() here modifies original delta
+  delta.insert('\n').eachLine((lineDelta, attributes) => {
+    lines.push({ delta: lineDelta, attributes });
+  });
+  return lines;
 }
 
 class Scroll extends ScrollBlot {
@@ -135,6 +150,48 @@ class Scroll extends ScrollBlot {
     } else {
       super.insertBefore(blot, ref);
     }
+  }
+
+  insertContents(index: number, delta: Delta) {
+    const [child, offset] = this.children.find(index);
+    if (child == null) return;
+    const lines = deltaToLines(delta);
+    const first = lines.shift();
+    if (first == null) return;
+    this.batchStart();
+    // @ts-ignore
+    child.insertContents(offset, first.delta);
+    const last = lines.pop();
+    let after;
+    if (last != null) {
+      after = child.split(offset + first.delta.length());
+      Object.keys(first.attributes).forEach(name => {
+        // @ts-ignore
+        child.format(name, first.attributes[name]);
+      });
+      after.insertContents(0, last.delta);
+    }
+
+    lines.forEach(({ delta: lineDelta, attributes }) => {
+      const blockAttribute = Object.keys(attributes).find(
+        key =>
+          this.query(
+            key,
+            // eslint-disable-next-line no-bitwise
+            Scope.BLOCK & Scope.BLOT,
+          ) != null,
+      );
+      const block = this.create(
+        blockAttribute || this.statics.defaultChild.blotName,
+        blockAttribute ? attributes[blockAttribute] : undefined,
+      );
+      // @ts-ignore
+      block.insertContents(0, lineDelta);
+      this.insertBefore(block, after);
+    });
+
+    this.batchEnd();
+    this.optimize();
   }
 
   isEnabled() {
