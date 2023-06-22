@@ -6,7 +6,7 @@ import {
   LeafBlot,
   Scope,
 } from 'parchment';
-import Delta from 'quill-delta';
+import Delta, { AttributeMap, Op } from 'quill-delta';
 import Break from './break';
 import Inline from './inline';
 import TextBlot from './text';
@@ -80,6 +80,31 @@ class Block extends BlockBlot {
       head.remove();
     }
     this.cache = {};
+  }
+
+  // TODO: Either handle \n in deltas or move insertAt splitting responsibility to scroll
+  insertContents(index: number, delta: Delta) {
+    delta.reduce((index: number, op: Op) => {
+      const length = Op.length(op);
+      let attributes = op.attributes || {};
+      if (op.insert != null) {
+        if (typeof op.insert === 'string') {
+          const text = op.insert;
+          this.insertAt(index, text);
+          const [leaf] = this.descendant(LeafBlot, index);
+          const formats = bubbleFormats(leaf);
+          attributes = AttributeMap.diff(formats, attributes) || {};
+        } else if (typeof op.insert === 'object') {
+          const key = Object.keys(op.insert)[0]; // There should only be one key
+          if (key == null) return index;
+          this.insertAt(index, key, op.insert[key]);
+        }
+      }
+      Object.keys(attributes).forEach(name => {
+        this.formatAt(index, length, name, attributes[name]);
+      });
+      return index + length;
+    }, index);
   }
 
   length() {
