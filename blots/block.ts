@@ -28,17 +28,28 @@ class Block extends BlockBlot {
     this.cache = {};
   }
 
-  formatAt(index, length, name, value) {
+  formatAt(index, length, format, value?) {
     if (length <= 0) return;
-    if (this.scroll.query(name, Scope.BLOCK)) {
+    if (typeof format != 'string') {
+      const order = Inline.order.slice().reverse();
+      Object.keys(format)
+        .sort((a, b) => {
+          const aOrder = order.indexOf(a);
+          const bOrder = order.indexOf(b);
+          return aOrder - bOrder;
+        })
+        .forEach(key => {
+          this.formatAt(index, length, key, format[key]);
+        });
+    } else if (this.scroll.query(format, Scope.BLOCK)) {
       if (index + length === this.length()) {
-        this.format(name, value);
+        this.format(format, value);
       }
     } else {
       super.formatAt(
         index,
         Math.min(length, this.length() - index - 1),
-        name,
+        format,
         value,
       );
     }
@@ -100,9 +111,7 @@ class Block extends BlockBlot {
           this.insertAt(index, key, op.insert[key]);
         }
       }
-      Object.keys(attributes).forEach(name => {
-        this.formatAt(index, length, name, attributes[name]);
-      });
+      this.formatAt(index, length, attributes);
       return index + length;
     }, index);
   }
