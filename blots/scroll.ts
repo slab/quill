@@ -164,10 +164,10 @@ class Scroll extends ScrollBlot {
     const last = lines.pop();
     let after;
     if (last != null) {
-      after = child.split(offset + first.delta.length());
+      after = child.split(offset + first.delta.length(), true);
       Object.keys(first.attributes).forEach(name => {
         // @ts-ignore
-        child.format(name, first.attributes[name]);
+        after.prev.format(name, first.attributes[name]);
       });
       after.insertContents(0, last.delta);
     }
@@ -185,9 +185,20 @@ class Scroll extends ScrollBlot {
         blockAttribute || this.statics.defaultChild.blotName,
         blockAttribute ? attributes[blockAttribute] : undefined,
       );
+      this.insertBefore(block, after);
       // @ts-ignore
       block.insertContents(0, lineDelta);
-      this.insertBefore(block, after);
+      Object.keys(attributes).forEach(key => {
+        if (
+          this.query(
+            key,
+            // eslint-disable-next-line no-bitwise
+            Scope.BLOCK & Scope.BLOT,
+          ) == null
+        ) {
+          block.formatAt(0, block.length(), key, attributes[key]);
+        }
+      });
     });
 
     this.batchEnd();
