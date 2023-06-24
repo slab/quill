@@ -210,8 +210,9 @@ class Editor {
   }
 
   insertContents(index: number, contents: Delta): Delta {
-    const change = new Delta().retain(index).concat(contents);
-    this.scroll.insertContents(index, contents);
+    const normalizedDelta = normalizeDelta(contents);
+    const change = new Delta().retain(index).concat(normalizedDelta);
+    this.scroll.insertContents(index, normalizedDelta);
     return this.update(change);
   }
 
