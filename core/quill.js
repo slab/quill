@@ -67,6 +67,9 @@ class Quill {
     }
     let html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
+    this.container.setAttribute('role', 'textbox');
+    this.container.setAttribute('aria-multiline', true);
+    this.container.setAttribute('aria-label', 'description');
     this.container.innerHTML = '';
     this.container.__quill = this;
     this.root = this.addContainer('ql-editor');

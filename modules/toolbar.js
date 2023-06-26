@@ -24,6 +24,8 @@ class Toolbar extends Module {
       return debug.error('Container required for toolbar', this.options);
     }
     this.container.classList.add('ql-toolbar');
+    this.container.setAttribute('role', 'region');
+    this.container.setAttribute('aria-label', 'toolbar');
     this.controls = [];
     this.handlers = {};
     Object.keys(this.options.handlers).forEach((format) => {
@@ -56,6 +58,7 @@ class Toolbar extends Module {
     if (input.tagName === 'BUTTON') {
       input.setAttribute('type', 'button');
     }
+    input.setAttribute('aria-label', format);
     if (this.handlers[format] == null) {
       if (this.quill.scroll.whitelist != null && this.quill.scroll.whitelist[format] == null) {
         debug.warn('ignoring attaching to disabled format', format, input);
@@ -132,6 +135,7 @@ class Toolbar extends Module {
       } else {
         if (range == null) {
           input.classList.remove('ql-active');
+          input.setAttribute('aria-pressed', false);
         } else if (input.hasAttribute('value')) {
           // both being null should match (default values)
           // '1' should match with 1 (headers)
@@ -139,8 +143,10 @@ class Toolbar extends Module {
                          (formats[format] != null && formats[format].toString() === input.getAttribute('value')) ||
                          (formats[format] == null && !input.getAttribute('value'));
           input.classList.toggle('ql-active', isActive);
+          input.setAttribute('aria-pressed', isActive);
         } else {
           input.classList.toggle('ql-active', formats[format] != null);
+          input.setAttribute('aria-pressed', formats[format] != null);
         }
       }
     });
