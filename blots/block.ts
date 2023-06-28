@@ -6,7 +6,7 @@ import {
   LeafBlot,
   Scope,
 } from 'parchment';
-import Delta, { AttributeMap, Op } from 'quill-delta';
+import Delta from 'quill-delta';
 import Break from './break';
 import Inline from './inline';
 import TextBlot from './text';
@@ -28,28 +28,17 @@ class Block extends BlockBlot {
     this.cache = {};
   }
 
-  formatAt(index, length, format, value?) {
+  formatAt(index, length, name, value) {
     if (length <= 0) return;
-    if (typeof format != 'string') {
-      const order = Inline.order.slice().reverse();
-      Object.keys(format)
-        .sort((a, b) => {
-          const aOrder = order.indexOf(a);
-          const bOrder = order.indexOf(b);
-          return aOrder - bOrder;
-        })
-        .forEach(key => {
-          this.formatAt(index, length, key, format[key]);
-        });
-    } else if (this.scroll.query(format, Scope.BLOCK)) {
+    if (this.scroll.query(name, Scope.BLOCK)) {
       if (index + length === this.length()) {
-        this.format(format, value);
+        this.format(name, value);
       }
     } else {
       super.formatAt(
         index,
         Math.min(length, this.length() - index - 1),
-        format,
+        name,
         value,
       );
     }
@@ -91,29 +80,6 @@ class Block extends BlockBlot {
       head.remove();
     }
     this.cache = {};
-  }
-
-  // TODO: Either handle \n in deltas or move insertAt splitting responsibility to scroll
-  insertContents(index: number, delta: Delta) {
-    delta.reduce((index: number, op: Op) => {
-      const length = Op.length(op);
-      let attributes = op.attributes || {};
-      if (op.insert != null) {
-        if (typeof op.insert === 'string') {
-          const text = op.insert;
-          this.insertAt(index, text);
-          const [leaf] = this.descendant(LeafBlot, index);
-          const formats = bubbleFormats(leaf);
-          attributes = AttributeMap.diff(formats, attributes) || {};
-        } else if (typeof op.insert === 'object') {
-          const key = Object.keys(op.insert)[0]; // There should only be one key
-          if (key == null) return index;
-          this.insertAt(index, key, op.insert[key]);
-        }
-      }
-      this.formatAt(index, length, attributes);
-      return index + length;
-    }, index);
   }
 
   length() {
