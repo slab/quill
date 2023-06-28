@@ -7,6 +7,11 @@ import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
 import Tooltip from '../ui/tooltip';
 import { Range } from '../core/selection';
+import Clipboard from '../modules/clipboard';
+import History from '../modules/history';
+import Keyboard from '../modules/keyboard';
+import Uploader from '../modules/uploader';
+import Selection from '../core/selection';
 
 const ALIGNS = [false, 'center', 'right', 'justify'];
 
@@ -87,7 +92,12 @@ class BaseTheme extends Theme {
     quill.emitter.listenDOM('click', document.body, listener);
   }
 
-  // @ts-expect-error
+  addModule(name: 'clipboard'): Clipboard;
+  addModule(name: 'keyboard'): Keyboard;
+  addModule(name: 'uploader'): Uploader;
+  addModule(name: 'history'): History;
+  addModule(name: 'selection'): Selection;
+  addModule(name: string): unknown;
   addModule(name: string) {
     const module = super.addModule(name);
     if (name === 'toolbar') {
