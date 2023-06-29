@@ -237,7 +237,7 @@ class BaseTooltip extends Tooltip {
     this.hide();
   }
 
-  edit(mode = 'link', preview = null) {
+  edit(mode = 'link', preview: string | null = null) {
     this.root.classList.remove('ql-hidden');
     this.root.classList.add('ql-editing');
     if (preview != null) {
