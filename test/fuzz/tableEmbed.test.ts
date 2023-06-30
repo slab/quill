@@ -3,16 +3,8 @@ import TableEmbed, {
   CellData,
   TableData,
   TableRowColumnOp,
-} from '../modules/tableEmbed';
-
-// Random testing in order to find unknown issues.
-
-const random = choices => {
-  if (typeof choices === 'number') {
-    return Math.floor(Math.random() * choices);
-  }
-  return choices[random(choices.length)];
-};
+} from '../../modules/tableEmbed';
+import { choose, randomInt } from './utils';
 
 const getRandomRowColumnId = () => {
   const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -26,16 +18,16 @@ const attachAttributes = <T extends object>(
   obj: T,
 ): T & { attributes: Record<string, unknown> } => {
   const getRandomAttributes = () => {
-    const attributeCount = random([1, 4, 8]);
+    const attributeCount = choose([1, 4, 8]);
     const allowedAttributes = ['align', 'background', 'color', 'font'];
     const allowedValues = ['center', 'red', 'left', 'uppercase'];
     const attributes = {};
     new Array(attributeCount).fill(0).forEach(() => {
-      attributes[random(allowedAttributes)] = random(allowedValues);
+      attributes[choose(allowedAttributes)] = choose(allowedValues);
     });
     return attributes;
   };
-  if (random([true, false])) {
+  if (choose([true, false])) {
     // @ts-expect-error
     obj.attributes = getRandomAttributes();
   }
@@ -44,14 +36,14 @@ const attachAttributes = <T extends object>(
 };
 
 const getRandomCellContent = () => {
-  const opCount = random([1, 2, 3]);
+  const opCount = choose([1, 2, 3]);
   const delta = new Delta();
   new Array(opCount).fill(0).forEach(() => {
     delta.push(
       attachAttributes({
-        insert: new Array(random(10) + 1)
+        insert: new Array(randomInt(10) + 1)
           .fill(0)
-          .map(() => random(['a', 'b', 'c', 'c', 'e', 'f', 'g']))
+          .map(() => choose(['a', 'b', 'c', 'c', 'e', 'f', 'g']))
           .join(''),
       }),
     );
@@ -67,26 +59,26 @@ const getRandomChange = base => {
       base.ops[0].insert['table-embed'].columns || [],
     ).length(),
   };
-  ['rows', 'columns'].forEach(field => {
+  (['rows', 'columns'] as const).forEach(field => {
     const baseLength = dimension[field];
-    const action = random(['insert', 'delete', 'retain']);
+    const action = choose(['insert', 'delete', 'retain']);
     const delta = new Delta();
     switch (action) {
       case 'insert':
-        delta.retain(random(baseLength + 1));
+        delta.retain(randomInt(baseLength + 1));
         delta.push(
           attachAttributes({ insert: { id: getRandomRowColumnId() } }),
         );
         break;
       case 'delete':
         if (baseLength >= 1) {
-          delta.retain(random(baseLength));
+          delta.retain(randomInt(baseLength));
           delta.delete(1);
         }
         break;
       case 'retain':
         if (baseLength >= 1) {
-          delta.retain(random(baseLength));
+          delta.retain(randomInt(baseLength));
           delta.push(attachAttributes({ retain: 1 }));
         }
         break;
@@ -98,10 +90,10 @@ const getRandomChange = base => {
     }
   });
 
-  const updateCellCount = random([0, 1, 2, 3]);
+  const updateCellCount = choose([0, 1, 2, 3]);
   new Array(updateCellCount).fill(0).forEach(() => {
-    const row = random(dimension.rows);
-    const column = random(dimension.columns);
+    const row = randomInt(dimension.rows);
+    const column = randomInt(dimension.columns);
     const cellIdentityToModify = `${row + 1}:${column + 1}`;
     table.cells = {
       [cellIdentityToModify]: attachAttributes({
@@ -121,9 +113,9 @@ const getRandomRowColumnInsert = (count: number): TableRowColumnOp[] => {
 };
 
 const getRandomBase = () => {
-  const rowCount = random([0, 1, 2, 3]);
-  const columnCount = random([0, 1, 2]);
-  const cellCount = random([0, 1, 2, 3, 4, 5]);
+  const rowCount = choose([0, 1, 2, 3]);
+  const columnCount = choose([0, 1, 2]);
+  const cellCount = choose([0, 1, 2, 3, 4, 5]);
 
   const table: TableData = {};
   if (rowCount) table.rows = getRandomRowColumnInsert(rowCount);
@@ -131,11 +123,11 @@ const getRandomBase = () => {
   if (cellCount) {
     const cells = {};
     new Array(cellCount).fill(0).forEach(() => {
-      const row = random(rowCount);
-      const column = random(columnCount);
+      const row = randomInt(rowCount);
+      const column = randomInt(columnCount);
       const identity = `${row + 1}:${column + 1}`;
       const cell: CellData = attachAttributes({});
-      if (random([true, false])) {
+      if (choose([true, false])) {
         cell.content = getRandomCellContent();
       }
       if (Object.keys(cell).length) {
@@ -158,7 +150,7 @@ const runTestCase = () => {
   );
 };
 
-describe('random tests', () => {
+describe('tableEmbed', () => {
   beforeAll(() => {
     TableEmbed.register();
   });
