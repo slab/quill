@@ -6,13 +6,17 @@ class Composition {
   isComposing = false;
 
   constructor(private scroll: Scroll, private emitter: Emitter) {
-    scroll.domNode.addEventListener('compositionstart', event => {
+    this.setupListeners();
+  }
+
+  private setupListeners() {
+    this.scroll.domNode.addEventListener('compositionstart', event => {
       if (!this.isComposing) {
         this.handleCompositionStart(event);
       }
     });
 
-    scroll.domNode.addEventListener('compositionend', event => {
+    this.scroll.domNode.addEventListener('compositionend', event => {
       if (this.isComposing) {
         this.handleCompositionEnd(event);
       }
