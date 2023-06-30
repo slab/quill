@@ -10,5 +10,5 @@ export function runFuzz(testCase: () => void) {
   const start = performance.now();
   do {
     testCase();
-  } while (performance.now() - start > 30 * 1000);
+  } while (performance.now() - start < 30 * 1000);
 }
