@@ -1,5 +1,5 @@
 import Delta, { AttributeMap, Op } from 'quill-delta';
-import { choose, randomInt } from './utils';
+import { choose, randomInt, runFuzz } from './utils';
 import { AlignClass } from '../../formats/align';
 import { FontClass } from '../../formats/font';
 import { SizeClass } from '../../formats/size';
@@ -214,18 +214,18 @@ const generateChange = (doc: Delta, changeCount: number) => {
 
 describe('editor', () => {
   it('setContents()', () => {
-    for (let i = 0; i < 2000; i += 1) {
+    runFuzz(() => {
       const quill = new Quill(document.createElement('div'));
       const delta = generateDocument();
 
       expect(delta.concat(new Delta().delete(1))).toEqual(
         quill.setContents(delta),
       );
-    }
+    });
   });
 
   it('updateContents()', () => {
-    for (let i = 0; i < 100; i += 1) {
+    runFuzz(() => {
       const quill = new Quill(document.createElement('div'));
       const delta = generateDocument();
       quill.setContents(delta);
@@ -236,6 +236,6 @@ describe('editor', () => {
         const diff = quill.updateContents(change);
         expect(change).toEqual(diff);
       }
-    }
+    });
   });
 });

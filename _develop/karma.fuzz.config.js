@@ -9,5 +9,11 @@ module.exports = config => {
     frameworks: ['jasmine'],
     reporters: ['progress'],
     browsers: ['jsdom'],
+    singleRun: true,
+    browserNoActivityTimeout: 120000,
+    browserDisconnectTimeout: 120000,
+    browserDisconnectTolerance: 3,
+    browserSocketTimeout: 120000,
+    captureTimeout: 120000,
   });
 };
