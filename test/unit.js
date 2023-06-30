@@ -12,6 +12,7 @@ import './unit/blots/inline';
 
 import './unit/core/editor';
 import './unit/core/selection';
+import './unit/core/composition';
 import './unit/core/quill';
 
 import './unit/formats/color';
