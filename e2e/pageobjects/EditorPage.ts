@@ -81,6 +81,23 @@ export default class EditorPage {
     });
   }
 
+  async cutoffHistory() {
+    await this.page.evaluate(() => {
+      // @ts-expect-error
+      window.quill.history.cutoff();
+    });
+  }
+
+  async updateContents(delta: Op[], source: 'api' | 'user' = 'api') {
+    await this.page.evaluate(
+      ({ delta, source }) => {
+        // @ts-expect-error
+        window.quill.updateContents(delta, source);
+      },
+      { delta, source },
+    );
+  }
+
   async setContents(delta: Op[]) {
     await this.page.evaluate(delta => {
       // @ts-expect-error
