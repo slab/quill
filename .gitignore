@@ -19,6 +19,7 @@ formats/*.js
 modules/*.js
 themes/*.js
 ui/*.js
+e2e/**/*.js
 
 test/**/*.js
 !test/helpers/**/*.js
