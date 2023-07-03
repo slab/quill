@@ -68,41 +68,30 @@ export default class EditorPage {
   async html(content: string, title = '') {
     await this.page.evaluate(html => {
       // @ts-expect-error
-      const quill = window.Quill.find(
-        document.querySelector('.ql-editor')?.parentElement,
-      );
-      const contents = quill.clipboard.convert({ html, text: '\n' });
-      return quill.setContents(contents);
+      const contents = window.quill.clipboard.convert({ html, text: '\n' });
+      // @ts-expect-error
+      return window.quill.setContents(contents);
     }, `<p>${title}</p>${content}`);
   }
 
   getSelection() {
     return this.page.evaluate(() => {
       // @ts-expect-error
-      const quill = window.Quill.find(
-        document.querySelector('.ql-editor')?.parentElement,
-      );
-      return quill.getSelection();
+      return window.quill.getSelection();
     });
   }
 
   async setContents(delta: Op[]) {
     await this.page.evaluate(delta => {
       // @ts-expect-error
-      const quill = window.Quill.find(
-        document.querySelector('.ql-editor')?.parentElement,
-      );
-      quill.setContents(delta);
+      window.quill.setContents(delta);
     }, delta);
   }
 
   getContents(): Promise<Op[]> {
     return this.page.evaluate(() => {
       // @ts-expect-error
-      const quill = window.Quill.find(
-        document.querySelector('.ql-editor')?.parentElement,
-      );
-      return quill.getContents().ops;
+      return window.quill.getContents().ops;
     });
   }
 
