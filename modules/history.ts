@@ -74,7 +74,7 @@ class History extends Module<HistoryOptions> {
     this.quill.updateContents(delta, Quill.sources.USER);
     this.ignoreChange = false;
     const index = getLastChangeIndex(this.quill.scroll, delta);
-    this.quill.setSelection(index);
+    this.quill.setSelection(index, Quill.sources.USER);
   }
 
   clear() {

@@ -81,6 +81,20 @@ describe('History', function () {
       expect(quill.history.stack.undo.length).toEqual(2);
     });
 
+    it('emits selection changes', function () {
+      const quill = new Quill(this.container.firstChild, {
+        modules: {
+          history: { delay: 0 },
+        },
+      });
+      quill.insertText(0, 'foo');
+      const change = jasmine.createSpy('change');
+      quill.on('selection-change', change);
+      quill.history.undo();
+
+      expect(change).toHaveBeenCalledOnceWith(jasmine.anything(), null, 'user');
+    });
+
     it('user change', function () {
       this.quill.root.firstChild.innerHTML = 'The lazy foxes';
       this.quill.update();
