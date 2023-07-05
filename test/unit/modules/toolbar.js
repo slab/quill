@@ -1,9 +1,9 @@
 import Quill from '../../../core/quill';
 import { addControls } from '../../../modules/toolbar';
 
-describe('Toolbar', function() {
-  describe('add controls', function() {
-    it('single level', function() {
+describe('Toolbar', function () {
+  describe('add controls', function () {
+    it('single level', function () {
       addControls(this.container, ['bold', 'italic']);
       expect(this.container).toEqualHTML(`
         <span class="ql-formats">
@@ -13,7 +13,7 @@ describe('Toolbar', function() {
       `);
     });
 
-    it('nested group', function() {
+    it('nested group', function () {
       addControls(this.container, [
         ['bold', 'italic'],
         ['underline', 'strike'],
@@ -30,7 +30,7 @@ describe('Toolbar', function() {
       `);
     });
 
-    it('button value', function() {
+    it('button value', function () {
       addControls(this.container, ['bold', { header: '2' }]);
       expect(this.container).toEqualHTML(`
         <span class="ql-formats">
@@ -40,7 +40,7 @@ describe('Toolbar', function() {
       `);
     });
 
-    it('select', function() {
+    it('select', function () {
       addControls(this.container, [{ size: ['10px', false, '18px', '32px'] }]);
       expect(this.container).toEqualHTML(`
         <span class="ql-formats">
@@ -54,7 +54,7 @@ describe('Toolbar', function() {
       `);
     });
 
-    it('everything', function() {
+    it('everything', function () {
       addControls(this.container, [
         [
           { font: [false, 'sans-serif', 'monospace'] },
@@ -106,8 +106,8 @@ describe('Toolbar', function() {
     });
   });
 
-  describe('active', function() {
-    beforeEach(function() {
+  describe('active', function () {
+    beforeEach(function () {
       const container = this.initialize(
         HTMLElement,
         `
@@ -130,30 +130,27 @@ describe('Toolbar', function() {
       });
     });
 
-    it('toggle button', function() {
-      const boldButton = this.container.parentNode.querySelector(
-        'button.ql-bold',
-      );
+    it('toggle button', function () {
+      const boldButton =
+        this.container.parentNode.querySelector('button.ql-bold');
       this.quill.setSelection(7);
       expect(boldButton.classList.contains('ql-active')).toBe(true);
       this.quill.setSelection(2);
       expect(boldButton.classList.contains('ql-active')).toBe(false);
     });
 
-    it('link', function() {
-      const linkButton = this.container.parentNode.querySelector(
-        'button.ql-link',
-      );
+    it('link', function () {
+      const linkButton =
+        this.container.parentNode.querySelector('button.ql-link');
       this.quill.setSelection(12);
       expect(linkButton.classList.contains('ql-active')).toBe(true);
       this.quill.setSelection(2);
       expect(linkButton.classList.contains('ql-active')).toBe(false);
     });
 
-    it('dropdown', function() {
-      const sizeSelect = this.container.parentNode.querySelector(
-        'select.ql-size',
-      );
+    it('dropdown', function () {
+      const sizeSelect =
+        this.container.parentNode.querySelector('select.ql-size');
       this.quill.setSelection(21);
       expect(sizeSelect.selectedIndex).toEqual(0);
       this.quill.setSelection(23);
@@ -164,7 +161,7 @@ describe('Toolbar', function() {
       expect(sizeSelect.selectedIndex).toEqual(1);
     });
 
-    it('custom button', function() {
+    it('custom button', function () {
       const centerButton = this.container.parentNode.querySelector(
         'button.ql-align[value="center"]',
       );

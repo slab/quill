@@ -85,7 +85,9 @@ const reindexCellIdentities = (cells, { rows, columns }) => {
   Object.keys(cells).forEach(identity => {
     let [row, column] = parseCellIdentity(identity);
 
+    // @ts-expect-error Fix me later
     row = composePosition(rows, row);
+    // @ts-expect-error Fix me later
     column = composePosition(columns, column);
 
     if (row !== null && column !== null) {
@@ -110,6 +112,7 @@ export const tableHandler = {
 
     Object.keys(b.cells || {}).forEach(identity => {
       const aCell = cells[identity] || {};
+      // @ts-expect-error Fix me later
       const bCell = b.cells[identity];
 
       const content = new Delta(aCell.content || []).compose(
@@ -153,12 +156,15 @@ export const tableHandler = {
 
     Object.keys(a.cells || {}).forEach(identity => {
       let [row, column] = parseCellIdentity(identity);
+      // @ts-expect-error Fix me later
       row = composePosition(rows, row);
+      // @ts-expect-error Fix me later
       column = composePosition(columns, column);
 
       if (row !== null && column !== null) {
         const newIdentity = stringifyCellIdentity(row, column);
 
+        // @ts-expect-error Fix me later
         const aCell = a.cells[identity];
         const bCell = cells[newIdentity];
         if (bCell) {
@@ -222,6 +228,7 @@ export const tableHandler = {
         composePosition(new Delta(change.rows || []), row) === null ||
         composePosition(new Delta(change.columns || []), column) === null
       ) {
+        // @ts-expect-error Fix me later
         cells[identity] = base.cells[identity];
       }
     });

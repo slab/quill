@@ -1,10 +1,6 @@
 import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
 import * as Parchment from 'parchment';
-import {
-  Blot,
-  BlotConstructor,
-} from 'parchment/dist/typings/blot/abstract/blot';
 import Delta, { Op } from 'quill-delta';
 import Block, { BlockEmbed } from '../blots/block';
 import Scroll, { ScrollConstructor } from '../blots/scroll';
@@ -15,9 +11,10 @@ import Uploader from '../modules/uploader';
 import Editor from './editor';
 import Emitter, { EmitterSource } from './emitter';
 import instances from './instances';
-import logger from './logger';
+import logger, { DebugLevel } from './logger';
 import Module from './module';
 import Selection, { Range } from './selection';
+import Composition from './composition';
 import Theme, { ThemeConstructor } from './theme';
 
 const debug = logger('quill');
@@ -27,13 +24,13 @@ Parchment.ParentBlot.uiClass = 'ql-ui';
 
 interface Options {
   theme?: string;
-  debug?: string | boolean;
+  debug?: DebugLevel | boolean;
   registry?: Parchment.Registry;
   readOnly?: boolean;
-  container?: HTMLElement;
+  container?: HTMLElement | string;
   placeholder?: string;
-  bounds?: HTMLElement | null;
-  scrollingContainer?: HTMLElement | null;
+  bounds?: HTMLElement | string | null;
+  scrollingContainer?: HTMLElement | string | null;
   modules?: Record<string, unknown>;
 }
 
@@ -42,6 +39,8 @@ interface ExpandedOptions extends Omit<Options, 'theme'> {
   registry: Parchment.Registry;
   container: HTMLElement;
   modules: Record<string, unknown>;
+  bounds?: HTMLElement | null;
+  scrollingContainer?: HTMLElement | null;
 }
 
 class Quill {
@@ -67,7 +66,7 @@ class Quill {
     'core/theme': Theme,
   };
 
-  static debug(limit: string | boolean) {
+  static debug(limit: DebugLevel | boolean) {
     if (limit === true) {
       limit = 'log';
     }
@@ -92,10 +91,10 @@ class Quill {
   static register(
     path:
       | string
-      | BlotConstructor
+      | Parchment.BlotConstructor
       | Parchment.Attributor
       | Record<string, unknown>,
-    target?: BlotConstructor | Parchment.Attributor | boolean,
+    target?: Parchment.BlotConstructor | Parchment.Attributor | boolean,
     overwrite = false,
   ) {
     if (typeof path !== 'string') {
@@ -137,6 +136,7 @@ class Quill {
   emitter: Emitter;
   allowReadOnlyEdits: boolean;
   editor: Editor;
+  composition: Composition;
   selection: Selection;
 
   theme: Theme;
@@ -147,7 +147,7 @@ class Quill {
 
   options: ExpandedOptions;
 
-  constructor(container: HTMLElement, options: Options = {}) {
+  constructor(container: HTMLElement | string, options: Options = {}) {
     this.options = expandConfig(container, options);
     this.container = this.options.container;
     if (this.container == null) {
@@ -174,11 +174,13 @@ class Quill {
     });
     this.editor = new Editor(this.scroll);
     this.selection = new Selection(this.scroll, this.emitter);
+    this.composition = new Composition(this.scroll, this.emitter);
     this.theme = new this.options.theme(this, this.options); // eslint-disable-line new-cap
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
     this.uploader = this.theme.addModule('uploader');
+    this.theme.addModule('input');
     this.theme.init();
     this.emitter.on(Emitter.events.EDITOR_CHANGE, type => {
       if (type === Emitter.events.TEXT_CHANGE) {
@@ -229,11 +231,11 @@ class Quill {
     this.allowReadOnlyEdits = false;
   }
 
-  addContainer(container: string, refNode?: Node): HTMLDivElement;
-  addContainer(container: HTMLElement, refNode?: Node): HTMLElement;
+  addContainer(container: string, refNode?: Node | null): HTMLDivElement;
+  addContainer(container: HTMLElement, refNode?: Node | null): HTMLElement;
   addContainer(
     container: string | HTMLElement,
-    refNode = null,
+    refNode: Node | null = null,
   ): HTMLDivElement | HTMLElement {
     if (typeof container === 'string') {
       const className = container;
@@ -429,8 +431,8 @@ class Quill {
     return this.editor.getContents(index, length);
   }
 
-  getFormat(index: number, length?: number);
-  getFormat(range: { index: number; length: number });
+  getFormat(index?: number, length?: number);
+  getFormat(range?: { index: number; length: number });
   getFormat(
     index: { index: number; length: number } | number = this.getSelection(true),
     length = 0,
@@ -441,7 +443,7 @@ class Quill {
     return this.editor.getFormat(index.index, index.length);
   }
 
-  getIndex(blot: Blot) {
+  getIndex(blot: Parchment.Blot) {
     return blot.offset(this.scroll);
   }
 
@@ -495,8 +497,8 @@ class Quill {
     return this.editor.getHTML(index, length);
   }
 
-  getText(range: { index: number; length: number }): string;
-  getText(index: number, length?: number): string;
+  getText(range?: { index: number; length: number }): string;
+  getText(index?: number, length?: number): string;
   getText(
     index: { index: number; length: number } | number = 0,
     length?: number,
@@ -533,6 +535,12 @@ class Quill {
   insertText(
     index: number,
     text: string,
+    formats: Record<string, unknown>,
+    source: EmitterSource,
+  ): Delta;
+  insertText(
+    index: number,
+    text: string,
     name: string,
     value: unknown,
     source: EmitterSource,
@@ -540,12 +548,13 @@ class Quill {
   insertText(
     index: number,
     text: string,
-    name: string | EmitterSource,
+    name: string | Record<string, unknown> | EmitterSource,
     value?: unknown,
     source?: EmitterSource,
   ): Delta {
     let formats;
     // eslint-disable-next-line prefer-const
+    // @ts-expect-error
     [index, , formats, source] = overload(index, 0, name, value, source);
     return modify.call(
       this,
@@ -624,8 +633,7 @@ class Quill {
         const length = this.getLength();
         // Quill will set empty editor to \n
         const delete1 = this.editor.deleteText(0, length);
-        // delta always applied before existing content
-        const applied = this.editor.applyDelta(delta);
+        const applied = this.editor.insertContents(0, delta);
         // Remove extra \n from empty editor initialization
         const delete2 = this.editor.deleteText(this.getLength() - 1, 1);
         return delete1.compose(applied).compose(delete2);
@@ -650,7 +658,7 @@ class Quill {
       [index, length, , source] = overload(index, length, source);
       this.selection.setRange(new Range(Math.max(0, index), length), source);
       if (source !== Emitter.sources.SILENT) {
-        this.selection.scrollIntoView(this.scrollingContainer);
+        this.scrollIntoView();
       }
     }
   }
@@ -684,7 +692,7 @@ class Quill {
 }
 
 function expandConfig(
-  container: HTMLElement,
+  container: HTMLElement | string,
   userConfig: Options,
 ): ExpandedOptions {
   let expandedConfig = merge(
@@ -873,6 +881,7 @@ function overload(
   }
   // Handle format being object, two format name/value strings or excluded
   if (typeof name === 'object') {
+    // @ts-expect-error Fix me later
     formats = name;
     // @ts-expect-error
     source = value;

@@ -19,7 +19,12 @@ formats/*.js
 modules/*.js
 themes/*.js
 ui/*.js
-test/random.js
+e2e/**/*.js
+
+test/**/*.js
+!test/helpers/**/*.js
+!test/unit/**/*.js
+!test/unit.js
 
 core.js
 quill.js

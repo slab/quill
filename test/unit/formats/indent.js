@@ -1,8 +1,8 @@
 import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
 
-describe('Indent', function() {
-  it('+1', function() {
+describe('Indent', function () {
+  it('+1', function () {
     const editor = this.initialize(
       Editor,
       '<ol><li data-list="bullet">0123</li></ol>',
@@ -16,7 +16,7 @@ describe('Indent', function() {
     );
   });
 
-  it('-1', function() {
+  it('-1', function () {
     const editor = this.initialize(
       Editor,
       '<ol><li data-list="bullet" class="ql-indent-1">0123</li></ol>',

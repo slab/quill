@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import merge from 'lodash.merge';
-import { LeafBlot, Scope } from 'parchment';
+import { LeafBlot, EmbedBlot, Scope } from 'parchment';
 import Delta, { AttributeMap, Op } from 'quill-delta';
 import Block, { BlockEmbed, bubbleFormats } from '../blots/block';
 import Break from '../blots/break';
@@ -11,6 +11,11 @@ import TextBlot, { escapeText } from '../blots/text';
 import { Range } from './selection';
 
 const ASCII = /^[ -~]*$/;
+
+type SelectionInfo = {
+  newRange: Range;
+  oldRange: Range;
+};
 
 class Editor {
   scroll: Scroll;
@@ -27,25 +32,24 @@ class Editor {
     this.scroll.batchStart();
     const normalizedDelta = normalizeDelta(delta);
     const deleteDelta = new Delta();
-    normalizedDelta.reduce((index, op) => {
+    const normalizedOps = splitOpLines(normalizedDelta.ops.slice());
+    normalizedOps.reduce((index, op) => {
       const length = Op.length(op);
       let attributes = op.attributes || {};
-      let addedNewline = false;
+      let isImplicitNewlinePrepended = false;
+      let isImplicitNewlineAppended = false;
       if (op.insert != null) {
         deleteDelta.retain(length);
         if (typeof op.insert === 'string') {
           const text = op.insert;
-          // @ts-expect-error TODO: Fix this the next time the file is edited.
-          addedNewline =
+          isImplicitNewlineAppended =
             !text.endsWith('\n') &&
             (scrollLength <= index ||
-              // @ts-expect-error
-              this.scroll.descendant(BlockEmbed, index)[0]);
+              !!this.scroll.descendant(BlockEmbed, index)[0]);
           this.scroll.insertAt(index, text);
           const [line, offset] = this.scroll.line(index);
           let formats = merge({}, bubbleFormats(line));
           if (line instanceof Block) {
-            // @ts-expect-error
             const [leaf] = line.descendant(LeafBlot, offset);
             formats = merge(formats, bubbleFormats(leaf));
           }
@@ -53,13 +57,35 @@ class Editor {
         } else if (typeof op.insert === 'object') {
           const key = Object.keys(op.insert)[0]; // There should only be one key
           if (key == null) return index;
-          // @ts-expect-error TODO: Fix this the next time the file is edited.
-          addedNewline =
-            this.scroll.query(key, Scope.INLINE) != null &&
-            (scrollLength <= index ||
-              // @ts-expect-error
-              this.scroll.descendant(BlockEmbed, index)[0]);
+          const isInlineEmbed = this.scroll.query(key, Scope.INLINE) != null;
+          if (isInlineEmbed) {
+            if (
+              scrollLength <= index ||
+              !!this.scroll.descendant(BlockEmbed, index)[0]
+            ) {
+              isImplicitNewlineAppended = true;
+            }
+          } else if (index > 0) {
+            const [leaf, offset] = this.scroll.descendant(LeafBlot, index - 1);
+            if (leaf instanceof TextBlot) {
+              const text = leaf.value();
+              if (text[offset] !== '\n') {
+                isImplicitNewlinePrepended = true;
+              }
+            } else if (
+              leaf instanceof EmbedBlot &&
+              leaf.statics.scope === Scope.INLINE_BLOT
+            ) {
+              isImplicitNewlinePrepended = true;
+            }
+          }
           this.scroll.insertAt(index, key, op.insert[key]);
+
+          if (isInlineEmbed) {
+            const [leaf] = this.scroll.descendant(LeafBlot, index);
+            const formats = merge({}, bubbleFormats(leaf));
+            attributes = AttributeMap.diff(formats, attributes) || {};
+          }
         }
         scrollLength += length;
       } else {
@@ -74,10 +100,12 @@ class Editor {
       Object.keys(attributes).forEach(name => {
         this.scroll.formatAt(index, length, name, attributes[name]);
       });
-      const addedLength = addedNewline ? 1 : 0;
-      scrollLength += addedLength;
+      const prependedLength = isImplicitNewlinePrepended ? 1 : 0;
+      const addedLength = isImplicitNewlineAppended ? 1 : 0;
+      scrollLength += prependedLength + addedLength;
+      deleteDelta.retain(prependedLength);
       deleteDelta.delete(addedLength);
-      return index + length + addedLength;
+      return index + length + prependedLength + addedLength;
     }, 0);
     deleteDelta.reduce((index, op) => {
       if (typeof op.delete === 'number') {
@@ -135,8 +163,8 @@ class Editor {
   }
 
   getFormat(index: number, length = 0): Record<string, unknown> {
-    let lines = [];
-    let leaves = [];
+    let lines: (Block | BlockEmbed)[] = [];
+    let leaves: LeafBlot[] = [];
     if (length === 0) {
       this.scroll.path(index).forEach(path => {
         const [blot] = path;
@@ -148,10 +176,9 @@ class Editor {
       });
     } else {
       lines = this.scroll.lines(index, length);
-      // @ts-expect-error
       leaves = this.scroll.descendants(LeafBlot, index, length);
     }
-    [lines, leaves] = [lines, leaves].map(blots => {
+    const [lineFormats, leafFormats] = [lines, leaves].map(blots => {
       if (blots.length === 0) return {};
       let formats = bubbleFormats(blots.shift());
       while (Object.keys(formats).length > 0) {
@@ -161,15 +188,18 @@ class Editor {
       }
       return formats;
     });
-    return { ...lines, ...leaves };
+    return { ...lineFormats, ...leafFormats };
   }
 
   getHTML(index: number, length: number): string {
     const [line, lineOffset] = this.scroll.line(index);
-    if (line.length() >= lineOffset + length) {
-      return convertHTML(line, lineOffset, length, true);
+    if (line) {
+      if (line.length() >= lineOffset + length) {
+        return convertHTML(line, lineOffset, length, true);
+      }
+      return convertHTML(this.scroll, index, length, true);
     }
-    return convertHTML(this.scroll, index, length, true);
+    return '';
   }
 
   getText(index: number, length: number): string {
@@ -177,6 +207,13 @@ class Editor {
       .filter(op => typeof op.insert === 'string')
       .map(op => op.insert)
       .join('');
+  }
+
+  insertContents(index: number, contents: Delta): Delta {
+    const normalizedDelta = normalizeDelta(contents);
+    const change = new Delta().retain(index).concat(normalizedDelta);
+    this.scroll.insertContents(index, normalizedDelta);
+    return this.update(change);
   }
 
   insertEmbed(index: number, embed: string, value: unknown): Delta {
@@ -203,7 +240,7 @@ class Editor {
     if (this.scroll.children.length === 0) return true;
     if (this.scroll.children.length > 1) return false;
     const blot = this.scroll.children.head;
-    if (blot.statics.blotName !== Block.blotName) return false;
+    if (blot?.statics.blotName !== Block.blotName) return false;
     const block = blot as Block;
     if (block.children.length > 1) return false;
     return block.children.head instanceof Break;
@@ -227,18 +264,25 @@ class Editor {
     return this.applyDelta(delta);
   }
 
-  update(change: Delta, mutations = [], selectionInfo = undefined): Delta {
+  update(
+    change: Delta | null,
+    mutations: MutationRecord[] = [],
+    selectionInfo: SelectionInfo | undefined = undefined,
+  ): Delta {
     const oldDelta = this.delta;
     if (
       mutations.length === 1 &&
       mutations[0].type === 'characterData' &&
+      // @ts-expect-error Fix me later
       mutations[0].target.data.match(ASCII) &&
       this.scroll.find(mutations[0].target)
     ) {
       // Optimization for character changes
       const textBlot = this.scroll.find(mutations[0].target);
       const formats = bubbleFormats(textBlot);
+      // @ts-expect-error Fix me later
       const index = textBlot.offset(this.scroll);
+      // @ts-expect-error Fix me later
       const oldValue = mutations[0].oldValue.replace(CursorBlot.CONTENTS, '');
       const oldText = new Delta().insert(oldValue);
       // @ts-expect-error
@@ -310,7 +354,7 @@ function convertHTML(blot, index, length, isRoot = false) {
   if (blot.children) {
     // TODO fix API
     if (blot.statics.blotName === 'list-container') {
-      const items = [];
+      const items: any[] = [];
       blot.children.forEachAt(index, length, (child, offset, childLength) => {
         const formats = child.formats();
         items.push({
@@ -323,7 +367,7 @@ function convertHTML(blot, index, length, isRoot = false) {
       });
       return convertListHTML(items, -1, []);
     }
-    const parts = [];
+    const parts: string[] = [];
     blot.children.forEachAt(index, length, (child, offset, childLength) => {
       parts.push(convertHTML(child, offset, childLength));
     });
@@ -382,11 +426,25 @@ function normalizeDelta(delta: Delta) {
   }, new Delta());
 }
 
-function shiftRange(
-  { index, length }: { index: number; length: number },
-  amount: number,
-) {
+function shiftRange({ index, length }: Range, amount: number) {
   return new Range(index + amount, length);
+}
+
+function splitOpLines(ops: Op[]) {
+  const split: Op[] = [];
+  ops.forEach(op => {
+    if (typeof op.insert === 'string') {
+      const lines = op.insert.split('\n');
+      lines.forEach((line, index) => {
+        if (index) split.push({ insert: '\n', attributes: op.attributes });
+        if (line) split.push({ insert: line, attributes: op.attributes });
+      });
+    } else {
+      split.push(op);
+    }
+  });
+
+  return split;
 }
 
 export default Editor;

@@ -1,11 +1,11 @@
 import {
   AttributorStore,
   BlockBlot,
+  Blot,
   EmbedBlot,
   LeafBlot,
   Scope,
 } from 'parchment';
-import { Blot } from 'parchment/dist/typings/blot/abstract/blot';
 import Delta from 'quill-delta';
 import Break from './break';
 import Inline from './inline';
@@ -45,7 +45,7 @@ class Block extends BlockBlot {
     this.cache = {};
   }
 
-  insertAt(index, value, def?: unknown) {
+  insertAt(index: number, value: string, def?: unknown) {
     if (def != null) {
       super.insertAt(index, value, def);
       this.cache = {};
@@ -53,7 +53,7 @@ class Block extends BlockBlot {
     }
     if (value.length === 0) return;
     const lines = value.split('\n');
-    const text = lines.shift();
+    const text = lines.shift() as string;
     if (text.length > 0) {
       if (index < this.length() - 1 || this.children.tail == null) {
         super.insertAt(Math.min(index, this.length() - 1), text);
@@ -66,6 +66,7 @@ class Block extends BlockBlot {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let block: Blot | this = this;
     lines.reduce((lineIndex, line) => {
+      // @ts-expect-error Fix me later
       block = block.split(lineIndex, true);
       block.insertAt(0, line);
       return line.length;
@@ -88,7 +89,7 @@ class Block extends BlockBlot {
     return this.cache.length;
   }
 
-  moveChildren(target, ref) {
+  moveChildren(target, ref?) {
     super.moveChildren(target, ref);
     this.cache = {};
   }
@@ -114,6 +115,7 @@ class Block extends BlockBlot {
         this.parent.insertBefore(clone, this);
         return this;
       }
+      // @ts-expect-error Fix me later
       this.parent.insertBefore(clone, this.next);
       return clone;
     }
@@ -156,12 +158,25 @@ class BlockEmbed extends EmbedBlot {
   }
 
   insertAt(index: number, value: string, def?: unknown) {
-    if (typeof value === 'string' && value.endsWith('\n')) {
-      const block = this.scroll.create(Block.blotName);
-      this.parent.insertBefore(block, index === 0 ? this : this.next);
-      block.insertAt(0, value.slice(0, -1));
-    } else {
+    if (def != null) {
       super.insertAt(index, value, def);
+      return;
+    }
+    const lines = value.split('\n');
+    const text = lines.pop();
+    const blocks = lines.map(line => {
+      const block = this.scroll.create(Block.blotName);
+      block.insertAt(0, line);
+      return block;
+    });
+    const ref = this.split(index);
+    blocks.forEach(block => {
+      // @ts-expect-error Fix me later
+      this.parent.insertBefore(block, ref);
+    });
+    if (text) {
+      // @ts-expect-error Fix me later
+      this.parent.insertBefore(this.scroll.create('text', text), ref);
     }
   }
 }
@@ -169,18 +184,15 @@ BlockEmbed.scope = Scope.BLOCK_BLOT;
 // It is important for cursor behavior BlockEmbeds use tags that are block level elements
 
 function blockDelta(blot: BlockBlot, filter = true) {
-  return (
-    blot
-      // @ts-expect-error
-      .descendants(LeafBlot)
-      .reduce((delta, leaf: LeafBlot) => {
-        if (leaf.length() === 0) {
-          return delta;
-        }
-        return delta.insert(leaf.value(), bubbleFormats(leaf, {}, filter));
-      }, new Delta())
-      .insert('\n', bubbleFormats(blot))
-  );
+  return blot
+    .descendants(LeafBlot)
+    .reduce((delta, leaf) => {
+      if (leaf.length() === 0) {
+        return delta;
+      }
+      return delta.insert(leaf.value(), bubbleFormats(leaf, {}, filter));
+    }, new Delta())
+    .insert('\n', bubbleFormats(blot));
 }
 
 function bubbleFormats(blot, formats = {}, filter = true) {
