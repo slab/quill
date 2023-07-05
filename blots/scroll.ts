@@ -1,6 +1,7 @@
 import {
   Blot,
   ContainerBlot,
+  EmbedBlot,
   LeafBlot,
   Parent,
   ParentBlot,
@@ -8,10 +9,21 @@ import {
   Scope,
   ScrollBlot,
 } from 'parchment';
+import Delta, { AttributeMap, Op } from 'quill-delta';
 import Emitter, { EmitterSource } from '../core/emitter';
 import Block, { BlockEmbed } from './block';
 import Break from './break';
 import Container from './container';
+import { bubbleFormats } from './block';
+
+type RenderBlock =
+  | {
+      type: 'blockEmbed';
+      attributes: AttributeMap;
+      key: string;
+      value: unknown;
+    }
+  | { type: 'block'; attributes: AttributeMap; delta: Delta };
 
 function isLine(blot: unknown): blot is Block | BlockEmbed {
   return blot instanceof Block || blot instanceof BlockEmbed;
@@ -137,6 +149,76 @@ class Scroll extends ScrollBlot {
     }
   }
 
+  insertContents(index: number, delta: Delta) {
+    const renderBlocks = this.deltaToRenderBlocks(
+      delta.concat(new Delta().insert('\n')),
+    );
+    const last = renderBlocks.pop();
+    if (last == null) return;
+
+    this.batchStart();
+
+    const first = renderBlocks.shift();
+    if (first) {
+      const shouldInsertNewlineChar =
+        first.type === 'block' &&
+        (first.delta.length() === 0 ||
+          (!this.descendant(BlockEmbed, index)[0] && index < this.length()));
+      const delta =
+        first.type === 'block'
+          ? first.delta
+          : new Delta().insert({ [first.key]: first.value });
+      insertInlineContents(this, index, delta);
+      const newlineCharIndex = index + delta.length();
+      if (shouldInsertNewlineChar) {
+        this.insertAt(newlineCharIndex, '\n');
+      }
+
+      const formats = bubbleFormats(this.line(index)[0]);
+      const attributes = AttributeMap.diff(formats, first.attributes) || {};
+      Object.keys(attributes).forEach(name => {
+        this.formatAt(newlineCharIndex, 1, name, attributes[name]);
+      });
+
+      index = newlineCharIndex + 1;
+    }
+
+    let [refBlot, refBlotOffset] = this.children.find(index);
+    if (renderBlocks.length) {
+      if (refBlot) {
+        refBlot = refBlot.split(refBlotOffset);
+        refBlotOffset = 0;
+      }
+
+      renderBlocks.forEach(renderBlock => {
+        if (renderBlock.type === 'block') {
+          const block = this.createBlock(renderBlock.attributes);
+          this.insertBefore(block, refBlot || undefined);
+          insertInlineContents(block, 0, renderBlock.delta);
+        } else {
+          const blockEmbed = this.create(
+            renderBlock.key,
+            renderBlock.value,
+          ) as EmbedBlot;
+          Object.keys(renderBlock.attributes).forEach(name => {
+            blockEmbed.format(name, renderBlock.attributes[name]);
+          });
+          this.insertBefore(blockEmbed, refBlot || undefined);
+        }
+      });
+    }
+
+    if (last.type === 'block' && last.delta.length()) {
+      const offset = refBlot
+        ? refBlot.offset(refBlot.scroll) + refBlotOffset
+        : this.length();
+      insertInlineContents(this, offset, last.delta);
+    }
+
+    this.batchEnd();
+    this.optimize();
+  }
+
   isEnabled() {
     return this.domNode.getAttribute('contenteditable') === 'true';
   }
@@ -242,6 +324,123 @@ class Scroll extends ScrollBlot {
       blot.updateContent(change);
     }
   }
+
+  private deltaToRenderBlocks(delta: Delta) {
+    const renderBlocks: RenderBlock[] = [];
+
+    let currentBlockDelta = new Delta();
+    delta.forEach(op => {
+      const insert = op?.insert;
+      if (!insert) return;
+      if (typeof insert === 'string') {
+        const splitted = insert.split('\n');
+        splitted.slice(0, -1).forEach(text => {
+          currentBlockDelta.insert(text, op.attributes);
+          renderBlocks.push({
+            type: 'block',
+            delta: currentBlockDelta,
+            attributes: op.attributes ?? {},
+          });
+          currentBlockDelta = new Delta();
+        });
+        const last = splitted[splitted.length - 1];
+        if (last) {
+          currentBlockDelta.insert(last, op.attributes);
+        }
+      } else {
+        const key = Object.keys(insert)[0];
+        if (!key) return;
+        if (this.query(key, Scope.INLINE)) {
+          currentBlockDelta.push(op);
+        } else {
+          if (currentBlockDelta.length()) {
+            renderBlocks.push({
+              type: 'block',
+              delta: currentBlockDelta,
+              attributes: {},
+            });
+          }
+          currentBlockDelta = new Delta();
+          renderBlocks.push({
+            type: 'blockEmbed',
+            key,
+            value: insert[key],
+            attributes: op.attributes ?? {},
+          });
+        }
+      }
+    });
+
+    if (currentBlockDelta.length()) {
+      renderBlocks.push({
+        type: 'block',
+        delta: currentBlockDelta,
+        attributes: {},
+      });
+    }
+
+    return renderBlocks;
+  }
+
+  private createBlock(attributes: AttributeMap) {
+    let blotName: string | undefined;
+    const formats: AttributeMap = {};
+
+    Object.entries(attributes).forEach(([key, value]) => {
+      const isBlockBlot = this.query(key, Scope.BLOCK & Scope.BLOT) != null;
+      if (isBlockBlot) {
+        blotName = key;
+      } else {
+        formats[key] = value;
+      }
+    });
+
+    const block = this.create(
+      blotName || this.statics.defaultChild.blotName,
+      blotName ? attributes[blotName] : undefined,
+    ) as ParentBlot;
+
+    const length = block.length();
+    Object.entries(formats).forEach(([key, value]) => {
+      block.formatAt(0, length, key, value);
+    });
+
+    return block;
+  }
+}
+
+function insertInlineContents(
+  parent: ParentBlot,
+  index: number,
+  inlineContents: Delta,
+) {
+  inlineContents.reduce((index, op) => {
+    const length = Op.length(op);
+    let attributes = op.attributes || {};
+    if (op.insert != null) {
+      if (typeof op.insert === 'string') {
+        const text = op.insert;
+        parent.insertAt(index, text);
+        const [leaf] = parent.descendant(LeafBlot, index);
+        const formats = bubbleFormats(leaf);
+        attributes = AttributeMap.diff(formats, attributes) || {};
+      } else if (typeof op.insert === 'object') {
+        const key = Object.keys(op.insert)[0]; // There should only be one key
+        if (key == null) return index;
+        parent.insertAt(index, key, op.insert[key]);
+        const isInlineEmbed = parent.scroll.query(key, Scope.INLINE) != null;
+        if (isInlineEmbed) {
+          const [leaf] = parent.descendant(LeafBlot, index);
+          const formats = bubbleFormats(leaf);
+          attributes = AttributeMap.diff(formats, attributes) || {};
+        }
+      }
+    }
+    Object.keys(attributes).forEach(key => {
+      parent.formatAt(index, length, key, attributes[key]);
+    });
+    return index + length;
+  }, index);
 }
 
 export interface ScrollConstructor {

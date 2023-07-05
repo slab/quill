@@ -2,6 +2,7 @@ import Emitter from '../../../core/emitter';
 import Selection, { Range } from '../../../core/selection';
 import Cursor from '../../../blots/cursor';
 import Scroll from '../../../blots/scroll';
+import Delta from 'quill-delta';
 
 describe('Scroll', function () {
   it('initialize empty document', function () {
@@ -86,6 +87,16 @@ describe('Scroll', function () {
       const [leaf, offset] = scroll.leaf(10);
       expect(leaf).toEqual(null);
       expect(offset).toEqual(-1);
+    });
+  });
+
+  describe('insertContents()', function () {
+    it('does not mutate the input', function () {
+      const scroll = this.initialize(Scroll, '<p>Test</p>');
+      const delta = new Delta().insert('\n');
+      const clonedDelta = new Delta(structuredClone(delta.ops));
+      scroll.insertContents(0, delta);
+      expect(delta.ops).toEqual(clonedDelta.ops);
     });
   });
 });

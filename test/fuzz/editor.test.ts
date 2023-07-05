@@ -140,11 +140,17 @@ const generateDocument = () => {
   return delta;
 };
 
-const generateChange = (doc: Delta, changeCount: number) => {
+const generateChange = (
+  doc: Delta,
+  changeCount: number,
+  allowedActions = ['insert', 'delete', 'retain'],
+) => {
   const docLength = doc.length();
-  const skipLength = randomInt(docLength);
+  const skipLength = allowedActions.includes('retain')
+    ? randomInt(docLength)
+    : 0;
   let change = new Delta().retain(skipLength);
-  const action = choose(['insert', 'delete', 'retain']);
+  const action = choose(allowedActions);
   const nextOp = doc.slice(skipLength).ops[0];
   if (!nextOp) throw new Error('nextOp expected');
   const needNewline = !isLineFinished(doc.slice(0, skipLength));
@@ -209,7 +215,9 @@ const generateChange = (doc: Delta, changeCount: number) => {
   changeCount -= 1;
   return changeCount <= 0
     ? change
-    : change.compose(generateChange(doc.compose(change), changeCount));
+    : change.compose(
+        generateChange(doc.compose(change), changeCount, allowedActions),
+      );
 };
 
 describe('editor', () => {
@@ -236,6 +244,28 @@ describe('editor', () => {
         const diff = quill.updateContents(change);
         expect(change).toEqual(diff);
       }
+    });
+  });
+
+  it('insertContents() vs applyDelta()', () => {
+    const quill1 = new Quill(document.createElement('div'));
+    const quill2 = new Quill(document.createElement('div'));
+
+    runFuzz(() => {
+      const delta = generateDocument();
+      quill1.setContents(delta);
+      quill2.setContents(delta);
+
+      const retain = randomInt(delta.length());
+      const change = generateChange(delta, randomInt(20) + 1, ['insert']);
+
+      quill1.editor.insertContents(retain, change);
+      quill2.editor.applyDelta(new Delta().retain(retain).concat(change));
+
+      const contents1 = quill1.getContents().ops;
+      const contents2 = quill2.getContents().ops;
+
+      expect(contents1).toEqual(contents2);
     });
   });
 });

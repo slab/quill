@@ -781,6 +781,244 @@ describe('Editor', function () {
     });
   });
 
+  describe('insertContents', function () {
+    const video =
+      '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>';
+
+    it('ignores empty delta', function () {
+      const editor = this.initialize(Editor, '<p>1</p>');
+      editor.insertContents(0, new Delta());
+      expect(editor.getDelta().ops).toEqual([{ insert: '1\n' }]);
+
+      editor.insertContents(0, new Delta().retain(100));
+      expect(editor.getDelta().ops).toEqual([{ insert: '1\n' }]);
+    });
+
+    it('prepend to paragraph', function () {
+      const editor = this.initialize(Editor, '<p>2</p>');
+      editor.insertContents(0, new Delta().insert('1'));
+      expect(editor.getDelta().ops).toEqual([{ insert: '12\n' }]);
+
+      editor.insertContents(
+        0,
+        new Delta()
+          .insert('a', { bold: true })
+          .insert('\n', { header: 1 })
+          .insert('b', { bold: true }),
+      );
+
+      expect(editor.getDelta().ops).toEqual([
+        { insert: 'a', attributes: { bold: true } },
+        { insert: '\n', attributes: { header: 1 } },
+        { insert: 'b', attributes: { bold: true } },
+        { insert: '12\n' },
+      ]);
+    });
+
+    it('prepend to list item', function () {
+      const editor = this.initialize(
+        Editor,
+        '<ol><li data-list="bullet">2</li></ol>',
+      );
+      editor.insertContents(0, new Delta().insert('1'));
+      expect(editor.getDelta().ops).toEqual([
+        { insert: '12' },
+        { insert: '\n', attributes: { list: 'bullet' } },
+      ]);
+
+      editor.insertContents(
+        0,
+        new Delta()
+          .insert('a', { bold: true })
+          .insert('\n', { header: 1 })
+          .insert('b', { bold: true }),
+      );
+
+      expect(editor.getDelta().ops).toEqual([
+        { insert: 'a', attributes: { bold: true } },
+        { insert: '\n', attributes: { header: 1 } },
+        { insert: 'b', attributes: { bold: true } },
+        { insert: '12' },
+        { insert: '\n', attributes: { list: 'bullet' } },
+      ]);
+    });
+
+    describe('prepend to block embed', function () {
+      it('without ending with \\n', function () {
+        const editor = this.initialize(Editor, `${video}`);
+        editor.insertContents(0, new Delta().insert('a'));
+        expect(editor.getDelta().ops).toEqual([
+          { insert: 'a\n' },
+          { insert: { video: '#' } },
+        ]);
+      });
+
+      it('empty first line', function () {
+        const editor = this.initialize(Editor, `<p></p>${video}`);
+        editor.insertContents(1, new Delta().insert('\nworld\n'));
+        expect(editor.getDelta().ops).toEqual([
+          { insert: '\n\nworld\n' },
+          { insert: { video: '#' } },
+        ]);
+      });
+
+      it('multiple lines', function () {
+        const editor = this.initialize(Editor, `${video}`);
+        editor.insertContents(
+          0,
+          new Delta().insert('a').insert('\n', { header: 1 }),
+        );
+        expect(editor.getDelta().ops).toEqual([
+          { insert: 'a' },
+          { insert: '\n', attributes: { header: 1 } },
+          { insert: { video: '#' } },
+        ]);
+      });
+    });
+
+    describe('append', function () {
+      it('appends to editor', function () {
+        const editor = this.initialize(Editor, '<p>1</p>');
+        editor.insertContents(2, new Delta().insert('a'));
+        expect(editor.getDelta().ops).toEqual([{ insert: '1\na\n' }]);
+        editor.insertContents(
+          4,
+          new Delta().insert('b').insert('\n', { header: 1 }),
+        );
+        expect(editor.getDelta().ops).toEqual([
+          { insert: '1\na\nb' },
+          { insert: '\n', attributes: { header: 1 } },
+        ]);
+      });
+
+      it('appends to paragraph', function () {
+        const editor = this.initialize(Editor, '<p>1</p><p>2</p>');
+        editor.insertContents(2, new Delta().insert('a'));
+        expect(editor.getDelta().ops).toEqual([{ insert: '1\na2\n' }]);
+        editor.insertContents(
+          2,
+          new Delta().insert('b').insert('\n', { header: 1 }),
+        );
+        expect(editor.getDelta().ops).toEqual([
+          { insert: '1\nb' },
+          { insert: '\n', attributes: { header: 1 } },
+          { insert: 'a2\n' },
+        ]);
+      });
+
+      it('appends to block embed', function () {
+        const editor = this.initialize(Editor, `${video}<p>2</p>`);
+        editor.insertContents(1, new Delta().insert('1'));
+        expect(editor.getDelta().ops).toEqual([
+          { insert: { video: '#' } },
+          { insert: '12\n' },
+        ]);
+        editor.insertContents(
+          1,
+          new Delta().insert('b').insert('\n', { header: 1 }),
+        );
+        expect(editor.getDelta().ops).toEqual([
+          { insert: { video: '#' } },
+          { insert: 'b' },
+          { insert: '\n', attributes: { header: 1 } },
+          { insert: '12\n' },
+        ]);
+      });
+    });
+
+    it('inserts formatted block embeds', function () {
+      const editor = this.initialize(Editor, `<p></p>`);
+      editor.insertContents(
+        0,
+        new Delta()
+          .insert('a\n')
+          .insert({ video: '#' }, { width: '300' })
+          .insert({ video: '#' }, { width: '300' })
+          .insert('\nd'),
+      );
+      expect(editor.getDelta().ops).toEqual([
+        { insert: 'a\n' },
+        { insert: { video: '#' }, attributes: { width: '300' } },
+        { insert: { video: '#' }, attributes: { width: '300' } },
+        { insert: '\nd\n' },
+      ]);
+    });
+
+    it('inserts inline embeds to bold text', function () {
+      const editor = this.initialize(Editor, `<p><strong>ab</strong></p>`);
+      editor.insertContents(1, new Delta().insert({ image: '#' }));
+      expect(editor.getDelta().ops).toEqual([
+        { insert: 'a', attributes: { bold: true } },
+        { insert: { image: '#' } },
+        { insert: 'b', attributes: { bold: true } },
+        { insert: '\n' },
+      ]);
+    });
+
+    it('inserts multiple lines to a container', function () {
+      const editor = this.initialize(
+        Editor,
+        `<ol><li data-list="ordered"></li></ol>`,
+      );
+      editor.insertContents(
+        0,
+        new Delta()
+          .insert('world', { font: 'monospace' })
+          .insert('\n', { list: 'bullet' })
+          .insert('\n'),
+      );
+      expect(editor.getDelta().ops).toEqual([
+        { insert: 'world', attributes: { font: 'monospace' } },
+        { insert: '\n', attributes: { list: 'bullet' } },
+        { insert: '\n' },
+        { insert: '\n', attributes: { list: 'ordered' } },
+      ]);
+    });
+
+    describe('invalid delta', function () {
+      const getEditorDelta = (context, modify) => {
+        const editor = context.initialize(Editor, `<p></p>`);
+        modify(editor);
+        return editor.getDelta().ops;
+      };
+
+      it('conflict block formats', function () {
+        const change = new Delta()
+          .insert('a')
+          .insert('\n', { header: 1, list: 'bullet' })
+          .insert('b')
+          .insert('\n', { header: 1, list: 'bullet' });
+
+        expect(
+          getEditorDelta(this, editor => editor.insertContents(0, change)),
+        ).toEqual(getEditorDelta(this, editor => editor.applyDelta(change)));
+      });
+
+      it('block embeds with line formats', function () {
+        const change = new Delta()
+          .insert('a\n')
+          .insert({ video: '#' }, { header: 1 })
+          .insert({ video: '#' }, { header: 1 })
+          .insert('\n', { header: 1 });
+
+        expect(
+          getEditorDelta(this, editor => editor.insertContents(0, change)),
+        ).toEqual(getEditorDelta(this, editor => editor.applyDelta(change)));
+      });
+
+      it('missing \\n before block embeds', function () {
+        const change = new Delta()
+          .insert('a')
+          .insert({ video: '#' })
+          .insert('b\n');
+
+        expect(
+          getEditorDelta(this, editor => editor.insertContents(0, change)),
+        ).toEqual(getEditorDelta(this, editor => editor.applyDelta(change)));
+      });
+    });
+  });
+
   describe('getFormat()', function () {
     it('unformatted', function () {
       const editor = this.initialize(Editor, '<p>0123</p>');

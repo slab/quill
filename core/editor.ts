@@ -209,6 +209,13 @@ class Editor {
       .join('');
   }
 
+  insertContents(index: number, contents: Delta): Delta {
+    const normalizedDelta = normalizeDelta(contents);
+    const change = new Delta().retain(index).concat(normalizedDelta);
+    this.scroll.insertContents(index, normalizedDelta);
+    return this.update(change);
+  }
+
   insertEmbed(index: number, embed: string, value: unknown): Delta {
     this.scroll.insertAt(index, embed, value);
     return this.update(new Delta().retain(index).insert({ [embed]: value }));
