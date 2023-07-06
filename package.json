@@ -84,7 +84,8 @@
     "defaults"
   ],
   "scripts": {
-    "build": "npm run build:webpack",
+    "build": "npm run build:typescript && npm run build:webpack",
+    "build:typescript": "tsc -p tsconfig.npm.json",
     "build:webpack": "webpack --config _develop/webpack.config.js",
     "build:release": "./_develop/scripts/release.sh",
     "develop": "npm run start",
