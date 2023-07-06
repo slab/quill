@@ -36,6 +36,7 @@ const attributeDefs: {
     { name: 'height', values: ['100', '200', '300'] },
   ],
   blockEmbed: [
+    { name: 'align', values: ['center', 'right'] },
     { name: 'width', values: ['100', '200', '300'] },
     { name: 'height', values: ['100', '200', '300'] },
   ],

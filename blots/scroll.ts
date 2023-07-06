@@ -200,10 +200,10 @@ class Scroll extends ScrollBlot {
             renderBlock.key,
             renderBlock.value,
           ) as EmbedBlot;
+          this.insertBefore(blockEmbed, refBlot || undefined);
           Object.keys(renderBlock.attributes).forEach(name => {
             blockEmbed.format(name, renderBlock.attributes[name]);
           });
-          this.insertBefore(blockEmbed, refBlot || undefined);
         }
       });
     }
