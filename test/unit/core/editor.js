@@ -1,6 +1,12 @@
 import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
+import Block from '../../../blots/block';
 import Selection, { Range } from '../../../core/selection';
+import Scroll from '../../../blots/scroll';
+import { Registry } from 'parchment';
+import Text from '../../../blots/text';
+import Emitter from '../../../core/emitter';
+import Break from '../../../blots/break';
 
 describe('Editor', function () {
   describe('insert', function () {
@@ -841,6 +847,37 @@ describe('Editor', function () {
         { insert: '12' },
         { insert: '\n', attributes: { list: 'bullet' } },
       ]);
+    });
+
+    it('insert before formatting', function () {
+      class MyBlot extends Block {
+        static className = 'my-blot';
+        static blotName = 'my-blot';
+
+        formatAt(index, length, name, value) {
+          super.formatAt(index, length, name, value);
+          if (name === 'test-style' && !!this.prev) {
+            this.domNode.setAttribute('test-style', value);
+          }
+        }
+      }
+
+      const registry = new Registry();
+      registry.register(MyBlot, Block, Break, Text);
+      const editor = new Editor(
+        new Scroll(registry, document.createElement('div'), {
+          emitter: new Emitter(),
+        }),
+      );
+
+      editor.insertContents(
+        0,
+        new Delta()
+          .insert('\n')
+          .insert('hi')
+          .insert('\n', { 'my-blot': true, 'test-style': 'random' }),
+      );
+      expect(editor.scroll.domNode.innerHTML).toContain('test-style="random"');
     });
 
     describe('prepend to block embed', function () {
