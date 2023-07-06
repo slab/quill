@@ -192,8 +192,10 @@ class Scroll extends ScrollBlot {
 
       renderBlocks.forEach(renderBlock => {
         if (renderBlock.type === 'block') {
-          const block = this.createBlock(renderBlock.attributes);
-          this.insertBefore(block, refBlot || undefined);
+          const block = this.createBlock(
+            renderBlock.attributes,
+            refBlot || undefined,
+          );
           insertInlineContents(block, 0, renderBlock.delta);
         } else {
           const blockEmbed = this.create(
@@ -382,7 +384,7 @@ class Scroll extends ScrollBlot {
     return renderBlocks;
   }
 
-  private createBlock(attributes: AttributeMap) {
+  private createBlock(attributes: AttributeMap, refBlot?: Blot) {
     let blotName: string | undefined;
     const formats: AttributeMap = {};
 
@@ -399,6 +401,8 @@ class Scroll extends ScrollBlot {
       blotName || this.statics.defaultChild.blotName,
       blotName ? attributes[blotName] : undefined,
     ) as ParentBlot;
+
+    this.insertBefore(block, refBlot || undefined);
 
     const length = block.length();
     Object.entries(formats).forEach(([key, value]) => {
