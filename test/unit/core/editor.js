@@ -926,7 +926,7 @@ describe('Editor', function () {
       });
     });
 
-    it('inserts formatted block embeds', function () {
+    it('inserts formatted block embeds (styles)', function () {
       const editor = this.initialize(Editor, `<p></p>`);
       editor.insertContents(
         0,
@@ -940,6 +940,24 @@ describe('Editor', function () {
         { insert: 'a\n' },
         { insert: { video: '#' }, attributes: { width: '300' } },
         { insert: { video: '#' }, attributes: { width: '300' } },
+        { insert: '\nd\n' },
+      ]);
+    });
+
+    it('inserts formatted block embeds (attributor)', function () {
+      const editor = this.initialize(Editor, `<p></p>`);
+      editor.insertContents(
+        0,
+        new Delta()
+          .insert('a\n')
+          .insert({ video: '#' }, { align: 'center' })
+          .insert({ video: '#' }, { align: 'center' })
+          .insert('\nd'),
+      );
+      expect(editor.getDelta().ops).toEqual([
+        { insert: 'a\n' },
+        { insert: { video: '#' }, attributes: { align: 'center' } },
+        { insert: { video: '#' }, attributes: { align: 'center' } },
         { insert: '\nd\n' },
       ]);
     });
