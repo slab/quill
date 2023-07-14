@@ -997,4 +997,197 @@ describe('Quill', () => {
       expect([...quill.root.classList]).not.toContain('ql-blank');
     });
   });
+
+  describe('scrollSelectionIntoView', () => {
+    const createContents = (separator: string) =>
+      new Array(200)
+        .fill(0)
+        .map((_, i) => `text ${i + 1}`)
+        .join(separator);
+
+    const viewportRatio = (element: Element): Promise<number> => {
+      return new Promise(resolve => {
+        const observer = new IntersectionObserver(entries => {
+          resolve(entries[0].intersectionRatio);
+          observer.disconnect();
+        });
+        observer.observe(element);
+        // Firefox doesn't call IntersectionObserver callback unless
+        // there are rafs.
+        requestAnimationFrame(() => {});
+      });
+    };
+
+    test('scroll upward', async () => {
+      document.body.style.height = '500px';
+      const container = document.body.appendChild(
+        document.createElement('div'),
+      );
+
+      Object.assign(container.style, {
+        height: '100px',
+        overflow: 'scroll',
+      });
+
+      const editorContainer = container.appendChild(
+        document.createElement('div'),
+      );
+      Object.assign(editorContainer.style, {
+        height: '100px',
+        overflow: 'scroll',
+        border: '10px solid red',
+      });
+
+      const space = container.appendChild(document.createElement('div'));
+      space.style.height = '800px';
+
+      const quill = new Quill(editorContainer);
+
+      const text = createContents('\n');
+      quill.setContents(new Delta().insert(text));
+      quill.setSelection({ index: text.indexOf('text 10'), length: 4 }, 'user');
+
+      container.scrollTop = -500;
+
+      expect(
+        await viewportRatio(
+          editorContainer.querySelector('p:nth-child(10)') as HTMLElement,
+        ),
+      ).toBeGreaterThan(0.9);
+      expect(
+        await viewportRatio(
+          editorContainer.querySelector('p:nth-child(11)') as HTMLElement,
+        ),
+      ).toEqual(0);
+    });
+
+    test('scroll downward', async () => {
+      document.body.style.height = '500px';
+      const container = document.body.appendChild(
+        document.createElement('div'),
+      );
+
+      Object.assign(container.style, {
+        height: '100px',
+        overflow: 'scroll',
+      });
+
+      const space = container.appendChild(document.createElement('div'));
+      space.style.height = '80px';
+
+      const editorContainer = container.appendChild(
+        document.createElement('div'),
+      );
+      Object.assign(editorContainer.style, {
+        height: '100px',
+        overflow: 'scroll',
+        border: '10px solid red',
+      });
+
+      const quill = new Quill(editorContainer);
+
+      const text = createContents('\n');
+      quill.setContents(new Delta().insert(text));
+      quill.setSelection(
+        { index: text.indexOf('text 100'), length: 4 },
+        'user',
+      );
+
+      expect(
+        await viewportRatio(
+          editorContainer.querySelector('p:nth-child(100)') as HTMLElement,
+        ),
+      ).toBeGreaterThan(0.9);
+      expect(
+        await viewportRatio(
+          editorContainer.querySelector('p:nth-child(101)') as HTMLElement,
+        ),
+      ).toEqual(0);
+    });
+
+    test('scroll-padding', async () => {
+      const container = document.body.appendChild(
+        document.createElement('div'),
+      );
+      const quill = new Quill(container);
+      Object.assign(quill.root.style, {
+        scrollPaddingBottom: '50px',
+        height: '200px',
+        overflow: 'auto',
+      });
+      const text = createContents('\n');
+      quill.setContents(new Delta().insert(text));
+      quill.setSelection({ index: text.indexOf('text 10'), length: 4 }, 'user');
+      expect(
+        await viewportRatio(
+          container.querySelector('p:nth-child(10)') as HTMLElement,
+        ),
+      ).toBe(1);
+      expect(
+        await viewportRatio(
+          container.querySelector('p:nth-child(11)') as HTMLElement,
+        ),
+      ).toBe(1);
+      quill.root.style.scrollPaddingBottom = '0';
+      quill.setSelection(1, 'user');
+      quill.setSelection({ index: text.indexOf('text 10'), length: 4 }, 'user');
+      expect(
+        await viewportRatio(
+          container.querySelector('p:nth-child(11)') as HTMLElement,
+        ),
+      ).toBe(0);
+    });
+
+    test('inline scroll', async () => {
+      const container = document.body.appendChild(
+        document.createElement('div'),
+      );
+
+      Object.assign(container.style, {
+        width: '200px',
+        display: 'flex',
+        overflow: 'scroll',
+      });
+
+      const space = container.appendChild(document.createElement('div'));
+      space.style.width = '80px';
+
+      const editorContainer = container.appendChild(
+        document.createElement('div'),
+      );
+      Object.assign(editorContainer.style, {
+        width: '100px',
+        overflow: 'scroll',
+        border: '10px solid red',
+      });
+
+      const quill = new Quill(editorContainer);
+
+      Object.assign(quill.root.style, {
+        overflow: 'scroll',
+        whiteSpace: 'nowrap',
+      });
+
+      const text = createContents(' ');
+      const text100Index = text.indexOf('text 100');
+      const delta = new Delta()
+        .insert(text)
+        .compose(new Delta().retain(text100Index).retain(8, { bold: true }));
+      quill.setContents(delta);
+      quill.setSelection({ index: text100Index, length: 8 }, 'user');
+
+      expect(
+        await viewportRatio(
+          editorContainer.querySelector('strong') as HTMLElement,
+        ),
+      ).toBeGreaterThan(0.9);
+
+      quill.setSelection(0, 'user');
+      expect(
+        await viewportRatio(
+          editorContainer.querySelector('strong') as HTMLElement,
+        ),
+      ).toEqual(0);
+    });
+  });
 });
