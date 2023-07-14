@@ -218,7 +218,7 @@ class Clipboard extends Module<ClipboardOptions> {
       delta.length() - range.length,
       Quill.sources.SILENT,
     );
-    this.quill.scrollIntoView();
+    this.quill.scrollSelectionIntoView();
   }
 
   prepareMatching(container: Element, nodeMatches: WeakMap<Node, Matcher[]>) {
