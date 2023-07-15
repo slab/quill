@@ -64,7 +64,6 @@ const baseConfig = {
     'quill.core': './assets/core.styl',
     'quill.bubble': './assets/bubble.styl',
     'quill.snow': './assets/snow.styl',
-    'unit.js': './test/unit.js',
   },
   output: {
     filename: '[name]',
