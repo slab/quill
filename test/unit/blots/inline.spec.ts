@@ -1,8 +1,14 @@
-import Scroll from '../../../blots/scroll';
+import { describe, expect, test } from 'vitest';
+import { createRegistry, createScroll } from '../__helpers__/factory';
+import Bold from '../../../formats/bold';
+import Italic from '../../../formats/italic';
 
-describe('Inline', function () {
-  it('format order', function () {
-    const scroll = this.initialize(Scroll, '<p>Hello World!</p>');
+describe('Inline', () => {
+  test('format order', () => {
+    const scroll = createScroll(
+      '<p>Hello World!</p>',
+      createRegistry([Bold, Italic]),
+    );
     scroll.formatAt(0, 1, 'bold', true);
     scroll.formatAt(0, 1, 'italic', true);
     scroll.formatAt(2, 1, 'italic', true);
@@ -12,9 +18,12 @@ describe('Inline', function () {
     );
   });
 
-  it('reorder', function () {
-    const scroll = this.initialize(Scroll, '<p>0<strong>12</strong>3</p>');
-    const p = scroll.domNode.firstChild;
+  test('reorder', () => {
+    const scroll = createScroll(
+      '<p>0<strong>12</strong>3</p>',
+      createRegistry([Bold, Italic]),
+    );
+    const p = scroll.domNode.firstChild as HTMLParagraphElement;
     const em = document.createElement('em');
     Array.from(p.childNodes).forEach(function (node) {
       em.appendChild(node);

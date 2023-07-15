@@ -1,8 +1,17 @@
-import Scroll from '../../../blots/scroll';
+import { describe, expect, test } from 'vitest';
+import {
+  createScroll as baseCreateScroll,
+  createRegistry,
+} from '../__helpers__/factory';
+import Video from '../../../formats/video';
+import Image from '../../../formats/image';
 
-describe('Block Embed', function () {
-  it('insert', function () {
-    const scroll = this.initialize(Scroll, '<p>0123</p>');
+const createScroll = (html: string) =>
+  baseCreateScroll(html, createRegistry([Video, Image]));
+
+describe('Block Embed', () => {
+  test('insert', () => {
+    const scroll = createScroll('<p>0123</p>');
     scroll.insertAt(2, 'video', '#');
     expect(scroll.domNode).toEqualHTML(`
       <p>01</p>
@@ -11,8 +20,8 @@ describe('Block Embed', function () {
     `);
   });
 
-  it('split newline', function () {
-    const scroll = this.initialize(Scroll, '<p>0123</p>');
+  test('split newline', () => {
+    const scroll = createScroll('<p>0123</p>');
     scroll.insertAt(4, 'video', '#');
     expect(scroll.domNode).toEqualHTML(`
       <p>0123</p>
@@ -21,8 +30,8 @@ describe('Block Embed', function () {
     `);
   });
 
-  it('insert end of document', function () {
-    const scroll = this.initialize(Scroll, '<p>0123</p>');
+  test('insert end of document', () => {
+    const scroll = createScroll('<p>0123</p>');
     scroll.insertAt(5, 'video', '#');
     expect(scroll.domNode).toEqualHTML(`
       <p>0123</p>
@@ -30,9 +39,8 @@ describe('Block Embed', function () {
     `);
   });
 
-  it('insert text before', function () {
-    const scroll = this.initialize(
-      Scroll,
+  test('insert text before', () => {
+    const scroll = createScroll(
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
     );
     scroll.insertAt(0, 'Test');
@@ -42,9 +50,8 @@ describe('Block Embed', function () {
     `);
   });
 
-  it('insert text after', function () {
-    const scroll = this.initialize(
-      Scroll,
+  test('insert text after', () => {
+    const scroll = createScroll(
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
     );
     scroll.insertAt(1, 'Test');
@@ -54,9 +61,8 @@ describe('Block Embed', function () {
     `);
   });
 
-  it('insert inline embed before', function () {
-    const scroll = this.initialize(
-      Scroll,
+  test('insert inline embed before', () => {
+    const scroll = createScroll(
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
     );
     scroll.insertAt(0, 'image', '/assets/favicon.png');
@@ -66,9 +72,8 @@ describe('Block Embed', function () {
     `);
   });
 
-  it('insert inline embed after', function () {
-    const scroll = this.initialize(
-      Scroll,
+  test('insert inline embed after', () => {
+    const scroll = createScroll(
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
     );
     scroll.insertAt(1, 'image', '/assets/favicon.png');
@@ -78,9 +83,8 @@ describe('Block Embed', function () {
     `);
   });
 
-  it('insert block embed before', function () {
-    const scroll = this.initialize(
-      Scroll,
+  test('insert block embed before', () => {
+    const scroll = createScroll(
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
     );
     scroll.insertAt(0, 'video', '#1');
@@ -90,9 +94,8 @@ describe('Block Embed', function () {
     `);
   });
 
-  it('insert block embed after', function () {
-    const scroll = this.initialize(
-      Scroll,
+  test('insert block embed after', () => {
+    const scroll = createScroll(
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
     );
     scroll.insertAt(1, 'video', '#1');
@@ -102,9 +105,8 @@ describe('Block Embed', function () {
     `);
   });
 
-  it('insert newline before', function () {
-    const scroll = this.initialize(
-      Scroll,
+  test('insert newline before', () => {
+    const scroll = createScroll(
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
     );
     scroll.insertAt(0, '\n');
@@ -115,9 +117,8 @@ describe('Block Embed', function () {
     `);
   });
 
-  it('insert multiple newlines before', function () {
-    const scroll = this.initialize(
-      Scroll,
+  test('insert multiple newlines before', () => {
+    const scroll = createScroll(
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
     );
     scroll.insertAt(0, '\n\n\n');
@@ -130,9 +131,8 @@ describe('Block Embed', function () {
     `);
   });
 
-  it('insert newline after', function () {
-    const scroll = this.initialize(
-      Scroll,
+  test('insert newline after', () => {
+    const scroll = createScroll(
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
     );
     scroll.insertAt(1, '\n');
@@ -143,9 +143,8 @@ describe('Block Embed', function () {
     `);
   });
 
-  it('delete preceding newline', function () {
-    const scroll = this.initialize(
-      Scroll,
+  test('delete preceding newline', () => {
+    const scroll = createScroll(
       '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
     );
     scroll.deleteAt(4, 1);
