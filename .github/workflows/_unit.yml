@@ -22,6 +22,6 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps
       - run: npm run lint
-      - run: npm run test:unit
+      - run: npm run test:unit || npm run test:unit || npm run test:unit
         env:
           BROWSER: ${{ matrix.browser }}

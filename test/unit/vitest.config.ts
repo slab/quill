@@ -10,7 +10,6 @@ export default defineConfig({
       'test/unit/__helpers__/expect.ts',
       'test/unit/__helpers__/cleanup.ts',
     ],
-    retry: 3,
     browser: {
       enabled: true,
       provider: 'playwright',
