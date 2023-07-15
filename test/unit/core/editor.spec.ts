@@ -7,20 +7,67 @@ import { Registry } from 'parchment';
 import Text from '../../../blots/text';
 import Emitter from '../../../core/emitter';
 import Break from '../../../blots/break';
+import { describe, expect, test } from 'vitest';
+import { createRegistry, createScroll } from '../__helpers__/factory';
+import List, { ListContainer } from '../../../formats/list';
+import Bold from '../../../formats/bold';
+import Image from '../../../formats/image';
+import Link from '../../../formats/link';
+import { FontClass } from '../../../formats/font';
+import Header from '../../../formats/header';
+import Italic from '../../../formats/italic';
+import { AlignClass } from '../../../formats/align';
+import Video from '../../../formats/video';
+import Strike from '../../../formats/strike';
+import Underline from '../../../formats/underline';
+import CodeBlock, { CodeBlockContainer } from '../../../formats/code';
+import { SizeClass } from '../../../formats/size';
+import Blockquote from '../../../formats/blockquote';
+import IndentClass from '../../../formats/indent';
+import { ColorClass } from '../../../formats/color';
 
-describe('Editor', function () {
-  describe('insert', function () {
-    it('text', function () {
-      const editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
+const createEditor = (html: string | { html: string }) => {
+  const scroll = createScroll(
+    html,
+    createRegistry([
+      ListContainer,
+      List,
+      IndentClass,
+      Bold,
+      Image,
+      ColorClass,
+      Link,
+      FontClass,
+      Header,
+      Italic,
+      AlignClass,
+      Video,
+      Strike,
+      Underline,
+      CodeBlock,
+      CodeBlockContainer,
+      Blockquote,
+      SizeClass,
+    ]),
+  );
+  return new Editor(scroll);
+};
+
+describe('Editor', () => {
+  describe('insert', () => {
+    test('text', () => {
+      const editor = createEditor('<p><strong>0123</strong></p>');
       editor.insertText(2, '!!');
       expect(editor.getDelta()).toEqual(
         new Delta().insert('01!!23', { bold: true }).insert('\n'),
       );
-      expect(this.container).toEqualHTML('<p><strong>01!!23</strong></p>');
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p><strong>01!!23</strong></p>',
+      );
     });
 
-    it('embed', function () {
-      const editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
+    test('embed', () => {
+      const editor = createEditor('<p><strong>0123</strong></p>');
       editor.insertEmbed(2, 'image', '/assets/favicon.png');
       expect(editor.getDelta()).toEqual(
         new Delta()
@@ -29,34 +76,34 @@ describe('Editor', function () {
           .insert('23', { bold: true })
           .insert('\n'),
       );
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p><strong>01<img src="/assets/favicon.png">23</strong></p>',
       );
     });
 
-    it('on empty line', function () {
-      const editor = this.initialize(Editor, '<p>0</p><p><br></p><p>3</p>');
+    test('on empty line', () => {
+      const editor = createEditor('<p>0</p><p><br></p><p>3</p>');
       editor.insertText(2, '!');
       expect(editor.getDelta()).toEqual(new Delta().insert('0\n!\n3\n'));
-      expect(this.container).toEqualHTML('<p>0</p><p>!</p><p>3</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>0</p><p>!</p><p>3</p>');
     });
 
-    it('end of document', function () {
-      const editor = this.initialize(Editor, '<p>Hello</p>');
+    test('end of document', () => {
+      const editor = createEditor('<p>Hello</p>');
       editor.insertText(6, 'World!');
       expect(editor.getDelta()).toEqual(new Delta().insert('Hello\nWorld!\n'));
-      expect(this.container).toEqualHTML('<p>Hello</p><p>World!</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>Hello</p><p>World!</p>');
     });
 
-    it('end of document with newline', function () {
-      const editor = this.initialize(Editor, '<p>Hello</p>');
+    test('end of document with newline', () => {
+      const editor = createEditor('<p>Hello</p>');
       editor.insertText(6, 'World!\n');
       expect(editor.getDelta()).toEqual(new Delta().insert('Hello\nWorld!\n'));
-      expect(this.container).toEqualHTML('<p>Hello</p><p>World!</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>Hello</p><p>World!</p>');
     });
 
-    it('embed at end of document with newline', function () {
-      const editor = this.initialize(Editor, '<p>Hello</p>');
+    test('embed at end of document with newline', () => {
+      const editor = createEditor('<p>Hello</p>');
       editor.insertEmbed(6, 'image', '/assets/favicon.png');
       expect(editor.getDelta()).toEqual(
         new Delta()
@@ -64,13 +111,13 @@ describe('Editor', function () {
           .insert({ image: '/assets/favicon.png' })
           .insert('\n'),
       );
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>Hello</p><p><img src="/assets/favicon.png"></p>',
       );
     });
 
-    it('newline splitting', function () {
-      const editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
+    test('newline splitting', () => {
+      const editor = createEditor('<p><strong>0123</strong></p>');
       editor.insertText(2, '\n');
       expect(editor.getDelta()).toEqual(
         new Delta()
@@ -79,35 +126,35 @@ describe('Editor', function () {
           .insert('23', { bold: true })
           .insert('\n'),
       );
-      expect(this.container).toEqualHTML(`
+      expect(editor.scroll.domNode).toEqualHTML(`
         <p><strong>01</strong></p>
         <p><strong>23</strong></p>`);
     });
 
-    it('prepend newline', function () {
-      const editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
+    test('prepend newline', () => {
+      const editor = createEditor('<p><strong>0123</strong></p>');
       editor.insertText(0, '\n');
       expect(editor.getDelta()).toEqual(
         new Delta().insert('\n').insert('0123', { bold: true }).insert('\n'),
       );
-      expect(this.container).toEqualHTML(`
+      expect(editor.scroll.domNode).toEqualHTML(`
         <p><br></p>
         <p><strong>0123</strong></p>`);
     });
 
-    it('append newline', function () {
-      const editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
+    test('append newline', () => {
+      const editor = createEditor('<p><strong>0123</strong></p>');
       editor.insertText(4, '\n');
       expect(editor.getDelta()).toEqual(
         new Delta().insert('0123', { bold: true }).insert('\n\n'),
       );
-      expect(this.container).toEqualHTML(`
+      expect(editor.scroll.domNode).toEqualHTML(`
         <p><strong>0123</strong></p>
         <p><br></p>`);
     });
 
-    it('multiline text', function () {
-      const editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
+    test('multiline text', () => {
+      const editor = createEditor('<p><strong>0123</strong></p>');
       editor.insertText(2, '\n!!\n!!\n');
       expect(editor.getDelta()).toEqual(
         new Delta()
@@ -120,15 +167,15 @@ describe('Editor', function () {
           .insert('23', { bold: true })
           .insert('\n'),
       );
-      expect(this.container).toEqualHTML(`
+      expect(editor.scroll.domNode).toEqualHTML(`
         <p><strong>01</strong></p>
         <p><strong>!!</strong></p>
         <p><strong>!!</strong></p>
         <p><strong>23</strong></p>`);
     });
 
-    it('multiple newlines', function () {
-      const editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
+    test('multiple newlines', () => {
+      const editor = createEditor('<p><strong>0123</strong></p>');
       editor.insertText(2, '\n\n');
       expect(editor.getDelta()).toEqual(
         new Delta()
@@ -137,14 +184,14 @@ describe('Editor', function () {
           .insert('23', { bold: true })
           .insert('\n'),
       );
-      expect(this.container).toEqualHTML(`
+      expect(editor.scroll.domNode).toEqualHTML(`
         <p><strong>01</strong></p>
         <p><br></p>
         <p><strong>23</strong></p>`);
     });
 
-    it('text removing formatting', function () {
-      const editor = this.initialize(Editor, '<p><s>01</s></p>');
+    test('text removing formatting', () => {
+      const editor = createEditor('<p><s>01</s></p>');
       editor.insertText(2, '23', { bold: false, strike: false });
       expect(editor.getDelta()).toEqual(
         new Delta().insert('01', { strike: true }).insert('23\n'),
@@ -152,123 +199,101 @@ describe('Editor', function () {
     });
   });
 
-  describe('delete', function () {
-    it('inner node', function () {
-      const editor = this.initialize(
-        Editor,
-        '<p><strong><em>0123</em></strong></p>',
-      );
+  describe('delete', () => {
+    test('inner node', () => {
+      const editor = createEditor('<p><strong><em>0123</em></strong></p>');
       editor.deleteText(1, 2);
       expect(editor.getDelta()).toEqual(
         new Delta().insert('03', { bold: true, italic: true }).insert('\n'),
       );
-      expect(this.container).toEqualHTML('<p><strong><em>03</em></strong></p>');
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p><strong><em>03</em></strong></p>',
+      );
     });
 
-    it('parts of multiple lines', function () {
-      const editor = this.initialize(
-        Editor,
-        '<p><em>0123</em></p><p><em>5678</em></p>',
-      );
+    test('parts of multiple lines', () => {
+      const editor = createEditor('<p><em>0123</em></p><p><em>5678</em></p>');
       editor.deleteText(2, 5);
       expect(editor.getDelta()).toEqual(
         new Delta().insert('0178', { italic: true }).insert('\n'),
       );
-      expect(this.container).toEqualHTML('<p><em>0178</em></p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p><em>0178</em></p>');
     });
 
-    it('entire line keeping newline', function () {
-      const editor = this.initialize(
-        Editor,
-        '<p><strong><em>0123</em></strong></p>',
-      );
+    test('entire line keeping newline', () => {
+      const editor = createEditor('<p><strong><em>0123</em></strong></p>');
       editor.deleteText(0, 4);
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
-      expect(this.container).toEqualHTML('<p><br></p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p><br></p>');
     });
 
-    it('newline', function () {
-      const editor = this.initialize(
-        Editor,
-        '<p><em>0123</em></p><p><em>5678</em></p>',
-      );
+    test('newline', () => {
+      const editor = createEditor('<p><em>0123</em></p><p><em>5678</em></p>');
       editor.deleteText(4, 1);
       expect(editor.getDelta()).toEqual(
         new Delta().insert('01235678', { italic: true }).insert('\n'),
       );
-      expect(this.container).toEqualHTML('<p><em>01235678</em></p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p><em>01235678</em></p>');
     });
 
-    it('entire document', function () {
-      const editor = this.initialize(
-        Editor,
-        '<p><strong><em>0123</em></strong></p>',
-      );
+    test('entire document', () => {
+      const editor = createEditor('<p><strong><em>0123</em></strong></p>');
       editor.deleteText(0, 5);
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
-      expect(this.container).toEqualHTML('<p><br></p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p><br></p>');
     });
 
-    it('multiple complete lines', function () {
-      const editor = this.initialize(
-        Editor,
+    test('multiple complete lines', () => {
+      const editor = createEditor(
         '<p><em>012</em></p><p><em>456</em></p><p><em>890</em></p>',
       );
       editor.deleteText(0, 8);
       expect(editor.getDelta()).toEqual(
         new Delta().insert('890', { italic: true }).insert('\n'),
       );
-      expect(this.container).toEqualHTML('<p><em>890</em></p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p><em>890</em></p>');
     });
   });
 
-  describe('format', function () {
-    it('line', function () {
-      const editor = this.initialize(Editor, '<p>0123</p>');
+  describe('format', () => {
+    test('line', () => {
+      const editor = createEditor('<p>0123</p>');
       editor.formatLine(1, 1, { header: 1 });
       expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
     });
   });
 
-  describe('removeFormat', function () {
-    it('unwrap', function () {
-      const editor = this.initialize(Editor, '<p>0<em>12</em>3</p>');
+  describe('removeFormat', () => {
+    test('unwrap', () => {
+      const editor = createEditor('<p>0<em>12</em>3</p>');
       editor.removeFormat(1, 2);
-      expect(this.container).toEqualHTML('<p>0123</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
     });
 
-    it('split inline', function () {
-      const editor = this.initialize(
-        Editor,
-        '<p>0<strong><em>12</em></strong>3</p>',
-      );
+    test('split inline', () => {
+      const editor = createEditor('<p>0<strong><em>12</em></strong>3</p>');
       editor.removeFormat(1, 1);
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>01<strong><em>2</em></strong>3</p>',
       );
     });
 
-    it('partial line', function () {
-      const editor = this.initialize(
-        Editor,
+    test('partial line', () => {
+      const editor = createEditor(
         '<h1>01</h1><ol><li data-list="ordered">34</li></ol>',
       );
       editor.removeFormat(1, 3);
-      expect(this.container).toEqualHTML('<p>01</p><p>34</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>01</p><p>34</p>');
     });
 
-    it('remove embed', function () {
-      const editor = this.initialize(
-        Editor,
-        '<p>0<img src="/assets/favicon.png">2</p>',
-      );
+    test('remove embed', () => {
+      const editor = createEditor('<p>0<img src="/assets/favicon.png">2</p>');
       editor.removeFormat(1, 1);
-      expect(this.container).toEqualHTML('<p>02</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>02</p>');
     });
 
-    it('combined', function () {
-      const editor = this.initialize(
-        Editor,
+    test('combined', () => {
+      const editor = createEditor(
         `
         <h1>01<img src="/assets/favicon.png">3</h1>
         <ol>
@@ -277,15 +302,14 @@ describe('Editor', function () {
       `,
       );
       editor.removeFormat(1, 7);
-      expect(this.container).toEqualHTML(`
+      expect(editor.scroll.domNode).toEqualHTML(`
         <p>013</p>
         <p>567<strong><em>8</em>9</strong>0</p>
       `);
     });
 
-    it('end of document', function () {
-      const editor = this.initialize(
-        Editor,
+    test('end of document', () => {
+      const editor = createEditor(
         `
         <ol>
           <li data-list="ordered">0123</li>
@@ -294,133 +318,132 @@ describe('Editor', function () {
       `,
       );
       editor.removeFormat(0, 12);
-      expect(this.container).toEqualHTML(`
+      expect(editor.scroll.domNode).toEqualHTML(`
         <p>0123</p>
         <p>5678</p>
       `);
     });
   });
 
-  describe('applyDelta', function () {
-    it('insert', function () {
-      const editor = this.initialize(Editor, '<p></p>');
+  describe('applyDelta', () => {
+    test('insert', () => {
+      const editor = createEditor('<p></p>');
       editor.applyDelta(new Delta().insert('01'));
-      expect(this.container).toEqualHTML('<p>01</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>01</p>');
     });
 
-    it('attributed insert', function () {
-      const editor = this.initialize(Editor, '<p>0123</p>');
+    test('attributed insert', () => {
+      const editor = createEditor('<p>0123</p>');
       editor.applyDelta(new Delta().retain(2).insert('|', { bold: true }));
-      expect(this.container).toEqualHTML('<p>01<strong>|</strong>23</p>');
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p>01<strong>|</strong>23</p>',
+      );
     });
 
-    it('format', function () {
-      const editor = this.initialize(Editor, '<p>01</p>');
+    test('format', () => {
+      const editor = createEditor('<p>01</p>');
       editor.applyDelta(new Delta().retain(2, { bold: true }));
-      expect(this.container).toEqualHTML('<p><strong>01</strong></p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p><strong>01</strong></p>');
     });
 
-    it('discontinuous formats', function () {
-      const editor = this.initialize(Editor, '');
+    test('discontinuous formats', () => {
+      const editor = createEditor('');
       const delta = new Delta()
         .insert('ab', { bold: true })
         .insert('23\n45')
         .insert('cd', { bold: true });
       editor.applyDelta(delta);
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p><strong>ab</strong>23</p><p>45<strong>cd</strong></p>',
       );
     });
 
-    it('unformatted insert', function () {
-      const editor = this.initialize(Editor, '<p><em>01</em></p>');
+    test('unformatted insert', () => {
+      const editor = createEditor('<p><em>01</em></p>');
       editor.applyDelta(new Delta().retain(1).insert('|'));
-      expect(this.container).toEqualHTML('<p><em>0</em>|<em>1</em></p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p><em>0</em>|<em>1</em></p>');
     });
 
-    it('insert at format boundary', function () {
-      const editor = this.initialize(Editor, '<p><em>0</em><u>1</u></p>');
+    test('insert at format boundary', () => {
+      const editor = createEditor('<p><em>0</em><u>1</u></p>');
       editor.applyDelta(new Delta().retain(1).insert('|', { strike: true }));
-      expect(this.container).toEqualHTML('<p><em>0</em><s>|</s><u>1</u></p>');
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p><em>0</em><s>|</s><u>1</u></p>',
+      );
     });
 
-    it('unformatted newline', function () {
-      const editor = this.initialize(Editor, '<h1>01</h1>');
+    test('unformatted newline', () => {
+      const editor = createEditor('<h1>01</h1>');
       editor.applyDelta(new Delta().retain(2).insert('\n'));
-      expect(this.container).toEqualHTML('<p>01</p><h1><br></h1>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>01</p><h1><br></h1>');
     });
 
-    it('formatted embed', function () {
-      const editor = this.initialize(Editor, '');
+    test('formatted embed', () => {
+      const editor = createEditor('');
       editor.applyDelta(
         new Delta().insert({ image: '/assets/favicon.png' }, { italic: true }),
       );
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p><em><img src="/assets/favicon.png"></em></p>',
       );
     });
 
-    it('insert text before block embed', function () {
-      const editor = this.initialize(
-        Editor,
+    test('insert text before block embed', () => {
+      const editor = createEditor(
         '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
       editor.applyDelta(new Delta().retain(5).insert('5678'));
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>0123</p><p>5678</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
     });
 
-    it('insert attributed text before block embed', function () {
-      const editor = this.initialize(
-        Editor,
+    test('insert attributed text before block embed', () => {
+      const editor = createEditor(
         '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
       editor.applyDelta(new Delta().retain(5).insert('5678', { bold: true }));
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>0123</p><p><strong>5678</strong></p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
     });
 
-    it('insert text with newline before block embed', function () {
-      const editor = this.initialize(
-        Editor,
+    test('insert text with newline before block embed', () => {
+      const editor = createEditor(
         '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
       editor.applyDelta(new Delta().retain(5).insert('5678\n'));
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>0123</p><p>5678</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
     });
 
-    it('insert formatted lines before block embed', function () {
-      const editor = this.initialize(
-        Editor,
+    test('insert formatted lines before block embed', () => {
+      const editor = createEditor(
         '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
       editor.applyDelta(
         new Delta().retain(5).insert('a\nb').insert('\n', { header: 1 }),
       );
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>0123</p><p>a</p><h1>b</h1><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
     });
 
-    it('insert attributed text with newline before block embed', function () {
-      const editor = this.initialize(
-        Editor,
+    test('insert attributed text with newline before block embed', () => {
+      const editor = createEditor(
         '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
       editor.applyDelta(
         new Delta().retain(5).insert('5678', { bold: true }).insert('\n'),
       );
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>0123</p><p><strong>5678</strong></p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
     });
 
-    it('multiple inserts and deletes', function () {
-      const editor = this.initialize(Editor, '<p>0123</p>');
+    test('multiple inserts and deletes', () => {
+      const editor = createEditor('<p>0123</p>');
       editor.applyDelta(
         new Delta()
           .retain(1)
@@ -430,12 +453,11 @@ describe('Editor', function () {
           .delete(1)
           .insert('efg'),
       );
-      expect(this.container).toEqualHTML('<p>0acdefg</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>0acdefg</p>');
     });
 
-    it('insert text with delete in existing block', function () {
-      const editor = this.initialize(
-        Editor,
+    test('insert text with delete in existing block', () => {
+      const editor = createEditor(
         '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
       editor.applyDelta(
@@ -446,12 +468,11 @@ describe('Editor', function () {
           .retain(1)
           .delete(1),
       );
-      expect(this.container).toEqualHTML('<p>0123abc</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>0123abc</p>');
     });
 
-    it('insert text with delete before block embed', function () {
-      const editor = this.initialize(
-        Editor,
+    test('insert text with delete before block embed', () => {
+      const editor = createEditor(
         '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
       editor.applyDelta(
@@ -461,12 +482,11 @@ describe('Editor', function () {
           .insert('abc\n')
           .delete(1),
       );
-      expect(this.container).toEqualHTML('<p>0123</p><p>abc</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>0123</p><p>abc</p>');
     });
 
-    it('insert inline embed with delete in existing block', function () {
-      const editor = this.initialize(
-        Editor,
+    test('insert inline embed with delete in existing block', () => {
+      const editor = createEditor(
         '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
       editor.applyDelta(
@@ -477,14 +497,13 @@ describe('Editor', function () {
           .retain(1)
           .delete(1),
       );
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>0123<img src="/assets/favicon.png"></p>',
       );
     });
 
-    it('insert inline embed with delete before block embed', function () {
-      const editor = this.initialize(
-        Editor,
+    test('insert inline embed with delete before block embed', () => {
+      const editor = createEditor(
         '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
       editor.applyDelta(
@@ -495,14 +514,13 @@ describe('Editor', function () {
           .insert('\n')
           .delete(1),
       );
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>0123</p><p><img src="/assets/favicon.png"></p>',
       );
     });
 
-    it('insert inline embed with delete before block embed using delete op first', function () {
-      const editor = this.initialize(
-        Editor,
+    test('insert inline embed with delete before block embed using delete op first', () => {
+      const editor = createEditor(
         '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
       editor.applyDelta(
@@ -513,14 +531,13 @@ describe('Editor', function () {
           // Explicit newline required to maintain correct index calculation for the delete.
           .insert('\n'),
       );
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>0123</p><p><img src="/assets/favicon.png"></p>',
       );
     });
 
-    it('insert inline embed and text with delete before block embed', function () {
-      const editor = this.initialize(
-        Editor,
+    test('insert inline embed and text with delete before block embed', () => {
+      const editor = createEditor(
         '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
       editor.applyDelta(
@@ -531,73 +548,69 @@ describe('Editor', function () {
           .insert('abc\n')
           .delete(1),
       );
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>0123</p><p><img src="/assets/favicon.png">abc</p>',
       );
     });
 
-    it('insert inline embed to the middle of formatted content', function () {
-      const editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
+    test('insert inline embed to the middle of formatted content', () => {
+      const editor = createEditor('<p><strong>0123</strong></p>');
       editor.applyDelta(
         new Delta().retain(2).insert({ image: '/assets/favicon.png' }),
       );
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p><strong>01</strong><img src="/assets/favicon.png"><strong>23</strong></p>',
       );
     });
 
-    it('insert inline embed between plain text and formatted content', function () {
-      const editor = this.initialize(Editor, '<p>a<strong>b</strong></p>');
+    test('insert inline embed between plain text and formatted content', () => {
+      const editor = createEditor('<p>a<strong>b</strong></p>');
       editor.applyDelta(new Delta().retain(1).insert({ image: '#' }));
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>a<img src="#"><strong>b</strong></p>',
       );
     });
 
-    it('prepend inline embed to another inline embed with same attributes', function () {
-      const editor = this.initialize(Editor, '<p><img src="#" alt="hi"/></p>');
+    test('prepend inline embed to another inline embed with same attributes', () => {
+      const editor = createEditor('<p><img src="#" alt="hi"/></p>');
       editor.applyDelta(new Delta().insert({ image: '#' }, { alt: 'hi' }));
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p><img src="#" alt="hi"><img src="#" alt="hi"></p>',
       );
     });
 
-    it('insert block embed with delete before block embed', function () {
-      const editor = this.initialize(
-        Editor,
+    test('insert block embed with delete before block embed', () => {
+      const editor = createEditor(
         '<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
       editor.applyDelta(
         new Delta().retain(5).insert({ video: '#changed' }).delete(1),
       );
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>0123</p><iframe src="#changed" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>',
       );
     });
 
-    it('deletes block embed and appends text', function () {
-      const editor = this.initialize(
-        Editor,
+    test('deletes block embed and appends text', () => {
+      const editor = createEditor(
         `<p><br></p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p>b</p>`,
       );
       editor.applyDelta(new Delta().retain(1).insert('a').delete(1));
-      expect(this.container).toEqualHTML('<p><br></p><p>ab</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p><br></p><p>ab</p>');
     });
 
-    it('multiple delete block embed and append texts', function () {
-      const editor = this.initialize(
-        Editor,
+    test('multiple delete block embed and append texts', () => {
+      const editor = createEditor(
         `<p><br></p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p>b</p>`,
       );
       editor.applyDelta(
         new Delta().retain(1).insert('a').delete(1).insert('!').delete(1),
       );
-      expect(this.container).toEqualHTML('<p><br></p><p>a!b</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p><br></p><p>a!b</p>');
     });
 
-    it('multiple nonconsecutive delete block embed and append texts', function () {
-      const editor = this.initialize(
-        Editor,
+    test('multiple nonconsecutive delete block embed and append texts', () => {
+      const editor = createEditor(
         `<p><br></p>
          <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe>
          <p>a</p>
@@ -624,115 +637,113 @@ describe('Editor', function () {
         .delete(1);
       editor.applyDelta(delta);
       expect(editor.getDelta()).toEqual(old.compose(delta));
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p><br></p><p>1a</p><p>2bb</p><p>3ccc</p><p>4dddd</p>',
       );
     });
 
-    describe('block embed', function () {
-      it('improper block embed insert', function () {
-        const editor = this.initialize(Editor, '<p>0123</p>');
+    describe('block embed', () => {
+      test('improper block embed insert', () => {
+        const editor = createEditor('<p>0123</p>');
         editor.applyDelta(new Delta().retain(2).insert({ video: '#' }));
-        expect(this.container).toEqualHTML(
+        expect(editor.scroll.domNode).toEqualHTML(
           '<p>01</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe><p>23</p>',
         );
       });
 
-      describe('insert and delete', function () {
-        it('prepend', function () {
-          const editor = this.initialize(Editor, '<p>0123</p>');
+      describe('insert and delete', () => {
+        test('prepend', () => {
+          const editor = createEditor('<p>0123</p>');
           editor.applyDelta(new Delta().insert({ video: '#' }).delete(2));
-          expect(this.container).toEqualHTML(
+          expect(editor.scroll.domNode).toEqualHTML(
             '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe><p>23</p>',
           );
         });
 
-        it('insert to the middle of text', function () {
-          const editor = this.initialize(Editor, `<p>abc</p>`);
+        test('insert to the middle of text', () => {
+          const editor = createEditor(`<p>abc</p>`);
           editor.applyDelta(
             new Delta().retain(1).insert({ video: '#' }).delete(2),
           );
-          expect(this.container).toEqualHTML(
+          expect(editor.scroll.domNode).toEqualHTML(
             '<p>a</p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p><br></p>',
           );
         });
 
-        it('insert after \\n', function () {
-          const editor = this.initialize(Editor, `<p>a</p><p>cda</p>`);
+        test('insert after \\n', () => {
+          const editor = createEditor(`<p>a</p><p>cda</p>`);
           editor.applyDelta(
             new Delta().retain(2).insert({ video: '#' }).delete(2),
           );
-          expect(this.container).toEqualHTML(
+          expect(editor.scroll.domNode).toEqualHTML(
             '<p>a</p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p>a</p>',
           );
         });
 
-        it('insert after an inline embed', function () {
-          const editor = this.initialize(
-            Editor,
+        test('insert after an inline embed', () => {
+          const editor = createEditor(
             `<p><img src="/assets/favicon.png"></p><p>abc</p>`,
           );
           editor.applyDelta(
             new Delta().retain(1).insert({ video: '#' }).delete(2),
           );
-          expect(this.container).toEqualHTML(
+          expect(editor.scroll.domNode).toEqualHTML(
             '<p><img src="/assets/favicon.png"></p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p>bc</p>',
           );
         });
 
-        it('insert after a block embed', function () {
-          const editor = this.initialize(
-            Editor,
+        test('insert after a block embed', () => {
+          const editor = createEditor(
             `<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p>abc</p>`,
           );
           editor.applyDelta(
             new Delta().retain(1).insert({ video: '#' }).delete(2),
           );
-          expect(this.container).toEqualHTML(
+          expect(editor.scroll.domNode).toEqualHTML(
             '<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="#"></iframe><p>c</p>',
           );
         });
       });
 
-      it('append formatted block embed', function () {
-        const editor = this.initialize(Editor, '<p>0123</p><p><br></p>');
+      test('append formatted block embed', () => {
+        const editor = createEditor('<p>0123</p><p><br></p>');
         editor.applyDelta(
           new Delta().retain(5).insert({ video: '#' }, { align: 'right' }),
         );
-        expect(this.container).toEqualHTML(
+        expect(editor.scroll.domNode).toEqualHTML(
           '<p>0123</p><iframe src="#" class="ql-video ql-align-right" frameborder="0" allowfullscreen="true"></iframe><p><br></p>',
         );
       });
     });
 
-    it('append', function () {
-      const editor = this.initialize(Editor, '<p>0123</p>');
+    test('append', () => {
+      const editor = createEditor('<p>0123</p>');
       editor.applyDelta(new Delta().retain(5).insert('5678'));
-      expect(this.container).toEqualHTML('<p>0123</p><p>5678</p>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>0123</p><p>5678</p>');
     });
 
-    it('append newline', function () {
-      const editor = this.initialize(Editor, '<p>0123</p>');
+    test('append newline', () => {
+      const editor = createEditor('<p>0123</p>');
       editor.applyDelta(new Delta().retain(5).insert('\n', { header: 2 }));
-      expect(this.container).toEqualHTML('<p>0123</p><h2><br></h2>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>0123</p><h2><br></h2>');
     });
 
-    it('append text with newline', function () {
-      const editor = this.initialize(Editor, '<p>0123</p>');
+    test('append text with newline', () => {
+      const editor = createEditor('<p>0123</p>');
       editor.applyDelta(
         new Delta().retain(5).insert('5678').insert('\n', { header: 2 }),
       );
-      expect(this.container).toEqualHTML('<p>0123</p><h2>5678</h2>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>0123</p><h2>5678</h2>');
     });
 
-    it('append non-isolated newline', function () {
-      const editor = this.initialize(Editor, '<p>0123</p>');
+    test('append non-isolated newline', () => {
+      const editor = createEditor('<p>0123</p>');
       editor.applyDelta(new Delta().retain(5).insert('5678\n', { header: 2 }));
-      expect(this.container).toEqualHTML('<p>0123</p><h2>5678</h2>');
+      expect(editor.scroll.domNode).toEqualHTML('<p>0123</p><h2>5678</h2>');
     });
 
-    it('eventual append', function () {
-      const editor = this.initialize(Editor, '<p>0123</p>');
+    test('eventual append', () => {
+      const editor = createEditor('<p>0123</p>');
       editor.applyDelta(
         new Delta()
           .retain(2)
@@ -740,11 +751,13 @@ describe('Editor', function () {
           .retain(3)
           .insert('cd\n', { header: 2 }),
       );
-      expect(this.container).toEqualHTML('<h1>01ab</h1><p>23</p><h2>cd</h2>');
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<h1>01ab</h1><p>23</p><h2>cd</h2>',
+      );
     });
 
-    it('append text, embed and newline', function () {
-      const editor = this.initialize(Editor, '<p>0123</p>');
+    test('append text, embed and newline', () => {
+      const editor = createEditor('<p>0123</p>');
       editor.applyDelta(
         new Delta()
           .retain(5)
@@ -752,13 +765,13 @@ describe('Editor', function () {
           .insert({ image: '/assets/favicon.png' })
           .insert('\n', { header: 2 }),
       );
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p>0123</p><h2>5678<img src="/assets/favicon.png"></h2>',
       );
     });
 
-    it('append multiple lines', function () {
-      const editor = this.initialize(Editor, '<p>0123</p>');
+    test('append multiple lines', () => {
+      const editor = createEditor('<p>0123</p>');
       editor.applyDelta(
         new Delta()
           .retain(5)
@@ -767,32 +780,34 @@ describe('Editor', function () {
           .insert('89')
           .insert('\n', { header: 2 }),
       );
-      expect(this.container).toEqualHTML('<p>0123</p><h1>56</h1><h2>89</h2>');
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p>0123</p><h1>56</h1><h2>89</h2>',
+      );
     });
 
-    it('code block', function () {
-      const editor = this.initialize(Editor, {
+    test('code block', () => {
+      const editor = createEditor({
         html: '<p>0</p><div class="ql-code-block-container"><div class="ql-code-block">1</div><div class="ql-code-block">23</div></div><p><br></p>',
       });
       editor.applyDelta(new Delta().delete(4).retain(1).delete(2));
       expect(editor.scroll.domNode.innerHTML).toEqual('<p>2</p>');
     });
 
-    it('prepending bold with a newline and unformatted text', function () {
-      const editor = this.initialize(Editor, '<p><strong>a</strong></p>');
+    test('prepending bold with a newline and unformatted text', () => {
+      const editor = createEditor('<p><strong>a</strong></p>');
       editor.applyDelta(new Delta().insert('\n1'));
-      expect(this.container).toEqualHTML(
+      expect(editor.scroll.domNode).toEqualHTML(
         '<p><br></p><p>1<strong>a</strong></p>',
       );
     });
   });
 
-  describe('insertContents', function () {
+  describe('insertContents', () => {
     const video =
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>';
 
-    it('ignores empty delta', function () {
-      const editor = this.initialize(Editor, '<p>1</p>');
+    test('ignores empty delta', () => {
+      const editor = createEditor('<p>1</p>');
       editor.insertContents(0, new Delta());
       expect(editor.getDelta().ops).toEqual([{ insert: '1\n' }]);
 
@@ -800,8 +815,8 @@ describe('Editor', function () {
       expect(editor.getDelta().ops).toEqual([{ insert: '1\n' }]);
     });
 
-    it('prepend to paragraph', function () {
-      const editor = this.initialize(Editor, '<p>2</p>');
+    test('prepend to paragraph', () => {
+      const editor = createEditor('<p>2</p>');
       editor.insertContents(0, new Delta().insert('1'));
       expect(editor.getDelta().ops).toEqual([{ insert: '12\n' }]);
 
@@ -821,11 +836,8 @@ describe('Editor', function () {
       ]);
     });
 
-    it('prepend to list item', function () {
-      const editor = this.initialize(
-        Editor,
-        '<ol><li data-list="bullet">2</li></ol>',
-      );
+    test('prepend to list item', () => {
+      const editor = createEditor('<ol><li data-list="bullet">2</li></ol>');
       editor.insertContents(0, new Delta().insert('1'));
       expect(editor.getDelta().ops).toEqual([
         { insert: '12' },
@@ -849,7 +861,7 @@ describe('Editor', function () {
       ]);
     });
 
-    it('insert before formatting', function () {
+    test('insert before formatting', () => {
       class MyBlot extends Block {
         static className = 'my-blot';
         static blotName = 'my-blot';
@@ -880,9 +892,9 @@ describe('Editor', function () {
       expect(editor.scroll.domNode.innerHTML).toContain('test-style="random"');
     });
 
-    describe('prepend to block embed', function () {
-      it('without ending with \\n', function () {
-        const editor = this.initialize(Editor, `${video}`);
+    describe('prepend to block embed', () => {
+      test('without ending with \\n', () => {
+        const editor = createEditor(`${video}`);
         editor.insertContents(0, new Delta().insert('a'));
         expect(editor.getDelta().ops).toEqual([
           { insert: 'a\n' },
@@ -890,8 +902,8 @@ describe('Editor', function () {
         ]);
       });
 
-      it('empty first line', function () {
-        const editor = this.initialize(Editor, `<p></p>${video}`);
+      test('empty first line', () => {
+        const editor = createEditor(`<p></p>${video}`);
         editor.insertContents(1, new Delta().insert('\nworld\n'));
         expect(editor.getDelta().ops).toEqual([
           { insert: '\n\nworld\n' },
@@ -899,8 +911,8 @@ describe('Editor', function () {
         ]);
       });
 
-      it('multiple lines', function () {
-        const editor = this.initialize(Editor, `${video}`);
+      test('multiple lines', () => {
+        const editor = createEditor(`${video}`);
         editor.insertContents(
           0,
           new Delta().insert('a').insert('\n', { header: 1 }),
@@ -913,9 +925,9 @@ describe('Editor', function () {
       });
     });
 
-    describe('append', function () {
-      it('appends to editor', function () {
-        const editor = this.initialize(Editor, '<p>1</p>');
+    describe('append', () => {
+      test('appends to editor', () => {
+        const editor = createEditor('<p>1</p>');
         editor.insertContents(2, new Delta().insert('a'));
         expect(editor.getDelta().ops).toEqual([{ insert: '1\na\n' }]);
         editor.insertContents(
@@ -928,8 +940,8 @@ describe('Editor', function () {
         ]);
       });
 
-      it('appends to paragraph', function () {
-        const editor = this.initialize(Editor, '<p>1</p><p>2</p>');
+      test('appends to paragraph', () => {
+        const editor = createEditor('<p>1</p><p>2</p>');
         editor.insertContents(2, new Delta().insert('a'));
         expect(editor.getDelta().ops).toEqual([{ insert: '1\na2\n' }]);
         editor.insertContents(
@@ -943,8 +955,8 @@ describe('Editor', function () {
         ]);
       });
 
-      it('appends to block embed', function () {
-        const editor = this.initialize(Editor, `${video}<p>2</p>`);
+      test('appends to block embed', () => {
+        const editor = createEditor(`${video}<p>2</p>`);
         editor.insertContents(1, new Delta().insert('1'));
         expect(editor.getDelta().ops).toEqual([
           { insert: { video: '#' } },
@@ -963,8 +975,8 @@ describe('Editor', function () {
       });
     });
 
-    it('inserts formatted block embeds (styles)', function () {
-      const editor = this.initialize(Editor, `<p></p>`);
+    test('inserts formatted block embeds (styles)', () => {
+      const editor = createEditor(`<p></p>`);
       editor.insertContents(
         0,
         new Delta()
@@ -981,8 +993,8 @@ describe('Editor', function () {
       ]);
     });
 
-    it('inserts formatted block embeds (attributor)', function () {
-      const editor = this.initialize(Editor, `<p></p>`);
+    test('inserts formatted block embeds (attributor)', () => {
+      const editor = createEditor(`<p></p>`);
       editor.insertContents(
         0,
         new Delta()
@@ -999,8 +1011,8 @@ describe('Editor', function () {
       ]);
     });
 
-    it('inserts inline embeds to bold text', function () {
-      const editor = this.initialize(Editor, `<p><strong>ab</strong></p>`);
+    test('inserts inline embeds to bold text', () => {
+      const editor = createEditor(`<p><strong>ab</strong></p>`);
       editor.insertContents(1, new Delta().insert({ image: '#' }));
       expect(editor.getDelta().ops).toEqual([
         { insert: 'a', attributes: { bold: true } },
@@ -1010,11 +1022,8 @@ describe('Editor', function () {
       ]);
     });
 
-    it('inserts multiple lines to a container', function () {
-      const editor = this.initialize(
-        Editor,
-        `<ol><li data-list="ordered"></li></ol>`,
-      );
+    test('inserts multiple lines to a container', () => {
+      const editor = createEditor(`<ol><li data-list="ordered"></li></ol>`);
       editor.insertContents(
         0,
         new Delta()
@@ -1030,14 +1039,14 @@ describe('Editor', function () {
       ]);
     });
 
-    describe('invalid delta', function () {
-      const getEditorDelta = (context, modify) => {
-        const editor = context.initialize(Editor, `<p></p>`);
+    describe('invalid delta', () => {
+      const getEditorDelta = (modify: (editor: Editor) => void) => {
+        const editor = createEditor(`<p></p>`);
         modify(editor);
         return editor.getDelta().ops;
       };
 
-      it('conflict block formats', function () {
+      test('conflict block formats', () => {
         const change = new Delta()
           .insert('a')
           .insert('\n', { header: 1, list: 'bullet' })
@@ -1045,11 +1054,11 @@ describe('Editor', function () {
           .insert('\n', { header: 1, list: 'bullet' });
 
         expect(
-          getEditorDelta(this, editor => editor.insertContents(0, change)),
-        ).toEqual(getEditorDelta(this, editor => editor.applyDelta(change)));
+          getEditorDelta(editor => editor.insertContents(0, change)),
+        ).toEqual(getEditorDelta(editor => editor.applyDelta(change)));
       });
 
-      it('block embeds with line formats', function () {
+      test('block embeds with line formats', () => {
         const change = new Delta()
           .insert('a\n')
           .insert({ video: '#' }, { header: 1 })
@@ -1057,37 +1066,36 @@ describe('Editor', function () {
           .insert('\n', { header: 1 });
 
         expect(
-          getEditorDelta(this, editor => editor.insertContents(0, change)),
-        ).toEqual(getEditorDelta(this, editor => editor.applyDelta(change)));
+          getEditorDelta(editor => editor.insertContents(0, change)),
+        ).toEqual(getEditorDelta(editor => editor.applyDelta(change)));
       });
 
-      it('missing \\n before block embeds', function () {
+      test('missing \\n before block embeds', () => {
         const change = new Delta()
           .insert('a')
           .insert({ video: '#' })
           .insert('b\n');
 
         expect(
-          getEditorDelta(this, editor => editor.insertContents(0, change)),
-        ).toEqual(getEditorDelta(this, editor => editor.applyDelta(change)));
+          getEditorDelta(editor => editor.insertContents(0, change)),
+        ).toEqual(getEditorDelta(editor => editor.applyDelta(change)));
       });
     });
   });
 
-  describe('getFormat()', function () {
-    it('unformatted', function () {
-      const editor = this.initialize(Editor, '<p>0123</p>');
+  describe('getFormat()', () => {
+    test('unformatted', () => {
+      const editor = createEditor('<p>0123</p>');
       expect(editor.getFormat(1)).toEqual({});
     });
 
-    it('formatted', function () {
-      const editor = this.initialize(Editor, '<h1><em>0123</em></h1>');
+    test('formatted', () => {
+      const editor = createEditor('<h1><em>0123</em></h1>');
       expect(editor.getFormat(1)).toEqual({ header: 1, italic: true });
     });
 
-    it('cursor', function () {
-      const editor = this.initialize(
-        Editor,
+    test('cursor', () => {
+      const editor = createEditor(
         '<h1><strong><em>0123</em></strong></h1><h2><u>5678</u></h2>',
       );
       expect(editor.getFormat(2)).toEqual({
@@ -1097,11 +1105,9 @@ describe('Editor', function () {
       });
     });
 
-    it('cursor with preformat', function () {
-      const [editor, selection] = this.initialize(
-        [Editor, Selection],
-        '<h1><strong><em>0123</em></strong></h1>',
-      );
+    test('cursor with preformat', () => {
+      const editor = createEditor('<h1><strong><em>0123</em></strong></h1>');
+      const selection = new Selection(editor.scroll, editor.scroll.emitter);
       selection.setRange(new Range(2));
       selection.format('underline', true);
       selection.format('color', 'red');
@@ -1114,9 +1120,8 @@ describe('Editor', function () {
       });
     });
 
-    it('across leaves', function () {
-      const editor = this.initialize(
-        Editor,
+    test('across leaves', () => {
+      const editor = createEditor(
         `
         <h1>
           <strong class="ql-size-small"><em>01</em></strong>
@@ -1132,9 +1137,8 @@ describe('Editor', function () {
       });
     });
 
-    it('across leaves repeated', function () {
-      const editor = this.initialize(
-        Editor,
+    test('across leaves repeated', () => {
+      const editor = createEditor(
         `
         <h1>
           <strong class="ql-size-small"><em>01</em></strong>
@@ -1151,9 +1155,8 @@ describe('Editor', function () {
       });
     });
 
-    it('across lines repeated', function () {
-      const editor = this.initialize(
-        Editor,
+    test('across lines repeated', () => {
+      const editor = createEditor(
         `
         <h1 class="ql-align-right"><em>01</em></h1>
         <h1 class="ql-align-center"><em>34</em></h1>
@@ -1167,9 +1170,8 @@ describe('Editor', function () {
         align: ['right', 'center'],
       });
     });
-    it('across lines', function () {
-      const editor = this.initialize(
-        Editor,
+    test('across lines', () => {
+      const editor = createEditor(
         `
         <h1 class="ql-align-right"><em>01</em></h1>
         <h1 class="ql-align-center"><em>34</em></h1>
@@ -1183,15 +1185,14 @@ describe('Editor', function () {
     });
   });
 
-  describe('getHTML', function () {
-    it('inline', function () {
-      const editor = this.initialize(Editor, '<blockquote>Test</blockquote>');
+  describe('getHTML', () => {
+    test('inline', () => {
+      const editor = createEditor('<blockquote>Test</blockquote>');
       expect(editor.getHTML(1, 2)).toEqual('es');
     });
 
-    it('across lines', function () {
-      const editor = this.initialize(
-        Editor,
+    test('across lines', () => {
+      const editor = createEditor(
         '<h1 class="ql-align-center">Header</h1><p>Text</p><blockquote>Quote</blockquote>',
       );
       expect(editor.getHTML(1, 14)).toEqual(
@@ -1199,9 +1200,8 @@ describe('Editor', function () {
       );
     });
 
-    it('mixed list', function () {
-      const editor = this.initialize(
-        Editor,
+    test('mixed list', () => {
+      const editor = createEditor(
         `
           <ol>
             <li data-list="ordered">One</li>
@@ -1223,9 +1223,8 @@ describe('Editor', function () {
       `);
     });
 
-    it('nested list', function () {
-      const editor = this.initialize(
-        Editor,
+    test('nested list', () => {
+      const editor = createEditor(
         `
           <ol>
             <li data-list="ordered">One</li>
@@ -1255,9 +1254,8 @@ describe('Editor', function () {
       `);
     });
 
-    it('nested checklist', function () {
-      const editor = this.initialize(
-        Editor,
+    test('nested checklist', () => {
+      const editor = createEditor(
         `
           <ol>
             <li data-list="checked">One</li>
@@ -1287,9 +1285,8 @@ describe('Editor', function () {
       `);
     });
 
-    it('partial list', function () {
-      const editor = this.initialize(
-        Editor,
+    test('partial list', () => {
+      const editor = createEditor(
         `
         <ol>
           <li data-list="ordered">1111</li>
@@ -1317,20 +1314,19 @@ describe('Editor', function () {
       `);
     });
 
-    it('text within tag', function () {
-      const editor = this.initialize(Editor, '<p><a>a</a></p>');
+    test('text within tag', () => {
+      const editor = createEditor('<p><a>a</a></p>');
       expect(editor.getHTML(0, 1)).toEqual('<a>a</a>');
     });
 
-    it('escape html', function () {
-      const editor = this.initialize(Editor, '<p><br></p>');
+    test('escape html', () => {
+      const editor = createEditor('<p><br></p>');
       editor.insertText(0, '<b>Test</b>');
       expect(editor.getHTML(0, 11)).toEqual('&lt;b&gt;Test&lt;/b&gt;');
     });
 
-    it('multiline code', function () {
-      const editor = this.initialize(
-        Editor,
+    test('multiline code', () => {
+      const editor = createEditor(
         '<p><br></p><p>0123</p><p><br></p><p><br></p><p>4567</p><p><br></p>',
       );
       const length = editor.scroll.length();
