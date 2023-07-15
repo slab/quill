@@ -4,7 +4,7 @@ import Module from '../core/module';
 import Quill from '../core/quill';
 import type Scroll from '../blots/scroll';
 
-interface HistoryOptions {
+export interface HistoryOptions {
   userOnly: boolean;
   delay: number;
   maxStack: number;

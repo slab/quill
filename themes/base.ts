@@ -214,7 +214,7 @@ class BaseTooltip extends Tooltip {
   textbox: HTMLInputElement | null;
   linkRange?: Range;
 
-  constructor(quill: Quill, boundsContainer) {
+  constructor(quill: Quill, boundsContainer?: HTMLElement) {
     super(quill, boundsContainer);
     this.textbox = this.root.querySelector('input[type="text"]');
     this.listen();
