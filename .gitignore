@@ -21,10 +21,7 @@ themes/*.js
 ui/*.js
 e2e/**/*.js
 
-test/**/*.js
-!test/helpers/**/*.js
-!test/unit/**/*.js
-!test/unit.js
+!test/unit/__helpers__/vitest.d.ts
 
 core.js
 quill.js
