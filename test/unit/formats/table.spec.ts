@@ -1,5 +1,23 @@
 import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
+import {
+  createScroll as baseCreateScroll,
+  createRegistry,
+} from '../__helpers__/factory';
+import { describe, expect, test } from 'vitest';
+import {
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from '../../../formats/table';
+import Header from '../../../formats/header';
+
+const createScroll = (html: string) =>
+  baseCreateScroll(
+    html,
+    createRegistry([TableBody, TableCell, TableContainer, TableRow, Header]),
+  );
 
 const tableDelta = new Delta()
   .insert('A1')
@@ -40,59 +58,70 @@ const tableHTML = `
         <td data-row="c">C3</td>
       </tr>
     </tbody>
-  </table>`;
+  </table>
+  `;
 
-describe('Table', function () {
-  it('initialize', function () {
-    const editor = this.initialize(Editor, tableHTML);
+describe('Table', () => {
+  test('initialize', () => {
+    const editor = new Editor(createScroll(tableHTML));
     expect(editor.getDelta()).toEqual(tableDelta);
-    expect(this.container).toEqualHTML(tableHTML);
+    expect(editor.scroll).toMatchInlineSnapshot(tableHTML);
   });
 
-  it('add', function () {
-    const editor = this.initialize(Editor, '');
+  test('add', () => {
+    const editor = new Editor(createScroll(''));
     editor.applyDelta(new Delta([...tableDelta.ops]).delete(1));
-    expect(this.container).toEqualHTML(tableHTML);
+    expect(editor.scroll).toMatchInlineSnapshot(tableHTML);
   });
 
-  it('add format plaintext', function () {
-    const editor = this.initialize(Editor, '<p>Test</p>');
+  test('add format plaintext', () => {
+    const editor = new Editor(createScroll('<p>Test</p>'));
     editor.formatLine(0, 5, { table: 'a' });
-    expect(this.container).toEqualHTML(
-      '<table><tbody><tr><td data-row="a">Test</td></tr></tbody></table>',
-    );
+    expect(editor.scroll).toMatchInlineSnapshot(`
+      <table>
+        <tbody>
+          <tr>
+            <td data-row="a">Test</td>
+          </tr>
+        </tbody>
+      </table>
+    `);
   });
 
-  it('add format replace', function () {
-    const editor = this.initialize(Editor, '<h1>Test</h1>');
+  test('add format replace', () => {
+    const editor = new Editor(createScroll('<h1>Test</h1>'));
     editor.formatLine(0, 5, { table: 'a' });
-    expect(this.container).toEqualHTML(
-      '<table><tbody><tr><td data-row="a">Test</td></tr></tbody></table>',
-    );
+    expect(editor.scroll).toMatchInlineSnapshot(`
+      <table>
+        <tbody>
+          <tr>
+            <td data-row="a">Test</td>
+          </tr>
+        </tbody>
+      </table>
+    `);
   });
 
-  it('remove format plaintext', function () {
-    const editor = this.initialize(
-      Editor,
-      '<table><tr><td data-row="a">Test</td></tr></table>',
+  test('remove format plaintext', () => {
+    const editor = new Editor(
+      createScroll('<table><tr><td data-row="a">Test</td></tr></table>'),
     );
     editor.formatLine(0, 5, { table: null });
-    expect(this.container).toEqualHTML('<p>Test</p>');
+    expect(editor.scroll).toMatchInlineSnapshot('<p>Test</p>');
   });
 
-  it('remove format replace', function () {
-    const editor = this.initialize(
-      Editor,
-      '<table><tr><td data-row="a">Test</td></tr></table>',
+  test('remove format replace', () => {
+    const editor = new Editor(
+      createScroll('<table><tr><td data-row="a">Test</td></tr></table>'),
     );
     editor.formatLine(0, 5, { header: 1 });
-    expect(this.container).toEqualHTML('<h1>Test</h1>');
+    expect(editor.scroll).toMatchInlineSnapshot('<h1>Test</h1>');
   });
 
-  it('group rows', function () {
-    const editor = this.initialize(
-      Editor,
-      `
+  test('group rows', () => {
+    const editor = new Editor(
+      createScroll(
+        `
       <table>
         <tbody>
           <tr><td data-row="a">A</td></tr>
@@ -100,94 +129,82 @@ describe('Table', function () {
         </tbody>
       </table>
     `,
+      ),
     );
+    // @ts-expect-error
     editor.scroll.children.head.children.head.children.head.optimize();
-    expect(this.container).toEqualHTML(`
+    expect(editor.scroll).toMatchInlineSnapshot(`
       <table>
         <tbody>
-          <tr><td data-row="a">A</td><td data-row="a">B</td></tr>
+          <tr>
+            <td data-row="a">A</td>
+            <td data-row="a">B</td>
+          </tr>
         </tbody>
       </table>
     `);
   });
 
-  it('split rows', function () {
-    const editor = this.initialize(
-      Editor,
-      `
+  test('split rows', () => {
+    const editor = new Editor(
+      createScroll(
+        `
       <table>
         <tbody>
           <tr><td data-row="a">A</td><td data-row="b">B</td></tr>
         </tbody>
       </table>
     `,
+      ),
     );
+    // @ts-expect-error
     editor.scroll.children.head.children.head.children.head.optimize();
-    expect(this.container).toEqualHTML(`
+    expect(editor.scroll).toMatchInlineSnapshot(`
       <table>
         <tbody>
-          <tr><td data-row="a">A</td></tr>
-          <tr><td data-row="b">B</td></tr>
+          <tr>
+            <td data-row="a">A</td>
+          </tr>
+          <tr>
+            <td data-row="b">B</td>
+          </tr>
         </tbody>
       </table>
     `);
   });
 
-  it('group and split rows', function () {
-    const editor = this.initialize(
-      Editor,
-      `
+  test('group and split rows', () => {
+    const editor = new Editor(
+      createScroll(`
       <table>
         <tbody>
           <tr><td data-row="a">A</td><td data-row="b">B1</td></tr>
           <tr><td data-row="b">B2</td></tr>
         </tbody>
       </table>
-    `,
+    `),
     );
+    // @ts-expect-error
     editor.scroll.children.head.children.head.children.head.optimize();
-    expect(this.container).toEqualHTML(`
+    expect(editor.scroll).toMatchInlineSnapshot(`
       <table>
         <tbody>
-          <tr><td data-row="a">A</td></tr>
-          <tr><td data-row="b">B1</td><td data-row="b">B2</td></tr>
+          <tr>
+            <td data-row="a">A</td>
+          </tr>
+          <tr>
+            <td data-row="b">B1</td>
+            <td data-row="b">B2</td>
+          </tr>
         </tbody>
       </table>
     `);
   });
 
-  xit('group and split multiple rows', function () {
-    const editor = this.initialize(
-      Editor,
-      `
-      <table>
-        <tbody>
-          <tr><td data-row="1"><br></td><td data-row="1"><br></td><td data-row="1"><br></td></tr>
-          <tr><td data-row="2"><br></td><td data-row="2"><br></td><td data-row="2"><br></td></tr>
-          <tr><td data-row="3"><br></td><td data-row="3"><br></td></tr>
-          <tr><td data-row="3"><br></td><td data-row="4"><br></td></tr>
-          <tr><td data-row="4"><br></td><td data-row="4"><br></td></tr>
-        </tbody>
-      </table>
-    `,
-    );
-    editor.scroll.children.head.children.head.optimize();
-    expect(this.container).toEqualHTML(`
-      <table>
-        <tbody>
-          <tr><td data-row="1"><br></td><td data-row="1"><br></td><td data-row="1"><br></td></tr>
-          <tr><td data-row="2"><br></td><td data-row="2"><br></td><td data-row="2"><br></td></tr>
-          <tr><td data-row="3"><br></td><td data-row="3"><br></td><td data-row="3"><br></td></tr>
-          <tr><td data-row="4"><br></td><td data-row="4"><br></td><td data-row="4"><br></td></tr>
-        </tbody>
-      </table>
-    `);
-  });
-
-  it('balance cells', function () {
-    const editor = this.initialize(
-      Editor,
-      `<table>
+  test('balance cells', () => {
+    const editor = new Editor(
+      createScroll(
+        `<table>
         <tbody>
           <tr>
             <td data-row="a">A1</td>
@@ -203,20 +220,22 @@ describe('Table', function () {
           </tr>
         </tbody>
       </table>`,
+      ),
     );
+    // @ts-expect-error
     editor.scroll.children.head.balanceCells();
-    expect(this.container).toEqualHTML(
-      `<table>
+    expect(editor.scroll).toMatchInlineSnapshot(`
+      <table>
         <tbody>
           <tr>
             <td data-row="a">A1</td>
-            <td data-row="a"><br></td>
-            <td data-row="a"><br></td>
+            <td data-row="a"><br /></td>
+            <td data-row="a"><br /></td>
           </tr>
           <tr>
             <td data-row="b">B1</td>
             <td data-row="b">B2</td>
-            <td data-row="b"><br></td>
+            <td data-row="b"><br /></td>
           </tr>
           <tr>
             <td data-row="c">C1</td>
@@ -224,16 +243,16 @@ describe('Table', function () {
             <td data-row="c">C3</td>
           </tr>
         </tbody>
-      </table>`,
-    );
+      </table>
+    `);
   });
 
-  it('format', function () {
-    const editor = this.initialize(Editor, '<p>a</p><p>b</p><p>1</p><p>2</p>');
+  test('format', () => {
+    const editor = new Editor(createScroll('<p>a</p><p>b</p><p>1</p><p>2</p>'));
     editor.formatLine(0, 4, { table: 'a' });
     editor.formatLine(4, 4, { table: 'b' });
-    expect(this.container).toEqualHTML(
-      `<table>
+    expect(editor.scroll).toMatchInlineSnapshot(`
+      <table>
         <tbody>
           <tr>
             <td data-row="a">a</td>
@@ -244,42 +263,42 @@ describe('Table', function () {
             <td data-row="b">2</td>
           </tr>
         </tbody>
-      </table>`,
-    );
+      </table>
+    `);
   });
 
-  it('applyDelta', function () {
-    const editor = this.initialize(Editor, '<p><br></p>');
+  test('applyDelta', () => {
+    const editor = new Editor(createScroll('<p><br /></p>'));
     editor.applyDelta(
       new Delta().insert('\n\n', { table: 'a' }).insert('\n\n', { table: 'b' }),
     );
-    expect(this.container).toEqualHTML(
-      `<table>
+    expect(editor.scroll).toMatchInlineSnapshot(`
+      <table>
         <tbody>
           <tr>
-            <td data-row="a"><br></td>
-            <td data-row="a"><br></td>
+            <td data-row="a"><br /></td>
+            <td data-row="a"><br /></td>
           </tr>
           <tr>
-            <td data-row="b"><br></td>
-            <td data-row="b"><br></td>
+            <td data-row="b"><br /></td>
+            <td data-row="b"><br /></td>
           </tr>
         </tbody>
       </table>
-      <p><br></p>`,
-    );
+      <p><br /></p>
+    `);
   });
 
-  it('unbalanced table applyDelta', function () {
-    const editor = this.initialize(Editor, '<p><br></p>');
+  test('unbalanced table applyDelta', () => {
+    const editor = new Editor(createScroll('<p><br /></p>'));
     editor.applyDelta(
       new Delta()
         .insert('A1\nB1\nC1\n', { table: '1' })
         .insert('A2\nB2\nC2\n', { table: '2' })
         .insert('A3\nB3\n', { table: '3' }),
     );
-    expect(this.container).toEqualHTML(
-      `<table>
+    expect(editor.scroll).toMatchInlineSnapshot(`
+      <table>
         <tbody>
           <tr>
             <td data-row="1">A1</td>
@@ -297,25 +316,26 @@ describe('Table', function () {
           </tr>
         </tbody>
       </table>
-      <p><br></p>`,
-    );
+      <p><br /></p>
+    `);
   });
 
-  it('existing table applyDelta', function () {
-    const editor = this.initialize(
-      Editor,
-      `
+  test('existing table applyDelta', () => {
+    const editor = new Editor(
+      createScroll(
+        `
       <table>
         <tbody>
           <tr>
             <td data-row="1">A1</td>
           </tr>
           <tr>
-            <td data-row="2"><br></td>
+            <td data-row="2"><br /></td>
             <td data-row="2">B1</td>
           </tr>
         </tbody>
       </table>`,
+      ),
     );
     editor.applyDelta(
       new Delta()
@@ -323,19 +343,19 @@ describe('Table', function () {
         .retain(1, { table: '1' })
         .insert('\n', { table: '2' }),
     );
-    expect(this.container).toEqualHTML(
-      `<table>
+    expect(editor.scroll).toMatchInlineSnapshot(`
+      <table>
         <tbody>
           <tr>
             <td data-row="1">A1</td>
-            <td data-row="1"><br></td>
+            <td data-row="1"><br /></td>
           </tr>
           <tr>
-            <td data-row="2"><br></td>
+            <td data-row="2"><br /></td>
             <td data-row="2">B1</td>
           </tr>
         </tbody>
-      </table>`,
-    );
+      </table>
+    `);
   });
 });
