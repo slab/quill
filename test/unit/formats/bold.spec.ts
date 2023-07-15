@@ -18,6 +18,6 @@ describe('Bold', () => {
       scroll.domNode.firstChild.lastChild,
     );
     scroll.update();
-    expect(scroll).toMatchInlineSnapshot('<p><strong>abc</strong></p>');
+    expect(scroll.domNode).toEqualHTML('<p><strong>abc</strong></p>');
   });
 });

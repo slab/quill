@@ -65,19 +65,19 @@ describe('Table', () => {
   test('initialize', () => {
     const editor = new Editor(createScroll(tableHTML));
     expect(editor.getDelta()).toEqual(tableDelta);
-    expect(editor.scroll).toMatchInlineSnapshot(tableHTML);
+    expect(editor.scroll.domNode).toEqualHTML(tableHTML);
   });
 
   test('add', () => {
     const editor = new Editor(createScroll(''));
     editor.applyDelta(new Delta([...tableDelta.ops]).delete(1));
-    expect(editor.scroll).toMatchInlineSnapshot(tableHTML);
+    expect(editor.scroll.domNode).toEqualHTML(tableHTML);
   });
 
   test('add format plaintext', () => {
     const editor = new Editor(createScroll('<p>Test</p>'));
     editor.formatLine(0, 5, { table: 'a' });
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <table>
         <tbody>
           <tr>
@@ -91,7 +91,7 @@ describe('Table', () => {
   test('add format replace', () => {
     const editor = new Editor(createScroll('<h1>Test</h1>'));
     editor.formatLine(0, 5, { table: 'a' });
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <table>
         <tbody>
           <tr>
@@ -107,7 +107,7 @@ describe('Table', () => {
       createScroll('<table><tr><td data-row="a">Test</td></tr></table>'),
     );
     editor.formatLine(0, 5, { table: null });
-    expect(editor.scroll).toMatchInlineSnapshot('<p>Test</p>');
+    expect(editor.scroll.domNode).toEqualHTML('<p>Test</p>');
   });
 
   test('remove format replace', () => {
@@ -115,7 +115,7 @@ describe('Table', () => {
       createScroll('<table><tr><td data-row="a">Test</td></tr></table>'),
     );
     editor.formatLine(0, 5, { header: 1 });
-    expect(editor.scroll).toMatchInlineSnapshot('<h1>Test</h1>');
+    expect(editor.scroll.domNode).toEqualHTML('<h1>Test</h1>');
   });
 
   test('group rows', () => {
@@ -133,7 +133,7 @@ describe('Table', () => {
     );
     // @ts-expect-error
     editor.scroll.children.head.children.head.children.head.optimize();
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <table>
         <tbody>
           <tr>
@@ -159,7 +159,7 @@ describe('Table', () => {
     );
     // @ts-expect-error
     editor.scroll.children.head.children.head.children.head.optimize();
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <table>
         <tbody>
           <tr>
@@ -186,7 +186,7 @@ describe('Table', () => {
     );
     // @ts-expect-error
     editor.scroll.children.head.children.head.children.head.optimize();
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <table>
         <tbody>
           <tr>
@@ -224,7 +224,7 @@ describe('Table', () => {
     );
     // @ts-expect-error
     editor.scroll.children.head.balanceCells();
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <table>
         <tbody>
           <tr>
@@ -251,7 +251,7 @@ describe('Table', () => {
     const editor = new Editor(createScroll('<p>a</p><p>b</p><p>1</p><p>2</p>'));
     editor.formatLine(0, 4, { table: 'a' });
     editor.formatLine(4, 4, { table: 'b' });
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <table>
         <tbody>
           <tr>
@@ -272,7 +272,7 @@ describe('Table', () => {
     editor.applyDelta(
       new Delta().insert('\n\n', { table: 'a' }).insert('\n\n', { table: 'b' }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <table>
         <tbody>
           <tr>
@@ -297,7 +297,7 @@ describe('Table', () => {
         .insert('A2\nB2\nC2\n', { table: '2' })
         .insert('A3\nB3\n', { table: '3' }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <table>
         <tbody>
           <tr>
@@ -343,7 +343,7 @@ describe('Table', () => {
         .retain(1, { table: '1' })
         .insert('\n', { table: '2' }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <table>
         <tbody>
           <tr>

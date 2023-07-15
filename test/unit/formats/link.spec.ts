@@ -21,7 +21,7 @@ describe('Link', () => {
         .insert('12', { link: 'https://quilljs.com' })
         .insert('3\n'),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(
+    expect(editor.scroll.domNode).toEqualHTML(
       '<p>0<a href="https://quilljs.com" rel="noopener noreferrer" target="_blank">12</a>3</p>',
     );
   });
@@ -46,7 +46,7 @@ describe('Link', () => {
         .insert('12', { link: Link.SANITIZED_URL })
         .insert('3\n'),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(
+    expect(editor.scroll.domNode).toEqualHTML(
       '<p>0<a href="about:blank" rel="noopener noreferrer" target="_blank">12</a>3</p>',
     );
   });
@@ -64,7 +64,7 @@ describe('Link', () => {
         .insert('12', { link: 'https://quilljs.com' })
         .insert('3\n'),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(
+    expect(editor.scroll.domNode).toEqualHTML(
       '<p>0<a href="https://quilljs.com" rel="noopener noreferrer" target="_blank">12</a>3</p>',
     );
   });
@@ -81,7 +81,7 @@ describe('Link', () => {
       .insert('12', { size: 'large' })
       .insert('3\n');
     expect(editor.getDelta()).toEqual(delta);
-    expect(editor.scroll).toMatchInlineSnapshot(
+    expect(editor.scroll.domNode).toEqualHTML(
       '<p>0<span class="ql-size-large">12</span>3</p>',
     );
   });

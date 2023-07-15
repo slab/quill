@@ -19,7 +19,7 @@ describe('Code', () => {
   test('format newline', () => {
     const editor = new Editor(createScroll('<p><br></p>'));
     editor.formatLine(0, 1, { 'code-block': true });
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <div class="ql-code-block-container" spellcheck="false">
         <div class="ql-code-block"><br /></div>
       </div>
@@ -36,7 +36,7 @@ describe('Code', () => {
         .insert('5678')
         .insert('\n', { 'code-block': true }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <div class="ql-code-block-container" spellcheck="false">
         <div class="ql-code-block">0123</div>
         <div class="ql-code-block">5678</div>
@@ -52,7 +52,7 @@ describe('Code', () => {
     );
     editor.formatText(4, 1, { 'code-block': false });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
-    expect(editor.scroll).toMatchInlineSnapshot('<p>0123</p>');
+    expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
   });
 
   test('delete last', () => {
@@ -68,7 +68,7 @@ describe('Code', () => {
         .insert('\n', { 'code-block': true })
         .insert('5678\n'),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <div class="ql-code-block-container" spellcheck="false">
         <div class="ql-code-block">0123</div>
       </div>
@@ -86,7 +86,7 @@ describe('Code', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('01234567').insert('\n', { 'code-block': true }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <div class="ql-code-block-container" spellcheck="false">
         <div class="ql-code-block">01234567</div>
       </div>
@@ -103,7 +103,7 @@ describe('Code', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('01234567').insert('\n', { header: 1 }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot('<h1>01234567</h1>');
+    expect(editor.scroll.domNode).toEqualHTML('<h1>01234567</h1>');
   });
 
   test('delete across before partial merge', () => {
@@ -127,7 +127,7 @@ describe('Code', () => {
         .insert('60')
         .insert('\n', { header: 1 }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <div class="ql-code-block-container" spellcheck="false">
         <div class="ql-code-block">01</div>
         <div class="ql-code-block">34</div>
@@ -154,7 +154,7 @@ describe('Code', () => {
         .insert('89')
         .insert('\n', { header: 1 }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <div class="ql-code-block-container" spellcheck="false">
         <div class="ql-code-block">01</div>
       </div>
@@ -180,7 +180,7 @@ describe('Code', () => {
         .insert('89')
         .insert('\n', { 'code-block': true }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <div class="ql-code-block-container" spellcheck="false">
         <div class="ql-code-block">016</div>
         <div class="ql-code-block">89</div>
@@ -198,7 +198,7 @@ describe('Code', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('0123').insert('\n', { header: 1 }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot('<h1>0123</h1>');
+    expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
   });
 
   test('replace multiple', () => {
@@ -220,7 +220,7 @@ describe('Code', () => {
         .insert('23')
         .insert('\n', { header: 1 }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot('<h1>01</h1>\n<h1>23</h1>');
+    expect(editor.scroll.domNode).toEqualHTML('<h1>01</h1>\n<h1>23</h1>');
   });
 
   test('format imprecise bounds', () => {
@@ -245,7 +245,7 @@ describe('Code', () => {
         .insert('45')
         .insert('\n', { 'code-block': true }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <h1>01</h1>
       <h1>23</h1>
       <div class="ql-code-block-container" spellcheck="false">
@@ -276,7 +276,7 @@ describe('Code', () => {
         .insert('45')
         .insert('\n', { 'code-block': true }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <div class="ql-code-block-container" spellcheck="false">
         <div class="ql-code-block">01</div>
         <div class="ql-code-block">23</div>
@@ -307,7 +307,7 @@ describe('Code', () => {
         .insert('45')
         .insert('\n', { 'code-block': true }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <div class="ql-code-block-container" spellcheck="false">
         <div class="ql-code-block">01</div>
       </div>
@@ -328,7 +328,7 @@ describe('Code', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('0123').insert('\n', { 'code-block': true }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <div class="ql-code-block-container" spellcheck="false">
         <div class="ql-code-block">0123</div>
       </div>
@@ -351,7 +351,7 @@ describe('Code', () => {
       .delete(1)
       .retain(1, { 'code-block': null });
     editor.applyDelta(delta);
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <div class="ql-code-block-container" spellcheck="false">
         <div class="ql-code-block">a</div>
         <div class="ql-code-block">b</div>

@@ -45,7 +45,7 @@ describe('Clipboard', () => {
         const quill = createQuill();
         quill.clipboard.onCapturePaste(clipboardEvent);
         await sleep(2);
-        expect(quill.scroll).toMatchInlineSnapshot(
+        expect(quill.root).toEqualHTML(
           '<p>01<strong>|</strong><em>7</em>8</p>',
         );
         expect(quill.getSelection()).toEqual(new Range(3));
@@ -65,7 +65,7 @@ describe('Clipboard', () => {
         });
         await sleep(2);
         expect(upload).not.toHaveBeenCalled();
-        expect(quill.scroll).toMatchInlineSnapshot(
+        expect(quill.root).toEqualHTML(
           '<p>01<strong>|</strong><em>7</em>8</p>',
         );
         expect(quill.getSelection()).toEqual(new Range(3));
@@ -118,7 +118,7 @@ describe('Clipboard', () => {
         const { clipboardData, clipboardEvent } = setup();
         quill.clipboard.onCaptureCopy(clipboardEvent, true);
         await sleep(2);
-        expect(quill.scroll).toMatchInlineSnapshot('<h1>01<em>7</em>8</h1>');
+        expect(quill.root).toEqualHTML('<h1>01<em>7</em>8</h1>');
         expect(quill.getSelection()).toEqual(new Range(2));
         expect(clipboardData['text/plain']).toEqual('23\n56');
         expect(clipboardData['text/html']).toEqual(
@@ -130,15 +130,13 @@ describe('Clipboard', () => {
     test('dangerouslyPasteHTML(html)', () => {
       const quill = createQuill();
       quill.clipboard.dangerouslyPasteHTML('<i>ab</i><b>cd</b>');
-      expect(quill.scroll).toMatchInlineSnapshot(
-        '<p><em>ab</em><strong>cd</strong></p>',
-      );
+      expect(quill.root).toEqualHTML('<p><em>ab</em><strong>cd</strong></p>');
     });
 
     test('dangerouslyPasteHTML(index, html)', () => {
       const quill = createQuill();
       quill.clipboard.dangerouslyPasteHTML(2, '<b>ab</b>');
-      expect(quill.scroll).toMatchInlineSnapshot(`
+      expect(quill.root).toEqualHTML(`
         <h1>01<strong>ab</strong>23</h1>
         <p>5<em>67</em>8</p>
       `);

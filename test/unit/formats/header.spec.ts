@@ -18,7 +18,7 @@ describe('Header', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('0123', { italic: true }).insert('\n', { header: 1 }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot('<h1><em>0123</em></h1>');
+    expect(editor.scroll.domNode).toEqualHTML('<h1><em>0123</em></h1>');
   });
 
   test('remove', () => {
@@ -27,7 +27,7 @@ describe('Header', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('0123', { italic: true }).insert('\n'),
     );
-    expect(editor.scroll).toMatchInlineSnapshot('<p><em>0123</em></p>');
+    expect(editor.scroll.domNode).toEqualHTML('<p><em>0123</em></p>');
   });
 
   test('change', () => {
@@ -36,6 +36,6 @@ describe('Header', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('0123', { italic: true }).insert('\n', { header: 2 }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot('<h2><em>0123</em></h2>');
+    expect(editor.scroll.domNode).toEqualHTML('<h2><em>0123</em></h2>');
   });
 });

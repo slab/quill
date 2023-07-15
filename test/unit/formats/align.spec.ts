@@ -17,7 +17,7 @@ describe('Align', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('0123').insert('\n', { align: 'center' }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(
+    expect(editor.scroll.domNode).toEqualHTML(
       '<p class="ql-align-center">0123</p>',
     );
   });
@@ -28,7 +28,7 @@ describe('Align', () => {
     );
     editor.formatText(4, 1, { align: false });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
-    expect(editor.scroll).toMatchInlineSnapshot('<p>0123</p>');
+    expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
   });
 
   test('whitelist', () => {
@@ -39,7 +39,7 @@ describe('Align', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('0123').insert('\n', { align: 'center' }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(
+    expect(editor.scroll.domNode).toEqualHTML(
       '<p class="ql-align-center">0123</p>',
     );
   });
@@ -48,6 +48,6 @@ describe('Align', () => {
     const editor = new Editor(createScroll('<p>0123</p>'));
     editor.formatText(1, 2, { align: 'center' });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
-    expect(editor.scroll).toMatchInlineSnapshot('<p>0123</p>');
+    expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
   });
 });

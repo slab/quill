@@ -20,7 +20,7 @@ describe('Indent', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('0123').insert('\n', { list: 'bullet', indent: 1 }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li class="ql-indent-1" data-list="bullet">0123</li>
       </ol>
@@ -37,7 +37,7 @@ describe('Indent', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('0123').insert('\n', { list: 'bullet' }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="bullet">0123</li>
       </ol>

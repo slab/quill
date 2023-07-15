@@ -343,8 +343,8 @@ describe('Selection', () => {
       selection.setRange(new Range(4));
       selection.format('bold', true);
       expect(selection.getRange()[0]?.index).toEqual(4);
-      expect(selection.scroll).toMatchInlineSnapshot(`
-        <p>0123<strong><span class="ql-cursor">{Cursor.CONTENTS}</span></strong></p>
+      expect(selection.root).toEqualHTML(`
+        <p>0123<strong><span class="ql-cursor">${Cursor.CONTENTS}</span></strong></p>
       `);
     });
 
@@ -354,8 +354,8 @@ describe('Selection', () => {
 
       selection.format('bold', true);
       expect(selection.getRange()[0]?.index).toEqual(2);
-      expect(selection.scroll).toMatchInlineSnapshot(`
-      <p><em>01</em><strong><em><span class="ql-cursor">{Cursor.CONTENTS}</span></em></strong><em>23</em></p>
+      expect(selection.root).toEqualHTML(`
+      <p><em>01</em><strong><em><span class="ql-cursor">${Cursor.CONTENTS}</span></em></strong><em>23</em></p>
       `);
     });
 
@@ -364,8 +364,8 @@ describe('Selection', () => {
       selection.setRange(new Range(1));
       selection.format('underline', true);
       expect(selection.getRange()[0]?.index).toEqual(1);
-      expect(selection.scroll).toMatchInlineSnapshot(`
-        <p><em>0<u><span class="ql-cursor">{Cursor.CONTENTS}</span></u></em><strong>1</strong></p>
+      expect(selection.root).toEqualHTML(`
+        <p><em>0<u><span class="ql-cursor">${Cursor.CONTENTS}</span></u></em><strong>1</strong></p>
       `);
     });
 
@@ -374,8 +374,8 @@ describe('Selection', () => {
       selection.setRange(new Range(0));
       selection.format('bold', true);
       expect(selection.getRange()[0]?.index).toEqual(0);
-      expect(selection.scroll).toMatchInlineSnapshot(`
-        <p><strong><span class="ql-cursor">{Cursor.CONTENTS}</span></strong></p>
+      expect(selection.root).toEqualHTML(`
+        <p><strong><span class="ql-cursor">${Cursor.CONTENTS}</span></strong></p>
       `);
     });
 
@@ -396,8 +396,8 @@ describe('Selection', () => {
       selection.format('underline', true);
       selection.format('background', 'blue');
       expect(selection.getRange()[0]?.index).toEqual(2);
-      expect(selection.scroll).toMatchInlineSnapshot(`
-        <p>01<em style="color: red; background-color: blue;"><u><span class="ql-cursor">{Cursor.CONTENTS}</span></u></em>23</p>
+      expect(selection.root).toEqualHTML(`
+        <p>01<em style="color: red; background-color: blue;"><u><span class="ql-cursor">${Cursor.CONTENTS}</span></u></em>23</p>
       `);
     });
 
@@ -408,8 +408,8 @@ describe('Selection', () => {
       selection.format('underline', true);
       selection.format('italic', false);
       expect(selection.getRange()[0]?.index).toEqual(2);
-      expect(selection.scroll).toMatchInlineSnapshot(`
-        <p><strong>01<u><span class="ql-cursor">{Cursor.CONTENTS}</span></u>23</strong></p>
+      expect(selection.root).toEqualHTML(`
+        <p><strong>01<u><span class="ql-cursor">${Cursor.CONTENTS}</span></u>23</strong></p>
       `);
     });
 
@@ -419,7 +419,7 @@ describe('Selection', () => {
       selection.format('italic', true);
       selection.setRange(new Range(0, 0));
       selection.scroll.update();
-      expect(selection.scroll).toMatchInlineSnapshot('<p>0123</p>');
+      expect(selection.root).toEqualHTML('<p>0123</p>');
     });
 
     test('text change cleanup', () => {
@@ -429,7 +429,7 @@ describe('Selection', () => {
       selection.cursor.textNode.data = `${Cursor.CONTENTS}|`;
       selection.setNativeRange(selection.cursor.textNode, 2);
       selection.scroll.update();
-      expect(selection.scroll).toMatchInlineSnapshot('<p>01<em>|</em>23</p>');
+      expect(selection.root).toEqualHTML('<p>01<em>|</em>23</p>');
     });
 
     test('no cleanup', () => {
@@ -439,8 +439,8 @@ describe('Selection', () => {
       selection.root.removeChild(selection.root.lastChild as Node);
       selection.scroll.update();
       expect(selection.getRange()[0]?.index).toEqual(2);
-      expect(selection.scroll).toMatchInlineSnapshot(`
-        <p>01<em><span class="ql-cursor">{Cursor.CONTENTS}</span></em>23</p>
+      expect(selection.root).toEqualHTML(`
+        <p>01<em><span class="ql-cursor">${Cursor.CONTENTS}</span></em>23</p>
       `);
     });
 
@@ -451,8 +451,8 @@ describe('Selection', () => {
         );
         selection.setRange(new Range(4));
         selection.format('bold', false);
-        expect(selection.scroll).toMatchInlineSnapshot(`
-          <p><strong><a href="https://example.com">link</a></strong><span class="ql-cursor">{Cursor.CONTENTS}</span></p>
+        expect(selection.root).toEqualHTML(`
+          <p><strong><a href="https://example.com">link</a></strong><span class="ql-cursor">${Cursor.CONTENTS}</span></p>
           <p><br /></p>
         `);
       });
@@ -463,8 +463,8 @@ describe('Selection', () => {
         );
         selection.setRange(new Range(4));
         selection.format('italic', false);
-        expect(selection.scroll).toMatchInlineSnapshot(`
-          <p><strong><em><a href="https://example.com">bold</a></em><span class="ql-cursor">{Cursor.CONTENTS}</span></strong></p>
+        expect(selection.root).toEqualHTML(`
+          <p><strong><em><a href="https://example.com">bold</a></em><span class="ql-cursor">${Cursor.CONTENTS}</span></strong></p>
           <p><br /></p>
         `);
       });
@@ -475,8 +475,8 @@ describe('Selection', () => {
         );
         selection.setRange(new Range(4));
         selection.format('link', 'https://example.com');
-        expect(selection.scroll).toMatchInlineSnapshot(`
-          <p><strong>bold<span class="ql-cursor">{Cursor.CONTENTS}</span></strong></p>
+        expect(selection.root).toEqualHTML(`
+          <p><strong>bold<span class="ql-cursor">${Cursor.CONTENTS}</span></strong></p>
           <p><br /></p>
         `);
       });

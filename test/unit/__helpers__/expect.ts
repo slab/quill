@@ -1,103 +1,5 @@
 import { expect } from 'vitest';
-import Cursor from '../../../blots/cursor';
-import { Blot, ContainerBlot, ScrollBlot } from 'parchment';
 import { normalizeHTML } from './utils';
-
-expect.addSnapshotSerializer({
-  serialize(val) {
-    return val.outerHTML.replace(Cursor.CONTENTS, '{Cursor.CONTENTS}');
-  },
-  test(val) {
-    return val instanceof HTMLElement && val.classList.contains('ql-cursor');
-  },
-});
-
-expect.addSnapshotSerializer({
-  serialize() {
-    return '';
-  },
-  test(val) {
-    return val instanceof HTMLElement && val.classList.contains('ql-ui');
-  },
-});
-
-interface Config {
-  indent: string;
-  min: boolean;
-  spacingOuter: string;
-  spacingInner: string;
-}
-
-const printBlot = (
-  blot: Blot,
-  config: Config,
-  indentation: string,
-  depth: number,
-  refs: unknown,
-  printer: (
-    value: unknown,
-    config: Config,
-    indentation: string,
-    depth: number,
-    refs: unknown,
-  ) => string,
-) => {
-  const isScroll = blot instanceof ScrollBlot;
-  if (isScroll || blot instanceof ContainerBlot) {
-    const html = printer(
-      blot.domNode,
-      {
-        ...config,
-        min: true,
-        indent: '',
-        spacingOuter: '',
-        spacingInner: ' ',
-      },
-      '',
-      depth,
-      refs,
-    );
-    const childNodes = blot.children
-      .map(child => {
-        return (
-          indentation +
-          printBlot(
-            child,
-            config,
-            indentation + config.indent,
-            depth,
-            refs,
-            printer,
-          )
-        );
-      })
-      .join('\n');
-
-    if (isScroll) return childNodes;
-    const openTag = html.slice(0, html.indexOf('>') + 1);
-    const endTag = html.slice(html.lastIndexOf('<'));
-
-    return `${openTag}\n${childNodes}\n${indentation.slice(
-      config.indent.length,
-    )}${endTag}`;
-  }
-  return printer(
-    blot.domNode,
-    { ...config, min: true, indent: '', spacingInner: ' ', spacingOuter: '' },
-    '',
-    depth,
-    refs,
-  );
-};
-
-expect.addSnapshotSerializer({
-  serialize(val, config, indentation, depth, refs, printer) {
-    return printBlot(val, config, indentation, depth, refs, printer);
-  },
-  test(blot) {
-    return typeof blot === 'object' && 'statics' in blot;
-  },
-});
 
 const sortAttributes = (element: HTMLElement) => {
   const attributes = Array.from(element.attributes);
@@ -152,7 +54,10 @@ expect.extend({
     return {
       pass: false,
       message: () =>
-        `expected ${receivedDOM.innerHTML} to match html ${expectedDOM.innerHTML}`,
+        `HTMLs don't match.\n${this.utils.diff(
+          this.utils.stringify(receivedDOM),
+          this.utils.stringify(expectedDOM),
+        )}`,
     };
   },
 });

@@ -18,7 +18,7 @@ describe('Color', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('0').insert('12', { color: 'red' }).insert('3\n'),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(
+    expect(editor.scroll.domNode).toEqualHTML(
       '<p>0<span style="color: red;">12</span>3</p>',
     );
   });
@@ -33,7 +33,7 @@ describe('Color', () => {
       .insert('12', { bold: true })
       .insert('3\n');
     expect(editor.getDelta()).toEqual(delta);
-    expect(editor.scroll).toMatchInlineSnapshot('<p>0<strong>12</strong>3</p>');
+    expect(editor.scroll.domNode).toEqualHTML('<p>0<strong>12</strong>3</p>');
   });
 
   test('remove unwrap', () => {
@@ -42,13 +42,13 @@ describe('Color', () => {
     );
     editor.formatText(1, 2, { color: false });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
-    expect(editor.scroll).toMatchInlineSnapshot('<p>0123</p>');
+    expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
   });
 
   test('invalid scope', () => {
     const editor = new Editor(createScroll('<p>0123</p>'));
     editor.formatText(4, 1, { color: 'red' });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
-    expect(editor.scroll).toMatchInlineSnapshot('<p>0123</p>');
+    expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
   });
 });

@@ -31,7 +31,7 @@ describe('List', () => {
         .insert('\n', { list: 'ordered' })
         .insert('0123\n'),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <p>0123</p>
       <ol>
         <li data-list="ordered">5678</li>
@@ -61,7 +61,7 @@ describe('List', () => {
         .insert('\n', { list: 'unchecked' })
         .insert('0123\n'),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="checked">0123</li>
         <li data-list="unchecked">5678</li>
@@ -82,7 +82,7 @@ describe('List', () => {
     );
     editor.formatText(9, 1, { list: null });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n5678\n0123\n'));
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <p>0123</p>
       <p>5678</p>
       <p>0123</p>
@@ -106,7 +106,7 @@ describe('List', () => {
         .insert('\n', { list: 'bullet' })
         .insert('0123\n'),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <p>0123</p>
       <ol>
         <li data-list="bullet">5678</li>
@@ -129,7 +129,7 @@ describe('List', () => {
     expect(editor.getDelta()).toEqual(
       new Delta().insert('0123').insert('\n', { list: 'bullet' }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="bullet">0123</li>
       </ol>
@@ -148,7 +148,7 @@ describe('List', () => {
         .insert('0123')
         .insert('\n', { align: 'center', list: 'bullet' }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li class="ql-align-center" data-list="bullet">0123</li>
       </ol>
@@ -175,7 +175,7 @@ describe('List', () => {
         .insert('0123')
         .insert('\n', { list: 'ordered' }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="ordered">0123</li>
         <li data-list="ordered">5678</li>
@@ -201,7 +201,7 @@ describe('List', () => {
         .insert('0123')
         .insert('\n', { list: 'ordered' }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="ordered">0123</li>
         <li data-list="ordered">0123</li>
@@ -229,7 +229,7 @@ describe('List', () => {
         .insert('0123')
         .insert('\n', { list: 'checked' }),
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="checked">0123</li>
         <li data-list="checked">5678</li>
@@ -243,13 +243,13 @@ describe('List', () => {
       createScroll('<ol><li data-list="ordered"><br></li></ol>'),
     );
     editor.insertText(0, 'Test');
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="ordered">Test</li>
       </ol>
     `);
     editor.deleteText(0, 4);
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="ordered"><br /></li>
       </ol>
@@ -268,7 +268,7 @@ describe('List', () => {
       ),
     );
     editor.deleteText(2, 5);
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="ordered">0178</li>
         <li data-list="ordered">0123</li>
@@ -285,7 +285,7 @@ describe('List', () => {
       ),
     );
     editor.deleteText(2, 5);
-    expect(editor.scroll).toMatchInlineSnapshot('<p>0178</p>');
+    expect(editor.scroll.domNode).toEqualHTML('<p>0178</p>');
   });
 
   test('delete partial', () => {
@@ -293,7 +293,7 @@ describe('List', () => {
       createScroll('<p>0123</p><ol><li data-list="ordered">5678</li></ol>'),
     );
     editor.deleteText(2, 5);
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="ordered">0178</li>
       </ol>
@@ -313,7 +313,7 @@ describe('List', () => {
       ),
     );
     editor.formatLine(1, 10, { list: 'bullet' });
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="bullet">One</li>
         <li class="ql-indent-1" data-list="bullet">Alpha</li>
@@ -327,7 +327,7 @@ describe('List', () => {
       createScroll('<p class="ql-align-center">Test</p>'),
     );
     editor.formatLine(4, 1, { list: 'bullet' });
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li class="ql-align-center" data-list="bullet">Test</li>
       </ol>
@@ -343,11 +343,11 @@ describe('List', () => {
       'video',
       'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0',
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="ordered">Te</li>
       </ol>
-      <iframe allowfullscreen="true" class="ql-video" frameborder="0" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0" />
+      <iframe allowfullscreen="true" class="ql-video" frameborder="0" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0"></iframe>
       <ol>
         <li data-list="ordered">st</li>
       </ol>
@@ -363,8 +363,8 @@ describe('List', () => {
       'video',
       'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0',
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
-      <iframe allowfullscreen="true" class="ql-video" frameborder="0" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0" />
+    expect(editor.scroll.domNode).toEqualHTML(`
+      <iframe allowfullscreen="true" class="ql-video" frameborder="0" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0"></iframe>
       <ol>
         <li data-list="ordered">Test</li>
       </ol>
@@ -380,11 +380,11 @@ describe('List', () => {
       'video',
       'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0',
     );
-    expect(editor.scroll).toMatchInlineSnapshot(`
+    expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
         <li data-list="ordered">Test</li>
       </ol>
-      <iframe allowfullscreen="true" class="ql-video" frameborder="0" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0" />
+      <iframe allowfullscreen="true" class="ql-video" frameborder="0" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0"></iframe>
       <ol>
         <li data-list="ordered"><br /></li>
       </ol>
