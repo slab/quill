@@ -1,12 +1,11 @@
 import hljs from 'highlight.js';
 import Delta from 'quill-delta';
-import Quill from '../../../core';
-import BoldBlot from '../../../formats/bold';
-import Syntax, { CodeToken, CodeBlock } from '../../../modules/syntax';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
-import { normalizeHTML, sleep } from '../__helpers__/utils';
-import { createRegistry } from '../__helpers__/factory';
+import Quill from '../../../core';
 import Bold from '../../../formats/bold';
+import Syntax, { CodeBlock, CodeToken } from '../../../modules/syntax';
+import { createRegistry } from '../__helpers__/factory';
+import { normalizeHTML, sleep } from '../__helpers__/utils';
 
 const HIGHLIGHT_INTERVAL = 10;
 
@@ -221,7 +220,7 @@ describe('Syntax', () => {
 
     describe('allowedChildren', () => {
       beforeAll(() => {
-        CodeBlock.allowedChildren.push(BoldBlot);
+        CodeBlock.allowedChildren.push(Bold);
       });
 
       afterAll(() => {
