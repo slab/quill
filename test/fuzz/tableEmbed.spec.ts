@@ -4,7 +4,9 @@ import TableEmbed, {
   TableData,
   TableRowColumnOp,
 } from '../../modules/tableEmbed';
-import { choose, randomInt } from './utils';
+import { choose, randomInt } from './__helpers__/utils';
+import { describe, expect, test } from 'vitest';
+import { beforeAll } from 'vitest';
 
 const getRandomRowColumnId = () => {
   const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -155,7 +157,7 @@ describe('tableEmbed', () => {
     TableEmbed.register();
   });
 
-  it('delta', () => {
+  test('delta', () => {
     for (let i = 0; i < 20; i += 1) {
       for (let j = 0; j < 1000; j += 1) {
         runTestCase();

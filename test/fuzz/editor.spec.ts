@@ -1,9 +1,10 @@
 import Delta, { AttributeMap, Op } from 'quill-delta';
-import { choose, randomInt, runFuzz } from './utils';
+import { choose, randomInt, runFuzz } from './__helpers__/utils';
 import { AlignClass } from '../../formats/align';
 import { FontClass } from '../../formats/font';
 import { SizeClass } from '../../formats/size';
 import Quill from '../../quill';
+import { describe, expect, test } from 'vitest';
 
 type AttributeDef = { name: string; values: (number | string | boolean)[] };
 const BLOCK_EMBED_NAME = 'video';
@@ -222,7 +223,7 @@ const generateChange = (
 };
 
 describe('editor', () => {
-  it('setContents()', () => {
+  test('setContents()', () => {
     runFuzz(() => {
       const quill = new Quill(document.createElement('div'));
       const delta = generateDocument();
@@ -233,7 +234,7 @@ describe('editor', () => {
     });
   });
 
-  it('updateContents()', () => {
+  test('updateContents()', () => {
     runFuzz(() => {
       const quill = new Quill(document.createElement('div'));
       const delta = generateDocument();
@@ -248,7 +249,7 @@ describe('editor', () => {
     });
   });
 
-  it('insertContents() vs applyDelta()', () => {
+  test('insertContents() vs applyDelta()', () => {
     const quill1 = new Quill(document.createElement('div'));
     const quill2 = new Quill(document.createElement('div'));
 
