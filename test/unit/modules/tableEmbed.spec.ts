@@ -1,13 +1,18 @@
 import Delta from 'quill-delta';
-import TableEmbed from '../../../modules/tableEmbed';
+import { tableHandler } from '../../../modules/tableEmbed';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
-describe('Delta', () => {
-  beforeAll(() => {
-    TableEmbed.register();
+describe('tableHandler', () => {
+  beforeEach(() => {
+    Delta.registerEmbed('table-embed', tableHandler);
+  });
+
+  afterEach(() => {
+    Delta.unregisterEmbed('table-embed');
   });
 
   describe('compose', () => {
-    it('adds a row', () => {
+    test('adds a row', () => {
       const base = new Delta([
         {
           insert: {
@@ -64,7 +69,7 @@ describe('Delta', () => {
       );
     });
 
-    it('adds two rows', () => {
+    test('adds two rows', () => {
       const base = new Delta([
         {
           insert: {
@@ -129,7 +134,7 @@ describe('Delta', () => {
       );
     });
 
-    it('adds a row and changes cell content', () => {
+    test('adds a row and changes cell content', () => {
       const base = new Delta([
         {
           insert: {
@@ -195,7 +200,7 @@ describe('Delta', () => {
       );
     });
 
-    it('deletes a column', () => {
+    test('deletes a column', () => {
       const base = new Delta([
         {
           insert: {
@@ -248,7 +253,7 @@ describe('Delta', () => {
       );
     });
 
-    it('removes a cell attributes', () => {
+    test('removes a cell attributes', () => {
       const base = new Delta([
         {
           insert: {
@@ -274,7 +279,7 @@ describe('Delta', () => {
       );
     });
 
-    it('removes all rows', () => {
+    test('removes all rows', () => {
       const base = new Delta([
         {
           insert: { 'table-embed': { rows: [{ insert: { id: '11111111' } }] } },
@@ -292,7 +297,7 @@ describe('Delta', () => {
   });
 
   describe('transform', () => {
-    it('transform rows and columns', () => {
+    test('transform rows and columns', () => {
       const change1 = new Delta([
         {
           retain: {
@@ -348,7 +353,7 @@ describe('Delta', () => {
       );
     });
 
-    it('transform cells', () => {
+    test('transform cells', () => {
       const change1 = new Delta([
         {
           retain: {
@@ -406,7 +411,7 @@ describe('Delta', () => {
       );
     });
 
-    it('transform cell attributes', () => {
+    test('transform cell attributes', () => {
       const change1 = new Delta([
         {
           retain: {
@@ -446,7 +451,7 @@ describe('Delta', () => {
   });
 
   describe('invert', () => {
-    it('reverts rows and columns', () => {
+    test('reverts rows and columns', () => {
       const base = new Delta([
         {
           insert: {
@@ -492,7 +497,7 @@ describe('Delta', () => {
       );
     });
 
-    it('inverts cell content', () => {
+    test('inverts cell content', () => {
       const base = new Delta([
         {
           insert: {
@@ -547,7 +552,7 @@ describe('Delta', () => {
       );
     });
 
-    it('inverts cells removed by row/column delta', () => {
+    test('inverts cells removed by row/column delta', () => {
       const base = new Delta([
         {
           insert: {

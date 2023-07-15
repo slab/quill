@@ -1,11 +1,32 @@
+import { describe, expect, test } from 'vitest';
 import Quill from '../../../core/quill';
 import { addControls } from '../../../modules/toolbar';
+import { normalizeHTML } from '../__helpers__/utils';
+import SnowTheme from '../../../themes/snow';
+import Toolbar from '../../../modules/toolbar';
+import Clipboard from '../../../modules/clipboard';
+import Keyboard from '../../../modules/keyboard';
+import History from '../../../modules/history';
+import Uploader from '../../../modules/uploader';
+import { createRegistry } from '../__helpers__/factory';
+import Input from '../../../modules/input';
+import { SizeClass } from '../../../formats/size';
+import Bold from '../../../formats/bold';
+import Link from '../../../formats/link';
+import { AlignClass } from '../../../formats/align';
 
-describe('Toolbar', function () {
-  describe('add controls', function () {
-    it('single level', function () {
-      addControls(this.container, ['bold', 'italic']);
-      expect(this.container).toEqualHTML(`
+const createContainer = (html = '') => {
+  const container = document.body.appendChild(document.createElement('div'));
+  container.innerHTML = normalizeHTML(html);
+  return container;
+};
+
+describe('Toolbar', () => {
+  describe('add controls', () => {
+    test('single level', () => {
+      const container = createContainer();
+      addControls(container, ['bold', 'italic']);
+      expect(container).toEqualHTML(`
         <span class="ql-formats">
           <button type="button" class="ql-bold"></button>
           <button type="button" class="ql-italic"></button>
@@ -13,12 +34,13 @@ describe('Toolbar', function () {
       `);
     });
 
-    it('nested group', function () {
-      addControls(this.container, [
+    test('nested group', () => {
+      const container = createContainer();
+      addControls(container, [
         ['bold', 'italic'],
         ['underline', 'strike'],
       ]);
-      expect(this.container).toEqualHTML(`
+      expect(container).toEqualHTML(`
         <span class="ql-formats">
           <button type="button" class="ql-bold"></button>
           <button type="button" class="ql-italic"></button>
@@ -30,9 +52,10 @@ describe('Toolbar', function () {
       `);
     });
 
-    it('button value', function () {
-      addControls(this.container, ['bold', { header: '2' }]);
-      expect(this.container).toEqualHTML(`
+    test('button value', () => {
+      const container = createContainer();
+      addControls(container, ['bold', { header: '2' }]);
+      expect(container).toEqualHTML(`
         <span class="ql-formats">
           <button type="button" class="ql-bold"></button>
           <button type="button" class="ql-header" value="2"></button>
@@ -40,9 +63,10 @@ describe('Toolbar', function () {
       `);
     });
 
-    it('select', function () {
-      addControls(this.container, [{ size: ['10px', false, '18px', '32px'] }]);
-      expect(this.container).toEqualHTML(`
+    test('select', () => {
+      const container = createContainer();
+      addControls(container, [{ size: ['10px', false, '18px', '32px'] }]);
+      expect(container).toEqualHTML(`
         <span class="ql-formats">
           <select class="ql-size">
             <option value="10px"></option>
@@ -54,8 +78,9 @@ describe('Toolbar', function () {
       `);
     });
 
-    it('everything', function () {
-      addControls(this.container, [
+    test('everything', () => {
+      const container = createContainer();
+      addControls(container, [
         [
           { font: [false, 'sans-serif', 'monospace'] },
           { size: ['10px', false, '18px', '32px'] },
@@ -68,7 +93,7 @@ describe('Toolbar', function () {
         ],
         ['link', 'image'],
       ]);
-      expect(this.container).toEqualHTML(`
+      expect(container).toEqualHTML(`
         <span class="ql-formats">
           <select class="ql-font">
             <option selected="selected"></option>
@@ -106,10 +131,9 @@ describe('Toolbar', function () {
     });
   });
 
-  describe('active', function () {
-    beforeEach(function () {
-      const container = this.initialize(
-        HTMLElement,
+  describe('active', () => {
+    const setup = () => {
+      const container = createContainer(
         `
         <p>0123</p>
         <p><strong>5678</strong></p>
@@ -118,7 +142,20 @@ describe('Toolbar', function () {
         <p><span class="ql-size-small">01</span><span class="ql-size-large">23</span></p>
       `,
       );
-      this.quill = new Quill(container, {
+
+      Quill.register(
+        {
+          'themes/snow': SnowTheme,
+          'modules/toolbar': Toolbar,
+          'modules/clipboard': Clipboard,
+          'modules/keyboard': Keyboard,
+          'modules/history': History,
+          'modules/uploader': Uploader,
+          'modules/input': Input,
+        },
+        true,
+      );
+      const quill = new Quill(container, {
         modules: {
           toolbar: [
             ['bold', 'link'],
@@ -127,54 +164,63 @@ describe('Toolbar', function () {
           ],
         },
         theme: 'snow',
+        registry: createRegistry([SizeClass, Bold, AlignClass, Link]),
       });
-    });
+      return { container, quill };
+    };
 
-    it('toggle button', function () {
-      const boldButton =
-        this.container.parentNode.querySelector('button.ql-bold');
-      this.quill.setSelection(7);
+    test('toggle button', () => {
+      const { container, quill } = setup();
+      const boldButton = container.parentNode?.querySelector(
+        'button.ql-bold',
+      ) as HTMLButtonElement;
+      quill.setSelection(7);
       expect(boldButton.classList.contains('ql-active')).toBe(true);
-      this.quill.setSelection(2);
+      quill.setSelection(2);
       expect(boldButton.classList.contains('ql-active')).toBe(false);
     });
 
-    it('link', function () {
-      const linkButton =
-        this.container.parentNode.querySelector('button.ql-link');
-      this.quill.setSelection(12);
+    test('link', () => {
+      const { container, quill } = setup();
+      const linkButton = container.parentNode?.querySelector(
+        'button.ql-link',
+      ) as HTMLButtonElement;
+      quill.setSelection(12);
       expect(linkButton.classList.contains('ql-active')).toBe(true);
-      this.quill.setSelection(2);
+      quill.setSelection(2);
       expect(linkButton.classList.contains('ql-active')).toBe(false);
     });
 
-    it('dropdown', function () {
-      const sizeSelect =
-        this.container.parentNode.querySelector('select.ql-size');
-      this.quill.setSelection(21);
+    test('dropdown', () => {
+      const { container, quill } = setup();
+      const sizeSelect = container.parentNode?.querySelector(
+        'select.ql-size',
+      ) as HTMLSelectElement;
+      quill.setSelection(21);
       expect(sizeSelect.selectedIndex).toEqual(0);
-      this.quill.setSelection(23);
+      quill.setSelection(23);
       expect(sizeSelect.selectedIndex).toEqual(2);
-      this.quill.setSelection(21, 2);
+      quill.setSelection(21, 2);
       expect(sizeSelect.selectedIndex).toBeLessThan(0);
-      this.quill.setSelection(2);
+      quill.setSelection(2);
       expect(sizeSelect.selectedIndex).toEqual(1);
     });
 
-    it('custom button', function () {
-      const centerButton = this.container.parentNode.querySelector(
+    test('custom button', () => {
+      const { container, quill } = setup();
+      const centerButton = container.parentNode?.querySelector(
         'button.ql-align[value="center"]',
-      );
-      const leftButton = this.container.parentNode.querySelector(
+      ) as HTMLButtonElement;
+      const leftButton = container.parentNode?.querySelector(
         'button.ql-align[value]',
-      );
-      this.quill.setSelection(17);
+      ) as HTMLButtonElement;
+      quill.setSelection(17);
       expect(centerButton.classList.contains('ql-active')).toBe(true);
       expect(leftButton.classList.contains('ql-active')).toBe(false);
-      this.quill.setSelection(2);
+      quill.setSelection(2);
       expect(centerButton.classList.contains('ql-active')).toBe(false);
       expect(leftButton.classList.contains('ql-active')).toBe(true);
-      this.quill.blur();
+      quill.blur();
       expect(centerButton.classList.contains('ql-active')).toBe(false);
       expect(leftButton.classList.contains('ql-active')).toBe(false);
     });
