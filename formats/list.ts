@@ -26,6 +26,9 @@ class ListItem extends Block {
     super(scroll, domNode);
     const ui = domNode.ownerDocument.createElement('span');
     const listEventHandler = e => {
+      if (e.type === 'touchstart'){
+        e.preventDefault();
+      }
       if (!scroll.isEnabled()) return;
       const format = this.statics.formats(domNode, scroll);
       if (format === 'checked') {
