@@ -33,27 +33,24 @@ class History extends Module<HistoryOptions> {
     super(quill, options);
     this.quill.on(
       Quill.events.EDITOR_CHANGE,
-      (eventName, delta, oldDelta, source) => {
-        if (eventName !== Quill.events.TEXT_CHANGE || this.ignoreChange) return;
-        if (!this.options.userOnly || source === Quill.sources.USER) {
-          this.record(delta, oldDelta);
-        } else {
-          this.transform(delta);
+      (eventName, value, oldValue, source) => {
+        if (eventName === Quill.events.SELECTION_CHANGE) {
+          if (value && source !== Quill.sources.SILENT) {
+            this.currentRange = value;
+          }
+        } else if (eventName === Quill.events.TEXT_CHANGE) {
+          if (!this.ignoreChange) {
+            if (!this.options.userOnly || source === Quill.sources.USER) {
+              this.record(value, oldValue);
+            } else {
+              this.transform(value);
+            }
+          }
+
+          this.currentRange = transformRange(this.currentRange, value);
         }
       },
     );
-
-    this.quill.on(Quill.events.EDITOR_CHANGE, (...args) => {
-      if (args[0] === Quill.events.SELECTION_CHANGE) {
-        const range = args[1];
-        if (range && args[3] !== Quill.sources.SILENT) {
-          this.currentRange = range;
-        }
-      } else if (args[0] === Quill.events.TEXT_CHANGE) {
-        const [, change] = args;
-        this.currentRange = transformRange(this.currentRange, change);
-      }
-    });
 
     this.quill.keyboard.addBinding(
       { key: 'z', shortKey: true },
