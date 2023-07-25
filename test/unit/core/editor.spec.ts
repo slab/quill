@@ -975,6 +975,33 @@ describe('Editor', () => {
       });
     });
 
+    test('prepends a formatted block embed', () => {
+      const editor = createEditor(`<p></p>`);
+      editor.insertContents(
+        0,
+        new Delta().insert({ video: '#' }, { width: '300' }),
+      );
+      expect(editor.getDelta().ops).toEqual([
+        { insert: { video: '#' }, attributes: { width: '300' } },
+        { insert: '\n' },
+      ]);
+    });
+
+    test('prepends two formatted block embeds', () => {
+      const editor = createEditor(`<p></p>`);
+      editor.insertContents(
+        0,
+        new Delta()
+          .insert({ video: '#' }, { width: '300' })
+          .insert({ video: '#' }, { width: '600' }),
+      );
+      expect(editor.getDelta().ops).toEqual([
+        { insert: { video: '#' }, attributes: { width: '300' } },
+        { insert: { video: '#' }, attributes: { width: '600' } },
+        { insert: '\n' },
+      ]);
+    });
+
     test('inserts formatted block embeds (styles)', () => {
       const editor = createEditor(`<p></p>`);
       editor.insertContents(
