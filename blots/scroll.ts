@@ -169,18 +169,19 @@ class Scroll extends ScrollBlot {
           ? first.delta
           : new Delta().insert({ [first.key]: first.value });
       insertInlineContents(this, index, delta);
-      const newlineCharIndex = index + delta.length();
+      const newlineCharLength = first.type === 'block' ? 1 : 0;
+      const lineEndIndex = index + delta.length() + newlineCharLength;
       if (shouldInsertNewlineChar) {
-        this.insertAt(newlineCharIndex, '\n');
+        this.insertAt(lineEndIndex - 1, '\n');
       }
 
       const formats = bubbleFormats(this.line(index)[0]);
       const attributes = AttributeMap.diff(formats, first.attributes) || {};
       Object.keys(attributes).forEach(name => {
-        this.formatAt(newlineCharIndex, 1, name, attributes[name]);
+        this.formatAt(lineEndIndex - 1, 1, name, attributes[name]);
       });
 
-      index = newlineCharIndex + 1;
+      index = lineEndIndex;
     }
 
     let [refBlot, refBlotOffset] = this.children.find(index);

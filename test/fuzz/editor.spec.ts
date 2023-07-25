@@ -122,9 +122,13 @@ const generateSingleInsertDelta = (): Delta['ops'][number] & {
   return op;
 };
 
-const safePushInsert = (delta: Delta) => {
+const safePushInsert = (delta: Delta, isDoc: boolean) => {
   const op = generateSingleInsertDelta();
-  if (typeof op.insert === 'object' && op.insert[BLOCK_EMBED_NAME]) {
+  if (
+    typeof op.insert === 'object' &&
+    op.insert[BLOCK_EMBED_NAME] &&
+    (!isDoc || (delta.ops.length && !isLineFinished(delta)))
+  ) {
     delta.insert('\n');
   }
   delta.push(op);
@@ -134,7 +138,7 @@ const generateDocument = () => {
   const delta = new Delta();
   const operationCount = 2 + randomInt(20);
   for (let i = 0; i < operationCount; i += 1) {
-    safePushInsert(delta);
+    safePushInsert(delta, true);
   }
   if (!isLineFinished(delta)) {
     delta.insert('\n');
@@ -161,7 +165,7 @@ const generateChange = (
       const delta = new Delta();
       const operationCount = randomInt(5) + 1;
       for (let i = 0; i < operationCount; i += 1) {
-        safePushInsert(delta);
+        safePushInsert(delta, false);
       }
       if (
         needNewline ||
