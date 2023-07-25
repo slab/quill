@@ -5,7 +5,7 @@ import Quill from '../core/quill';
 import type Scroll from '../blots/scroll';
 import { Range } from '../core/selection';
 
-interface HistoryOptions {
+export interface HistoryOptions {
   userOnly: boolean;
   delay: number;
   maxStack: number;

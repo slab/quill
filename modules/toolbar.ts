@@ -192,7 +192,12 @@ function addButton(container: HTMLElement, format: string, value?: unknown) {
   container.appendChild(input);
 }
 
-function addControls(container: HTMLElement, groups: string[][]) {
+function addControls(
+  container: HTMLElement,
+  groups:
+    | (string | Record<string, unknown>)[][]
+    | (string | Record<string, unknown>)[],
+) {
   if (!Array.isArray(groups[0])) {
     // @ts-expect-error
     groups = [groups];

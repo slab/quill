@@ -13,12 +13,7 @@
       }
     }
   },
-  "ignorePatterns": [
-    "website/**/*",
-    "*.js",
-    "!test/helpers/**/*.js",
-    "!test/unit/**/*.js"
-  ],
+  "ignorePatterns": ["website/**/*", "*.js"],
   "rules": {
     "arrow-parens": ["error", "as-needed"],
     "no-use-before-define": ["error", { "functions": false, "classes": false }],
