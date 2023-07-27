@@ -235,6 +235,7 @@ class BaseTooltip extends Tooltip {
 
   cancel() {
     this.hide();
+    this.restoreFocus();
   }
 
   edit(mode = 'link', preview: string | null = null) {
