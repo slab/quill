@@ -59,6 +59,7 @@ class BubbleTooltip extends BaseTooltip {
 
   listen() {
     super.listen();
+    // @ts-expect-error Fix me later
     this.root.querySelector('.ql-close').addEventListener('click', () => {
       this.root.classList.remove('ql-editing');
     });

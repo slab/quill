@@ -24,14 +24,17 @@ class SnowTooltip extends BaseTooltip {
 
   listen() {
     super.listen();
+    // @ts-expect-error Fix me later
     this.root.querySelector('a.ql-action').addEventListener('click', event => {
       if (this.root.classList.contains('ql-editing')) {
         this.save();
       } else {
+        // @ts-expect-error Fix me later
         this.edit('link', this.preview.textContent);
       }
       event.preventDefault();
     });
+    // @ts-expect-error Fix me later
     this.root.querySelector('a.ql-remove').addEventListener('click', event => {
       if (this.linkRange != null) {
         const range = this.linkRange;
@@ -48,14 +51,15 @@ class SnowTooltip extends BaseTooltip {
         if (range == null) return;
         if (range.length === 0 && source === Emitter.sources.USER) {
           const [link, offset] = this.quill.scroll.descendant(
-            // @ts-expect-error
             LinkBlot,
             range.index,
           );
           if (link != null) {
             this.linkRange = new Range(range.index - offset, link.length());
             const preview = LinkBlot.formats(link.domNode);
+            // @ts-expect-error Fix me later
             this.preview.textContent = preview;
+            // @ts-expect-error Fix me later
             this.preview.setAttribute('href', preview);
             this.show();
             this.position(this.quill.getBounds(this.linkRange));

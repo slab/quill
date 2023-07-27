@@ -2,37 +2,56 @@ import { Scope } from 'parchment';
 import Delta from 'quill-delta';
 import Module from '../core/module';
 import Quill from '../core/quill';
+import type Scroll from '../blots/scroll';
+import { Range } from '../core/selection';
 
-interface HistoryOptions {
+export interface HistoryOptions {
   userOnly: boolean;
   delay: number;
   maxStack: number;
 }
 
+export interface StackItem {
+  delta: Delta;
+  range: Range | null;
+}
+
+interface Stack {
+  undo: StackItem[];
+  redo: StackItem[];
+}
+
 class History extends Module<HistoryOptions> {
-  lastRecorded: number;
-  ignoreChange: boolean;
-  stack: {
-    undo: Delta[];
-    redo: Delta[];
-  };
+  static DEFAULTS: HistoryOptions;
+
+  lastRecorded = 0;
+  ignoreChange = false;
+  stack: Stack = { undo: [], redo: [] };
+  currentRange: Range | null = null;
 
   constructor(quill: Quill, options: Partial<HistoryOptions>) {
     super(quill, options);
-    this.lastRecorded = 0;
-    this.ignoreChange = false;
-    this.clear();
     this.quill.on(
       Quill.events.EDITOR_CHANGE,
-      (eventName, delta, oldDelta, source) => {
-        if (eventName !== Quill.events.TEXT_CHANGE || this.ignoreChange) return;
-        if (!this.options.userOnly || source === Quill.sources.USER) {
-          this.record(delta, oldDelta);
-        } else {
-          this.transform(delta);
+      (eventName, value, oldValue, source) => {
+        if (eventName === Quill.events.SELECTION_CHANGE) {
+          if (value && source !== Quill.sources.SILENT) {
+            this.currentRange = value;
+          }
+        } else if (eventName === Quill.events.TEXT_CHANGE) {
+          if (!this.ignoreChange) {
+            if (!this.options.userOnly || source === Quill.sources.USER) {
+              this.record(value, oldValue);
+            } else {
+              this.transform(value);
+            }
+          }
+
+          this.currentRange = transformRange(this.currentRange, value);
         }
       },
     );
+
     this.quill.keyboard.addBinding(
       { key: 'z', shortKey: true },
       this.undo.bind(this),
@@ -59,18 +78,22 @@ class History extends Module<HistoryOptions> {
     });
   }
 
-  change(source, dest) {
+  change(source: 'undo' | 'redo', dest: 'redo' | 'undo') {
     if (this.stack[source].length === 0) return;
-    const delta = this.stack[source].pop();
+    const item = this.stack[source].pop();
+    if (!item) return;
     const base = this.quill.getContents();
-    const inverseDelta = delta.invert(base);
-    this.stack[dest].push(inverseDelta);
+    const inverseDelta = item.delta.invert(base);
+    this.stack[dest].push({
+      delta: inverseDelta,
+      range: transformRange(item.range, inverseDelta),
+    });
     this.lastRecorded = 0;
     this.ignoreChange = true;
-    this.quill.updateContents(delta, Quill.sources.USER);
+    this.quill.updateContents(item.delta, Quill.sources.USER);
     this.ignoreChange = false;
-    const index = getLastChangeIndex(this.quill.scroll, delta);
-    this.quill.setSelection(index);
+
+    this.restoreSelection(item);
   }
 
   clear() {
@@ -81,22 +104,28 @@ class History extends Module<HistoryOptions> {
     this.lastRecorded = 0;
   }
 
-  record(changeDelta, oldDelta) {
+  record(changeDelta: Delta, oldDelta: Delta) {
     if (changeDelta.ops.length === 0) return;
     this.stack.redo = [];
     let undoDelta = changeDelta.invert(oldDelta);
+    let undoRange = this.currentRange;
     const timestamp = Date.now();
     if (
+      // @ts-expect-error Fix me later
       this.lastRecorded + this.options.delay > timestamp &&
       this.stack.undo.length > 0
     ) {
-      const delta = this.stack.undo.pop();
-      undoDelta = undoDelta.compose(delta);
+      const item = this.stack.undo.pop();
+      if (item) {
+        undoDelta = undoDelta.compose(item.delta);
+        undoRange = item.range;
+      }
     } else {
       this.lastRecorded = timestamp;
     }
     if (undoDelta.length() === 0) return;
-    this.stack.undo.push(undoDelta);
+    this.stack.undo.push({ delta: undoDelta, range: undoRange });
+    // @ts-expect-error Fix me later
     if (this.stack.undo.length > this.options.maxStack) {
       this.stack.undo.shift();
     }
@@ -106,13 +135,22 @@ class History extends Module<HistoryOptions> {
     this.change('redo', 'undo');
   }
 
-  transform(delta) {
+  transform(delta: Delta) {
     transformStack(this.stack.undo, delta);
     transformStack(this.stack.redo, delta);
   }
 
   undo() {
     this.change('undo', 'redo');
+  }
+
+  protected restoreSelection(stackItem: StackItem) {
+    if (stackItem.range) {
+      this.quill.setSelection(stackItem.range, Quill.sources.USER);
+    } else {
+      const index = getLastChangeIndex(this.quill.scroll, stackItem.delta);
+      this.quill.setSelection(index, Quill.sources.USER);
+    }
   }
 }
 History.DEFAULTS = {
@@ -121,19 +159,22 @@ History.DEFAULTS = {
   userOnly: false,
 };
 
-function transformStack(stack, delta) {
+function transformStack(stack: StackItem[], delta: Delta) {
   let remoteDelta = delta;
   for (let i = stack.length - 1; i >= 0; i -= 1) {
-    const oldDelta = stack[i];
-    stack[i] = remoteDelta.transform(oldDelta, true);
-    remoteDelta = oldDelta.transform(remoteDelta);
-    if (stack[i].length() === 0) {
+    const oldItem = stack[i];
+    stack[i] = {
+      delta: remoteDelta.transform(oldItem.delta, true),
+      range: oldItem.range && transformRange(oldItem.range, remoteDelta),
+    };
+    remoteDelta = oldItem.delta.transform(remoteDelta);
+    if (stack[i].delta.length() === 0) {
       stack.splice(i, 1);
     }
   }
 }
 
-function endsWithNewlineChange(scroll, delta) {
+function endsWithNewlineChange(scroll: Scroll, delta: Delta) {
   const lastOp = delta.ops[delta.ops.length - 1];
   if (lastOp == null) return false;
   if (lastOp.insert != null) {
@@ -147,7 +188,7 @@ function endsWithNewlineChange(scroll, delta) {
   return false;
 }
 
-function getLastChangeIndex(scroll, delta) {
+function getLastChangeIndex(scroll: Scroll, delta: Delta) {
   const deleteLength = delta.reduce((length, op) => {
     return length + (op.delete || 0);
   }, 0);
@@ -156,6 +197,13 @@ function getLastChangeIndex(scroll, delta) {
     changeIndex -= 1;
   }
   return changeIndex;
+}
+
+function transformRange(range: Range | null, delta: Delta) {
+  if (!range) return range;
+  const start = delta.transformPosition(range.index);
+  const end = delta.transformPosition(range.index + range.length);
+  return { index: start, length: end - start };
 }
 
 export { History as default, getLastChangeIndex };

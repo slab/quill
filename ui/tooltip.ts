@@ -5,7 +5,7 @@ class Tooltip {
   boundsContainer: HTMLElement;
   root: HTMLDivElement;
 
-  constructor(quill: Quill, boundsContainer: HTMLElement) {
+  constructor(quill: Quill, boundsContainer?: HTMLElement) {
     this.quill = quill;
     this.boundsContainer = boundsContainer || document.body;
     this.root = quill.addContainer('ql-tooltip');

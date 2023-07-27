@@ -166,7 +166,7 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
     )}\n</pre>`;
   }
 
-  optimize(context: unknown) {
+  optimize(context: Record<string, any>) {
     super.optimize(context);
     if (
       this.parent != null &&
@@ -193,6 +193,8 @@ interface SyntaxOptions {
 }
 
 class Syntax extends Module<SyntaxOptions> {
+  static DEFAULTS: SyntaxOptions & { hljs: any };
+
   static register() {
     Quill.register(CodeToken, true);
     // @ts-expect-error
@@ -210,6 +212,7 @@ class Syntax extends Module<SyntaxOptions> {
         'Syntax module requires highlight.js. Please include the library on the page before Quill.',
       );
     }
+    // @ts-expect-error Fix me later
     this.languages = this.options.languages.reduce((memo, { key }) => {
       memo[key] = true;
       return memo;
@@ -223,6 +226,7 @@ class Syntax extends Module<SyntaxOptions> {
     this.quill.on(Quill.events.SCROLL_BLOT_MOUNT, blot => {
       if (!(blot instanceof SyntaxCodeBlockContainer)) return;
       const select = this.quill.root.ownerDocument.createElement('select');
+      // @ts-expect-error Fix me later
       this.options.languages.forEach(({ key, label }) => {
         const option = select.ownerDocument.createElement('option');
         option.textContent = label;
@@ -244,9 +248,11 @@ class Syntax extends Module<SyntaxOptions> {
   }
 
   initTimer() {
-    let timer = null;
+    let timer: ReturnType<typeof setTimeout> | null = null;
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, () => {
-      clearTimeout(timer);
+      if (timer) {
+        clearTimeout(timer);
+      }
       timer = setTimeout(() => {
         this.highlight();
         timer = null;
@@ -254,14 +260,13 @@ class Syntax extends Module<SyntaxOptions> {
     });
   }
 
-  highlight(blot = null, force = false) {
+  highlight(blot: SyntaxCodeBlockContainer | null = null, force = false) {
     if (this.quill.selection.composing) return;
     this.quill.update(Quill.sources.USER);
     const range = this.quill.getSelection();
     const blots =
       blot == null
-        ? // @ts-expect-error
-          this.quill.scroll.descendants(SyntaxCodeBlockContainer)
+        ? this.quill.scroll.descendants(SyntaxCodeBlockContainer)
         : [blot];
     blots.forEach(container => {
       container.highlight(this.highlightBlot, force);

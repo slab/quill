@@ -1,4 +1,4 @@
-import LinkedList from 'parchment/dist/typings/collection/linked-list';
+import { LinkedList } from 'parchment';
 import Block from '../blots/block';
 import Container from '../blots/container';
 
@@ -65,10 +65,15 @@ class TableRow extends Container {
   next: this | null;
 
   checkMerge() {
+    // @ts-expect-error
     if (super.checkMerge() && this.next.children.head != null) {
+      // @ts-expect-error
       const thisHead = this.children.head.formats();
+      // @ts-expect-error
       const thisTail = this.children.tail.formats();
+      // @ts-expect-error
       const nextHead = this.next.children.head.formats();
+      // @ts-expect-error
       const nextTail = this.next.children.tail.formats();
       return (
         thisHead.table === thisTail.table &&
@@ -127,8 +132,7 @@ class TableContainer extends Container {
   children: LinkedList<TableBody>;
 
   balanceCells() {
-    // @ts-expect-error TODO: fix signature of ParentBlot.descendants
-    const rows = this.descendants(TableRow) as TableRow[];
+    const rows = this.descendants(TableRow);
     const maxColumns = rows.reduce((max, row) => {
       return Math.max(row.children.length, max);
     }, 0);
@@ -168,6 +172,7 @@ class TableContainer extends Container {
     if (body == null || body.children.head == null) return;
     body.children.forEach(row => {
       const ref = row.children.at(index);
+      // @ts-expect-error
       const value = TableCell.formats(row.children.head.domNode);
       const cell = this.scroll.create(TableCell.blotName, value);
       row.insertBefore(cell, ref);

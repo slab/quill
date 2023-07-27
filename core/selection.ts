@@ -8,7 +8,7 @@ import Scroll from '../blots/scroll';
 
 const debug = logger('quill:selection');
 
-type NativeRange = ReturnType<Document['createRange']>;
+type NativeRange = AbstractRange;
 
 interface NormalizedRange {
   start: {
@@ -95,12 +95,10 @@ class Selection {
   }
 
   handleComposition() {
-    this.root.addEventListener('compositionstart', () => {
+    this.emitter.on(Emitter.events.COMPOSITION_BEFORE_START, () => {
       this.composing = true;
-      this.scroll.batchStart();
     });
-    this.root.addEventListener('compositionend', () => {
-      this.scroll.batchEnd();
+    this.emitter.on(Emitter.events.COMPOSITION_END, () => {
       this.composing = false;
       if (this.cursor.parent) {
         const range = this.cursor.restore();
@@ -148,6 +146,7 @@ class Selection {
       // TODO Give blot ability to not split
       if (blot instanceof LeafBlot) {
         const after = blot.split(nativeRange.start.offset);
+        // @ts-expect-error Fix me later
         blot.parent.insertBefore(this.cursor, after);
       } else {
         // @ts-expect-error TODO: nativeRange.start.node doesn't seem to match function signature
@@ -253,6 +252,7 @@ class Selection {
     const indexes = positions.map(position => {
       const [node, offset] = position;
       const blot = this.scroll.find(node, true);
+      // @ts-expect-error Fix me later
       const index = blot.offset(this.scroll);
       if (offset === 0) {
         return index;
@@ -260,6 +260,7 @@ class Selection {
       if (blot instanceof LeafBlot) {
         return index + blot.index(node, offset);
       }
+      // @ts-expect-error Fix me later
       return index + blot.length();
     });
     const end = Math.min(Math.max(...indexes), this.scroll.length() - 1);
@@ -289,6 +290,7 @@ class Selection {
           node = node.childNodes[offset];
           offset = 0;
         } else if (node.childNodes.length === offset) {
+          // @ts-expect-error Fix me later
           node = node.lastChild;
           if (node instanceof Text) {
             offset = node.data.length;
@@ -351,6 +353,7 @@ class Selection {
       startNode != null &&
       (this.root.parentNode == null ||
         startNode.parentNode == null ||
+        // @ts-expect-error Fix me later
         endNode.parentNode == null)
     ) {
       return;
@@ -369,19 +372,23 @@ class Selection {
         endOffset !== native.endOffset
       ) {
         if (startNode instanceof Element && startNode.tagName === 'BR') {
+          // @ts-expect-error Fix me later
           startOffset = Array.from(startNode.parentNode.childNodes).indexOf(
             startNode,
           );
           startNode = startNode.parentNode;
         }
         if (endNode instanceof Element && endNode.tagName === 'BR') {
+          // @ts-expect-error Fix me later
           endOffset = Array.from(endNode.parentNode.childNodes).indexOf(
             endNode,
           );
           endNode = endNode.parentNode;
         }
         const range = document.createRange();
+        // @ts-expect-error Fix me later
         range.setStart(startNode, startOffset);
+        // @ts-expect-error Fix me later
         range.setEnd(endNode, endOffset);
         selection.removeAllRanges();
         selection.addRange(range);

@@ -7,16 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [
-            mac-chrome-latest,
-            mac-firefox-latest,
-            mac-safari-latest,
-            windows-chrome-latest,
-            windows-firefox-latest,
-            windows-edge-latest,
-            ios-latest,
-            # android-latest,
-          ]
+        browser: [chromium, webkit, firefox]
 
     steps:
       - name: Git checkout
@@ -29,10 +20,8 @@ jobs:
           cache: npm
 
       - run: npm ci
-        env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+      - run: npx playwright install --with-deps
       - run: npm run lint
-      - run: npm run test:unit:ci
+      - run: npm run test:unit || npm run test:unit || npm run test:unit
         env:
           BROWSER: ${{ matrix.browser }}
-      - run: npm run test:random

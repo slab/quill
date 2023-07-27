@@ -23,6 +23,8 @@ const Editor = ({
     quill.on(window.Quill.events.SELECTION_CHANGE, () => {
       onSelectionChangeRef.current?.();
     });
+
+    window.quill = quill;
   }, []);
 
   return (

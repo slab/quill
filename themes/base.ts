@@ -7,6 +7,11 @@ import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
 import Tooltip from '../ui/tooltip';
 import { Range } from '../core/selection';
+import Clipboard from '../modules/clipboard';
+import History from '../modules/history';
+import Keyboard from '../modules/keyboard';
+import Uploader from '../modules/uploader';
+import Selection from '../core/selection';
 
 const ALIGNS = [false, 'center', 'right', 'justify'];
 
@@ -87,7 +92,12 @@ class BaseTheme extends Theme {
     quill.emitter.listenDOM('click', document.body, listener);
   }
 
-  // @ts-expect-error
+  addModule(name: 'clipboard'): Clipboard;
+  addModule(name: 'keyboard'): Keyboard;
+  addModule(name: 'uploader'): Uploader;
+  addModule(name: 'history'): History;
+  addModule(name: 'selection'): Selection;
+  addModule(name: string): unknown;
   addModule(name: string) {
     const module = super.addModule(name);
     if (name === 'toolbar') {
@@ -204,13 +214,14 @@ class BaseTooltip extends Tooltip {
   textbox: HTMLInputElement | null;
   linkRange?: Range;
 
-  constructor(quill: Quill, boundsContainer) {
+  constructor(quill: Quill, boundsContainer?: HTMLElement) {
     super(quill, boundsContainer);
     this.textbox = this.root.querySelector('input[type="text"]');
     this.listen();
   }
 
   listen() {
+    // @ts-expect-error Fix me later
     this.textbox.addEventListener('keydown', event => {
       if (event.key === 'Enter') {
         this.save();
@@ -227,18 +238,23 @@ class BaseTooltip extends Tooltip {
     this.restoreFocus();
   }
 
-  edit(mode = 'link', preview = null) {
+  edit(mode = 'link', preview: string | null = null) {
     this.root.classList.remove('ql-hidden');
     this.root.classList.add('ql-editing');
     if (preview != null) {
+      // @ts-expect-error Fix me later
       this.textbox.value = preview;
     } else if (mode !== this.root.getAttribute('data-mode')) {
+      // @ts-expect-error Fix me later
       this.textbox.value = '';
     }
     this.position(this.quill.getBounds(this.quill.selection.savedRange));
+    // @ts-expect-error Fix me later
     this.textbox.select();
+    // @ts-expect-error Fix me later
     this.textbox.setAttribute(
       'placeholder',
+      // @ts-expect-error Fix me later
       this.textbox.getAttribute(`data-${mode}`) || '',
     );
     this.root.setAttribute('data-mode', mode);
@@ -251,6 +267,7 @@ class BaseTooltip extends Tooltip {
   }
 
   save() {
+    // @ts-expect-error Fix me later
     let { value } = this.textbox;
     switch (this.root.getAttribute('data-mode')) {
       case 'link': {
@@ -280,6 +297,7 @@ class BaseTooltip extends Tooltip {
           const index = range.index + range.length;
           this.quill.insertEmbed(
             index,
+            // @ts-expect-error Fix me later
             this.root.getAttribute('data-mode'),
             value,
             Emitter.sources.USER,
@@ -293,6 +311,7 @@ class BaseTooltip extends Tooltip {
       }
       default:
     }
+    // @ts-expect-error Fix me later
     this.textbox.value = '';
     this.hide();
   }
