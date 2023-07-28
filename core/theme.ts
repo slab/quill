@@ -2,14 +2,17 @@ import Quill from '../core';
 import Clipboard from '../modules/clipboard';
 import History from '../modules/history';
 import Keyboard from '../modules/keyboard';
+import { ToolbarProps } from '../modules/toolbar';
 import Uploader from '../modules/uploader';
 
-interface ThemeOptions {
-  modules: Record<string, unknown>;
+export interface ThemeOptions {
+  modules: Record<string, unknown> & {
+    toolbar?: null | ToolbarProps;
+  };
 }
 
 class Theme {
-  static DEFAULTS = {
+  static DEFAULTS: { modules: Record<string, any> } = {
     modules: {},
   };
 
@@ -17,7 +20,7 @@ class Theme {
     default: Theme,
   };
 
-  modules: Record<string, unknown> = {};
+  modules: ThemeOptions['modules'] = {};
 
   constructor(protected quill: Quill, protected options: ThemeOptions) {}
 

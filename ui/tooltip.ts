@@ -1,4 +1,5 @@
 import Quill from '../core';
+import { BoundsStatic } from '../core/quill';
 
 class Tooltip {
   quill: Quill;
@@ -23,7 +24,7 @@ class Tooltip {
     this.root.classList.add('ql-hidden');
   }
 
-  position(reference) {
+  position(reference: BoundsStatic) {
     const left =
       reference.left + reference.width / 2 - this.root.offsetWidth / 2;
     // root.scrollTop should be 0 if scrollContainer !== root

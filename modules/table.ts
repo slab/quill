@@ -17,8 +17,7 @@ class Table extends Module {
     Quill.register(TableContainer);
   }
 
-  constructor(...args) {
-    // @ts-expect-error
+  constructor(...args: ConstructorParameters<typeof Module>) {
     super(...args);
     this.listenBalanceCells();
   }
@@ -136,9 +135,9 @@ class Table extends Module {
   }
 
   listenBalanceCells() {
-    this.quill.on(Quill.events.SCROLL_OPTIMIZE, mutations => {
+    this.quill.on(Quill.events.SCROLL_OPTIMIZE, (mutations: MutationRecord[]) => {
       mutations.some(mutation => {
-        if (['TD', 'TR', 'TBODY', 'TABLE'].includes(mutation.target.tagName)) {
+        if (['TD', 'TR', 'TBODY', 'TABLE'].includes((mutation.target as HTMLElement).tagName)) {
           this.quill.once(Quill.events.TEXT_CHANGE, (delta, old, source) => {
             if (source !== Quill.sources.USER) return;
             this.balanceTables();

@@ -1,7 +1,7 @@
 import Picker from './picker';
 
 class ColorPicker extends Picker {
-  constructor(select, label) {
+  constructor(select: HTMLSelectElement, label: string) {
     super(select);
     this.label.innerHTML = label;
     this.container.classList.add('ql-color-picker');
@@ -12,22 +12,20 @@ class ColorPicker extends Picker {
       });
   }
 
-  buildItem(option) {
+  buildItem(option: HTMLOptionElement) {
     const item = super.buildItem(option);
     item.style.backgroundColor = option.getAttribute('value') || '';
     return item;
   }
 
-  selectItem(item, trigger) {
+  selectItem(item: HTMLElement | null, trigger?: boolean) {
     super.selectItem(item, trigger);
-    const colorLabel = this.label.querySelector('.ql-color-label');
+    const colorLabel = this.label.querySelector<HTMLElement>('.ql-color-label');
     const value = item ? item.getAttribute('data-value') || '' : '';
     if (colorLabel) {
       if (colorLabel.tagName === 'line') {
-        // @ts-expect-error
         colorLabel.style.stroke = value;
       } else {
-        // @ts-expect-error
         colorLabel.style.fill = value;
       }
     }

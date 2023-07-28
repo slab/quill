@@ -5,7 +5,7 @@ class Formula extends Embed {
   static className = 'ql-formula';
   static tagName = 'SPAN';
 
-  static create(value) {
+  static create(value: string) {
     // @ts-expect-error
     if (window.katex == null) {
       throw new Error('Formula module requires KaTeX.');

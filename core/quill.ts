@@ -15,12 +15,15 @@ import logger, { DebugLevel } from './logger';
 import Module from './module';
 import Selection, { Range } from './selection';
 import Composition from './composition';
-import Theme, { ThemeConstructor } from './theme';
+import Theme from './theme';
+import omit from 'lodash.omit';
 
 const debug = logger('quill');
 
 const globalRegistry = new Parchment.Registry();
 Parchment.ParentBlot.uiClass = 'ql-ui';
+
+export type Sources = 'api' | 'silent' | 'user';
 
 interface Options {
   theme?: string;
@@ -35,13 +38,23 @@ interface Options {
 }
 
 interface ExpandedOptions extends Omit<Options, 'theme'> {
-  theme: ThemeConstructor;
-  registry: Parchment.Registry;
-  container: HTMLElement;
+  theme?: typeof Theme;
+  registry?: Parchment.Registry;
+  container?: HTMLElement | string;
   modules: Record<string, unknown>;
-  bounds?: HTMLElement | null;
-  scrollingContainer?: HTMLElement | null;
+  bounds?: HTMLElement | string | null;
+  scrollingContainer?: HTMLElement | string | null;
+  [key: string]: unknown;
 }
+
+export type BoundsStatic = {
+  bottom: number;
+  height: number;
+  left: number;
+  right: number;
+  top: number;
+  width: number;
+};
 
 class Quill {
   static DEFAULTS: Partial<Options> = {
@@ -59,7 +72,7 @@ class Quill {
   // @ts-expect-error defined in webpack
   static version = typeof QUILL_VERSION === 'undefined' ? 'dev' : QUILL_VERSION;
 
-  static imports = {
+  static imports: Record<string, unknown> = {
     delta: Delta,
     parchment: Parchment,
     'core/module': Module,
@@ -78,6 +91,7 @@ class Quill {
   }
 
   static import(name: 'core/module'): typeof Module;
+  static import(name: `themes/${string}`): typeof Theme;
   static import(name: 'parchment'): typeof Parchment;
   static import(name: 'delta'): typeof Delta;
   static import(name: string): unknown;
@@ -149,10 +163,18 @@ class Quill {
 
   constructor(container: HTMLElement | string, options: Options = {}) {
     this.options = expandConfig(container, options);
-    this.container = this.options.container;
-    if (this.container == null) {
+    if (this.options.container == null) {
       debug.error('Invalid Quill container', container);
       return;
+    }
+    if (this.options.container instanceof HTMLElement) {
+      this.container = this.options.container;
+    }
+    if (typeof this.options.container === 'string') {
+      const el = document.querySelector<HTMLElement>(this.options.container);
+      if (el != null) {
+        this.container = el;
+      }
     }
     if (this.options.debug) {
       Quill.debug(this.options.debug);
@@ -163,19 +185,34 @@ class Quill {
     instances.set(this.container, this);
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
-    this.scrollingContainer = this.options.scrollingContainer || this.root;
+    this.scrollingContainer = this.root;
+    if (this.options.scrollingContainer instanceof HTMLElement) {
+      this.scrollingContainer = this.options.scrollingContainer;
+    }
+    if (typeof this.options.scrollingContainer === 'string') {
+      const el = document.querySelector<HTMLElement>(
+        this.options.scrollingContainer,
+      );
+      if (el != null) {
+        this.scrollingContainer = el;
+      }
+    }
     this.emitter = new Emitter();
-    // @ts-expect-error TODO: fix BlotConstructor
-    const ScrollBlot = this.options.registry.query(
-      Parchment.ScrollBlot.blotName,
-    ) as ScrollConstructor;
-    this.scroll = new ScrollBlot(this.options.registry, this.root, {
-      emitter: this.emitter,
-    });
+    if (this.options.registry) {
+      // @ts-expect-error TODO: fix BlotConstructor
+      const ScrollBlot = this.options.registry.query(
+        Parchment.ScrollBlot.blotName,
+      ) as ScrollConstructor;
+      this.scroll = new ScrollBlot(this.options.registry, this.root, {
+        emitter: this.emitter,
+      });
+    }
     this.editor = new Editor(this.scroll);
     this.selection = new Selection(this.scroll, this.emitter);
     this.composition = new Composition(this.scroll, this.emitter);
-    this.theme = new this.options.theme(this, this.options); // eslint-disable-line new-cap
+    if (this.options.theme) {
+      this.theme = new this.options.theme(this, this.options); // eslint-disable-line new-cap
+    }
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
@@ -329,22 +366,22 @@ class Quill {
     length: number,
     formats: Record<string, unknown>,
     source?: EmitterSource,
-  );
+  ): Delta;
   formatLine(
     index: number,
     length: number,
     name: string,
     value?: unknown,
     source?: EmitterSource,
-  );
+  ): Delta;
   formatLine(
     index: number,
     length: number,
     name: string | Record<string, unknown>,
     value?: unknown | EmitterSource,
     source?: EmitterSource,
-  ) {
-    let formats;
+  ): Delta {
+    let formats: Record<string, unknown>;
     // eslint-disable-next-line prefer-const
     [index, length, formats, source] = overload(
       index,
@@ -385,7 +422,7 @@ class Quill {
     value?: unknown | EmitterSource,
     source?: EmitterSource,
   ): Delta {
-    let formats;
+    let formats: Record<string, unknown>;
     // eslint-disable-next-line prefer-const
     [index, length, formats, source] = overload(
       // @ts-expect-error
@@ -407,7 +444,7 @@ class Quill {
     );
   }
 
-  getBounds(index, length = 0) {
+  getBounds(index: number | Range, length = 0): BoundsStatic | null {
     let bounds;
     if (typeof index === 'number') {
       bounds = this.selection.getBounds(index, length);
@@ -431,12 +468,14 @@ class Quill {
     return this.editor.getContents(index, length);
   }
 
-  getFormat(index?: number, length?: number);
-  getFormat(range?: { index: number; length: number });
+  getFormat(index?: number, length?: number): { [format: string]: unknown };
+  getFormat(range?: { index: number; length: number }): {
+    [format: string]: unknown;
+  };
   getFormat(
     index: { index: number; length: number } | number = this.getSelection(true),
     length = 0,
-  ) {
+  ): { [format: string]: unknown } {
     if (typeof index === 'number') {
       return this.editor.getFormat(index, length);
     }
@@ -552,7 +591,7 @@ class Quill {
     value?: unknown,
     source?: EmitterSource,
   ): Delta {
-    let formats;
+    let formats: Record<string, unknown>;
     // eslint-disable-next-line prefer-const
     // @ts-expect-error
     [index, , formats, source] = overload(index, 0, name, value, source);
@@ -695,7 +734,7 @@ function expandConfig(
   container: HTMLElement | string,
   userConfig: Options,
 ): ExpandedOptions {
-  let expandedConfig = merge(
+  let expandedConfig: ExpandedOptions = merge(
     {
       container,
       modules: {
@@ -705,12 +744,13 @@ function expandConfig(
         uploader: true,
       },
     },
-    userConfig,
+    { ...omit(userConfig, 'theme') },
   );
-  if (!expandedConfig.theme || expandedConfig.theme === Quill.DEFAULTS.theme) {
+
+  if (!expandedConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
     expandedConfig.theme = Theme;
   } else {
-    expandedConfig.theme = Quill.import(`themes/${expandedConfig.theme}`);
+    expandedConfig.theme = Quill.import(`themes/${userConfig.theme}`);
     if (expandedConfig.theme == null) {
       throw new Error(
         `Invalid theme ${expandedConfig.theme}. Did you register it?`,
@@ -759,12 +799,13 @@ function expandConfig(
     expandedConfig,
   );
   ['bounds', 'container', 'scrollingContainer'].forEach(key => {
-    if (typeof expandedConfig[key] === 'string') {
-      expandedConfig[key] = document.querySelector(expandedConfig[key]);
+    const selector = expandedConfig[key];
+    if (typeof selector === 'string') {
+      expandedConfig[key] = document.querySelector(selector);
     }
   });
   expandedConfig.modules = Object.keys(expandedConfig.modules).reduce(
-    (config, name) => {
+    (config: Record<string, unknown>, name) => {
       if (expandedConfig.modules[name]) {
         config[name] = expandedConfig.modules[name];
       }
@@ -777,7 +818,12 @@ function expandConfig(
 
 // Handle selection preservation and TEXT_CHANGE emission
 // common to modification APIs
-function modify(modifier, source, index, shift) {
+function modify(
+  modifier: () => Delta,
+  source: EmitterSource,
+  index: number | boolean,
+  shift: number | null,
+) {
   if (
     !this.isEnabled() &&
     source === Emitter.sources.USER &&
@@ -794,7 +840,7 @@ function modify(modifier, source, index, shift) {
     }
     if (shift == null) {
       range = shiftRange(range, change, source);
-    } else if (shift !== 0) {
+    } else if (shift !== 0 && typeof index === 'number') {
       range = shiftRange(range, index, shift, source);
     }
     this.setSelection(range, Emitter.sources.SILENT);
@@ -853,7 +899,7 @@ function overload(
   value?: unknown | EmitterSource,
   source?: EmitterSource,
 ): NormalizedIndexLength {
-  let formats = {};
+  let formats: Record<string, unknown> = {};
   // @ts-expect-error
   if (typeof index.index === 'number' && typeof index.length === 'number') {
     // Allow for throwaway end (used by insertText/insertEmbed)
@@ -899,11 +945,24 @@ function overload(
   return [index, length, formats, source];
 }
 
-function shiftRange(range, index, length, source?: EmitterSource) {
+function shiftRange(range: Range, change: Delta, source?: EmitterSource): Range;
+function shiftRange(
+  range: Range,
+  index: number,
+  length?: number,
+  source?: EmitterSource,
+): Range;
+function shiftRange(
+  range: Range,
+  index: number | Delta,
+  _length?: number | EmitterSource,
+  source?: EmitterSource,
+) {
+  const length = typeof _length === 'number' ? _length : 0;
   if (range == null) return null;
   let start;
   let end;
-  if (index && typeof index.transformPosition === 'function') {
+  if (index && index instanceof Delta) {
     [start, end] = [range.index, range.index + range.length].map(pos =>
       index.transformPosition(pos, source !== Emitter.sources.USER),
     );

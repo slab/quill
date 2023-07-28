@@ -3,8 +3,12 @@ import Emitter from '../core/emitter';
 import BaseTheme, { BaseTooltip } from './base';
 import { Range } from '../core/selection';
 import icons from '../ui/icons';
+import Quill from '../core';
+import { BoundsStatic } from '../core/quill';
+import { ThemeOptions } from '../core/theme';
+import Toolbar, { ToolbarConfig } from '../modules/toolbar';
 
-const TOOLBAR_CONFIG = [
+const TOOLBAR_CONFIG: ToolbarConfig = [
   ['bold', 'italic', 'link'],
   [{ header: 1 }, { header: 2 }, 'blockquote'],
 ];
@@ -18,7 +22,7 @@ class BubbleTooltip extends BaseTooltip {
     '</div>',
   ].join('');
 
-  constructor(quill, bounds) {
+  constructor(quill: Quill, bounds?: HTMLElement) {
     super(quill, bounds);
     this.quill.on(
       Emitter.events.EDITOR_CHANGE,
@@ -36,7 +40,10 @@ class BubbleTooltip extends BaseTooltip {
           this.root.style.width = `${this.root.offsetWidth}px`;
           const lines = this.quill.getLines(range.index, range.length);
           if (lines.length === 1) {
-            this.position(this.quill.getBounds(range));
+            const bounds = this.quill.getBounds(range);
+            if (bounds != null) {
+              this.position(bounds);
+            }
           } else {
             const lastLine = lines[lines.length - 1];
             const index = this.quill.getIndex(lastLine);
@@ -45,7 +52,9 @@ class BubbleTooltip extends BaseTooltip {
               range.index + range.length - index,
             );
             const indexBounds = this.quill.getBounds(new Range(index, length));
-            this.position(indexBounds);
+            if (indexBounds != null) {
+              this.position(indexBounds);
+            }
           }
         } else if (
           document.activeElement !== this.textbox &&
@@ -69,7 +78,10 @@ class BubbleTooltip extends BaseTooltip {
         if (this.root.classList.contains('ql-hidden')) return;
         const range = this.quill.getSelection();
         if (range != null) {
-          this.position(this.quill.getBounds(range));
+          const bounds = this.quill.getBounds(range);
+          if (bounds != null) {
+            this.position(bounds);
+          }
         }
       }, 1);
     });
@@ -79,7 +91,7 @@ class BubbleTooltip extends BaseTooltip {
     this.show();
   }
 
-  position(reference) {
+  position(reference: BoundsStatic) {
     const shift = super.position(reference);
     const arrow = this.root.querySelector('.ql-tooltip-arrow');
     // @ts-expect-error
@@ -93,7 +105,7 @@ class BubbleTooltip extends BaseTooltip {
 }
 
 class BubbleTheme extends BaseTheme {
-  constructor(quill, options) {
+  constructor(quill: Quill, options: ThemeOptions) {
     if (
       options.modules.toolbar != null &&
       options.modules.toolbar.container == null
@@ -104,19 +116,21 @@ class BubbleTheme extends BaseTheme {
     this.quill.container.classList.add('ql-bubble');
   }
 
-  extendToolbar(toolbar) {
+  extendToolbar(toolbar: Toolbar) {
     // @ts-expect-error
     this.tooltip = new BubbleTooltip(this.quill, this.options.bounds);
-    this.tooltip.root.appendChild(toolbar.container);
-    this.buildButtons(toolbar.container.querySelectorAll('button'), icons);
-    this.buildPickers(toolbar.container.querySelectorAll('select'), icons);
+    if (toolbar.container != null) {
+      this.tooltip.root.appendChild<HTMLElement>(toolbar.container);
+      this.buildButtons(toolbar.container.querySelectorAll('button'), icons);
+      this.buildPickers(toolbar.container.querySelectorAll('select'), icons);
+    }
   }
 }
 BubbleTheme.DEFAULTS = merge({}, BaseTheme.DEFAULTS, {
   modules: {
     toolbar: {
       handlers: {
-        link(value) {
+        link(value: string) {
           if (!value) {
             this.quill.format('link', false);
           } else {

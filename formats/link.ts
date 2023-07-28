@@ -6,7 +6,7 @@ class Link extends Inline {
   static SANITIZED_URL = 'about:blank';
   static PROTOCOL_WHITELIST = ['http', 'https', 'mailto', 'tel', 'sms'];
 
-  static create(value) {
+  static create(value: string) {
     const node = super.create(value) as Element;
     node.setAttribute('href', this.sanitize(value));
     node.setAttribute('rel', 'noopener noreferrer');
@@ -14,7 +14,7 @@ class Link extends Inline {
     return node;
   }
 
-  static formats(domNode) {
+  static formats(domNode: HTMLElement) {
     return domNode.getAttribute('href');
   }
 
@@ -22,7 +22,7 @@ class Link extends Inline {
     return sanitize(url, this.PROTOCOL_WHITELIST) ? url : this.SANITIZED_URL;
   }
 
-  format(name, value) {
+  format(name: string, value: unknown) {
     if (name !== this.statics.blotName || !value) {
       super.format(name, value);
     } else {
@@ -32,7 +32,7 @@ class Link extends Inline {
   }
 }
 
-function sanitize(url, protocols) {
+function sanitize(url: string, protocols: string[]) {
   const anchor = document.createElement('a');
   anchor.href = url;
   const protocol = anchor.href.slice(0, anchor.href.indexOf(':'));

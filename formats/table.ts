@@ -6,7 +6,7 @@ class TableCell extends Block {
   static blotName = 'table';
   static tagName = 'TD';
 
-  static create(value) {
+  static create(value: string) {
     // @ts-expect-error
     const node = super.create() as Element;
     if (value) {
@@ -17,7 +17,7 @@ class TableCell extends Block {
     return node;
   }
 
-  static formats(domNode) {
+  static formats(domNode: HTMLElement) {
     if (domNode.hasAttribute('data-row')) {
       return domNode.getAttribute('data-row');
     }
@@ -33,7 +33,7 @@ class TableCell extends Block {
     return -1;
   }
 
-  format(name, value) {
+  format(name: string, value: string) {
     if (name === TableCell.blotName && value) {
       this.domNode.setAttribute('data-row', value);
     } else {
@@ -84,9 +84,8 @@ class TableRow extends Container {
     return false;
   }
 
-  optimize(...args) {
-    // @ts-expect-error
-    super.optimize(...args);
+  optimize(context: { [key: string]: any; }) {
+    super.optimize(context);
     this.children.forEach(child => {
       if (child.next == null) return;
       const childFormats = child.formats();

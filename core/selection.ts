@@ -73,7 +73,7 @@ class Selection {
             );
           }
           const triggeredByTyping = mutations.some(
-            mutation =>
+            (mutation: MutationRecord) =>
               mutation.type === 'characterData' ||
               mutation.type === 'childList' ||
               (mutation.type === 'attributes' && mutation.target === this.root),
@@ -131,7 +131,7 @@ class Selection {
     this.setRange(this.savedRange);
   }
 
-  format(format, value) {
+  format(format: string, value: unknown) {
     this.scroll.update();
     const nativeRange = this.getNativeRange();
     if (
@@ -177,7 +177,7 @@ class Selection {
       range.setEnd(node, offset);
       return range.getBoundingClientRect();
     }
-    let side = 'left';
+    let side: keyof DOMRect = 'left';
     let rect: DOMRect;
     if (node instanceof Text) {
       // Return null if the text node is empty because it is
@@ -238,7 +238,7 @@ class Selection {
   hasFocus(): boolean {
     return (
       document.activeElement === this.root ||
-      contains(this.root, document.activeElement)
+      (document.activeElement != null && contains(this.root, document.activeElement))
     );
   }
 
@@ -459,7 +459,7 @@ class Selection {
   }
 }
 
-function contains(parent, descendant) {
+function contains(parent: Node, descendant: Node) {
   try {
     // Firefox inserts inaccessible nodes around video elements
     descendant.parentNode; // eslint-disable-line @typescript-eslint/no-unused-expressions

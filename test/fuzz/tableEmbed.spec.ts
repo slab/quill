@@ -2,6 +2,7 @@ import Delta from 'quill-delta';
 import TableEmbed, {
   CellData,
   TableData,
+  TableInsert,
   TableRowColumnOp,
 } from '../../modules/tableEmbed';
 import { choose, randomInt } from './__helpers__/utils';
@@ -22,7 +23,7 @@ const attachAttributes = <T extends object>(
     const attributeCount = choose([1, 4, 8]);
     const allowedAttributes = ['align', 'background', 'color', 'font'];
     const allowedValues = ['center', 'red', 'left', 'uppercase'];
-    const attributes = {};
+    const attributes: Record<string, unknown> = {};
     new Array(attributeCount).fill(0).forEach(() => {
       attributes[choose(allowedAttributes)] = choose(allowedValues);
     });
@@ -52,12 +53,13 @@ const getRandomCellContent = () => {
   return delta.ops;
 };
 
-const getRandomChange = base => {
+const getRandomChange = (base: Delta) => {
+  const tableInsert = base.ops[0] as TableInsert;
   const table: TableData = {};
   const dimension = {
-    rows: new Delta(base.ops[0].insert['table-embed'].rows || []).length(),
+    rows: new Delta(tableInsert.insert['table-embed'].rows || []).length(),
     columns: new Delta(
-      base.ops[0].insert['table-embed'].columns || [],
+      tableInsert.insert['table-embed'].columns || [],
     ).length(),
   };
   (['rows', 'columns'] as const).forEach(field => {
@@ -122,7 +124,7 @@ const getRandomBase = () => {
   if (rowCount) table.rows = getRandomRowColumnInsert(rowCount);
   if (columnCount) table.columns = getRandomRowColumnInsert(columnCount);
   if (cellCount) {
-    const cells = {};
+    const cells: TableData['cells'] = {};
     new Array(cellCount).fill(0).forEach(() => {
       const row = randomInt(rowCount);
       const column = randomInt(columnCount);
