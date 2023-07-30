@@ -12,11 +12,10 @@ export type TableRowColumnOp = Omit<Op, 'insert'> & {
 };
 
 export interface TableData {
-  rows?: Delta['ops'];
-  columns?: Delta['ops'];
+  rows?: Delta;
+  columns?: Delta;
   cells?: Record<string, CellData>;
 }
-
 
 export interface TableInsert {
   insert: {
@@ -72,11 +71,11 @@ const compactCellData = ({ content, attributes }: CellData) => {
 
 const compactTableData = ({ rows, columns, cells }: TableData) => {
   const data: TableData = {};
-  if (rows && rows.length > 0) {
+  if (rows && rows.length() > 0) {
     data.rows = rows;
   }
 
-  if (columns && columns.length > 0) {
+  if (columns && columns.length() > 0) {
     data.columns = columns;
   }
 
@@ -87,7 +86,10 @@ const compactTableData = ({ rows, columns, cells }: TableData) => {
   return data;
 };
 
-const reindexCellIdentities = (cells: NonNullable<TableData['cells']>, { rows, columns }: TableData) => {
+const reindexCellIdentities = (
+  cells: NonNullable<TableData['cells']>,
+  { rows, columns }: TableData,
+) => {
   const reindexedCells: NonNullable<TableData['cells']> = {};
   Object.keys(cells).forEach(identity => {
     let [row, column] = parseCellIdentity(identity);
@@ -107,14 +109,14 @@ const reindexCellIdentities = (cells: NonNullable<TableData['cells']>, { rows, c
 
 export const tableHandler = {
   compose(a: TableData, b: TableData, keepNull?: boolean) {
-    const rows = new Delta(a.rows || []).compose(new Delta(b.rows || [])).ops;
+    const rows = new Delta(a.rows || []).compose(new Delta(b.rows || []));
     const columns = new Delta(a.columns || []).compose(
       new Delta(b.columns || []),
-    ).ops;
+    );
 
     const cells = reindexCellIdentities(a.cells || {}, {
-      rows: new Delta(b.rows || []).ops,
-      columns: new Delta(b.columns || []).ops,
+      rows: new Delta(b.rows || []),
+      columns: new Delta(b.columns || []),
     });
 
     Object.keys(b.cells || {}).forEach(identity => {
@@ -153,12 +155,12 @@ export const tableHandler = {
       columns: new Delta(b.columns || []),
     };
 
-    const rows = aDeltas.rows.transform(bDeltas.rows, priority).ops;
-    const columns = aDeltas.columns.transform(bDeltas.columns, priority).ops;
+    const rows = aDeltas.rows.transform(bDeltas.rows, priority);
+    const columns = aDeltas.columns.transform(bDeltas.columns, priority);
 
     const cells = reindexCellIdentities(b.cells || {}, {
-      rows: bDeltas.rows.transform(aDeltas.rows, !priority).ops,
-      columns: bDeltas.columns.transform(aDeltas.columns, !priority).ops,
+      rows: bDeltas.rows.transform(aDeltas.rows, !priority),
+      columns: bDeltas.columns.transform(aDeltas.columns, !priority),
     });
 
     Object.keys(a.cells || {}).forEach(identity => {
@@ -201,10 +203,10 @@ export const tableHandler = {
   invert(change: TableData, base: TableData) {
     const rows = new Delta(change.rows || []).invert(
       new Delta(base.rows || []),
-    ).ops;
+    );
     const columns = new Delta(change.columns || []).invert(
       new Delta(base.columns || []),
-    ).ops;
+    );
     const cells = reindexCellIdentities(change.cells || {}, {
       rows,
       columns,

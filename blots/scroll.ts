@@ -81,7 +81,7 @@ class Scroll extends ScrollBlot {
     this.emitter.emit(Emitter.events.SCROLL_BLOT_UNMOUNT, blot);
   }
 
-  emitEmbedUpdate(blot: Blot, change: Delta) {
+  emitEmbedUpdate(blot: Blot, change: unknown) {
     this.emitter.emit(Emitter.events.SCROLL_EMBED_UPDATE, blot, change);
   }
 
@@ -176,13 +176,11 @@ class Scroll extends ScrollBlot {
       }
 
       const blot = this.line(index)[0];
-      if (blot != null) {
-        const formats = bubbleFormats(blot);
-        const attributes = AttributeMap.diff(formats, first.attributes) || {};
-        Object.keys(attributes).forEach(name => {
-          this.formatAt(lineEndIndex - 1, 1, name, attributes[name]);
-        });
-      }
+      const formats = bubbleFormats(blot);
+      const attributes = AttributeMap.diff(formats, first.attributes) || {};
+      Object.keys(attributes).forEach(name => {
+        this.formatAt(lineEndIndex - 1, 1, name, attributes[name]);
+      });
 
       index = lineEndIndex;
     }
@@ -430,10 +428,8 @@ function insertInlineContents(
         const text = op.insert;
         parent.insertAt(index, text);
         const [leaf] = parent.descendant(LeafBlot, index);
-        if (leaf != null) {
-          const formats = bubbleFormats(leaf);
-          attributes = AttributeMap.diff(formats, attributes) || {};
-        }
+        const formats = bubbleFormats(leaf);
+        attributes = AttributeMap.diff(formats, attributes) || {};
       } else if (typeof op.insert === 'object') {
         const key = Object.keys(op.insert)[0]; // There should only be one key
         if (key == null) return index;
@@ -441,10 +437,8 @@ function insertInlineContents(
         const isInlineEmbed = parent.scroll.query(key, Scope.INLINE) != null;
         if (isInlineEmbed) {
           const [leaf] = parent.descendant(LeafBlot, index);
-          if (leaf != null) {
-            const formats = bubbleFormats(leaf);
-            attributes = AttributeMap.diff(formats, attributes) || {};
-          }
+          const formats = bubbleFormats(leaf);
+          attributes = AttributeMap.diff(formats, attributes) || {};
         }
       }
     }

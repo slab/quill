@@ -14,7 +14,7 @@ import TextBlot from './text';
 
 const NEWLINE_LENGTH = 1;
 
-class Block extends BlockBlot implements Blot {
+class Block extends BlockBlot {
   cache: { delta?: Delta | null; length?: number } = {};
 
   delta(): Delta {
@@ -197,7 +197,7 @@ function blockDelta(blot: BlockBlot, filter = true) {
 }
 
 function bubbleFormats(
-  blot: Blot | LeafBlot | BlockBlot | Parent,
+  blot: Blot | LeafBlot | BlockBlot | Parent | null,
   formats: Record<string, unknown> = {},
   filter = true,
 ): Record<string, unknown> {

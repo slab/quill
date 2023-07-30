@@ -89,7 +89,7 @@ const getRandomChange = (base: Delta) => {
         break;
     }
     if (delta.length() > 0) {
-      table[field] = delta.ops;
+      table[field] = delta;
     }
   });
 
@@ -107,12 +107,14 @@ const getRandomChange = (base: Delta) => {
   return new Delta([attachAttributes({ retain: { 'table-embed': table } })]);
 };
 
-const getRandomRowColumnInsert = (count: number): TableRowColumnOp[] => {
-  return new Array(count)
+const getRandomRowColumnInsert = (count: number): Delta => {
+  const ops = new Array(count)
     .fill(0)
     .map<TableRowColumnOp>(() =>
       attachAttributes({ insert: { id: getRandomRowColumnId() } }),
     );
+
+  return new Delta(ops);
 };
 
 const getRandomBase = () => {

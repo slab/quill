@@ -352,7 +352,7 @@ function fillSelect(
     if (value === defaultValue) {
       option.setAttribute('selected', 'selected');
     } else {
-      option.setAttribute('value', value.toString());
+      option.setAttribute('value', String(value));
     }
     select.appendChild(option);
   });

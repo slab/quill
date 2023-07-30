@@ -1,17 +1,17 @@
 import { ClassAttributor, Scope } from 'parchment';
 
 class IndentAttributor extends ClassAttributor {
-  add(node: HTMLElement, _value: string | number) {
-    let value: number = 0;
-    if (_value === '+1' || _value === '-1') {
+  add(node: HTMLElement, value: string | number) {
+    let normalizedValue = 0;
+    if (value === '+1' || value === '-1') {
       const indent = this.value(node) || 0;
-      value = _value === '+1' ? indent + 1 : indent - 1;
+      normalizedValue = value === '+1' ? indent + 1 : indent - 1;
     }
-    if (value === 0) {
+    if (normalizedValue === 0) {
       this.remove(node);
       return true;
     }
-    return super.add(node, value.toString());
+    return super.add(node, normalizedValue.toString());
   }
 
   canAdd(node: HTMLElement, value: string) {

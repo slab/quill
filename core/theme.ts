@@ -12,7 +12,7 @@ export interface ThemeOptions {
 }
 
 class Theme {
-  static DEFAULTS: { modules: Record<string, any> } = {
+  static DEFAULTS: ThemeOptions = {
     modules: {},
   };
 

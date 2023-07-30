@@ -15,6 +15,9 @@ export type ToolbarConfig = Array<
 export interface ToolbarProps {
   container?: HTMLElement | ToolbarConfig | null;
   handlers?: Record<string, Handler>;
+  option?: number;
+  module?: boolean;
+  theme?: boolean;
 }
 
 class Toolbar extends Module<ToolbarProps> {
@@ -238,7 +241,7 @@ function addSelect(
   values.forEach(value => {
     const option = document.createElement('option');
     if (value !== false) {
-      option.setAttribute('value', value.toString());
+      option.setAttribute('value', String(value));
     } else {
       option.setAttribute('selected', 'selected');
     }

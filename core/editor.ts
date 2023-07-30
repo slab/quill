@@ -48,16 +48,14 @@ class Editor {
               !!this.scroll.descendant(BlockEmbed, index)[0]);
           this.scroll.insertAt(index, text);
           const [line, offset] = this.scroll.line(index);
-          if (line) {
-            let formats = merge({}, bubbleFormats(line));
-            if (line instanceof Block) {
-              const [leaf] = line.descendant(LeafBlot, offset);
-              if (leaf) {
-                formats = merge(formats, bubbleFormats(leaf));
-              }
+          let formats = merge({}, bubbleFormats(line));
+          if (line instanceof Block) {
+            const [leaf] = line.descendant(LeafBlot, offset);
+            if (leaf) {
+              formats = merge(formats, bubbleFormats(leaf));
             }
-            attributes = AttributeMap.diff(formats, attributes) || {};
           }
+          attributes = AttributeMap.diff(formats, attributes) || {};
         } else if (typeof op.insert === 'object') {
           const key = Object.keys(op.insert)[0]; // There should only be one key
           if (key == null) return index;
