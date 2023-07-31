@@ -111,5 +111,9 @@
   "engines": {
     "npm": ">=8.2.3"
   },
-  "engineStrict": true
+  "engineStrict": true,
+  "volta": {
+    "node": "18.17.0",
+    "npm": "8.19.4"
+  }
 }
