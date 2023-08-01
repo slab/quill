@@ -1,4 +1,4 @@
-type Rect = {
+export type Rect = {
   top: number;
   right: number;
   bottom: number;
@@ -12,11 +12,11 @@ const getElementRect = (element: Element): Rect => {
   const rect = element.getBoundingClientRect();
   const scaleX =
     ('offsetWidth' in element &&
-      rect.width / (element as HTMLElement).offsetWidth) ||
+      Math.abs(rect.width) / (element as HTMLElement).offsetWidth) ||
     1;
   const scaleY =
     ('offsetHeight' in element &&
-      rect.height / (element as HTMLElement).offsetHeight) ||
+      Math.abs(rect.height) / (element as HTMLElement).offsetHeight) ||
     1;
   return {
     top: rect.top,
