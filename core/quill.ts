@@ -16,7 +16,7 @@ import Module from './module';
 import Selection, { Range } from './selection';
 import Composition from './composition';
 import Theme, { ThemeConstructor } from './theme';
-import scrollRectIntoView from './utils/scrollRectIntoView';
+import scrollRectIntoView, { Rect } from './utils/scrollRectIntoView';
 
 const debug = logger('quill');
 
@@ -614,6 +614,10 @@ class Quill {
     );
   }
 
+  scrollRectIntoView(rect: Rect) {
+    scrollRectIntoView(this.root, rect);
+  }
+
   /**
    * @deprecated Use Quill#scrollSelectionIntoView() instead.
    */
@@ -632,7 +636,7 @@ class Quill {
     const range = this.selection.lastRange;
     const bounds = range && this.selection.getBounds(range.index, range.length);
     if (bounds) {
-      scrollRectIntoView(this.root, bounds);
+      this.scrollRectIntoView(bounds);
     }
   }
 
