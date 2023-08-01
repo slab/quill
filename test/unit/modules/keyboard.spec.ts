@@ -52,7 +52,10 @@ describe('Keyboard', () => {
       });
       expect(Keyboard.match(createKeyboardEvent('a'), binding!)).toBe(false);
       expect(
-        Keyboard.match(createKeyboardEvent('a', { [SHORTKEY]: true }), binding!),
+        Keyboard.match(
+          createKeyboardEvent('a', { [SHORTKEY]: true }),
+          binding!,
+        ),
       ).toBe(true);
     });
 
@@ -63,7 +66,10 @@ describe('Keyboard', () => {
       });
       expect(Keyboard.match(createKeyboardEvent('a'), binding!)).toBe(false);
       expect(
-        Keyboard.match(createKeyboardEvent('a', { [SHORTKEY]: true }), binding!),
+        Keyboard.match(
+          createKeyboardEvent('a', { [SHORTKEY]: true }),
+          binding!,
+        ),
       ).toBe(true);
     });
   });

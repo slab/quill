@@ -213,10 +213,13 @@ class Syntax extends Module<SyntaxOptions> {
       );
     }
     // @ts-expect-error Fix me later
-    this.languages = this.options.languages.reduce((memo: Record<string, unknown>, { key }) => {
-      memo[key] = true;
-      return memo;
-    }, {});
+    this.languages = this.options.languages.reduce(
+      (memo: Record<string, unknown>, { key }) => {
+        memo[key] = true;
+        return memo;
+      },
+      {},
+    );
     this.highlightBlot = this.highlightBlot.bind(this);
     this.initListener();
     this.initTimer();

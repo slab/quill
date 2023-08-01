@@ -581,13 +581,17 @@ function matchText(node: HTMLElement, delta: Delta) {
     text = text.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
     text = text.replace(/\s\s+/g, replacer.bind(replacer, true)); // collapse whitespace
     if (
-      (node.previousSibling == null && node.parentElement != null && isLine(node.parentElement)) ||
+      (node.previousSibling == null &&
+        node.parentElement != null &&
+        isLine(node.parentElement)) ||
       (node.previousSibling instanceof Element && isLine(node.previousSibling))
     ) {
       text = text.replace(/^\s+/, replacer.bind(replacer, false));
     }
     if (
-      (node.nextSibling == null && node.parentElement != null && isLine(node.parentElement)) ||
+      (node.nextSibling == null &&
+        node.parentElement != null &&
+        isLine(node.parentElement)) ||
       (node.nextSibling instanceof Element && isLine(node.nextSibling))
     ) {
       text = text.replace(/\s+$/, replacer.bind(replacer, false));

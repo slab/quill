@@ -88,6 +88,7 @@
     "build:release": "./_develop/scripts/release.sh",
     "develop": "npm run start",
     "lint": "npm run lint:eslint && npm run lint:tsc",
+    "lint:fix": "prettier --write -l './**/*.ts' && npm run lint:eslint --fix",
     "lint:eslint": "eslint .",
     "lint:tsc": "tsc --noEmit --skipLibCheck",
     "prepare": "npm run build",

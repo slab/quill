@@ -84,7 +84,7 @@ class TableRow extends Container {
     return false;
   }
 
-  optimize(context: { [key: string]: any; }) {
+  optimize(context: { [key: string]: any }) {
     super.optimize(context);
     this.children.forEach(child => {
       if (child.next == null) return;

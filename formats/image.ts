@@ -16,12 +16,15 @@ class Image extends EmbedBlot {
   }
 
   static formats(domNode: Element) {
-    return ATTRIBUTES.reduce((formats: Record<string, string | null>, attribute) => {
-      if (domNode.hasAttribute(attribute)) {
-        formats[attribute] = domNode.getAttribute(attribute);
-      }
-      return formats;
-    }, {});
+    return ATTRIBUTES.reduce(
+      (formats: Record<string, string | null>, attribute) => {
+        if (domNode.hasAttribute(attribute)) {
+          formats[attribute] = domNode.getAttribute(attribute);
+        }
+        return formats;
+      },
+      {},
+    );
   }
 
   static match(url: string) {

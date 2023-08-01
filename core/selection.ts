@@ -238,7 +238,8 @@ class Selection {
   hasFocus(): boolean {
     return (
       document.activeElement === this.root ||
-      (document.activeElement != null && contains(this.root, document.activeElement))
+      (document.activeElement != null &&
+        contains(this.root, document.activeElement))
     );
   }
 
