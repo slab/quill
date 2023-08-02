@@ -15,8 +15,9 @@ import logger, { DebugLevel } from './logger';
 import Module from './module';
 import Selection, { Range } from './selection';
 import Composition from './composition';
-import Theme from './theme';
+import Theme, { ThemeConstructor } from './theme';
 import omit from 'lodash.omit';
+import scrollRectIntoView, { Rect } from './utils/scrollRectIntoView';
 
 const debug = logger('quill');
 
@@ -33,7 +34,6 @@ interface Options {
   container?: HTMLElement | string;
   placeholder?: string;
   bounds?: HTMLElement | string | null;
-  scrollingContainer?: HTMLElement | string | null;
   modules?: Record<string, unknown>;
 }
 
@@ -43,7 +43,6 @@ interface ExpandedOptions extends Omit<Options, 'theme'> {
   container?: HTMLElement | string;
   modules: Record<string, unknown>;
   bounds?: HTMLElement | string | null;
-  scrollingContainer?: HTMLElement | string | null;
   [key: string]: unknown;
 }
 
@@ -63,7 +62,6 @@ class Quill {
     placeholder: '',
     readOnly: false,
     registry: globalRegistry,
-    scrollingContainer: null,
     theme: 'default',
   };
   static events = Emitter.events;
@@ -143,7 +141,6 @@ class Quill {
     }
   }
 
-  scrollingContainer: HTMLElement;
   container: HTMLElement;
   root: HTMLDivElement;
   scroll: Scroll;
@@ -185,18 +182,6 @@ class Quill {
     instances.set(this.container, this);
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
-    this.scrollingContainer = this.root;
-    if (this.options.scrollingContainer instanceof HTMLElement) {
-      this.scrollingContainer = this.options.scrollingContainer;
-    }
-    if (typeof this.options.scrollingContainer === 'string') {
-      const el = document.querySelector<HTMLElement>(
-        this.options.scrollingContainer,
-      );
-      if (el != null) {
-        this.scrollingContainer = el;
-      }
-    }
     this.emitter = new Emitter();
     if (this.options.registry) {
       // @ts-expect-error TODO: fix BlotConstructor
@@ -324,11 +309,11 @@ class Quill {
     this.container.classList.toggle('ql-disabled', !enabled);
   }
 
-  focus() {
-    const { scrollTop } = this.scrollingContainer;
+  focus(options: { preventScroll?: boolean } = {}) {
     this.selection.focus();
-    this.scrollingContainer.scrollTop = scrollTop;
-    this.scrollIntoView();
+    if (!options.preventScroll) {
+      this.scrollSelectionIntoView();
+    }
   }
 
   format(
@@ -657,8 +642,30 @@ class Quill {
     );
   }
 
+  scrollRectIntoView(rect: Rect) {
+    scrollRectIntoView(this.root, rect);
+  }
+
+  /**
+   * @deprecated Use Quill#scrollSelectionIntoView() instead.
+   */
   scrollIntoView() {
-    this.selection.scrollIntoView(this.scrollingContainer);
+    console.warn(
+      'Quill#scrollIntoView() has been deprecated and will be removed in the near future. Please use Quill#scrollSelectionIntoView() instead.',
+    );
+    this.scrollSelectionIntoView();
+  }
+
+  /**
+   * Scroll the current selection into the visible area.
+   * If the selection is already visible, no scrolling will occur.
+   */
+  scrollSelectionIntoView() {
+    const range = this.selection.lastRange;
+    const bounds = range && this.selection.getBounds(range.index, range.length);
+    if (bounds) {
+      this.scrollRectIntoView(bounds);
+    }
   }
 
   setContents(
@@ -697,7 +704,7 @@ class Quill {
       [index, length, , source] = overload(index, length, source);
       this.selection.setRange(new Range(Math.max(0, index), length), source);
       if (source !== Emitter.sources.SILENT) {
-        this.scrollIntoView();
+        this.scrollSelectionIntoView();
       }
     }
   }
@@ -798,7 +805,7 @@ function expandConfig(
     themeConfig,
     expandedConfig,
   );
-  ['bounds', 'container', 'scrollingContainer'].forEach(key => {
+  ['bounds', 'container'].forEach(key => {
     const selector = expandedConfig[key];
     if (typeof selector === 'string') {
       expandedConfig[key] = document.querySelector(selector);

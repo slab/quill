@@ -1,6 +1,11 @@
 import Quill from '../core';
 import { BoundsStatic } from '../core/quill';
 
+const isScrollable = (el: Element) => {
+  const { overflowY } = getComputedStyle(el, null);
+  return overflowY !== 'visible' && overflowY !== 'clip';
+};
+
 class Tooltip {
   quill: Quill;
   boundsContainer: HTMLElement;
@@ -12,7 +17,7 @@ class Tooltip {
     this.root = quill.addContainer('ql-tooltip');
     // @ts-expect-error
     this.root.innerHTML = this.constructor.TEMPLATE;
-    if (this.quill.root === this.quill.scrollingContainer) {
+    if (isScrollable(this.quill.root)) {
       this.quill.root.addEventListener('scroll', () => {
         this.root.style.marginTop = `${-1 * this.quill.root.scrollTop}px`;
       });

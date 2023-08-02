@@ -16,6 +16,7 @@
     "website"
   ],
   "dependencies": {
+    "compute-scroll-into-view": "3.0.3",
     "eventemitter3": "^4.0.7",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",

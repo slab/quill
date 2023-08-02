@@ -127,7 +127,7 @@ class Selection {
 
   focus() {
     if (this.hasFocus()) return;
-    this.root.focus();
+    this.root.focus({ preventScroll: true });
     this.setRange(this.savedRange);
   }
 
@@ -329,19 +329,6 @@ class Selection {
     ];
   }
 
-  scrollIntoView(scrollingContainer: Element) {
-    const range = this.lastRange;
-    if (range == null) return;
-    const bounds = this.getBounds(range.index, range.length);
-    if (bounds == null) return;
-    const scrollBounds = scrollingContainer.getBoundingClientRect();
-    if (bounds.top < scrollBounds.top) {
-      scrollingContainer.scrollTop -= scrollBounds.top - bounds.top;
-    } else if (bounds.bottom > scrollBounds.bottom) {
-      scrollingContainer.scrollTop += bounds.bottom - scrollBounds.bottom;
-    }
-  }
-
   setNativeRange(
     startNode: Node | null,
     startOffset?: number,
@@ -362,7 +349,7 @@ class Selection {
     const selection = document.getSelection();
     if (selection == null) return;
     if (startNode != null) {
-      if (!this.hasFocus()) this.root.focus();
+      if (!this.hasFocus()) this.root.focus({ preventScroll: true });
       const { native } = this.getNativeRange() || {};
       if (
         native == null ||
