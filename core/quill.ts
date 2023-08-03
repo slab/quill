@@ -15,7 +15,7 @@ import logger, { DebugLevel } from './logger';
 import Module from './module';
 import Selection, { Range } from './selection';
 import Composition from './composition';
-import Theme, { ThemeConstructor } from './theme';
+import Theme from './theme';
 import omit from 'lodash.omit';
 import scrollRectIntoView, { Rect } from './utils/scrollRectIntoView';
 

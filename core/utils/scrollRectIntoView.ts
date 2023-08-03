@@ -64,7 +64,7 @@ const scrollRectIntoView = (root: HTMLElement, targetRect: Rect) => {
 
   let current: Element | null = root;
   while (current) {
-    const isDocumentBody = current === document.body;
+    const isDocumentBody: boolean = current === document.body;
     const bounding = isDocumentBody
       ? {
           top: 0,
