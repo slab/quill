@@ -28,8 +28,8 @@ describe('Toolbar', () => {
       addControls(container, ['bold', 'italic']);
       expect(container).toEqualHTML(`
         <span class="ql-formats">
-          <button type="button" class="ql-bold"></button>
-          <button type="button" class="ql-italic"></button>
+          <button type="button" class="ql-bold" aria-pressed="false"></button>
+          <button type="button" class="ql-italic" aria-pressed="false"></button>
         </span>
       `);
     });
@@ -42,12 +42,12 @@ describe('Toolbar', () => {
       ]);
       expect(container).toEqualHTML(`
         <span class="ql-formats">
-          <button type="button" class="ql-bold"></button>
-          <button type="button" class="ql-italic"></button>
+          <button type="button" class="ql-bold" aria-pressed="false"></button>
+          <button type="button" class="ql-italic" aria-pressed="false"></button>
         </span>
         <span class="ql-formats">
-          <button type="button" class="ql-underline"></button>
-          <button type="button" class="ql-strike"></button>
+          <button type="button" class="ql-underline" aria-pressed="false"></button>
+          <button type="button" class="ql-strike" aria-pressed="false"></button>
         </span>
       `);
     });
@@ -57,8 +57,8 @@ describe('Toolbar', () => {
       addControls(container, ['bold', { header: '2' }]);
       expect(container).toEqualHTML(`
         <span class="ql-formats">
-          <button type="button" class="ql-bold"></button>
-          <button type="button" class="ql-header" value="2"></button>
+          <button type="button" class="ql-bold" aria-pressed="false"></button>
+          <button type="button" class="ql-header" aria-pressed="false" value="2"></button>
         </span>
       `);
     });
@@ -108,14 +108,14 @@ describe('Toolbar', () => {
           </select>
         </span>
         <span class="ql-formats">
-          <button type="button" class="ql-bold"></button>
-          <button type="button" class="ql-italic"></button>
-          <button type="button" class="ql-underline"></button>
-          <button type="button" class="ql-strike"></button>
+          <button type="button" class="ql-bold" aria-pressed="false"></button>
+          <button type="button" class="ql-italic" aria-pressed="false"></button>
+          <button type="button" class="ql-underline" aria-pressed="false"></button>
+          <button type="button" class="ql-strike" aria-pressed="false"></button>
         </span>
         <span class="ql-formats">
-          <button type="button" class="ql-list" value="ordered"></button>
-          <button type="button" class="ql-list" value="bullet"></button>
+          <button type="button" class="ql-list" value="ordered" aria-pressed="false"></button>
+          <button type="button" class="ql-list" value="bullet" aria-pressed="false"></button>
           <select class="ql-align">
             <option selected="selected"></option>
             <option value="center"></option>
@@ -124,8 +124,8 @@ describe('Toolbar', () => {
           </select>
         </span>
         <span class="ql-formats">
-          <button type="button" class="ql-link"></button>
-          <button type="button" class="ql-image"></button>
+          <button type="button" class="ql-link" aria-pressed="false"></button>
+          <button type="button" class="ql-image" aria-pressed="false"></button>
         </span>
       `);
     });
@@ -176,8 +176,10 @@ describe('Toolbar', () => {
       ) as HTMLButtonElement;
       quill.setSelection(7);
       expect(boldButton.classList.contains('ql-active')).toBe(true);
+      expect(boldButton.attributes['aria-pressed'].value).toBe('true');
       quill.setSelection(2);
       expect(boldButton.classList.contains('ql-active')).toBe(false);
+      expect(boldButton.attributes['aria-pressed'].value).toBe('false');
     });
 
     test('link', () => {
@@ -187,8 +189,10 @@ describe('Toolbar', () => {
       ) as HTMLButtonElement;
       quill.setSelection(12);
       expect(linkButton.classList.contains('ql-active')).toBe(true);
+      expect(linkButton.attributes['aria-pressed'].value).toBe('true');
       quill.setSelection(2);
       expect(linkButton.classList.contains('ql-active')).toBe(false);
+      expect(linkButton.attributes['aria-pressed'].value).toBe('false');
     });
 
     test('dropdown', () => {
@@ -217,12 +221,18 @@ describe('Toolbar', () => {
       quill.setSelection(17);
       expect(centerButton.classList.contains('ql-active')).toBe(true);
       expect(leftButton.classList.contains('ql-active')).toBe(false);
+      expect(centerButton.attributes['aria-pressed'].value).toBe('true');
+      expect(leftButton.attributes['aria-pressed'].value).toBe('false');
       quill.setSelection(2);
       expect(centerButton.classList.contains('ql-active')).toBe(false);
       expect(leftButton.classList.contains('ql-active')).toBe(true);
+      expect(centerButton.attributes['aria-pressed'].value).toBe('false');
+      expect(leftButton.attributes['aria-pressed'].value).toBe('true');
       quill.blur();
       expect(centerButton.classList.contains('ql-active')).toBe(false);
       expect(leftButton.classList.contains('ql-active')).toBe(false);
+      expect(centerButton.attributes['aria-pressed'].value).toBe('false');
+      expect(leftButton.attributes['aria-pressed'].value).toBe('false');
     });
   });
 });
