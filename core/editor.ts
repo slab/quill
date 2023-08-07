@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import merge from 'lodash.merge';
-import { LeafBlot, EmbedBlot, Scope } from 'parchment';
+import { LeafBlot, EmbedBlot, Scope, Blot, ParentBlot } from 'parchment';
 import Delta, { AttributeMap, Op } from 'quill-delta';
 import Block, { BlockEmbed, bubbleFormats } from '../blots/block';
 import Break from '../blots/break';
@@ -194,8 +194,10 @@ class Editor {
   getHTML(index: number, length: number): string {
     const [line, lineOffset] = this.scroll.line(index);
     if (line) {
+      const lineLength = line.length();
       if (line.length() >= lineOffset + length) {
-        return convertHTML(line, lineOffset, length, true);
+        const excludeOuterTag = !(lineOffset === 0 && length === lineLength);
+        return convertHTML(line, lineOffset, length, excludeOuterTag);
       }
       return convertHTML(this.scroll, index, length, true);
     }
@@ -311,7 +313,7 @@ class Editor {
   }
 }
 
-function convertListHTML(items, lastIndent, types) {
+function convertListHTML(items, lastIndent: number, types: string[]) {
   if (items.length === 0) {
     const [endTag] = getListType(types.pop());
     if (lastIndent <= 0) {
@@ -344,19 +346,27 @@ function convertListHTML(items, lastIndent, types) {
   return `</li></${endTag}>${convertListHTML(items, lastIndent - 1, types)}`;
 }
 
-function convertHTML(blot, index, length, isRoot = false) {
-  if (typeof blot.html === 'function') {
+function convertHTML(
+  blot: Blot,
+  index: number,
+  length: number,
+  excludeOuterTag = false,
+) {
+  if ('html' in blot && typeof blot.html === 'function') {
     return blot.html(index, length);
   }
   if (blot instanceof TextBlot) {
     return escapeText(blot.value().slice(index, index + length));
   }
-  if (blot.children) {
+  if (blot instanceof ParentBlot) {
     // TODO fix API
     if (blot.statics.blotName === 'list-container') {
       const items: any[] = [];
       blot.children.forEachAt(index, length, (child, offset, childLength) => {
-        const formats = child.formats();
+        const formats =
+          'formats' in child && typeof child.formats === 'function'
+            ? child.formats()
+            : {};
         items.push({
           child,
           offset,
@@ -371,10 +381,10 @@ function convertHTML(blot, index, length, isRoot = false) {
     blot.children.forEachAt(index, length, (child, offset, childLength) => {
       parts.push(convertHTML(child, offset, childLength));
     });
-    if (isRoot || blot.statics.blotName === 'list') {
+    if (excludeOuterTag || blot.statics.blotName === 'list') {
       return parts.join('');
     }
-    const { outerHTML, innerHTML } = blot.domNode;
+    const { outerHTML, innerHTML } = blot.domNode as Element;
     const [start, end] = outerHTML.split(`>${innerHTML}<`);
     // TODO cleanup
     if (start === '<table') {
@@ -382,7 +392,7 @@ function convertHTML(blot, index, length, isRoot = false) {
     }
     return `${start}>${parts.join('')}<${end}`;
   }
-  return blot.domNode.outerHTML;
+  return blot.domNode instanceof Element ? blot.domNode.outerHTML : '';
 }
 
 function combineFormats(formats, combined) {
