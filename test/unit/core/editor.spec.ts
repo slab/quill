@@ -1214,8 +1214,18 @@ describe('Editor', () => {
 
   describe('getHTML', () => {
     test('inline', () => {
+      expect(
+        createEditor('<blockquote>Test</blockquote>').getHTML(1, 2),
+      ).toEqual('es');
+
+      expect(
+        createEditor('<blockquote>Test</blockquote>').getHTML(0, 4),
+      ).toEqual('Test');
+    });
+
+    test('entire line', () => {
       const editor = createEditor('<blockquote>Test</blockquote>');
-      expect(editor.getHTML(1, 2)).toEqual('es');
+      expect(editor.getHTML(0, 5)).toEqual('<blockquote>Test</blockquote>');
     });
 
     test('across lines', () => {

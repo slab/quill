@@ -171,6 +171,7 @@ class Toolbar extends Module<ToolbarProps> {
         }
       } else if (range == null) {
         input.classList.remove('ql-active');
+        input.setAttribute('aria-pressed', 'false');
       } else if (input.hasAttribute('value')) {
         // both being null should match (default values)
         // '1' should match with 1 (headers)
@@ -180,8 +181,11 @@ class Toolbar extends Module<ToolbarProps> {
           (value != null && value.toString() === input.getAttribute('value')) ||
           (value == null && !input.getAttribute('value'));
         input.classList.toggle('ql-active', isActive);
+        input.setAttribute('aria-pressed', isActive.toString());
       } else {
-        input.classList.toggle('ql-active', formats[format] != null);
+        const isActive = formats[format] != null;
+        input.classList.toggle('ql-active', isActive);
+        input.setAttribute('aria-pressed', isActive.toString());
       }
     });
   }
@@ -192,6 +196,7 @@ function addButton(container: HTMLElement, format: string, value?: unknown) {
   const input = document.createElement('button');
   input.setAttribute('type', 'button');
   input.classList.add(`ql-${format}`);
+  input.setAttribute('aria-pressed', 'false');
   if (value != null) {
     // @ts-expect-error
     input.value = value;

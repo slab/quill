@@ -199,8 +199,10 @@ class Editor {
   getHTML(index: number, length: number): string {
     const [line, lineOffset] = this.scroll.line(index);
     if (line) {
+      const lineLength = line.length();
       if (line.length() >= lineOffset + length) {
-        return convertHTML(line, lineOffset, length, true);
+        const excludeOuterTag = !(lineOffset === 0 && length === lineLength);
+        return convertHTML(line, lineOffset, length, excludeOuterTag);
       }
       return convertHTML(this.scroll, index, length, true);
     }
@@ -362,26 +364,27 @@ function convertListHTML(
 }
 
 function convertHTML(
-  blot: Blot | { html(index: number, length: number): string },
+  blot: Blot,
   index: number,
   length: number,
-  isRoot = false,
+  excludeOuterTag = false,
 ): string {
   if ('html' in blot && typeof blot.html === 'function') {
     return blot.html(index, length);
   }
-
   if (!('html' in blot)) {
     if (blot instanceof TextBlot) {
       return escapeText(blot.value().slice(index, index + length));
     }
-    if ('children' in blot && blot instanceof ParentBlot) {
+    if (blot instanceof ParentBlot) {
       // TODO fix API
       if (blot.statics.blotName === 'list-container') {
         const items: any[] = [];
         blot.children.forEachAt(index, length, (child, offset, childLength) => {
-          // @ts-expect-error error in parchment types
-          const formats = child.formats();
+          const formats =
+            'formats' in child && typeof child.formats === 'function'
+              ? child.formats()
+              : {};
           items.push({
             child,
             offset,
@@ -396,10 +399,10 @@ function convertHTML(
       blot.children.forEachAt(index, length, (child, offset, childLength) => {
         parts.push(convertHTML(child, offset, childLength));
       });
-      if (isRoot || blot.statics.blotName === 'list') {
+      if (excludeOuterTag || blot.statics.blotName === 'list') {
         return parts.join('');
       }
-      const { outerHTML, innerHTML } = blot.domNode;
+      const { outerHTML, innerHTML } = blot.domNode as Element;
       const [start, end] = outerHTML.split(`>${innerHTML}<`);
       // TODO cleanup
       if (start === '<table') {
@@ -409,7 +412,7 @@ function convertHTML(
       }
       return `${start}>${parts.join('')}<${end}`;
     }
-    return (blot.domNode as HTMLElement).outerHTML;
+    return blot.domNode instanceof Element ? blot.domNode.outerHTML : '';
   }
 
   return '';
