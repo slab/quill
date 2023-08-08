@@ -59,30 +59,34 @@ class Selection {
       const native = this.getNativeRange();
       if (native == null) return;
       if (native.start.node === this.cursor.textNode) return; // cursor.restore() will handle
-      this.emitter.once(Emitter.events.SCROLL_UPDATE, (source, mutations) => {
-        try {
-          if (
-            this.root.contains(native.start.node) &&
-            this.root.contains(native.end.node)
-          ) {
-            this.setNativeRange(
-              native.start.node,
-              native.start.offset,
-              native.end.node,
-              native.end.offset,
+      this.emitter.once(
+        Emitter.events.SCROLL_UPDATE,
+        (source, mutations: MutationRecord[]) => {
+          try {
+            if (
+              this.root.contains(native.start.node) &&
+              this.root.contains(native.end.node)
+            ) {
+              this.setNativeRange(
+                native.start.node,
+                native.start.offset,
+                native.end.node,
+                native.end.offset,
+              );
+            }
+            const triggeredByTyping = mutations.some(
+              mutation =>
+                mutation.type === 'characterData' ||
+                mutation.type === 'childList' ||
+                (mutation.type === 'attributes' &&
+                  mutation.target === this.root),
             );
+            this.update(triggeredByTyping ? Emitter.sources.SILENT : source);
+          } catch (ignored) {
+            // ignore
           }
-          const triggeredByTyping = mutations.some(
-            (mutation: MutationRecord) =>
-              mutation.type === 'characterData' ||
-              mutation.type === 'childList' ||
-              (mutation.type === 'attributes' && mutation.target === this.root),
-          );
-          this.update(triggeredByTyping ? Emitter.sources.SILENT : source);
-        } catch (ignored) {
-          // ignore
-        }
-      });
+        },
+      );
     });
     this.emitter.on(Emitter.events.SCROLL_OPTIMIZE, (mutations, context) => {
       if (context.range) {
@@ -177,7 +181,7 @@ class Selection {
       range.setEnd(node, offset);
       return range.getBoundingClientRect();
     }
-    let side: keyof DOMRect = 'left';
+    let side: 'left' | 'right' = 'left';
     let rect: DOMRect;
     if (node instanceof Text) {
       // Return null if the text node is empty because it is

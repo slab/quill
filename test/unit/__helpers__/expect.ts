@@ -39,7 +39,7 @@ expect.extend({
         node.remove();
       });
 
-      ignoreAttrs.forEach((attr: string) => {
+      ignoreAttrs.forEach(attr => {
         Array.from(dom.querySelectorAll(`[${attr}]`)).forEach(node => {
           node.removeAttribute(attr);
         });

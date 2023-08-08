@@ -969,7 +969,11 @@ function shiftRange(
   if (range == null) return null;
   let start;
   let end;
-  if (index && index instanceof Delta) {
+  if (
+    index &&
+    typeof index !== 'number' &&
+    typeof index.transformPosition === 'function'
+  ) {
     [start, end] = [range.index, range.index + range.length].map(pos =>
       index.transformPosition(pos, source !== Emitter.sources.USER),
     );
