@@ -21,7 +21,6 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.5.0",
-    "lodash.omit": "^4.5.0",
     "parchment": "^3.0.0-alpha.1",
     "quill-delta": "^5.1.0"
   },
@@ -112,5 +111,9 @@
   "engines": {
     "npm": ">=8.2.3"
   },
-  "engineStrict": true
+  "engineStrict": true,
+  "volta": {
+    "node": "18.17.0",
+    "npm": "8.19.4"
+  }
 }

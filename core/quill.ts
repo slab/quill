@@ -16,7 +16,6 @@ import Module from './module';
 import Selection, { Range } from './selection';
 import Composition from './composition';
 import Theme from './theme';
-import omit from 'lodash.omit';
 import scrollRectIntoView, { Rect } from './utils/scrollRectIntoView';
 
 const debug = logger('quill');
@@ -741,6 +740,7 @@ function expandConfig(
   container: HTMLElement | string,
   userConfig: Options,
 ): ExpandedOptions {
+  // @ts-expect-error -- TODO fix this later
   let expandedConfig: ExpandedOptions = merge(
     {
       container,
@@ -751,10 +751,11 @@ function expandConfig(
         uploader: true,
       },
     },
-    { ...omit(userConfig, 'theme') },
+    userConfig,
   );
 
-  if (!userConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
+  // @ts-expect-error -- TODO fix this later
+  if (!expandedConfig.theme || expandedConfig.theme === Quill.DEFAULTS.theme) {
     expandedConfig.theme = Theme;
   } else {
     expandedConfig.theme = Quill.import(`themes/${userConfig.theme}`);
@@ -969,21 +970,21 @@ function shiftRange(
   if (range == null) return null;
   let start;
   let end;
-  if (
-    index &&
-    typeof index !== 'number' &&
-    typeof index.transformPosition === 'function'
-  ) {
+  // @ts-expect-error -- TODO: add a better type guard around `index`
+  if (index && typeof index.transformPosition === 'function') {
     [start, end] = [range.index, range.index + range.length].map(pos =>
+      // @ts-expect-error -- TODO: add a better type guard around `index`
       index.transformPosition(pos, source !== Emitter.sources.USER),
     );
   } else {
     [start, end] = [range.index, range.index + range.length].map(pos => {
+      // @ts-expect-error -- TODO: add a better type guard around `index`
       if (pos < index || (pos === index && source === Emitter.sources.USER))
         return pos;
       if (length >= 0) {
         return pos + length;
       }
+      // @ts-expect-error -- TODO: add a better type guard around `index`
       return Math.max(index, pos + length);
     });
   }
