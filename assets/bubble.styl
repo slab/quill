@@ -11,10 +11,10 @@ textColor = #fff
 @import './bubble/*'
 
 .ql-container.ql-bubble:not(.ql-disabled)
-  a
+  a:not(.ql-close)
     position: relative
     white-space: nowrap
-  a::before
+  a:not(.ql-close)::before
     background-color: #444
     border-radius: 15px
     top: -5px
@@ -26,7 +26,7 @@ textColor = #fff
     padding: 5px 15px
     text-decoration: none
     z-index: 1
-  a::after
+  a:not(.ql-close)::after
     border-top: 6px solid #444
     border-left: 6px solid transparent
     border-right: 6px solid transparent
@@ -34,12 +34,12 @@ textColor = #fff
     content: " "
     height: 0
     width: 0
-  a::before, a::after
+  a:not(.ql-close)::before, a:not(.ql-close)::after
     left: 0
     margin-left: 50%
     position: absolute
     transform: translate(-50%, -100%)
     transition: visibility 0s ease 200ms
     visibility: hidden
-  a:hover::before, a:hover::after
+  a:not(.ql-close):hover::before, a:not(.ql-close):hover::after
     visibility: visible
