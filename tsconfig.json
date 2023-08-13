@@ -9,6 +9,7 @@
     "noEmit": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
+    "verbatimModuleSyntax": true,
     "noUnusedLocals": true
   },
   "include": ["./**/*"]

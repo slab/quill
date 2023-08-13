@@ -1,12 +1,13 @@
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import merge from 'lodash.merge';
-import { LeafBlot, EmbedBlot, Scope, Blot, ParentBlot } from 'parchment';
+import { LeafBlot, EmbedBlot, Scope, ParentBlot } from 'parchment';
+import type { Blot } from 'parchment';
 import Delta, { AttributeMap, Op } from 'quill-delta';
 import Block, { BlockEmbed, bubbleFormats } from '../blots/block';
 import Break from '../blots/break';
 import CursorBlot from '../blots/cursor';
-import Scroll from '../blots/scroll';
+import type Scroll from '../blots/scroll';
 import TextBlot, { escapeText } from '../blots/text';
 import { Range } from './selection';
 

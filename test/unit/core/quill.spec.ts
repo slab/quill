@@ -1,13 +1,7 @@
 import '../../../quill';
 import Delta from 'quill-delta';
-import {
-  MockedFunction,
-  beforeEach,
-  describe,
-  expect,
-  test,
-  vitest,
-} from 'vitest';
+import { beforeEach, describe, expect, test, vitest } from 'vitest';
+import type { MockedFunction } from 'vitest';
 import Emitter from '../../../core/emitter';
 import Theme from '../../../core/theme';
 import Toolbar from '../../../modules/toolbar';

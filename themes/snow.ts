@@ -4,10 +4,11 @@ import BaseTheme, { BaseTooltip } from './base';
 import LinkBlot from '../formats/link';
 import { Range } from '../core/selection';
 import icons from '../ui/icons';
-import Quill from '../core';
-import { Context } from '../modules/keyboard';
-import Toolbar, { ToolbarConfig } from '../modules/toolbar';
-import { ThemeOptions } from '../core/theme';
+import type Quill from '../core';
+import type { Context } from '../modules/keyboard';
+import type Toolbar from '../modules/toolbar';
+import type { ToolbarConfig } from '../modules/toolbar';
+import type { ThemeOptions } from '../core/theme';
 
 const TOOLBAR_CONFIG: ToolbarConfig = [
   [{ header: ['1', '2', '3', false] }],

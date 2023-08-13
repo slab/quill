@@ -1,6 +1,13 @@
 import { describe, expect, test } from 'vitest';
 import Keyboard, { SHORTKEY, normalize } from '../../../modules/keyboard';
 
+const assert = <T>(value: T | null | undefined): T => {
+  if (value == null) {
+    throw new Error();
+  }
+  return value;
+};
+
 const createKeyboardEvent = (key: string, override?: Partial<KeyboardEvent>) =>
   new KeyboardEvent('keydown', {
     key,
@@ -17,9 +24,14 @@ describe('Keyboard', () => {
       const binding = normalize({
         key: 'a',
       });
-      expect(Keyboard.match(createKeyboardEvent('a'), binding!)).toBe(true);
+      expect(Keyboard.match(createKeyboardEvent('a'), assert(binding))).toBe(
+        true,
+      );
       expect(
-        Keyboard.match(createKeyboardEvent('A', { altKey: true }), binding!),
+        Keyboard.match(
+          createKeyboardEvent('A', { altKey: true }),
+          assert(binding),
+        ),
       ).toBe(false);
     });
 
@@ -28,9 +40,14 @@ describe('Keyboard', () => {
         key: 'a',
         altKey: true,
       });
-      expect(Keyboard.match(createKeyboardEvent('a'), binding!)).toBe(false);
+      expect(Keyboard.match(createKeyboardEvent('a'), assert(binding))).toBe(
+        false,
+      );
       expect(
-        Keyboard.match(createKeyboardEvent('a', { altKey: true }), binding!),
+        Keyboard.match(
+          createKeyboardEvent('a', { altKey: true }),
+          assert(binding),
+        ),
       ).toBe(true);
     });
 
@@ -39,9 +56,14 @@ describe('Keyboard', () => {
         key: 'a',
         altKey: null,
       });
-      expect(Keyboard.match(createKeyboardEvent('a'), binding!)).toBe(true);
+      expect(Keyboard.match(createKeyboardEvent('a'), assert(binding))).toBe(
+        true,
+      );
       expect(
-        Keyboard.match(createKeyboardEvent('a', { altKey: true }), binding!),
+        Keyboard.match(
+          createKeyboardEvent('a', { altKey: true }),
+          assert(binding),
+        ),
       ).toBe(true);
     });
 
@@ -50,11 +72,13 @@ describe('Keyboard', () => {
         key: 'a',
         shortKey: true,
       });
-      expect(Keyboard.match(createKeyboardEvent('a'), binding!)).toBe(false);
+      expect(Keyboard.match(createKeyboardEvent('a'), assert(binding))).toBe(
+        false,
+      );
       expect(
         Keyboard.match(
           createKeyboardEvent('a', { [SHORTKEY]: true }),
-          binding!,
+          assert(binding),
         ),
       ).toBe(true);
     });
@@ -64,11 +88,13 @@ describe('Keyboard', () => {
         key: 'a',
         [SHORTKEY]: true,
       });
-      expect(Keyboard.match(createKeyboardEvent('a'), binding!)).toBe(false);
+      expect(Keyboard.match(createKeyboardEvent('a'), assert(binding))).toBe(
+        false,
+      );
       expect(
         Keyboard.match(
           createKeyboardEvent('a', { [SHORTKEY]: true }),
-          binding!,
+          assert(binding),
         ),
       ).toBe(true);
     });

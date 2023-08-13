@@ -1,16 +1,8 @@
-import {
-  Blot,
-  ContainerBlot,
-  EmbedBlot,
-  LeafBlot,
-  Parent,
-  ParentBlot,
-  Registry,
-  Scope,
-  ScrollBlot,
-} from 'parchment';
+import { ContainerBlot, LeafBlot, Scope, ScrollBlot } from 'parchment';
+import type { Blot, Parent, EmbedBlot, ParentBlot, Registry } from 'parchment';
 import Delta, { AttributeMap, Op } from 'quill-delta';
-import Emitter, { EmitterSource } from '../core/emitter';
+import Emitter from '../core/emitter';
+import type { EmitterSource } from '../core/emitter';
 import Block, { BlockEmbed } from './block';
 import Break from './break';
 import Container from './container';

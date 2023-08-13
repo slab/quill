@@ -1,10 +1,11 @@
 import { LeafBlot, Scope } from 'parchment';
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
-import Emitter, { EmitterSource } from './emitter';
+import Emitter from './emitter';
+import type { EmitterSource } from './emitter';
 import logger from './logger';
-import Cursor from '../blots/cursor';
-import Scroll from '../blots/scroll';
+import type Cursor from '../blots/cursor';
+import type Scroll from '../blots/scroll';
 
 const debug = logger('quill:selection');
 
@@ -173,7 +174,7 @@ class Selection {
     this.update();
   }
 
-  getBounds(index: number, length = 0): Bounds | null {
+  getBounds(index: number, length = 0) {
     const scrollLength = this.scroll.length();
     index = Math.min(index, scrollLength - 1);
     length = Math.min(index + length, scrollLength - 1) - index;

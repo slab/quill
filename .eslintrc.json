@@ -30,6 +30,7 @@
       "excludedFiles": "*.d.ts",
       "plugins": ["prettier", "@typescript-eslint"],
       "rules": {
+        "@typescript-eslint/consistent-type-imports": "error",
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/ban-types": "off",
