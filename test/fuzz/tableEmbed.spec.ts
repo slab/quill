@@ -1,8 +1,7 @@
-import Delta from 'quill-delta';
+import Delta, { AttributeMap } from 'quill-delta';
 import TableEmbed, {
   CellData,
   TableData,
-  TableInsert,
   TableRowColumnOp,
 } from '../../modules/tableEmbed';
 import { choose, randomInt } from './__helpers__/utils';
@@ -23,7 +22,7 @@ const attachAttributes = <T extends object>(
     const attributeCount = choose([1, 4, 8]);
     const allowedAttributes = ['align', 'background', 'color', 'font'];
     const allowedValues = ['center', 'red', 'left', 'uppercase'];
-    const attributes: Record<string, unknown> = {};
+    const attributes: AttributeMap = {};
     new Array(attributeCount).fill(0).forEach(() => {
       attributes[choose(allowedAttributes)] = choose(allowedValues);
     });
@@ -54,12 +53,13 @@ const getRandomCellContent = () => {
 };
 
 const getRandomChange = (base: Delta) => {
-  const tableInsert = base.ops[0] as TableInsert;
   const table: TableData = {};
   const dimension = {
-    rows: new Delta(tableInsert.insert['table-embed'].rows || []).length(),
+    rows: new Delta(
+      (base.ops[0].insert as any)['table-embed'].rows || [],
+    ).length(),
     columns: new Delta(
-      tableInsert.insert['table-embed'].columns || [],
+      (base.ops[0].insert as any)['table-embed'].columns || [],
     ).length(),
   };
   (['rows', 'columns'] as const).forEach(field => {
@@ -89,7 +89,7 @@ const getRandomChange = (base: Delta) => {
         break;
     }
     if (delta.length() > 0) {
-      table[field] = delta;
+      table[field] = delta.ops;
     }
   });
 
@@ -107,14 +107,12 @@ const getRandomChange = (base: Delta) => {
   return new Delta([attachAttributes({ retain: { 'table-embed': table } })]);
 };
 
-const getRandomRowColumnInsert = (count: number): Delta => {
-  const ops = new Array(count)
+const getRandomRowColumnInsert = (count: number): TableRowColumnOp[] => {
+  return new Array(count)
     .fill(0)
     .map<TableRowColumnOp>(() =>
       attachAttributes({ insert: { id: getRandomRowColumnId() } }),
     );
-
-  return new Delta(ops);
 };
 
 const getRandomBase = () => {
@@ -126,7 +124,7 @@ const getRandomBase = () => {
   if (rowCount) table.rows = getRandomRowColumnInsert(rowCount);
   if (columnCount) table.columns = getRandomRowColumnInsert(columnCount);
   if (cellCount) {
-    const cells: TableData['cells'] = {};
+    const cells: Record<string, CellData> = {};
     new Array(cellCount).fill(0).forEach(() => {
       const row = randomInt(rowCount);
       const column = randomInt(columnCount);

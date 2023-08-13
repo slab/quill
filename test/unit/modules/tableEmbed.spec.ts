@@ -47,15 +47,15 @@ describe('tableHandler', () => {
           {
             insert: {
               'table-embed': {
-                rows: new Delta([
+                rows: [
                   { insert: { id: '55555555' } },
                   { insert: { id: '11111111' }, attributes: { height: 20 } },
-                ]),
-                columns: new Delta([
+                ],
+                columns: [
                   { insert: { id: '22222222' } },
                   { insert: { id: '33333333' }, attributes: { width: 30 } },
                   { insert: { id: '44444444' } },
-                ]),
+                ],
                 cells: {
                   '2:2': {
                     content: [{ insert: 'Hello' }],
@@ -111,16 +111,16 @@ describe('tableHandler', () => {
           {
             insert: {
               'table-embed': {
-                rows: new Delta([
+                rows: [
                   { insert: { id: '55555555' } },
                   { insert: { id: '66666666' } },
                   { insert: { id: '11111111' }, attributes: { height: 20 } },
-                ]),
-                columns: new Delta([
+                ],
+                columns: [
                   { insert: { id: '22222222' } },
                   { insert: { id: '33333333' }, attributes: { width: 30 } },
                   { insert: { id: '44444444' } },
-                ]),
+                ],
                 cells: {
                   '3:2': {
                     content: [{ insert: 'Hello' }],
@@ -176,16 +176,16 @@ describe('tableHandler', () => {
           {
             insert: {
               'table-embed': {
-                rows: new Delta([
+                rows: [
                   { insert: { id: '66666666' } },
                   { insert: { id: '11111111' } },
                   { insert: { id: '22222222' }, attributes: { height: 20 } },
-                ]),
-                columns: new Delta([
+                ],
+                columns: [
                   { insert: { id: '33333333' } },
                   { insert: { id: '44444444' }, attributes: { width: 30 } },
                   { insert: { id: '55555555' } },
-                ]),
+                ],
                 cells: {
                   '3:2': {
                     content: [{ insert: 'Hello' }],
@@ -228,7 +228,7 @@ describe('tableHandler', () => {
         {
           retain: {
             'table-embed': {
-              columns: new Delta([{ retain: 1 }, { delete: 1 }]),
+              columns: [{ retain: 1 }, { delete: 1 }],
             },
           },
         },
@@ -239,13 +239,13 @@ describe('tableHandler', () => {
           {
             insert: {
               'table-embed': {
-                rows: new Delta([
+                rows: [
                   { insert: { id: '11111111' }, attributes: { height: 20 } },
-                ]),
-                columns: new Delta([
+                ],
+                columns: [
                   { insert: { id: '22222222' } },
                   { insert: { id: '44444444' } },
-                ]),
+                ],
               },
             },
           },
@@ -336,16 +336,16 @@ describe('tableHandler', () => {
           {
             retain: {
               'table-embed': {
-                rows: new Delta([
+                rows: [
                   { retain: 3 },
                   { delete: 1 },
                   { retain: 1, attributes: { height: 50 } },
-                ]),
-                columns: new Delta([
+                ],
+                columns: [
                   { retain: 3 },
                   { delete: 1 },
                   { retain: 2, attributes: { width: 40 } },
-                ]),
+                ],
               },
             },
           },
@@ -395,7 +395,7 @@ describe('tableHandler', () => {
           {
             retain: {
               'table-embed': {
-                rows: new Delta([{ retain: 1 }, { delete: 1 }]),
+                rows: [{ retain: 1 }, { delete: 1 }],
                 cells: {
                   '7:1': {
                     content: [{ insert: 'Hello 6:1!' }],
@@ -485,11 +485,11 @@ describe('tableHandler', () => {
           {
             retain: {
               'table-embed': {
-                rows: new Delta([{ insert: { id: '11111111' } }]),
-                columns: new Delta([
+                rows: [{ insert: { id: '11111111' } }],
+                columns: [
                   { retain: 1 },
                   { insert: { id: '44444444' }, attributes: { width: 100 } },
-                ]),
+                ],
               },
             },
           },
@@ -539,7 +539,7 @@ describe('tableHandler', () => {
           {
             retain: {
               'table-embed': {
-                rows: new Delta([{ delete: 1 }]),
+                rows: [{ delete: 1 }],
                 cells: {
                   '1:2': {
                     content: [{ retain: 6 }, { insert: '1' }, { delete: 1 }],
@@ -589,10 +589,7 @@ describe('tableHandler', () => {
           {
             retain: {
               'table-embed': {
-                columns: new Delta([
-                  { retain: 1 },
-                  { insert: { id: '44444444' } },
-                ]),
+                columns: [{ retain: 1 }, { insert: { id: '44444444' } }],
                 cells: {
                   '1:2': {
                     content: [{ insert: 'content' }],

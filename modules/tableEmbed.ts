@@ -1,4 +1,4 @@
-import Delta, { OpIterator } from 'quill-delta';
+import Delta, { AttributeMap, OpIterator } from 'quill-delta';
 import Op from 'quill-delta/dist/Op';
 import Module from '../core/module';
 
@@ -12,15 +12,9 @@ export type TableRowColumnOp = Omit<Op, 'insert'> & {
 };
 
 export interface TableData {
-  rows?: Delta;
-  columns?: Delta;
+  rows?: Delta['ops'];
+  columns?: Delta['ops'];
   cells?: Record<string, CellData>;
-}
-
-export interface TableInsert {
-  insert: {
-    'table-embed': TableData;
-  };
 }
 
 const parseCellIdentity = (identity: string) => {
@@ -58,10 +52,16 @@ export const composePosition = (delta: Delta, index: number) => {
   return newIndex;
 };
 
-const compactCellData = ({ content, attributes }: CellData) => {
+const compactCellData = ({
+  content,
+  attributes,
+}: {
+  content: Delta;
+  attributes: AttributeMap | undefined;
+}) => {
   const data: CellData = {};
-  if (content && content.length > 0) {
-    data.content = content;
+  if (content.length() > 0) {
+    data.content = content.ops;
   }
   if (attributes && Object.keys(attributes).length > 0) {
     data.attributes = attributes;
@@ -69,17 +69,25 @@ const compactCellData = ({ content, attributes }: CellData) => {
   return Object.keys(data).length > 0 ? data : null;
 };
 
-const compactTableData = ({ rows, columns, cells }: TableData) => {
+const compactTableData = ({
+  rows,
+  columns,
+  cells,
+}: {
+  rows: Delta;
+  columns: Delta;
+  cells: Record<string, CellData>;
+}) => {
   const data: TableData = {};
-  if (rows && rows.length() > 0) {
-    data.rows = rows;
+  if (rows.length() > 0) {
+    data.rows = rows.ops;
   }
 
-  if (columns && columns.length() > 0) {
-    data.columns = columns;
+  if (columns.length() > 0) {
+    data.columns = columns.ops;
   }
 
-  if (cells && Object.keys(cells).length) {
+  if (Object.keys(cells).length) {
     data.cells = cells;
   }
 
@@ -87,10 +95,10 @@ const compactTableData = ({ rows, columns, cells }: TableData) => {
 };
 
 const reindexCellIdentities = (
-  cells: NonNullable<TableData['cells']>,
-  { rows, columns }: TableData,
+  cells: Record<string, CellData>,
+  { rows, columns }: { rows: Delta; columns: Delta },
 ) => {
-  const reindexedCells: NonNullable<TableData['cells']> = {};
+  const reindexedCells: Record<string, CellData> = {};
   Object.keys(cells).forEach(identity => {
     let [row, column] = parseCellIdentity(identity);
 
@@ -126,7 +134,7 @@ export const tableHandler = {
 
       const content = new Delta(aCell.content || []).compose(
         new Delta(bCell.content || []),
-      ).ops;
+      );
 
       const attributes = Delta.AttributeMap.compose(
         aCell.attributes,
@@ -180,7 +188,7 @@ export const tableHandler = {
           const content = new Delta(aCell.content || []).transform(
             new Delta(bCell.content || []),
             priority,
-          ).ops;
+          );
 
           const attributes = Delta.AttributeMap.transform(
             aCell.attributes,
@@ -216,7 +224,7 @@ export const tableHandler = {
       const baseCell = (base.cells || {})[identity] || {};
       const content = new Delta(changeCell.content || []).invert(
         new Delta(baseCell.content || []),
-      ).ops;
+      );
       const attributes = Delta.AttributeMap.invert(
         changeCell.attributes,
         baseCell.attributes,
