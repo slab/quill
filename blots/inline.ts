@@ -1,4 +1,5 @@
-import { BlotConstructor, EmbedBlot, InlineBlot, Scope } from 'parchment';
+import { EmbedBlot, InlineBlot, Scope } from 'parchment';
+import type { BlotConstructor } from 'parchment';
 import Break from './break';
 import Text from './text';
 

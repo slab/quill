@@ -3,7 +3,7 @@ import { EmbedBlot, Scope } from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
-import { Range } from '../core/selection';
+import type { Range } from '../core/selection';
 
 const debug = logger('quill:toolbar');
 

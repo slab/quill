@@ -1,7 +1,8 @@
-import { EmbedBlot, Parent, Scope, ScrollBlot } from 'parchment';
-import Selection from '../core/selection';
+import { EmbedBlot, Scope } from 'parchment';
+import type { Parent, ScrollBlot } from 'parchment';
+import type Selection from '../core/selection';
 import TextBlot from './text';
-import { EmbedContextRange } from './embed';
+import type { EmbedContextRange } from './embed';
 
 class Cursor extends EmbedBlot {
   static blotName = 'cursor';

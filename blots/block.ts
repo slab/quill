@@ -1,12 +1,11 @@
 import {
   AttributorStore,
   BlockBlot,
-  Blot,
   EmbedBlot,
   LeafBlot,
-  Parent,
   Scope,
 } from 'parchment';
+import type { Blot, Parent } from 'parchment';
 import Delta from 'quill-delta';
 import Break from './break';
 import Inline from './inline';

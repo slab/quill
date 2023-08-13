@@ -1,5 +1,5 @@
 import Embed from '../blots/embed';
-import Scroll from '../blots/scroll';
+import type Scroll from '../blots/scroll';
 import Emitter from './emitter';
 
 class Composition {

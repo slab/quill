@@ -1,5 +1,6 @@
 import Delta from 'quill-delta';
-import { Blot, ClassAttributor, Scope, ScrollBlot } from 'parchment';
+import { ClassAttributor, Scope } from 'parchment';
+import type { Blot, ScrollBlot } from 'parchment';
 import Inline from '../blots/inline';
 import Quill from '../core/quill';
 import Module from '../core/module';

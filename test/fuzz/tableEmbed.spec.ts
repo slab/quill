@@ -1,5 +1,7 @@
-import Delta, { AttributeMap } from 'quill-delta';
-import TableEmbed, {
+import type { AttributeMap } from 'quill-delta';
+import Delta from 'quill-delta';
+import TableEmbed from '../../modules/tableEmbed';
+import type {
   CellData,
   TableData,
   TableRowColumnOp,

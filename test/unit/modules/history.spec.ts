@@ -1,7 +1,8 @@
 import Delta from 'quill-delta';
 import { describe, expect, test, vitest } from 'vitest';
 import Quill from '../../../core';
-import { HistoryOptions, getLastChangeIndex } from '../../../modules/history';
+import { getLastChangeIndex } from '../../../modules/history';
+import type { HistoryOptions } from '../../../modules/history';
 import { createRegistry, createScroll } from '../__helpers__/factory';
 import { sleep } from '../__helpers__/utils';
 import Bold from '../../../formats/bold';

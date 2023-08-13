@@ -1,6 +1,6 @@
 import Block from '../blots/block';
 import Container from '../blots/container';
-import Scroll from '../blots/scroll';
+import type Scroll from '../blots/scroll';
 import Quill from '../core/quill';
 
 class ListContainer extends Container {}
