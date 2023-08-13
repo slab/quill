@@ -113,10 +113,6 @@ class Scroll extends ScrollBlot {
     this.optimize();
   }
 
-  handleDragStart(event: DragEvent) {
-    event.preventDefault();
-  }
-
   insertAt(index: number, value: string, def?: unknown) {
     if (index >= this.length()) {
       if (def == null || this.scroll.query(value, Scope.BLOCK) == null) {
@@ -175,8 +171,7 @@ class Scroll extends ScrollBlot {
         this.insertAt(lineEndIndex - 1, '\n');
       }
 
-      const blot = this.line(index)[0];
-      const formats = bubbleFormats(blot);
+      const formats = bubbleFormats(this.line(index)[0]);
       const attributes = AttributeMap.diff(formats, first.attributes) || {};
       Object.keys(attributes).forEach(name => {
         this.formatAt(lineEndIndex - 1, 1, name, attributes[name]);
@@ -327,6 +322,10 @@ class Scroll extends ScrollBlot {
     if (blot && blot.statics.blotName === key && isUpdatable(blot)) {
       blot.updateContent(change);
     }
+  }
+
+  protected handleDragStart(event: DragEvent) {
+    event.preventDefault();
   }
 
   private deltaToRenderBlocks(delta: Delta) {
