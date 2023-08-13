@@ -19,6 +19,15 @@ interface NormalizedRange {
   native: NativeRange;
 }
 
+export interface Bounds {
+  bottom: number;
+  height: number;
+  left: number;
+  right: number;
+  top: number;
+  width: number;
+}
+
 class Range {
   constructor(public index: number, public length = 0) {}
 }
@@ -164,7 +173,7 @@ class Selection {
     this.update();
   }
 
-  getBounds(index: number, length = 0) {
+  getBounds(index: number, length = 0): Bounds | null {
     const scrollLength = this.scroll.length();
     index = Math.min(index, scrollLength - 1);
     length = Math.min(index + length, scrollLength - 1) - index;

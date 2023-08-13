@@ -1,10 +1,9 @@
 import merge from 'lodash.merge';
 import Emitter from '../core/emitter';
 import BaseTheme, { BaseTooltip } from './base';
-import { Range } from '../core/selection';
+import { Bounds, Range } from '../core/selection';
 import icons from '../ui/icons';
 import Quill from '../core';
-import { BoundsStatic } from '../core/quill';
 import { ThemeOptions } from '../core/theme';
 import Toolbar, { ToolbarConfig } from '../modules/toolbar';
 
@@ -91,7 +90,7 @@ class BubbleTooltip extends BaseTooltip {
     this.show();
   }
 
-  position(reference: BoundsStatic) {
+  position(reference: Bounds) {
     const shift = super.position(reference);
     const arrow = this.root.querySelector('.ql-tooltip-arrow');
     // @ts-expect-error

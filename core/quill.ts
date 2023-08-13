@@ -13,17 +13,15 @@ import Emitter, { EmitterSource } from './emitter';
 import instances from './instances';
 import logger, { DebugLevel } from './logger';
 import Module from './module';
-import Selection, { Range } from './selection';
+import Selection, { Bounds, Range } from './selection';
 import Composition from './composition';
-import Theme from './theme';
+import Theme, { ThemeConstructor } from './theme';
 import scrollRectIntoView, { Rect } from './utils/scrollRectIntoView';
 
 const debug = logger('quill');
 
 const globalRegistry = new Parchment.Registry();
 Parchment.ParentBlot.uiClass = 'ql-ui';
-
-export type Sources = 'api' | 'silent' | 'user';
 
 interface Options {
   theme?: string;
@@ -37,22 +35,12 @@ interface Options {
 }
 
 interface ExpandedOptions extends Omit<Options, 'theme'> {
-  theme?: typeof Theme;
-  registry?: Parchment.Registry;
-  container?: HTMLElement | string;
+  theme: ThemeConstructor;
+  registry: Parchment.Registry;
+  container: HTMLElement;
   modules: Record<string, unknown>;
-  bounds?: HTMLElement | string | null;
-  [key: string]: unknown;
+  bounds?: HTMLElement | null;
 }
-
-export type BoundsStatic = {
-  bottom: number;
-  height: number;
-  left: number;
-  right: number;
-  top: number;
-  width: number;
-};
 
 class Quill {
   static DEFAULTS: Partial<Options> = {
@@ -159,18 +147,10 @@ class Quill {
 
   constructor(container: HTMLElement | string, options: Options = {}) {
     this.options = expandConfig(container, options);
-    if (this.options.container == null) {
+    this.container = this.options.container;
+    if (this.container == null) {
       debug.error('Invalid Quill container', container);
       return;
-    }
-    if (this.options.container instanceof HTMLElement) {
-      this.container = this.options.container;
-    }
-    if (typeof this.options.container === 'string') {
-      const el = document.querySelector<HTMLElement>(this.options.container);
-      if (el != null) {
-        this.container = el;
-      }
     }
     if (this.options.debug) {
       Quill.debug(this.options.debug);
@@ -182,21 +162,17 @@ class Quill {
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
     this.emitter = new Emitter();
-    if (this.options.registry) {
-      // @ts-expect-error TODO: fix BlotConstructor
-      const ScrollBlot = this.options.registry.query(
-        Parchment.ScrollBlot.blotName,
-      ) as ScrollConstructor;
-      this.scroll = new ScrollBlot(this.options.registry, this.root, {
-        emitter: this.emitter,
-      });
-    }
+    // @ts-expect-error TODO: fix BlotConstructor
+    const ScrollBlot = this.options.registry.query(
+      Parchment.ScrollBlot.blotName,
+    ) as ScrollConstructor;
+    this.scroll = new ScrollBlot(this.options.registry, this.root, {
+      emitter: this.emitter,
+    });
     this.editor = new Editor(this.scroll);
     this.selection = new Selection(this.scroll, this.emitter);
     this.composition = new Composition(this.scroll, this.emitter);
-    if (this.options.theme) {
-      this.theme = new this.options.theme(this, this.options); // eslint-disable-line new-cap
-    }
+    this.theme = new this.options.theme(this, this.options); // eslint-disable-line new-cap
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
@@ -428,8 +404,8 @@ class Quill {
     );
   }
 
-  getBounds(index: number | Range, length = 0): BoundsStatic | null {
-    let bounds;
+  getBounds(index: number | Range, length = 0): Bounds | null {
+    let bounds: Bounds | null = null;
     if (typeof index === 'number') {
       bounds = this.selection.getBounds(index, length);
     } else {
@@ -758,13 +734,14 @@ function expandConfig(
   if (!expandedConfig.theme || expandedConfig.theme === Quill.DEFAULTS.theme) {
     expandedConfig.theme = Theme;
   } else {
-    expandedConfig.theme = Quill.import(`themes/${userConfig.theme}`);
+    expandedConfig.theme = Quill.import(`themes/${expandedConfig.theme}`);
     if (expandedConfig.theme == null) {
       throw new Error(
         `Invalid theme ${expandedConfig.theme}. Did you register it?`,
       );
     }
   }
+  // @ts-expect-error -- TODO fix this later
   const themeConfig = cloneDeep(expandedConfig.theme.DEFAULTS);
   [themeConfig, expandedConfig].forEach(config => {
     config.modules = config.modules || {};
@@ -806,10 +783,11 @@ function expandConfig(
     themeConfig,
     expandedConfig,
   );
-  ['bounds', 'container'].forEach(key => {
+  (['bounds', 'container'] as const).forEach(key => {
     const selector = expandedConfig[key];
     if (typeof selector === 'string') {
-      expandedConfig[key] = document.querySelector(selector);
+      // @ts-expect-error Handle null case
+      expandedConfig[key] = document.querySelector(selector) as HTMLElement;
     }
   });
   expandedConfig.modules = Object.keys(expandedConfig.modules).reduce(
@@ -848,7 +826,8 @@ function modify(
     }
     if (shift == null) {
       range = shiftRange(range, change, source);
-    } else if (shift !== 0 && typeof index === 'number') {
+    } else if (shift !== 0) {
+      // @ts-expect-error index should always be number
       range = shiftRange(range, index, shift, source);
     }
     this.setSelection(range, Emitter.sources.SILENT);
@@ -963,10 +942,10 @@ function shiftRange(
 function shiftRange(
   range: Range,
   index: number | Delta,
-  _length?: number | EmitterSource,
+  lengthOrSource?: number | EmitterSource,
   source?: EmitterSource,
 ) {
-  const length = typeof _length === 'number' ? _length : 0;
+  const length = typeof lengthOrSource === 'number' ? lengthOrSource : 0;
   if (range == null) return null;
   let start;
   let end;
