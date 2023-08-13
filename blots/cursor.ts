@@ -1,7 +1,7 @@
 import { EmbedBlot, Parent, Scope, ScrollBlot } from 'parchment';
 import Selection from '../core/selection';
 import TextBlot from './text';
-import { EmbedContext } from './embed';
+import { EmbedContextRange } from './embed';
 
 class Cursor extends EmbedBlot {
   static blotName = 'cursor';
@@ -52,7 +52,7 @@ class Cursor extends EmbedBlot {
     }
   }
 
-  index(node: Text, offset: number) {
+  index(node: Node, offset: number) {
     if (node === this.textNode) return 0;
     return super.index(node, offset);
   }
@@ -71,7 +71,7 @@ class Cursor extends EmbedBlot {
     this.parent = null;
   }
 
-  restore(): EmbedContext | null {
+  restore(): EmbedContextRange | null {
     if (this.selection.composing || this.parent == null) return null;
     const range = this.selection.getNativeRange();
     // Browser may push down styles/nodes inside the cursor blot.
@@ -149,7 +149,7 @@ class Cursor extends EmbedBlot {
     return null;
   }
 
-  update(mutations: MutationRecord[], context: EmbedContext) {
+  update(mutations: MutationRecord[], context: Record<string, unknown>) {
     if (
       mutations.some(mutation => {
         return (

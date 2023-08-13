@@ -3,12 +3,11 @@ import TextBlot from './text';
 
 const GUARD_TEXT = '\uFEFF';
 
-export interface EmbedContext {
+export interface EmbedContextRange {
   startNode: Node | Text;
   startOffset: number;
   endNode?: Node | Text;
   endOffset?: number;
-  range?: EmbedContext;
 }
 
 class Embed extends EmbedBlot {
@@ -36,9 +35,9 @@ class Embed extends EmbedBlot {
     return super.index(node, offset);
   }
 
-  restore(node: Text): EmbedContext | null {
-    let range = null;
-    let textNode;
+  restore(node: Text): EmbedContextRange | null {
+    let range: EmbedContextRange | null = null;
+    let textNode: Text;
     const text = node.data.split(GUARD_TEXT).join('');
     if (node === this.leftGuard) {
       if (this.prev instanceof TextBlot) {
@@ -77,7 +76,7 @@ class Embed extends EmbedBlot {
     return range;
   }
 
-  update(mutations: MutationRecord[], context: EmbedContext) {
+  update(mutations: MutationRecord[], context: Record<string, unknown>) {
     mutations.forEach(mutation => {
       if (
         mutation.type === 'characterData' &&
