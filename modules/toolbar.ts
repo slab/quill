@@ -162,10 +162,10 @@ class Toolbar extends Module<ToolbarProps> {
           option = input.querySelector(`option[value="${value}"]`);
         }
         if (option == null) {
-          if (input instanceof HTMLSelectElement) {
-            input.value = ''; // TODO make configurable?
-            input.selectedIndex = -1;
-          }
+          // @ts-expect-error TODO fix me later
+          input.value = ''; // TODO make configurable?
+          // @ts-expect-error TODO fix me later
+          input.selectedIndex = -1;
         } else {
           option.selected = true;
         }
@@ -214,24 +214,22 @@ function addControls(
     // @ts-expect-error
     groups = [groups];
   }
-  groups.forEach(controls => {
+  groups.forEach((controls: any) => {
     const group = document.createElement('span');
     group.classList.add('ql-formats');
-    if (Array.isArray(controls)) {
-      controls.forEach(control => {
-        if (typeof control === 'string') {
-          addButton(group, control);
+    controls.forEach((control: any) => {
+      if (typeof control === 'string') {
+        addButton(group, control);
+      } else {
+        const format = Object.keys(control)[0];
+        const value = control[format];
+        if (Array.isArray(value)) {
+          addSelect(group, format, value);
         } else {
-          const format = Object.keys(control)[0];
-          const value = control[format];
-          if (Array.isArray(value)) {
-            addSelect(group, format, value);
-          } else {
-            addButton(group, format, value);
-          }
+          addButton(group, format, value);
         }
-      });
-    }
+      }
+    });
     container.appendChild(group);
   });
 }
