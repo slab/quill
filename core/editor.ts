@@ -285,41 +285,39 @@ class Editor {
       this.scroll.find(mutations[0].target)
     ) {
       // Optimization for character changes
-      const textBlot = this.scroll.find(mutations[0].target);
-      if (textBlot != null) {
-        const formats = bubbleFormats(textBlot);
-        const index = textBlot.offset(this.scroll);
-        // @ts-expect-error Fix me later
-        const oldValue = mutations[0].oldValue.replace(CursorBlot.CONTENTS, '');
-        const oldText = new Delta().insert(oldValue);
-        // @ts-expect-error
-        const newText = new Delta().insert(textBlot.value());
-        const relativeSelectionInfo = selectionInfo && {
-          oldRange: shiftRange(selectionInfo.oldRange, -index),
-          newRange: shiftRange(selectionInfo.newRange, -index),
-        };
-        const diffDelta = new Delta()
-          .retain(index)
-          .concat(oldText.diff(newText, relativeSelectionInfo));
-        change = diffDelta.reduce((delta, op) => {
-          if (op.insert) {
-            return delta.insert(op.insert, formats);
-          }
-          return delta.push(op);
-        }, new Delta());
-        this.delta = oldDelta.compose(change);
-      }
+      const textBlot = this.scroll.find(mutations[0].target) as Blot;
+      const formats = bubbleFormats(textBlot);
+      const index = textBlot.offset(this.scroll);
+      // @ts-expect-error Fix me later
+      const oldValue = mutations[0].oldValue.replace(CursorBlot.CONTENTS, '');
+      const oldText = new Delta().insert(oldValue);
+      // @ts-expect-error
+      const newText = new Delta().insert(textBlot.value());
+      const relativeSelectionInfo = selectionInfo && {
+        oldRange: shiftRange(selectionInfo.oldRange, -index),
+        newRange: shiftRange(selectionInfo.newRange, -index),
+      };
+      const diffDelta = new Delta()
+        .retain(index)
+        .concat(oldText.diff(newText, relativeSelectionInfo));
+      change = diffDelta.reduce((delta, op) => {
+        if (op.insert) {
+          return delta.insert(op.insert, formats);
+        }
+        return delta.push(op);
+      }, new Delta());
+      this.delta = oldDelta.compose(change);
     } else {
       this.delta = this.getDelta();
       if (!change || !isEqual(oldDelta.compose(change), this.delta)) {
         change = oldDelta.diff(this.delta, selectionInfo);
       }
     }
-    return change || oldDelta;
+    return change;
   }
 }
 
-interface Item {
+interface ListItem {
   child: Blot;
   offset: number;
   length: number;
@@ -327,7 +325,7 @@ interface Item {
   type: string;
 }
 function convertListHTML(
-  items: Item[],
+  items: ListItem[],
   lastIndent: number,
   types: string[],
 ): string {
@@ -372,76 +370,67 @@ function convertHTML(
   if ('html' in blot && typeof blot.html === 'function') {
     return blot.html(index, length);
   }
-  if (!('html' in blot)) {
-    if (blot instanceof TextBlot) {
-      return escapeText(blot.value().slice(index, index + length));
-    }
-    if (blot instanceof ParentBlot) {
-      // TODO fix API
-      if (blot.statics.blotName === 'list-container') {
-        const items: any[] = [];
-        blot.children.forEachAt(index, length, (child, offset, childLength) => {
-          const formats =
-            'formats' in child && typeof child.formats === 'function'
-              ? child.formats()
-              : {};
-          items.push({
-            child,
-            offset,
-            length: childLength,
-            indent: formats.indent || 0,
-            type: formats.list,
-          });
-        });
-        return convertListHTML(items, -1, []);
-      }
-      const parts: string[] = [];
-      blot.children.forEachAt(index, length, (child, offset, childLength) => {
-        parts.push(convertHTML(child, offset, childLength));
-      });
-      if (excludeOuterTag || blot.statics.blotName === 'list') {
-        return parts.join('');
-      }
-      const { outerHTML, innerHTML } = blot.domNode as Element;
-      const [start, end] = outerHTML.split(`>${innerHTML}<`);
-      // TODO cleanup
-      if (start === '<table') {
-        return `<table style="border: 1px solid #000;">${parts.join(
-          '',
-        )}<${end}`;
-      }
-      return `${start}>${parts.join('')}<${end}`;
-    }
-    return blot.domNode instanceof Element ? blot.domNode.outerHTML : '';
+  if (blot instanceof TextBlot) {
+    return escapeText(blot.value().slice(index, index + length));
   }
-
-  return '';
+  if (blot instanceof ParentBlot) {
+    // TODO fix API
+    if (blot.statics.blotName === 'list-container') {
+      const items: any[] = [];
+      blot.children.forEachAt(index, length, (child, offset, childLength) => {
+        const formats =
+          'formats' in child && typeof child.formats === 'function'
+            ? child.formats()
+            : {};
+        items.push({
+          child,
+          offset,
+          length: childLength,
+          indent: formats.indent || 0,
+          type: formats.list,
+        });
+      });
+      return convertListHTML(items, -1, []);
+    }
+    const parts: string[] = [];
+    blot.children.forEachAt(index, length, (child, offset, childLength) => {
+      parts.push(convertHTML(child, offset, childLength));
+    });
+    if (excludeOuterTag || blot.statics.blotName === 'list') {
+      return parts.join('');
+    }
+    const { outerHTML, innerHTML } = blot.domNode as Element;
+    const [start, end] = outerHTML.split(`>${innerHTML}<`);
+    // TODO cleanup
+    if (start === '<table') {
+      return `<table style="border: 1px solid #000;">${parts.join('')}<${end}`;
+    }
+    return `${start}>${parts.join('')}<${end}`;
+  }
+  return blot.domNode instanceof Element ? blot.domNode.outerHTML : '';
 }
 
 function combineFormats(
   formats: Record<string, unknown>,
   combined: Record<string, unknown>,
-) {
-  return Object.keys(combined).reduce(
-    (merged: Record<string, unknown>, name) => {
-      if (formats[name] == null) return merged;
-      const combinedValue = combined[name];
-      if (combinedValue === formats[name]) {
-        merged[name] = combinedValue;
-      } else if (Array.isArray(combinedValue)) {
-        if (combinedValue.indexOf(formats[name]) < 0) {
-          merged[name] = combinedValue.concat([formats[name]]);
-        } else {
-          // If style already exists, don't add to an array, but don't lose other styles
-          merged[name] = combinedValue;
-        }
+): Record<string, unknown> {
+  return Object.keys(combined).reduce((merged, name) => {
+    if (formats[name] == null) return merged;
+    const combinedValue = combined[name];
+    if (combinedValue === formats[name]) {
+      merged[name] = combinedValue;
+    } else if (Array.isArray(combinedValue)) {
+      if (combinedValue.indexOf(formats[name]) < 0) {
+        merged[name] = combinedValue.concat([formats[name]]);
       } else {
-        merged[name] = [combinedValue, formats[name]];
+        // If style already exists, don't add to an array, but don't lose other styles
+        merged[name] = combinedValue;
       }
-      return merged;
-    },
-    {},
-  );
+    } else {
+      merged[name] = [combinedValue, formats[name]];
+    }
+    return merged;
+  }, {} as Record<string, unknown>);
 }
 
 function getListType(type: string | undefined) {
