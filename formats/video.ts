@@ -8,7 +8,7 @@ class Video extends BlockEmbed {
   static className = 'ql-video';
   static tagName = 'IFRAME';
 
-  static create(value) {
+  static create(value: string) {
     const node = super.create(value) as Element;
     node.setAttribute('frameborder', '0');
     node.setAttribute('allowfullscreen', 'true');
@@ -17,12 +17,15 @@ class Video extends BlockEmbed {
   }
 
   static formats(domNode: Element) {
-    return ATTRIBUTES.reduce((formats, attribute) => {
-      if (domNode.hasAttribute(attribute)) {
-        formats[attribute] = domNode.getAttribute(attribute);
-      }
-      return formats;
-    }, {});
+    return ATTRIBUTES.reduce(
+      (formats: Record<string, string | null>, attribute) => {
+        if (domNode.hasAttribute(attribute)) {
+          formats[attribute] = domNode.getAttribute(attribute);
+        }
+        return formats;
+      },
+      {},
+    );
   }
 
   static sanitize(url: string) {
@@ -35,7 +38,7 @@ class Video extends BlockEmbed {
 
   domNode: HTMLVideoElement;
 
-  format(name, value) {
+  format(name: string, value: string) {
     if (ATTRIBUTES.indexOf(name) > -1) {
       if (value) {
         this.domNode.setAttribute(name, value);

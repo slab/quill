@@ -866,7 +866,7 @@ describe('Editor', () => {
         static className = 'my-blot';
         static blotName = 'my-blot';
 
-        formatAt(index, length, name, value) {
+        formatAt(index: number, length: number, name: string, value: string) {
           super.formatAt(index, length, name, value);
           if (name === 'test-style' && !!this.prev) {
             this.domNode.setAttribute('test-style', value);

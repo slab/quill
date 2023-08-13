@@ -101,7 +101,7 @@ describe('Clipboard', () => {
 
     describe('cut', () => {
       const setup = () => {
-        const clipboardData = {};
+        const clipboardData: Record<string, string> = {};
         const clipboardEvent = {
           clipboardData: {
             setData: (type, data) => {

@@ -3,14 +3,21 @@ import { EmbedBlot, Scope } from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
+import { Range } from '../core/selection';
 
 const debug = logger('quill:toolbar');
 
 type Handler = (value: any) => void;
 
-interface ToolbarProps {
-  container?: HTMLElement | null;
+export type ToolbarConfig = Array<
+  string[] | Array<string | Record<string, unknown>>
+>;
+export interface ToolbarProps {
+  container?: HTMLElement | ToolbarConfig | null;
   handlers?: Record<string, Handler>;
+  option?: number;
+  module?: boolean;
+  theme?: boolean;
 }
 
 class Toolbar extends Module<ToolbarProps> {
@@ -55,7 +62,7 @@ class Toolbar extends Module<ToolbarProps> {
     );
     this.quill.on(Quill.events.EDITOR_CHANGE, (type, range) => {
       if (type === Quill.events.SELECTION_CHANGE) {
-        this.update(range);
+        this.update(range as Range);
       }
     });
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, () => {
@@ -137,12 +144,12 @@ class Toolbar extends Module<ToolbarProps> {
     this.controls.push([format, input]);
   }
 
-  update(range) {
+  update(range: Range | null) {
     const formats = range == null ? {} : this.quill.getFormat(range);
     this.controls.forEach(pair => {
       const [format, input] = pair;
       if (input.tagName === 'SELECT') {
-        let option;
+        let option: HTMLOptionElement | null = null;
         if (range == null) {
           option = null;
         } else if (formats[format] == null) {
@@ -155,9 +162,9 @@ class Toolbar extends Module<ToolbarProps> {
           option = input.querySelector(`option[value="${value}"]`);
         }
         if (option == null) {
-          // @ts-expect-error
+          // @ts-expect-error TODO fix me later
           input.value = ''; // TODO make configurable?
-          // @ts-expect-error
+          // @ts-expect-error TODO fix me later
           input.selectedIndex = -1;
         } else {
           option.selected = true;
@@ -168,11 +175,11 @@ class Toolbar extends Module<ToolbarProps> {
       } else if (input.hasAttribute('value')) {
         // both being null should match (default values)
         // '1' should match with 1 (headers)
+        const value = formats[format] as boolean | number | string | object;
         const isActive =
-          formats[format] === input.getAttribute('value') ||
-          (formats[format] != null &&
-            formats[format].toString() === input.getAttribute('value')) ||
-          (formats[format] == null && !input.getAttribute('value'));
+          value === input.getAttribute('value') ||
+          (value != null && value.toString() === input.getAttribute('value')) ||
+          (value == null && !input.getAttribute('value'));
         input.classList.toggle('ql-active', isActive);
         input.setAttribute('aria-pressed', isActive.toString());
       } else {
@@ -207,10 +214,10 @@ function addControls(
     // @ts-expect-error
     groups = [groups];
   }
-  groups.forEach(controls => {
+  groups.forEach((controls: any) => {
     const group = document.createElement('span');
     group.classList.add('ql-formats');
-    controls.forEach(control => {
+    controls.forEach((control: any) => {
       if (typeof control === 'string') {
         addButton(group, control);
       } else {
@@ -227,13 +234,17 @@ function addControls(
   });
 }
 
-function addSelect(container, format, values) {
+function addSelect(
+  container: HTMLElement,
+  format: string,
+  values: Array<string | boolean>,
+) {
   const input = document.createElement('select');
   input.classList.add(`ql-${format}`);
   values.forEach(value => {
     const option = document.createElement('option');
     if (value !== false) {
-      option.setAttribute('value', value);
+      option.setAttribute('value', String(value));
     } else {
       option.setAttribute('selected', 'selected');
     }

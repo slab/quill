@@ -8,6 +8,7 @@
     "moduleResolution": "node",
     "noEmit": true,
     "strictNullChecks": true,
+    "noImplicitAny": true,
     "noUnusedLocals": true
   },
   "include": ["./**/*"]

@@ -1,9 +1,9 @@
-import { EmbedBlot, InlineBlot, Scope } from 'parchment';
+import { BlotConstructor, EmbedBlot, InlineBlot, Scope } from 'parchment';
 import Break from './break';
 import Text from './text';
 
 class Inline extends InlineBlot {
-  static allowedChildren = [Inline, Break, EmbedBlot, Text];
+  static allowedChildren: BlotConstructor[] = [Inline, Break, EmbedBlot, Text];
   // Lower index means deeper in the DOM tree, since not found (-1) is for embeds
   static order = [
     'cursor',
@@ -17,7 +17,7 @@ class Inline extends InlineBlot {
     'code', // Must be higher
   ];
 
-  static compare(self, other) {
+  static compare(self: string, other: string) {
     const selfIndex = Inline.order.indexOf(self);
     const otherIndex = Inline.order.indexOf(other);
     if (selfIndex >= 0 || otherIndex >= 0) {
@@ -32,7 +32,7 @@ class Inline extends InlineBlot {
     return 1;
   }
 
-  formatAt(index, length, name, value) {
+  formatAt(index: number, length: number, name: string, value: unknown) {
     if (
       Inline.compare(this.statics.blotName, name) < 0 &&
       this.scroll.query(name, Scope.BLOT)
@@ -46,7 +46,7 @@ class Inline extends InlineBlot {
     }
   }
 
-  optimize(context) {
+  optimize(context: { [key: string]: any }) {
     super.optimize(context);
     if (
       this.parent instanceof Inline &&

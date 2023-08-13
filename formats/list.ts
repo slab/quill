@@ -1,5 +1,6 @@
 import Block from '../blots/block';
 import Container from '../blots/container';
+import Scroll from '../blots/scroll';
 import Quill from '../core/quill';
 
 class ListContainer extends Container {}
@@ -7,14 +8,14 @@ ListContainer.blotName = 'list-container';
 ListContainer.tagName = 'OL';
 
 class ListItem extends Block {
-  static create(value) {
+  static create(value: string) {
     // @ts-expect-error
     const node = super.create() as Element;
     node.setAttribute('data-list', value);
     return node;
   }
 
-  static formats(domNode) {
+  static formats(domNode: HTMLElement) {
     return domNode.getAttribute('data-list') || undefined;
   }
 
@@ -22,10 +23,10 @@ class ListItem extends Block {
     Quill.register(ListContainer);
   }
 
-  constructor(scroll, domNode) {
+  constructor(scroll: Scroll, domNode: HTMLElement) {
     super(scroll, domNode);
     const ui = domNode.ownerDocument.createElement('span');
-    const listEventHandler = e => {
+    const listEventHandler = (e: Event) => {
       if (!scroll.isEnabled()) return;
       const format = this.statics.formats(domNode, scroll);
       if (format === 'checked') {
@@ -41,7 +42,7 @@ class ListItem extends Block {
     this.attachUI(ui);
   }
 
-  format(name, value) {
+  format(name: string, value: string) {
     if (name === this.statics.blotName && value) {
       this.domNode.setAttribute('data-list', value);
     } else {

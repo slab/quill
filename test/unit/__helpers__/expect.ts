@@ -23,7 +23,7 @@ const sortAttributes = (element: HTMLElement) => {
 };
 
 expect.extend({
-  toEqualHTML(received, expected, options) {
+  toEqualHTML(received, expected, options: { ignoreAttrs?: string[] } = {}) {
     const ignoreAttrs = options?.ignoreAttrs ?? [];
     const receivedDOM = document.createElement('div');
     const expectedDOM = document.createElement('div');

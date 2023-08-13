@@ -8,7 +8,7 @@ const config = {
 const FontClass = new ClassAttributor('font', 'ql-font', config);
 
 class FontStyleAttributor extends StyleAttributor {
-  value(node) {
+  value(node: HTMLElement) {
     return super.value(node).replace(/["']/g, '');
   }
 }

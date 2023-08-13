@@ -1,4 +1,4 @@
-import Delta, { OpIterator } from 'quill-delta';
+import Delta, { AttributeMap, OpIterator } from 'quill-delta';
 import Op from 'quill-delta/dist/Op';
 import Module from '../core/module';
 
@@ -52,7 +52,13 @@ export const composePosition = (delta: Delta, index: number) => {
   return newIndex;
 };
 
-const compactCellData = ({ content, attributes }) => {
+const compactCellData = ({
+  content,
+  attributes,
+}: {
+  content: Delta;
+  attributes: AttributeMap | undefined;
+}) => {
   const data: CellData = {};
   if (content.length() > 0) {
     data.content = content.ops;
@@ -63,7 +69,15 @@ const compactCellData = ({ content, attributes }) => {
   return Object.keys(data).length > 0 ? data : null;
 };
 
-const compactTableData = ({ rows, columns, cells }) => {
+const compactTableData = ({
+  rows,
+  columns,
+  cells,
+}: {
+  rows: Delta;
+  columns: Delta;
+  cells: Record<string, CellData>;
+}) => {
   const data: TableData = {};
   if (rows.length() > 0) {
     data.rows = rows.ops;
@@ -80,8 +94,11 @@ const compactTableData = ({ rows, columns, cells }) => {
   return data;
 };
 
-const reindexCellIdentities = (cells, { rows, columns }) => {
-  const reindexedCells = {};
+const reindexCellIdentities = (
+  cells: Record<string, CellData>,
+  { rows, columns }: { rows: Delta; columns: Delta },
+) => {
+  const reindexedCells: Record<string, CellData> = {};
   Object.keys(cells).forEach(identity => {
     let [row, column] = parseCellIdentity(identity);
 

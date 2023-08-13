@@ -12,15 +12,16 @@ class IconPicker extends Picker {
       },
     );
     this.defaultItem = this.container.querySelector('.ql-selected');
-    // @ts-expect-error
     this.selectItem(this.defaultItem);
   }
 
-  selectItem(target, trigger) {
+  selectItem(target: HTMLElement | null, trigger?: boolean) {
     super.selectItem(target, trigger);
     const item = target || this.defaultItem;
-    if (this.label.innerHTML === item.innerHTML) return;
-    this.label.innerHTML = item.innerHTML;
+    if (item != null) {
+      if (this.label.innerHTML === item.innerHTML) return;
+      this.label.innerHTML = item.innerHTML;
+    }
   }
 }
 

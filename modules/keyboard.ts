@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import Delta, { AttributeMap } from 'quill-delta';
-import { BlockBlot, EmbedBlot, Scope, TextBlot } from 'parchment';
+import { BlockBlot, Blot, EmbedBlot, Scope, TextBlot } from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
@@ -12,7 +12,7 @@ const debug = logger('quill:keyboard');
 
 const SHORTKEY = /Mac/i.test(navigator.platform) ? 'metaKey' : 'ctrlKey';
 
-interface Context {
+export interface Context {
   collapsed: boolean;
   empty: boolean;
   offset: number;
@@ -60,9 +60,9 @@ interface KeyboardOptions {
 class Keyboard extends Module<KeyboardOptions> {
   static DEFAULTS: KeyboardOptions;
 
-  static match(evt: KeyboardEvent, binding) {
+  static match(evt: KeyboardEvent, binding: BindingObject) {
     if (
-      ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'].some(key => {
+      (['altKey', 'ctrlKey', 'metaKey', 'shiftKey'] as const).some(key => {
         return !!binding[key] !== evt[key] && binding[key] !== null;
       })
     ) {
@@ -324,7 +324,7 @@ class Keyboard extends Module<KeyboardOptions> {
 
   handleEnter(range: Range, context: Context) {
     const lineFormats = Object.keys(context.format).reduce(
-      (formats, format) => {
+      (formats: Record<string, unknown>, format) => {
         if (
           this.quill.scroll.query(format, Scope.BLOCK) &&
           !Array.isArray(context.format[format])
@@ -805,7 +805,7 @@ function deleteRange({ quill, range }: { quill: Quill; range: Range }) {
   quill.setSelection(range.index, Quill.sources.SILENT);
 }
 
-function tableSide(table, row, cell, offset) {
+function tableSide(_table: unknown, row: Blot, cell: Blot, offset: number) {
   if (row.prev == null && row.next == null) {
     if (cell.prev == null && cell.next == null) {
       return offset === 0 ? -1 : 1;

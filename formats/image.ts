@@ -7,7 +7,7 @@ class Image extends EmbedBlot {
   static blotName = 'image';
   static tagName = 'IMG';
 
-  static create(value) {
+  static create(value: string) {
     const node = super.create(value) as Element;
     if (typeof value === 'string') {
       node.setAttribute('src', this.sanitize(value));
@@ -16,12 +16,15 @@ class Image extends EmbedBlot {
   }
 
   static formats(domNode: Element) {
-    return ATTRIBUTES.reduce((formats, attribute) => {
-      if (domNode.hasAttribute(attribute)) {
-        formats[attribute] = domNode.getAttribute(attribute);
-      }
-      return formats;
-    }, {});
+    return ATTRIBUTES.reduce(
+      (formats: Record<string, string | null>, attribute) => {
+        if (domNode.hasAttribute(attribute)) {
+          formats[attribute] = domNode.getAttribute(attribute);
+        }
+        return formats;
+      },
+      {},
+    );
   }
 
   static match(url: string) {
@@ -48,7 +51,7 @@ class Image extends EmbedBlot {
 
   domNode: HTMLImageElement;
 
-  format(name, value) {
+  format(name: string, value: string) {
     if (ATTRIBUTES.indexOf(name) > -1) {
       if (value) {
         this.domNode.setAttribute(name, value);

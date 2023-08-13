@@ -2,10 +2,10 @@ import DropdownIcon from '../assets/icons/dropdown.svg';
 
 let optionsCounter = 0;
 
-function toggleAriaAttribute(element, attribute) {
+function toggleAriaAttribute(element: HTMLElement, attribute: string) {
   element.setAttribute(
     attribute,
-    !(element.getAttribute(attribute) === 'true'),
+    `${!(element.getAttribute(attribute) === 'true')}`,
   );
 }
 

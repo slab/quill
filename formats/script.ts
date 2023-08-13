@@ -4,7 +4,7 @@ class Script extends Inline {
   static blotName = 'script';
   static tagName = ['SUB', 'SUP'];
 
-  static create(value) {
+  static create(value: 'super' | 'sub' | (string & {})) {
     if (value === 'super') {
       return document.createElement('sup');
     }
@@ -14,7 +14,7 @@ class Script extends Inline {
     return super.create(value);
   }
 
-  static formats(domNode) {
+  static formats(domNode: HTMLElement) {
     if (domNode.tagName === 'SUB') return 'sub';
     if (domNode.tagName === 'SUP') return 'super';
     return undefined;

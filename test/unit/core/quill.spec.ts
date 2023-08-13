@@ -611,8 +611,7 @@ describe('Quill', () => {
         expect(config.theme).toEqual(Snow);
         // @ts-expect-error
         expect(config.modules.toolbar.handlers.image).toEqual(
-          // @ts-expect-error
-          Snow.DEFAULTS.modules.toolbar.handlers.image,
+          Snow.DEFAULTS.modules.toolbar?.handlers?.image,
         );
       });
 
@@ -644,7 +643,6 @@ describe('Quill', () => {
       const oldTheme = Theme.DEFAULTS.modules;
       const oldToolbar = Toolbar.DEFAULTS;
       Toolbar.DEFAULTS = {
-        // @ts-expect-error
         option: 2,
         module: true,
       };

@@ -4,6 +4,7 @@ import {
   Blot,
   EmbedBlot,
   LeafBlot,
+  Parent,
   Scope,
 } from 'parchment';
 import Delta from 'quill-delta';
@@ -28,7 +29,7 @@ class Block extends BlockBlot {
     this.cache = {};
   }
 
-  formatAt(index, length, name, value) {
+  formatAt(index: number, length: number, name: string, value: unknown) {
     if (length <= 0) return;
     if (this.scroll.query(name, Scope.BLOCK)) {
       if (index + length === this.length()) {
@@ -73,7 +74,7 @@ class Block extends BlockBlot {
     }, index + text.length);
   }
 
-  insertBefore(blot, ref) {
+  insertBefore(blot: Blot, ref?: Blot | null) {
     const { head } = this.children;
     super.insertBefore(blot, ref);
     if (head instanceof Break) {
@@ -89,26 +90,27 @@ class Block extends BlockBlot {
     return this.cache.length;
   }
 
-  moveChildren(target, ref?) {
+  moveChildren(target: Parent, ref?: Blot | null) {
+    // @ts-expect-error Parchment types are wrong
     super.moveChildren(target, ref);
     this.cache = {};
   }
 
-  optimize(context) {
+  optimize(context: { [key: string]: any }) {
     super.optimize(context);
     this.cache = {};
   }
 
-  path(index) {
+  path(index: number) {
     return super.path(index, true);
   }
 
-  removeChild(child) {
+  removeChild(child: Blot) {
     super.removeChild(child);
     this.cache = {};
   }
 
-  split(index, force = false) {
+  split(index: number, force: boolean | undefined = false): Blot | null {
     if (force && (index === 0 || index >= this.length() - NEWLINE_LENGTH)) {
       const clone = this.clone();
       if (index === 0) {
@@ -145,7 +147,7 @@ class BlockEmbed extends EmbedBlot {
     });
   }
 
-  format(name, value) {
+  format(name: string, value: unknown) {
     const attribute = this.scroll.query(name, Scope.BLOCK_ATTRIBUTE);
     if (attribute != null) {
       // @ts-expect-error TODO: Scroll#query() should return Attributor when scope is attribute
@@ -153,7 +155,7 @@ class BlockEmbed extends EmbedBlot {
     }
   }
 
-  formatAt(index, length, name, value) {
+  formatAt(index: number, length: number, name: string, value: unknown) {
     this.format(name, value);
   }
 
@@ -195,9 +197,13 @@ function blockDelta(blot: BlockBlot, filter = true) {
     .insert('\n', bubbleFormats(blot));
 }
 
-function bubbleFormats(blot, formats = {}, filter = true) {
+function bubbleFormats(
+  blot: Blot | null,
+  formats: Record<string, unknown> = {},
+  filter = true,
+): Record<string, unknown> {
   if (blot == null) return formats;
-  if (typeof blot.formats === 'function') {
+  if ('formats' in blot && typeof blot.formats === 'function') {
     formats = {
       ...formats,
       ...blot.formats(),

@@ -176,9 +176,11 @@ describe('Toolbar', () => {
       ) as HTMLButtonElement;
       quill.setSelection(7);
       expect(boldButton.classList.contains('ql-active')).toBe(true);
+      // @ts-expect-error -- TODO fix later
       expect(boldButton.attributes['aria-pressed'].value).toBe('true');
       quill.setSelection(2);
       expect(boldButton.classList.contains('ql-active')).toBe(false);
+      // @ts-expect-error -- TODO fix later
       expect(boldButton.attributes['aria-pressed'].value).toBe('false');
     });
 
@@ -189,9 +191,11 @@ describe('Toolbar', () => {
       ) as HTMLButtonElement;
       quill.setSelection(12);
       expect(linkButton.classList.contains('ql-active')).toBe(true);
+      // @ts-expect-error -- TODO fix later
       expect(linkButton.attributes['aria-pressed'].value).toBe('true');
       quill.setSelection(2);
       expect(linkButton.classList.contains('ql-active')).toBe(false);
+      // @ts-expect-error -- TODO fix later
       expect(linkButton.attributes['aria-pressed'].value).toBe('false');
     });
 
@@ -221,17 +225,23 @@ describe('Toolbar', () => {
       quill.setSelection(17);
       expect(centerButton.classList.contains('ql-active')).toBe(true);
       expect(leftButton.classList.contains('ql-active')).toBe(false);
+      // @ts-expect-error -- TODO fix later
       expect(centerButton.attributes['aria-pressed'].value).toBe('true');
+      // @ts-expect-error -- TODO fix later
       expect(leftButton.attributes['aria-pressed'].value).toBe('false');
       quill.setSelection(2);
       expect(centerButton.classList.contains('ql-active')).toBe(false);
       expect(leftButton.classList.contains('ql-active')).toBe(true);
+      // @ts-expect-error -- TODO fix later
       expect(centerButton.attributes['aria-pressed'].value).toBe('false');
+      // @ts-expect-error -- TODO fix later
       expect(leftButton.attributes['aria-pressed'].value).toBe('true');
       quill.blur();
       expect(centerButton.classList.contains('ql-active')).toBe(false);
       expect(leftButton.classList.contains('ql-active')).toBe(false);
+      // @ts-expect-error -- TODO fix later
       expect(centerButton.attributes['aria-pressed'].value).toBe('false');
+      // @ts-expect-error -- TODO fix later
       expect(leftButton.attributes['aria-pressed'].value).toBe('false');
     });
   });

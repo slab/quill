@@ -51,7 +51,9 @@ class Editor {
           let formats = merge({}, bubbleFormats(line));
           if (line instanceof Block) {
             const [leaf] = line.descendant(LeafBlot, offset);
-            formats = merge(formats, bubbleFormats(leaf));
+            if (leaf) {
+              formats = merge(formats, bubbleFormats(leaf));
+            }
           }
           attributes = AttributeMap.diff(formats, attributes) || {};
         } else if (typeof op.insert === 'object') {
@@ -83,8 +85,10 @@ class Editor {
 
           if (isInlineEmbed) {
             const [leaf] = this.scroll.descendant(LeafBlot, index);
-            const formats = merge({}, bubbleFormats(leaf));
-            attributes = AttributeMap.diff(formats, attributes) || {};
+            if (leaf) {
+              const formats = merge({}, bubbleFormats(leaf));
+              attributes = AttributeMap.diff(formats, attributes) || {};
+            }
           }
         }
         scrollLength += length;
@@ -179,8 +183,9 @@ class Editor {
       leaves = this.scroll.descendants(LeafBlot, index, length);
     }
     const [lineFormats, leafFormats] = [lines, leaves].map(blots => {
-      if (blots.length === 0) return {};
-      let formats = bubbleFormats(blots.shift());
+      const blot = blots.shift();
+      if (blot == null) return {};
+      let formats = bubbleFormats(blot);
       while (Object.keys(formats).length > 0) {
         const blot = blots.shift();
         if (blot == null) return formats;
@@ -280,9 +285,8 @@ class Editor {
       this.scroll.find(mutations[0].target)
     ) {
       // Optimization for character changes
-      const textBlot = this.scroll.find(mutations[0].target);
+      const textBlot = this.scroll.find(mutations[0].target) as Blot;
       const formats = bubbleFormats(textBlot);
-      // @ts-expect-error Fix me later
       const index = textBlot.offset(this.scroll);
       // @ts-expect-error Fix me later
       const oldValue = mutations[0].oldValue.replace(CursorBlot.CONTENTS, '');
@@ -313,7 +317,18 @@ class Editor {
   }
 }
 
-function convertListHTML(items, lastIndent: number, types: string[]) {
+interface ListItem {
+  child: Blot;
+  offset: number;
+  length: number;
+  indent: number;
+  type: string;
+}
+function convertListHTML(
+  items: ListItem[],
+  lastIndent: number,
+  types: string[],
+): string {
   if (items.length === 0) {
     const [endTag] = getListType(types.pop());
     if (lastIndent <= 0) {
@@ -351,7 +366,7 @@ function convertHTML(
   index: number,
   length: number,
   excludeOuterTag = false,
-) {
+): string {
   if ('html' in blot && typeof blot.html === 'function') {
     return blot.html(index, length);
   }
@@ -395,26 +410,30 @@ function convertHTML(
   return blot.domNode instanceof Element ? blot.domNode.outerHTML : '';
 }
 
-function combineFormats(formats, combined) {
+function combineFormats(
+  formats: Record<string, unknown>,
+  combined: Record<string, unknown>,
+): Record<string, unknown> {
   return Object.keys(combined).reduce((merged, name) => {
     if (formats[name] == null) return merged;
-    if (combined[name] === formats[name]) {
-      merged[name] = combined[name];
-    } else if (Array.isArray(combined[name])) {
-      if (combined[name].indexOf(formats[name]) < 0) {
-        merged[name] = combined[name].concat([formats[name]]);
+    const combinedValue = combined[name];
+    if (combinedValue === formats[name]) {
+      merged[name] = combinedValue;
+    } else if (Array.isArray(combinedValue)) {
+      if (combinedValue.indexOf(formats[name]) < 0) {
+        merged[name] = combinedValue.concat([formats[name]]);
       } else {
         // If style already exists, don't add to an array, but don't lose other styles
-        merged[name] = combined[name];
+        merged[name] = combinedValue;
       }
     } else {
-      merged[name] = [combined[name], formats[name]];
+      merged[name] = [combinedValue, formats[name]];
     }
     return merged;
-  }, {});
+  }, {} as Record<string, unknown>);
 }
 
-function getListType(type) {
+function getListType(type: string | undefined) {
   const tag = type === 'ordered' ? 'ol' : 'ul';
   switch (type) {
     case 'checked':

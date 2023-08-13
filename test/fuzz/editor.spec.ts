@@ -150,7 +150,7 @@ const generateChange = (
   doc: Delta,
   changeCount: number,
   allowedActions = ['insert', 'delete', 'retain'],
-) => {
+): Delta => {
   const docLength = doc.length();
   const skipLength = allowedActions.includes('retain')
     ? randomInt(docLength)

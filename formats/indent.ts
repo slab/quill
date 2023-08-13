@@ -1,19 +1,20 @@
 import { ClassAttributor, Scope } from 'parchment';
 
 class IndentAttributor extends ClassAttributor {
-  add(node, value) {
+  add(node: HTMLElement, value: string | number) {
+    let normalizedValue = 0;
     if (value === '+1' || value === '-1') {
       const indent = this.value(node) || 0;
-      value = value === '+1' ? indent + 1 : indent - 1;
+      normalizedValue = value === '+1' ? indent + 1 : indent - 1;
     }
-    if (value === 0) {
+    if (normalizedValue === 0) {
       this.remove(node);
       return true;
     }
-    return super.add(node, value);
+    return super.add(node, normalizedValue.toString());
   }
 
-  canAdd(node, value) {
+  canAdd(node: HTMLElement, value: string) {
     return super.canAdd(node, value) || super.canAdd(node, parseInt(value, 10));
   }
 

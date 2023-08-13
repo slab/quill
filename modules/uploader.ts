@@ -39,11 +39,9 @@ class Uploader extends Module<UploaderOptions> {
   }
 
   upload(range: Range, files: FileList | File[]) {
-    const uploads = [];
+    const uploads: File[] = [];
     Array.from(files).forEach(file => {
-      // @ts-expect-error Fix me later
-      if (file && this.options.mimetypes.includes(file.type)) {
-        // @ts-expect-error Fix me later
+      if (file && this.options.mimetypes?.includes(file.type)) {
         uploads.push(file);
       }
     });

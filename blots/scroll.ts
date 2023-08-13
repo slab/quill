@@ -73,19 +73,19 @@ class Scroll extends ScrollBlot {
     this.update(mutations);
   }
 
-  emitMount(blot) {
+  emitMount(blot: Blot) {
     this.emitter.emit(Emitter.events.SCROLL_BLOT_MOUNT, blot);
   }
 
-  emitUnmount(blot) {
+  emitUnmount(blot: Blot) {
     this.emitter.emit(Emitter.events.SCROLL_BLOT_UNMOUNT, blot);
   }
 
-  emitEmbedUpdate(blot, change) {
+  emitEmbedUpdate(blot: Blot, change: unknown) {
     this.emitter.emit(Emitter.events.SCROLL_EMBED_UPDATE, blot, change);
   }
 
-  deleteAt(index, length) {
+  deleteAt(index: number, length: number) {
     const [first, offset] = this.line(index);
     const [last] = this.line(index + length);
     super.deleteAt(index, length);
@@ -108,13 +108,9 @@ class Scroll extends ScrollBlot {
     this.domNode.setAttribute('contenteditable', enabled ? 'true' : 'false');
   }
 
-  formatAt(index, length, format, value) {
+  formatAt(index: number, length: number, format: string, value: unknown) {
     super.formatAt(index, length, format, value);
     this.optimize();
-  }
-
-  handleDragStart(event) {
-    event.preventDefault();
   }
 
   insertAt(index: number, value: string, def?: unknown) {
@@ -322,10 +318,14 @@ class Scroll extends ScrollBlot {
   updateEmbedAt(index: number, key: string, change: unknown) {
     // Currently it only supports top-level embeds (BlockEmbed).
     // We can update `ParentBlot` in parchment to support inline embeds.
-    const [blot] = this.descendant(b => b instanceof BlockEmbed, index);
+    const [blot] = this.descendant((b: Blot) => b instanceof BlockEmbed, index);
     if (blot && blot.statics.blotName === key && isUpdatable(blot)) {
       blot.updateContent(change);
     }
+  }
+
+  protected handleDragStart(event: DragEvent) {
+    event.preventDefault();
   }
 
   private deltaToRenderBlocks(delta: Delta) {

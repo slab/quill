@@ -17,9 +17,9 @@ describe('Keyboard', () => {
       const binding = normalize({
         key: 'a',
       });
-      expect(Keyboard.match(createKeyboardEvent('a'), binding)).toBe(true);
+      expect(Keyboard.match(createKeyboardEvent('a'), binding!)).toBe(true);
       expect(
-        Keyboard.match(createKeyboardEvent('A', { altKey: true }), binding),
+        Keyboard.match(createKeyboardEvent('A', { altKey: true }), binding!),
       ).toBe(false);
     });
 
@@ -28,9 +28,9 @@ describe('Keyboard', () => {
         key: 'a',
         altKey: true,
       });
-      expect(Keyboard.match(createKeyboardEvent('a'), binding)).toBe(false);
+      expect(Keyboard.match(createKeyboardEvent('a'), binding!)).toBe(false);
       expect(
-        Keyboard.match(createKeyboardEvent('a', { altKey: true }), binding),
+        Keyboard.match(createKeyboardEvent('a', { altKey: true }), binding!),
       ).toBe(true);
     });
 
@@ -39,9 +39,9 @@ describe('Keyboard', () => {
         key: 'a',
         altKey: null,
       });
-      expect(Keyboard.match(createKeyboardEvent('a'), binding)).toBe(true);
+      expect(Keyboard.match(createKeyboardEvent('a'), binding!)).toBe(true);
       expect(
-        Keyboard.match(createKeyboardEvent('a', { altKey: true }), binding),
+        Keyboard.match(createKeyboardEvent('a', { altKey: true }), binding!),
       ).toBe(true);
     });
 
@@ -50,9 +50,12 @@ describe('Keyboard', () => {
         key: 'a',
         shortKey: true,
       });
-      expect(Keyboard.match(createKeyboardEvent('a'), binding)).toBe(false);
+      expect(Keyboard.match(createKeyboardEvent('a'), binding!)).toBe(false);
       expect(
-        Keyboard.match(createKeyboardEvent('a', { [SHORTKEY]: true }), binding),
+        Keyboard.match(
+          createKeyboardEvent('a', { [SHORTKEY]: true }),
+          binding!,
+        ),
       ).toBe(true);
     });
 
@@ -61,9 +64,12 @@ describe('Keyboard', () => {
         key: 'a',
         [SHORTKEY]: true,
       });
-      expect(Keyboard.match(createKeyboardEvent('a'), binding)).toBe(false);
+      expect(Keyboard.match(createKeyboardEvent('a'), binding!)).toBe(false);
       expect(
-        Keyboard.match(createKeyboardEvent('a', { [SHORTKEY]: true }), binding),
+        Keyboard.match(
+          createKeyboardEvent('a', { [SHORTKEY]: true }),
+          binding!,
+        ),
       ).toBe(true);
     });
   });

@@ -1,4 +1,5 @@
 import Quill from '../core';
+import { Bounds } from '../core/selection';
 
 const isScrollable = (el: Element) => {
   const { overflowY } = getComputedStyle(el, null);
@@ -28,7 +29,7 @@ class Tooltip {
     this.root.classList.add('ql-hidden');
   }
 
-  position(reference) {
+  position(reference: Bounds) {
     const left =
       reference.left + reference.width / 2 - this.root.offsetWidth / 2;
     // root.scrollTop should be 0 if scrollContainer !== root

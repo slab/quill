@@ -13,7 +13,7 @@ class Bold extends Inline {
     return true;
   }
 
-  optimize(context) {
+  optimize(context: { [key: string]: any }) {
     super.optimize(context);
     if (this.domNode.tagName !== this.statics.tagName[0]) {
       this.replaceWith(this.statics.blotName);
