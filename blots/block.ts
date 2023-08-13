@@ -74,7 +74,7 @@ class Block extends BlockBlot {
     }, index + text.length);
   }
 
-  insertBefore(blot: Blot, ref: Blot | null) {
+  insertBefore(blot: Blot, ref?: Blot | null) {
     const { head } = this.children;
     super.insertBefore(blot, ref);
     if (head instanceof Break) {
@@ -90,7 +90,8 @@ class Block extends BlockBlot {
     return this.cache.length;
   }
 
-  moveChildren(target: Parent, ref?: Blot) {
+  moveChildren(target: Parent, ref?: Blot | null) {
+    // @ts-expect-error Parchment types are wrong
     super.moveChildren(target, ref);
     this.cache = {};
   }
@@ -197,7 +198,7 @@ function blockDelta(blot: BlockBlot, filter = true) {
 }
 
 function bubbleFormats(
-  blot: Blot | LeafBlot | BlockBlot | Parent | null,
+  blot: Blot | null,
   formats: Record<string, unknown> = {},
   filter = true,
 ): Record<string, unknown> {
