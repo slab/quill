@@ -66,7 +66,7 @@ export default class EditorPage {
   }
 
   async html(content: string, title = '') {
-    await this.page.evaluate(html => {
+    await this.page.evaluate((html) => {
       // @ts-expect-error
       const contents = window.quill.clipboard.convert({ html, text: '\n' });
       // @ts-expect-error
@@ -99,7 +99,7 @@ export default class EditorPage {
   }
 
   async setContents(delta: Op[]) {
-    await this.page.evaluate(delta => {
+    await this.page.evaluate((delta) => {
       // @ts-expect-error
       window.quill.setContents(delta);
     }, delta);

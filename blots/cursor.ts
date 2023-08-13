@@ -152,7 +152,7 @@ class Cursor extends EmbedBlot {
 
   update(mutations: MutationRecord[], context: Record<string, unknown>) {
     if (
-      mutations.some(mutation => {
+      mutations.some((mutation) => {
         return (
           mutation.type === 'characterData' && mutation.target === this.textNode
         );

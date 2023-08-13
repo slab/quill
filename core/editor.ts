@@ -102,7 +102,7 @@ class Editor {
           this.scroll.updateEmbedAt(index, key, op.retain[key]);
         }
       }
-      Object.keys(attributes).forEach(name => {
+      Object.keys(attributes).forEach((name) => {
         this.scroll.formatAt(index, length, name, attributes[name]);
       });
       const prependedLength = isImplicitNewlinePrepended ? 1 : 0;
@@ -135,8 +135,8 @@ class Editor {
     formats: Record<string, unknown> = {},
   ): Delta {
     this.scroll.update();
-    Object.keys(formats).forEach(format => {
-      this.scroll.lines(index, Math.max(length, 1)).forEach(line => {
+    Object.keys(formats).forEach((format) => {
+      this.scroll.lines(index, Math.max(length, 1)).forEach((line) => {
         line.format(format, formats[format]);
       });
     });
@@ -150,7 +150,7 @@ class Editor {
     length: number,
     formats: Record<string, unknown> = {},
   ): Delta {
-    Object.keys(formats).forEach(format => {
+    Object.keys(formats).forEach((format) => {
       this.scroll.formatAt(index, length, format, formats[format]);
     });
     const delta = new Delta().retain(index).retain(length, cloneDeep(formats));
@@ -171,7 +171,7 @@ class Editor {
     let lines: (Block | BlockEmbed)[] = [];
     let leaves: LeafBlot[] = [];
     if (length === 0) {
-      this.scroll.path(index).forEach(path => {
+      this.scroll.path(index).forEach((path) => {
         const [blot] = path;
         if (blot instanceof Block) {
           lines.push(blot);
@@ -183,7 +183,7 @@ class Editor {
       lines = this.scroll.lines(index, length);
       leaves = this.scroll.descendants(LeafBlot, index, length);
     }
-    const [lineFormats, leafFormats] = [lines, leaves].map(blots => {
+    const [lineFormats, leafFormats] = [lines, leaves].map((blots) => {
       const blot = blots.shift();
       if (blot == null) return {};
       let formats = bubbleFormats(blot);
@@ -212,8 +212,8 @@ class Editor {
 
   getText(index: number, length: number): string {
     return this.getContents(index, length)
-      .filter(op => typeof op.insert === 'string')
-      .map(op => op.insert)
+      .filter((op) => typeof op.insert === 'string')
+      .map((op) => op.insert)
       .join('');
   }
 
@@ -236,7 +236,7 @@ class Editor {
   ): Delta {
     text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     this.scroll.insertAt(index, text);
-    Object.keys(formats).forEach(format => {
+    Object.keys(formats).forEach((format) => {
       this.scroll.formatAt(index, text.length, format, formats[format]);
     });
     return this.update(
@@ -415,23 +415,26 @@ function combineFormats(
   formats: Record<string, unknown>,
   combined: Record<string, unknown>,
 ): Record<string, unknown> {
-  return Object.keys(combined).reduce((merged, name) => {
-    if (formats[name] == null) return merged;
-    const combinedValue = combined[name];
-    if (combinedValue === formats[name]) {
-      merged[name] = combinedValue;
-    } else if (Array.isArray(combinedValue)) {
-      if (combinedValue.indexOf(formats[name]) < 0) {
-        merged[name] = combinedValue.concat([formats[name]]);
-      } else {
-        // If style already exists, don't add to an array, but don't lose other styles
+  return Object.keys(combined).reduce(
+    (merged, name) => {
+      if (formats[name] == null) return merged;
+      const combinedValue = combined[name];
+      if (combinedValue === formats[name]) {
         merged[name] = combinedValue;
+      } else if (Array.isArray(combinedValue)) {
+        if (combinedValue.indexOf(formats[name]) < 0) {
+          merged[name] = combinedValue.concat([formats[name]]);
+        } else {
+          // If style already exists, don't add to an array, but don't lose other styles
+          merged[name] = combinedValue;
+        }
+      } else {
+        merged[name] = [combinedValue, formats[name]];
       }
-    } else {
-      merged[name] = [combinedValue, formats[name]];
-    }
-    return merged;
-  }, {} as Record<string, unknown>);
+      return merged;
+    },
+    {} as Record<string, unknown>,
+  );
 }
 
 function getListType(type: string | undefined) {
@@ -462,7 +465,7 @@ function shiftRange({ index, length }: Range, amount: number) {
 
 function splitOpLines(ops: Op[]) {
   const split: Op[] = [];
-  ops.forEach(op => {
+  ops.forEach((op) => {
     if (typeof op.insert === 'string') {
       const lines = op.insert.split('\n');
       lines.forEach((line, index) => {

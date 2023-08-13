@@ -22,10 +22,13 @@ class Theme {
 
   modules: ThemeOptions['modules'] = {};
 
-  constructor(protected quill: Quill, protected options: ThemeOptions) {}
+  constructor(
+    protected quill: Quill,
+    protected options: ThemeOptions,
+  ) {}
 
   init() {
-    Object.keys(this.options.modules).forEach(name => {
+    Object.keys(this.options.modules).forEach((name) => {
       if (this.modules[name] == null) {
         this.addModule(name);
       }

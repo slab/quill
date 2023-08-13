@@ -165,13 +165,13 @@ class BlockEmbed extends EmbedBlot {
     }
     const lines = value.split('\n');
     const text = lines.pop();
-    const blocks = lines.map(line => {
+    const blocks = lines.map((line) => {
       const block = this.scroll.create(Block.blotName);
       block.insertAt(0, line);
       return block;
     });
     const ref = this.split(index);
-    blocks.forEach(block => {
+    blocks.forEach((block) => {
       // @ts-expect-error Fix me later
       this.parent.insertBefore(block, ref);
     });

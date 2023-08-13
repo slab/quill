@@ -77,8 +77,10 @@ class Clipboard extends Module<ClipboardOptions> {
 
   constructor(quill: Quill, options: Partial<ClipboardOptions>) {
     super(quill, options);
-    this.quill.root.addEventListener('copy', e => this.onCaptureCopy(e, false));
-    this.quill.root.addEventListener('cut', e => this.onCaptureCopy(e, true));
+    this.quill.root.addEventListener('copy', (e) =>
+      this.onCaptureCopy(e, false),
+    );
+    this.quill.root.addEventListener('cut', (e) => this.onCaptureCopy(e, true));
     this.quill.root.addEventListener('paste', this.onCapturePaste.bind(this));
     this.matchers = [];
     // @ts-expect-error Fix me later
@@ -224,7 +226,7 @@ class Clipboard extends Module<ClipboardOptions> {
   prepareMatching(container: Element, nodeMatches: WeakMap<Node, Matcher[]>) {
     const elementMatchers: Matcher[] = [];
     const textMatchers: Matcher[] = [];
-    this.matchers.forEach(pair => {
+    this.matchers.forEach((pair) => {
       const [selector, matcher] = pair;
       switch (selector) {
         case Node.TEXT_NODE:
@@ -234,7 +236,7 @@ class Clipboard extends Module<ClipboardOptions> {
           elementMatchers.push(matcher);
           break;
         default:
-          Array.from(container.querySelectorAll(selector)).forEach(node => {
+          Array.from(container.querySelectorAll(selector)).forEach((node) => {
             if (nodeMatches.has(node)) {
               const matches = nodeMatches.get(node);
               matches?.push(matcher);
@@ -393,7 +395,7 @@ function matchAttributor(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
   attributes
     .concat(classes)
     .concat(styles)
-    .forEach(name => {
+    .forEach((name) => {
       let attr = scroll.query(name, Scope.ATTRIBUTE) as Attributor;
       if (attr != null) {
         formats[attr.attrName] = attr.value(node);

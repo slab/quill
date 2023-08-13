@@ -64,7 +64,7 @@ const getRandomChange = (base: Delta) => {
       (base.ops[0].insert as any)['table-embed'].columns || [],
     ).length(),
   };
-  (['rows', 'columns'] as const).forEach(field => {
+  (['rows', 'columns'] as const).forEach((field) => {
     const baseLength = dimension[field];
     const action = choose(['insert', 'delete', 'retain']);
     const delta = new Delta();

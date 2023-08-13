@@ -87,7 +87,7 @@ describe('History', () => {
 
     test('limits undo stack size', () => {
       const { quill } = setup({ delay: 0, maxStack: 2 });
-      ['A', 'B', 'C'].forEach(text => {
+      ['A', 'B', 'C'].forEach((text) => {
         // @ts-expect-error
         quill.insertText(0, text);
       });

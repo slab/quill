@@ -77,7 +77,7 @@ describe('Clipboard', () => {
         quill.clipboard.onCapturePaste({
           ...clipboardEvent,
           clipboardData: {
-            getData: type =>
+            getData: (type) =>
               type === 'text/html'
                 ? `<meta charset='utf-8'><img src="/assets/favicon.png"/>`
                 : '|',

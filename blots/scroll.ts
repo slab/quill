@@ -49,7 +49,7 @@ class Scroll extends ScrollBlot {
     this.batch = false;
     this.optimize();
     this.enable();
-    this.domNode.addEventListener('dragstart', e => this.handleDragStart(e));
+    this.domNode.addEventListener('dragstart', (e) => this.handleDragStart(e));
   }
 
   batchStart() {
@@ -165,7 +165,7 @@ class Scroll extends ScrollBlot {
 
       const formats = bubbleFormats(this.line(index)[0]);
       const attributes = AttributeMap.diff(formats, first.attributes) || {};
-      Object.keys(attributes).forEach(name => {
+      Object.keys(attributes).forEach((name) => {
         this.formatAt(lineEndIndex - 1, 1, name, attributes[name]);
       });
 
@@ -179,7 +179,7 @@ class Scroll extends ScrollBlot {
         refBlotOffset = 0;
       }
 
-      renderBlocks.forEach(renderBlock => {
+      renderBlocks.forEach((renderBlock) => {
         if (renderBlock.type === 'block') {
           const block = this.createBlock(
             renderBlock.attributes,
@@ -192,7 +192,7 @@ class Scroll extends ScrollBlot {
             renderBlock.value,
           ) as EmbedBlot;
           this.insertBefore(blockEmbed, refBlot || undefined);
-          Object.keys(renderBlock.attributes).forEach(name => {
+          Object.keys(renderBlock.attributes).forEach((name) => {
             blockEmbed.format(name, renderBlock.attributes[name]);
           });
         }
@@ -324,12 +324,12 @@ class Scroll extends ScrollBlot {
     const renderBlocks: RenderBlock[] = [];
 
     let currentBlockDelta = new Delta();
-    delta.forEach(op => {
+    delta.forEach((op) => {
       const insert = op?.insert;
       if (!insert) return;
       if (typeof insert === 'string') {
         const splitted = insert.split('\n');
-        splitted.slice(0, -1).forEach(text => {
+        splitted.slice(0, -1).forEach((text) => {
           currentBlockDelta.insert(text, op.attributes);
           renderBlocks.push({
             type: 'block',
@@ -433,7 +433,7 @@ function insertInlineContents(
         }
       }
     }
-    Object.keys(attributes).forEach(key => {
+    Object.keys(attributes).forEach((key) => {
       parent.formatAt(index, length, key, attributes[key]);
     });
     return index + length;

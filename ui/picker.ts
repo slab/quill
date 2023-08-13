@@ -25,7 +25,7 @@ class Picker {
     this.label.addEventListener('mousedown', () => {
       this.togglePicker();
     });
-    this.label.addEventListener('keydown', event => {
+    this.label.addEventListener('keydown', (event) => {
       switch (event.key) {
         case 'Enter':
           this.togglePicker();
@@ -64,7 +64,7 @@ class Picker {
     item.addEventListener('click', () => {
       this.selectItem(item, true);
     });
-    item.addEventListener('keydown', event => {
+    item.addEventListener('keydown', (event) => {
       switch (event.key) {
         case 'Enter':
           this.selectItem(item, true);
@@ -110,7 +110,7 @@ class Picker {
     // @ts-expect-error
     this.options = options;
 
-    Array.from(this.select.options).forEach(option => {
+    Array.from(this.select.options).forEach((option) => {
       const item = this.buildItem(option);
       options.appendChild(item);
       if (option.selected === true) {
@@ -121,7 +121,7 @@ class Picker {
   }
 
   buildPicker() {
-    Array.from(this.select.attributes).forEach(item => {
+    Array.from(this.select.attributes).forEach((item) => {
       this.container.setAttribute(item.name, item.value);
     });
     this.container.classList.add('ql-picker');

@@ -15,7 +15,7 @@ const sortAttributes = (element: HTMLElement) => {
     element.setAttribute(attr.name, attr.value);
   }
 
-  element.childNodes.forEach(child => {
+  element.childNodes.forEach((child) => {
     if (child instanceof HTMLElement) {
       sortAttributes(child);
     }
@@ -34,13 +34,13 @@ expect.extend({
 
     const doms = [receivedDOM, expectedDOM];
 
-    doms.forEach(dom => {
-      Array.from(dom.querySelectorAll('.ql-ui')).forEach(node => {
+    doms.forEach((dom) => {
+      Array.from(dom.querySelectorAll('.ql-ui')).forEach((node) => {
         node.remove();
       });
 
-      ignoreAttrs.forEach(attr => {
-        Array.from(dom.querySelectorAll(`[${attr}]`)).forEach(node => {
+      ignoreAttrs.forEach((attr) => {
+        Array.from(dom.querySelectorAll(`[${attr}]`)).forEach((node) => {
           node.removeAttribute(attr);
         });
       });

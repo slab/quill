@@ -327,7 +327,7 @@ describe('Selection', () => {
       selection.format('bold', false);
       selection.setRange(new Range(8));
 
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         selection.emitter.once(Emitter.events.SCROLL_OPTIMIZE, () => {
           resolve();
         });

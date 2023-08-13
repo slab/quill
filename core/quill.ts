@@ -111,7 +111,7 @@ class Quill {
         // @ts-expect-error
         this.register(`formats/${name}`, path, target);
       } else {
-        Object.keys(path).forEach(key => {
+        Object.keys(path).forEach((key) => {
           // @ts-expect-error
           this.register(key, path[key], target);
         });
@@ -187,7 +187,7 @@ class Quill {
     this.uploader = this.theme.addModule('uploader');
     this.theme.addModule('input');
     this.theme.init();
-    this.emitter.on(Emitter.events.EDITOR_CHANGE, type => {
+    this.emitter.on(Emitter.events.EDITOR_CHANGE, (type) => {
       if (type === Emitter.events.TEXT_CHANGE) {
         this.root.classList.toggle('ql-blank', this.editor.isBlank());
       }
@@ -578,26 +578,31 @@ class Quill {
     return this.scroll.isEnabled();
   }
 
-  off(...args: Parameters<typeof Emitter['prototype']['off']>) {
+  off(...args: Parameters<(typeof Emitter)['prototype']['off']>) {
     return this.emitter.off(...args);
   }
 
   on(
-    event: typeof Emitter['events']['TEXT_CHANGE'],
+    event: (typeof Emitter)['events']['TEXT_CHANGE'],
     handler: (delta: Delta, oldContent: Delta, source: EmitterSource) => void,
   ): Emitter;
   on(
-    event: typeof Emitter['events']['SELECTION_CHANGE'],
+    event: (typeof Emitter)['events']['SELECTION_CHANGE'],
     handler: (range: Range, oldRange: Range, source: EmitterSource) => void,
   ): Emitter;
   // @ts-expect-error
   on(
-    event: typeof Emitter['events']['EDITOR_CHANGE'],
+    event: (typeof Emitter)['events']['EDITOR_CHANGE'],
     handler: (
       ...args:
-        | [typeof Emitter['events']['TEXT_CHANGE'], Delta, Delta, EmitterSource]
         | [
-            typeof Emitter['events']['SELECTION_CHANGE'],
+            (typeof Emitter)['events']['TEXT_CHANGE'],
+            Delta,
+            Delta,
+            EmitterSource,
+          ]
+        | [
+            (typeof Emitter)['events']['SELECTION_CHANGE'],
             Range,
             Range,
             EmitterSource,
@@ -605,11 +610,11 @@ class Quill {
     ) => void,
   ): Emitter;
   on(event: string, ...args: unknown[]): Emitter;
-  on(...args: Parameters<typeof Emitter['prototype']['on']>): Emitter {
+  on(...args: Parameters<(typeof Emitter)['prototype']['on']>): Emitter {
     return this.emitter.on(...args);
   }
 
-  once(...args: Parameters<typeof Emitter['prototype']['once']>) {
+  once(...args: Parameters<(typeof Emitter)['prototype']['once']>) {
     return this.emitter.once(...args);
   }
 
@@ -751,9 +756,9 @@ function expandConfig(
   }
   // @ts-expect-error -- TODO fix this later
   const themeConfig = cloneDeep(expandedConfig.theme.DEFAULTS);
-  [themeConfig, expandedConfig].forEach(config => {
+  [themeConfig, expandedConfig].forEach((config) => {
     config.modules = config.modules || {};
-    Object.keys(config.modules).forEach(module => {
+    Object.keys(config.modules).forEach((module) => {
       if (config.modules[module] === true) {
         config.modules[module] = {};
       }
@@ -791,7 +796,7 @@ function expandConfig(
     themeConfig,
     expandedConfig,
   );
-  (['bounds', 'container'] as const).forEach(key => {
+  (['bounds', 'container'] as const).forEach((key) => {
     const selector = expandedConfig[key];
     if (typeof selector === 'string') {
       // @ts-expect-error Handle null case
@@ -959,12 +964,12 @@ function shiftRange(
   let end;
   // @ts-expect-error -- TODO: add a better type guard around `index`
   if (index && typeof index.transformPosition === 'function') {
-    [start, end] = [range.index, range.index + range.length].map(pos =>
+    [start, end] = [range.index, range.index + range.length].map((pos) =>
       // @ts-expect-error -- TODO: add a better type guard around `index`
       index.transformPosition(pos, source !== Emitter.sources.USER),
     );
   } else {
-    [start, end] = [range.index, range.index + range.length].map(pos => {
+    [start, end] = [range.index, range.index + range.length].map((pos) => {
       // @ts-expect-error -- TODO: add a better type guard around `index`
       if (pos < index || (pos === index && source === Emitter.sources.USER))
         return pos;
