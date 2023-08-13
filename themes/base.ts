@@ -82,7 +82,7 @@ class BaseTheme extends Theme {
         this.tooltip.hide();
       }
       if (this.pickers != null) {
-        this.pickers.forEach(picker => {
+        this.pickers.forEach((picker) => {
           // @ts-expect-error
           if (!picker.container.contains(e.target)) {
             picker.close();
@@ -112,9 +112,9 @@ class BaseTheme extends Theme {
     buttons: NodeListOf<HTMLElement>,
     icons: Record<string, Record<string, string>>,
   ) {
-    Array.from(buttons).forEach(button => {
+    Array.from(buttons).forEach((button) => {
       const className = button.getAttribute('class') || '';
-      className.split(/\s+/).forEach(name => {
+      className.split(/\s+/).forEach((name) => {
         if (!name.startsWith('ql-')) return;
         name = name.slice('ql-'.length);
         if (icons[name] == null) return;
@@ -138,7 +138,7 @@ class BaseTheme extends Theme {
     selects: NodeListOf<HTMLSelectElement>,
     icons: Record<string, string | Record<string, string>>,
   ) {
-    this.pickers = Array.from(selects).map(select => {
+    this.pickers = Array.from(selects).map((select) => {
       if (select.classList.contains('ql-align')) {
         if (select.querySelector('option') == null) {
           fillSelect(select, ALIGNS);
@@ -175,7 +175,7 @@ class BaseTheme extends Theme {
       return new Picker(select);
     });
     const update = () => {
-      this.pickers.forEach(picker => {
+      this.pickers.forEach((picker) => {
         picker.update();
       });
     };
@@ -230,7 +230,7 @@ class BaseTooltip extends Tooltip {
 
   listen() {
     // @ts-expect-error Fix me later
-    this.textbox.addEventListener('keydown', event => {
+    this.textbox.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
         this.save();
         event.preventDefault();
@@ -346,7 +346,7 @@ function fillSelect(
   values: Array<string | boolean>,
   defaultValue: unknown = false,
 ) {
-  values.forEach(value => {
+  values.forEach((value) => {
     const option = document.createElement('option');
     if (value === defaultValue) {
       option.setAttribute('selected', 'selected');

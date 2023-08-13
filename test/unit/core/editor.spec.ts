@@ -1081,8 +1081,8 @@ describe('Editor', () => {
           .insert('\n', { header: 1, list: 'bullet' });
 
         expect(
-          getEditorDelta(editor => editor.insertContents(0, change)),
-        ).toEqual(getEditorDelta(editor => editor.applyDelta(change)));
+          getEditorDelta((editor) => editor.insertContents(0, change)),
+        ).toEqual(getEditorDelta((editor) => editor.applyDelta(change)));
       });
 
       test('block embeds with line formats', () => {
@@ -1093,8 +1093,8 @@ describe('Editor', () => {
           .insert('\n', { header: 1 });
 
         expect(
-          getEditorDelta(editor => editor.insertContents(0, change)),
-        ).toEqual(getEditorDelta(editor => editor.applyDelta(change)));
+          getEditorDelta((editor) => editor.insertContents(0, change)),
+        ).toEqual(getEditorDelta((editor) => editor.applyDelta(change)));
       });
 
       test('missing \\n before block embeds', () => {
@@ -1104,8 +1104,8 @@ describe('Editor', () => {
           .insert('b\n');
 
         expect(
-          getEditorDelta(editor => editor.insertContents(0, change)),
-        ).toEqual(getEditorDelta(editor => editor.applyDelta(change)));
+          getEditorDelta((editor) => editor.insertContents(0, change)),
+        ).toEqual(getEditorDelta((editor) => editor.applyDelta(change)));
       });
     });
   });

@@ -103,7 +103,7 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
   format(name: string, value: unknown) {
     if (name === SyntaxCodeBlock.blotName) {
       this.forceNext = true;
-      this.children.forEach(child => {
+      this.children.forEach((child) => {
         // @ts-expect-error
         child.format(name, value);
       });
@@ -123,9 +123,9 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
   ) {
     if (this.children.head == null) return;
     const nodes = Array.from(this.domNode.childNodes).filter(
-      node => node !== this.uiNode,
+      (node) => node !== this.uiNode,
     );
-    const text = `${nodes.map(node => node.textContent).join('\n')}\n`;
+    const text = `${nodes.map((node) => node.textContent).join('\n')}\n`;
     const language = SyntaxCodeBlock.formats(this.children.head.domNode);
     if (forced || this.forceNext || this.cachedText !== text) {
       if (text.trim().length > 0 || this.cachedText == null) {
@@ -138,7 +138,7 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
           // Should be all retains
           if (!retain) return index;
           if (attributes) {
-            Object.keys(attributes).forEach(format => {
+            Object.keys(attributes).forEach((format) => {
               if (
                 [SyntaxCodeBlock.blotName, CodeToken.blotName].includes(format)
               ) {
@@ -272,7 +272,7 @@ class Syntax extends Module<SyntaxOptions> {
       blot == null
         ? this.quill.scroll.descendants(SyntaxCodeBlockContainer)
         : [blot];
-    blots.forEach(container => {
+    blots.forEach((container) => {
       container.highlight(this.highlightBlot, force);
     });
     this.quill.update(Quill.sources.SILENT);

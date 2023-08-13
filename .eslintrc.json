@@ -14,21 +14,12 @@
     }
   },
   "ignorePatterns": ["website/**/*", "*.js"],
-  "rules": {
-    "arrow-parens": ["error", "as-needed"],
-    "no-use-before-define": ["error", { "functions": false, "classes": false }],
-    "prettier/prettier": "error"
-  },
   "overrides": [
-    {
-      "files": ["test/helpers/**/*.js", "test/unit/**/*.js"],
-      "plugins": ["prettier"]
-    },
     {
       "files": ["**/*.ts"],
       "extends": ["plugin:@typescript-eslint/recommended"],
       "excludedFiles": "*.d.ts",
-      "plugins": ["prettier", "@typescript-eslint"],
+      "plugins": ["@typescript-eslint"],
       "rules": {
         "@typescript-eslint/consistent-type-imports": "error",
         "@typescript-eslint/ban-ts-comment": "off",

@@ -30,26 +30,30 @@ class SnowTooltip extends BaseTooltip {
   listen() {
     super.listen();
     // @ts-expect-error Fix me later
-    this.root.querySelector('a.ql-action').addEventListener('click', event => {
-      if (this.root.classList.contains('ql-editing')) {
-        this.save();
-      } else {
-        // @ts-expect-error Fix me later
-        this.edit('link', this.preview.textContent);
-      }
-      event.preventDefault();
-    });
+    this.root
+      .querySelector('a.ql-action')
+      .addEventListener('click', (event) => {
+        if (this.root.classList.contains('ql-editing')) {
+          this.save();
+        } else {
+          // @ts-expect-error Fix me later
+          this.edit('link', this.preview.textContent);
+        }
+        event.preventDefault();
+      });
     // @ts-expect-error Fix me later
-    this.root.querySelector('a.ql-remove').addEventListener('click', event => {
-      if (this.linkRange != null) {
-        const range = this.linkRange;
-        this.restoreFocus();
-        this.quill.formatText(range, 'link', false, Emitter.sources.USER);
-        delete this.linkRange;
-      }
-      event.preventDefault();
-      this.hide();
-    });
+    this.root
+      .querySelector('a.ql-remove')
+      .addEventListener('click', (event) => {
+        if (this.linkRange != null) {
+          const range = this.linkRange;
+          this.restoreFocus();
+          this.quill.formatText(range, 'link', false, Emitter.sources.USER);
+          delete this.linkRange;
+        }
+        event.preventDefault();
+        this.hide();
+      });
     this.quill.on(
       Emitter.events.SELECTION_CHANGE,
       (range, oldRange, source) => {

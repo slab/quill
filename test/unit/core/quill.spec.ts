@@ -19,7 +19,7 @@ const createContainer = (html: string | { html: string } = '') => {
 
 describe('Quill', () => {
   test('imports', () => {
-    Object.keys(Quill.imports).forEach(path => {
+    Object.keys(Quill.imports).forEach((path) => {
       expect(Quill.import(path)).toBeTruthy();
     });
   });
@@ -272,7 +272,7 @@ describe('Quill', () => {
       (quill.root.firstChild?.firstChild as Text).data = '01!23';
       const delta = new Delta().retain(2).insert('!');
 
-      await new Promise(r => setTimeout(r, 1));
+      await new Promise((r) => setTimeout(r, 1));
       expect(quill.emitter.emit).toHaveBeenCalledWith(
         Emitter.events.TEXT_CHANGE,
         delta,
@@ -307,7 +307,7 @@ describe('Quill', () => {
             newSelection.index + newSelection.length,
           );
         }
-        await new Promise(r => setTimeout(r, 1));
+        await new Promise((r) => setTimeout(r, 1));
         const calls = (
           quill.emitter.emit as MockedFunction<typeof quill.emitter.emit>
         ).mock.calls;
@@ -998,8 +998,8 @@ describe('Quill', () => {
         .join(separator);
 
     const viewportRatio = (element: Element): Promise<number> => {
-      return new Promise(resolve => {
-        const observer = new IntersectionObserver(entries => {
+      return new Promise((resolve) => {
+        const observer = new IntersectionObserver((entries) => {
           resolve(entries[0].intersectionRatio);
           observer.disconnect();
         });

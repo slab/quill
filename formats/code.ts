@@ -17,7 +17,7 @@ class CodeBlockContainer extends Container {
     return (
       this.children
         // @ts-expect-error
-        .map(child => (child.length() <= 1 ? '' : child.domNode.innerText))
+        .map((child) => (child.length() <= 1 ? '' : child.domNode.innerText))
         .join('\n')
         .slice(index, index + length)
     );

@@ -13,7 +13,7 @@ import { normalizeHTML } from './utils';
 export const createRegistry = (formats: unknown[] = []) => {
   const registry = new Registry();
 
-  formats.forEach(format => {
+  formats.forEach((format) => {
     registry.register(format);
   });
   registry.register(Block);

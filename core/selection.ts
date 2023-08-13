@@ -30,7 +30,10 @@ export interface Bounds {
 }
 
 class Range {
-  constructor(public index: number, public length = 0) {}
+  constructor(
+    public index: number,
+    public length = 0,
+  ) {}
 }
 
 class Selection {
@@ -85,7 +88,7 @@ class Selection {
               );
             }
             const triggeredByTyping = mutations.some(
-              mutation =>
+              (mutation) =>
                 mutation.type === 'characterData' ||
                 mutation.type === 'childList' ||
                 (mutation.type === 'attributes' &&
@@ -264,7 +267,7 @@ class Selection {
     if (!range.native.collapsed) {
       positions.push([range.end.node, range.end.offset]);
     }
-    const indexes = positions.map(position => {
+    const indexes = positions.map((position) => {
       const [node, offset] = position;
       const blot = this.scroll.find(node, true);
       // @ts-expect-error Fix me later
@@ -298,7 +301,7 @@ class Selection {
       end: { node: nativeRange.endContainer, offset: nativeRange.endOffset },
       native: nativeRange,
     };
-    [range.start, range.end].forEach(position => {
+    [range.start, range.end].forEach((position) => {
       let { node, offset } = position;
       while (!(node instanceof Text) && node.childNodes.length > 0) {
         if (node.childNodes.length > offset) {

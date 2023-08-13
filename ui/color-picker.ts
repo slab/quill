@@ -7,7 +7,7 @@ class ColorPicker extends Picker {
     this.container.classList.add('ql-color-picker');
     Array.from(this.container.querySelectorAll('.ql-picker-item'))
       .slice(0, 7)
-      .forEach(item => {
+      .forEach((item) => {
         item.classList.add('ql-primary');
       });
   }

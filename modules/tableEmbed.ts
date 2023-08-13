@@ -99,7 +99,7 @@ const reindexCellIdentities = (
   { rows, columns }: { rows: Delta; columns: Delta },
 ) => {
   const reindexedCells: Record<string, CellData> = {};
-  Object.keys(cells).forEach(identity => {
+  Object.keys(cells).forEach((identity) => {
     let [row, column] = parseCellIdentity(identity);
 
     // @ts-expect-error Fix me later
@@ -127,7 +127,7 @@ export const tableHandler = {
       columns: new Delta(b.columns || []),
     });
 
-    Object.keys(b.cells || {}).forEach(identity => {
+    Object.keys(b.cells || {}).forEach((identity) => {
       const aCell = cells[identity] || {};
       // @ts-expect-error Fix me later
       const bCell = b.cells[identity];
@@ -171,7 +171,7 @@ export const tableHandler = {
       columns: bDeltas.columns.transform(aDeltas.columns, !priority),
     });
 
-    Object.keys(a.cells || {}).forEach(identity => {
+    Object.keys(a.cells || {}).forEach((identity) => {
       let [row, column] = parseCellIdentity(identity);
       // @ts-expect-error Fix me later
       row = composePosition(rows, row);
@@ -219,7 +219,7 @@ export const tableHandler = {
       rows,
       columns,
     });
-    Object.keys(cells).forEach(identity => {
+    Object.keys(cells).forEach((identity) => {
       const changeCell = cells[identity] || {};
       const baseCell = (base.cells || {})[identity] || {};
       const content = new Delta(changeCell.content || []).invert(
@@ -239,7 +239,7 @@ export const tableHandler = {
 
     // Cells may be removed when their row or column is removed
     // by row/column deltas. We should add them back.
-    Object.keys(base.cells || {}).forEach(identity => {
+    Object.keys(base.cells || {}).forEach((identity) => {
       const [row, column] = parseCellIdentity(identity);
       if (
         composePosition(new Delta(change.rows || []), row) === null ||

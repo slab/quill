@@ -10,7 +10,7 @@ class Input extends Module {
   constructor(quill: Quill, options: Record<string, never>) {
     super(quill, options);
 
-    quill.root.addEventListener('beforeinput', event => {
+    quill.root.addEventListener('beforeinput', (event) => {
       this.handleBeforeInput(event);
     });
 

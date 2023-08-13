@@ -8,7 +8,7 @@ const redo = (page: Page) => page.keyboard.press(`${SHORTKEY}+Shift+z`);
 
 const setUserOnly = (page: Page, value: boolean) =>
   page.evaluate(
-    value => {
+    (value) => {
       // @ts-expect-error
       window.quill.history.options.userOnly = value;
     },
