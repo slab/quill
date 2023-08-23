@@ -4,20 +4,23 @@ on:
     branches:
       - main
   pull_request:
-    types: [opened, edited, synchronize, reopened]
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+      - ready_for_review
     branches:
       - main
-
 jobs:
   ci-standard-checks:
-    runs-on: [ubuntu-latest]
-
+    runs-on:
+      - ubuntu-latest
     steps:
       - name: Check Out Source Code
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
       - name: CI Standard Checks
         uses: Typeform/ci-standard-checks@v1
         with:
