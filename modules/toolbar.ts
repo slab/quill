@@ -31,6 +31,7 @@ class Toolbar extends Module<ToolbarProps> {
     super(quill, options);
     if (Array.isArray(this.options.container)) {
       const container = document.createElement('div');
+      container.setAttribute('role', 'toolbar');
       addControls(container, this.options.container);
       quill.container?.parentNode?.insertBefore(container, quill.container);
       this.container = container;
