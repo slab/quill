@@ -28,8 +28,8 @@ describe('Toolbar', () => {
       addControls(container, ['bold', 'italic']);
       expect(container).toEqualHTML(`
         <span class="ql-formats">
-          <button type="button" class="ql-bold" aria-pressed="false"></button>
-          <button type="button" class="ql-italic" aria-pressed="false"></button>
+          <button type="button" aria-label="bold" class="ql-bold" aria-pressed="false"></button>
+          <button type="button" aria-label="italic" class="ql-italic" aria-pressed="false"></button>
         </span>
       `);
     });
@@ -42,12 +42,12 @@ describe('Toolbar', () => {
       ]);
       expect(container).toEqualHTML(`
         <span class="ql-formats">
-          <button type="button" class="ql-bold" aria-pressed="false"></button>
-          <button type="button" class="ql-italic" aria-pressed="false"></button>
+          <button type="button" aria-label="bold" class="ql-bold" aria-pressed="false"></button>
+          <button type="button" aria-label="italic" class="ql-italic" aria-pressed="false"></button>
         </span>
         <span class="ql-formats">
-          <button type="button" class="ql-underline" aria-pressed="false"></button>
-          <button type="button" class="ql-strike" aria-pressed="false"></button>
+          <button type="button" aria-label="underline" class="ql-underline" aria-pressed="false"></button>
+          <button type="button" aria-label="strike" class="ql-strike" aria-pressed="false"></button>
         </span>
       `);
     });
@@ -57,8 +57,8 @@ describe('Toolbar', () => {
       addControls(container, ['bold', { header: '2' }]);
       expect(container).toEqualHTML(`
         <span class="ql-formats">
-          <button type="button" class="ql-bold" aria-pressed="false"></button>
-          <button type="button" class="ql-header" aria-pressed="false" value="2"></button>
+          <button type="button" aria-label="bold" class="ql-bold" aria-pressed="false"></button>
+          <button type="button" aria-label="header: 2" class="ql-header" aria-pressed="false" value="2"></button>
         </span>
       `);
     });
@@ -108,14 +108,14 @@ describe('Toolbar', () => {
           </select>
         </span>
         <span class="ql-formats">
-          <button type="button" class="ql-bold" aria-pressed="false"></button>
-          <button type="button" class="ql-italic" aria-pressed="false"></button>
-          <button type="button" class="ql-underline" aria-pressed="false"></button>
-          <button type="button" class="ql-strike" aria-pressed="false"></button>
+          <button type="button" aria-label="bold" class="ql-bold" aria-pressed="false"></button>
+          <button type="button" aria-label="italic" class="ql-italic" aria-pressed="false"></button>
+          <button type="button" aria-label="underline" class="ql-underline" aria-pressed="false"></button>
+          <button type="button" aria-label="strike" class="ql-strike" aria-pressed="false"></button>
         </span>
         <span class="ql-formats">
-          <button type="button" class="ql-list" value="ordered" aria-pressed="false"></button>
-          <button type="button" class="ql-list" value="bullet" aria-pressed="false"></button>
+          <button type="button" aria-label="list: ordered" class="ql-list" value="ordered" aria-pressed="false"></button>
+          <button type="button" aria-label="list: bullet" class="ql-list" value="bullet" aria-pressed="false"></button>
           <select class="ql-align">
             <option selected="selected"></option>
             <option value="center"></option>
@@ -124,8 +124,8 @@ describe('Toolbar', () => {
           </select>
         </span>
         <span class="ql-formats">
-          <button type="button" class="ql-link" aria-pressed="false"></button>
-          <button type="button" class="ql-image" aria-pressed="false"></button>
+          <button type="button" aria-label="link" class="ql-link" aria-pressed="false"></button>
+          <button type="button" aria-label="image" class="ql-image" aria-pressed="false"></button>
         </span>
       `);
     });
