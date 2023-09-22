@@ -1,4 +1,5 @@
-export const SHORTKEY = process.platform === 'darwin' ? 'Meta' : 'Control';
+export const isMac = process.platform === 'darwin';
+export const SHORTKEY = isMac ? 'Meta' : 'Control';
 
 export function getSelectionInTextNode() {
   const selection = document.getSelection();
