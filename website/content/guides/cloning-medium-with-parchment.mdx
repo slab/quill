@@ -53,7 +53,7 @@ We follow Medium's example here in using `strong` and `em` tags but you could ju
 Quill.register(BoldBlot);
 Quill.register(ItalicBlot);
 
-var quill = new Quill('#editor');
+const quill = new Quill('#editor');
 
 quill.insertText(0, 'Test', { bold: true });
 quill.formatText(0, 4, 'italic', true);

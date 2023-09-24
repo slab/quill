@@ -55,36 +55,36 @@ To realize the full benefits of 1.0, it is encouraged to take a fresh view of Qu
 The default [Delta](/docs/delta/) representation of some content has changed. In all cases the old format is still supported in methods using Deltas as in input, such as `setContents` and `updateContents`. But outputted Deltas, such as the ones reported by `text-change` and `getContents` will be in the new form. Since [Parchment](https://github.com/quilljs/parchment) now allows custom content and formats, it is possible to customize these Delta representations entirely.
 
 ```javascript
-var newImage = {
+const newImage = {
   insert: { image: 'url' }
 };
-var oldImage = {
+const oldImage = {
   insert: 1,
   attributes: {
     image: 'url'
   }
 };
 
-var newOrderedList = {
+const newOrderedList = {
   insert: '\n',
   attributes: {
     list: 'ordered'
   }
 };
-var oldOrderedList = {
+const oldOrderedList = {
   insert: '\n',
   attributes: {
     list: true
   }
 };
 
-var newBullettedList = {
+const newBullettedList = {
   insert: '\n',
   attributes: {
     list: 'bullet'
   }
 };
-var oldBullettedList = {
+const oldBullettedList = {
   insert: '\n',
   attributes: {
     bullet: true
