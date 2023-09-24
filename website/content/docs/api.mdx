@@ -52,7 +52,7 @@ getContents(index: Number = 0, length: Number = remaining): Delta
 **Examples**
 
 ```javascript
-var delta = quill.getContents();
+const delta = quill.getContents();
 ```
 
 ### getLength
@@ -68,7 +68,7 @@ getLength(): Number
 **Examples**
 
 ```javascript
-var length = quill.getLength();
+const length = quill.getLength();
 ```
 
 ### getText
@@ -86,7 +86,7 @@ getText(index: Number = 0, length: Number = remaining): String
 **Examples**
 
 ```javascript
-var text = quill.getText(0, 10);
+const text = quill.getText(0, 10);
 ```
 
 ### insertEmbed
@@ -364,12 +364,12 @@ getSelection(focus = false): { index: Number, length: Number }
 **Examples**
 
 ```javascript
-var range = quill.getSelection();
+const range = quill.getSelection();
 if (range) {
   if (range.length == 0) {
     console.log('User cursor is at index', range.index);
   } else {
-    var text = quill.getText(range.index, range.length);
+    const text = quill.getText(range.index, range.length);
     console.log('User has highlighted: ', text);
   }
 } else {
@@ -539,7 +539,7 @@ quill.on('selection-change', function (range, oldRange, source) {
     if (range.length == 0) {
       console.log('User cursor is on', range.index);
     } else {
-      var text = quill.getText(range.index, range.length);
+      const text = quill.getText(range.index, range.length);
       console.log('User has highlighted', text);
     }
   } else {
@@ -642,13 +642,13 @@ Quill.find(domNode: Node, bubble: boolean = false): Blot | Quill
 **Examples**
 
 ```javascript
-var container = document.querySelector('#container');
-var quill = new Quill(container);
+const container = document.querySelector('#container');
+const quill = new Quill(container);
 console.log(Quill.find(container) === quill); // Should be true
 
 quill.insertText(0, 'Hello', 'link', 'https://world.com');
-var linkNode = document.querySelector('#container a');
-var linkBlot = Quill.find(linkNode);
+const linkNode = document.querySelector('#container a');
+const linkBlot = Quill.find(linkNode);
 ```
 
 ### getIndex #experimental
@@ -762,11 +762,11 @@ Quill.import(path): any
 **Examples**
 
 ```javascript
-var Parchment = Quill.import('parchment');
-var Delta = Quill.import('delta');
+const Parchment = Quill.import('parchment');
+const Delta = Quill.import('delta');
 
-var Toolbar = Quill.import('modules/toolbar');
-var Link = Quill.import('formats/link');
+const Toolbar = Quill.import('modules/toolbar');
+const Link = Quill.import('formats/link');
 // Similar to ES6 syntax `import Link from 'quill/formats/link';`
 ```
 
@@ -785,7 +785,7 @@ Quill.register(defs: { [String]: any }, supressWarning: Boolean = false)
 **Examples**
 
 ```javascript
-var Module = Quill.import('core/module');
+const Module = Quill.import('core/module');
 
 class CustomModule extends Module {}
 
@@ -817,7 +817,7 @@ addContainer(domNode: Node, refNode?: Node): Element
 **Examples**
 
 ```javascript
-var container = quill.addContainer('ql-custom');
+const container = quill.addContainer('ql-custom');
 ```
 
 ### getModule
@@ -833,5 +833,5 @@ getModule(name: String): any
 **Examples**
 
 ```javascript
-var toolbar = quill.getModule('toolbar');
+const toolbar = quill.getModule('toolbar');
 ```

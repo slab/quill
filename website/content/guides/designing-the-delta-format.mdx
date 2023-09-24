@@ -16,7 +16,7 @@ Let's start at the basics with just plain text. There already is a ubiquitous fo
 Arrays are the only other ordered data type available, so we use an array of objects. This also allows us to leverage JSON for compatibility with a breadth of tools.
 
 ```javascript
-var content = [
+const content = [
   { text: 'Hello' },
   { text: 'World', bold: true }
 ];
@@ -25,7 +25,7 @@ var content = [
 We can add italics, underline, and other formats to the main object if we want to; but it is cleaner to separate `text` from all of this so we organize formatting under one field, which we will name `attributes`.
 
 ```javascript
-var content = [
+const content = [
   { text: 'Hello' },
   { text: 'World', attributes: { bold: true } }
 ];
@@ -37,7 +37,7 @@ var content = [
 Even with our simple Delta format so far, it is unpredictable since the above "Hello World" example can be represented differently, so we cannot predict which will be generated:
 
 ```javascript
-var content = [
+const content = [
   { text: 'Hel' },
   { text: 'lo' },
   { text: 'World', attributes: { bold: true } }
@@ -56,7 +56,7 @@ We do not define the set of possible attributes, nor their meanings, but we do a
 So if we had the following, the only conclusion we can draw is `a` is different from `b`, but not what `a` or `b` means.
 
 ```javascript
-var content = [{
+const content = [{
   text: "Mystery",
   attributes: {
     a: true,
@@ -68,7 +68,7 @@ var content = [{
 It is up to the implementer to pick appropriate names:
 
 ```javascript
-var content = [{
+const content = [{
   text: "Mystery",
   attributes: {
     italic: true,
@@ -93,7 +93,7 @@ This unambiguous predictability makes Deltas easier to work with, both because y
 Line formats affect the contents of an entire line, so they present an interesting challenge for our compact and canonical constraints. A seemingly reasonable way to represent centered text would be the following:
 
 ```javascript
-var content = [
+const content = [
   { text: "Hello", attributes: { align: "center" } },
   { text: "\nWorld" }
 ];
@@ -102,7 +102,7 @@ var content = [
 But what if the user deletes the newline character? If we just naively get rid of the newline character, the Delta would now look like this:
 
 ```javascript
-var content = [
+const content = [
   { text: "Hello", attributes: { align: "center" } },
   { text: "World" }
 ];
@@ -111,7 +111,7 @@ var content = [
 Is this line still centered? If the answer is no, then our representation is not compact, since we do not need the attribute object and can combine the two strings:
 
 ```javascript
-var content = [
+const content = [
   { text: "HelloWorld" }
 ];
 ```
@@ -123,7 +123,7 @@ So we cannot just naively get rid of the newline character. We also have to eith
 What if we removed the newline from the following?
 
 ```javascript
-var content = [
+const content = [
   { text: "Hello", attributes: { align: "center" } },
   { text: "\n" },
   { text: "World", attributes: { align: "right" } }
@@ -138,7 +138,7 @@ To solve this, Quill "adds" a newline to all documents and always ends Deltas wi
 
 ```javascript
 // Hello World on two lines
-var content = [
+const content = [
   { text: "Hello" },
   { text: "\n", attributes: { align: "center" } },
   { text: "World" },
@@ -152,13 +152,13 @@ var content = [
 We want to add embedded content like images or video. Strings were natural to use for text but we have a lot more options for embeds. Since there are different types of embeds, our choice just needs to include this type information, and then the actual content. There are many reasonable options here but we will use an object whose only key is the embed type and the value is the content representation, which may have any type or value.
 
 ```javascript
-var img = {
+const img = {
   image: {
     url: 'https://quilljs.com/logo.png'
   }
 };
 
-var f = {
+const f = {
   formula: 'e=mc^2'
 };
 ```
@@ -166,7 +166,7 @@ var f = {
 Similar to text, images might have some defining characteristics, and some transient ones. We used `attributes` for text content and can use the same `attributes` field for images. But because of this, we can keep the general structure we have been using, but should rename our `text` key into something more general. For reasons we will explore later, we will choose the name `insert`. Putting this all together we have:
 
 ```javascript
-var content = [{
+const content = [{
   insert: 'Hello'
 }, {
   insert: 'World',
@@ -191,7 +191,7 @@ To describe deleting text, we need to know where and how many characters to dele
 One reasonable way to describe a deletion is to explicitly store its index and length.
 
 ```javascript
-var delta = [{
+const delta = [{
   delete: {
     index: 4,
     length: 1
@@ -215,7 +215,7 @@ Now that Deltas may be describing changes to a non-empty document, `{ insert: "H
 Similar to deletes, we need to specify the range of text to format, along with the format change itself. Formatting exists in the `attributes` object, so a simple solution is to provide an additional `attributes` object to merge with the existing one. This merge is shallow to keep things simple. We have not found a use case that is compelling enough to require a deep merge and warrants the added complexity.
 
 ```javascript
-var delta = [{
+const delta = [{
   format: {
     index: 4,
     length: 1
@@ -231,7 +231,7 @@ The special case is when we want to remove formatting. We will use `null` for th
 **Note:** We now have to be careful with indexes at the application layer. As mentioned earlier, Deltas do not ascribe any inherent meaning to any the `attributes`' key-value pairs, nor any embed types or values. Deltas do not know an image does not have duration, text does not have alternative texts, and videos cannot be bolded. The following is a *legal* Delta that might have been the result of applying other *legal* Deltas, by an application not being careful of format ranges.
 
 ```javascript
-var delta = [{
+const delta = [{
   insert: {
     image: "https://imgur.com/"
   },
@@ -276,7 +276,7 @@ This necessitates the creation of a new Operation, that will simply mean "keep t
 ```javascript
 // Starting with "HelloWorld",
 // bold "Hello", and insert a space right after it
-var change = [
+const change = [
   { format: true, attributes: { bold: true } },  // H
   { format: true, attributes: { bold: true } },  // e
   { format: true, attributes: { bold: true } },  // l
@@ -296,7 +296,7 @@ Since every character is described, explicit indexes and lengths are no longer n
 Therefore, we can make the easy optimization to merge adjacent equal Operations, re-introducing *length*. If the last Operation is a `retain` we can simply drop it, for it simply instructs to "do nothing to the rest of the document".
 
 ```javascript
-var change = [
+const change = [
   { format: 5, attributes: { bold: true } }
   { insert: ' ' }
 ]
@@ -305,7 +305,7 @@ var change = [
 Furthermore, you might notice that a `retain` is in some ways just a special case of `format`. For instance, there is no practical difference between `{ format: 1, attributes: {} }` and `{ retain: 1 }`. Compacting would drop the empty `attributes` object leaving us with just `{ format: 1 }`, creating a canonicalization conflict. Thus, in our example we will simply combine `format` and `retain`, and keep the name `retain`.
 
 ```javascript
-var change = [
+const change = [
   { retain: 5, attributes: { bold: true } },
   { insert: ' ' }
 ]
@@ -320,7 +320,7 @@ Right now we have an easy to use JSON Array that describes rich text. This is gr
 At the time of Delta's inception, it was not possible to sub-class an Array. For this reason Deltas are expressed as Objects, with a single property `ops` that stores an array of Operations like the ones we have been discussing.
 
 ```javascript
-var delta = {
+const delta = {
   ops: [{
     insert: 'Hello'
   }, {

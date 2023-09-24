@@ -105,7 +105,7 @@ quill.keyboard.addBinding({ key: Keyboard.keys.ENTER }, {
 When an Array, handler will be called if *any* of the specified formats are active. When an Object, *all* specified formats conditions must be met. In either case, the format property of the context parameter will be an Object of all current active formats, the same returned by `quill.getFormat()`.
 
 ```js
-var context = {
+const context = {
   format: {
     list: true,       // must be on a list, but can be any value
     script: 'super',  // must be exactly 'super', 'sub' will not suffice
@@ -162,7 +162,7 @@ Adding a binding with `quill.keyboard.addBinding` will not run before Quill's be
 Each binding config must contain `key` and `handler` options, and may optionally include any of the `context` options.
 
 ```javascript
-var bindings = {
+const bindings = {
   // This will overwrite the default binding also named 'tab'
   tab: {
     key: 9,
@@ -197,7 +197,7 @@ var bindings = {
   }
 };
 
-var quill = new Quill('#editor', {
+const quill = new Quill('#editor', {
   modules: {
     keyboard: {
       bindings: bindings
