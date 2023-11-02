@@ -6,6 +6,8 @@ class IndentAttributor extends ClassAttributor {
     if (value === '+1' || value === '-1') {
       const indent = this.value(node) || 0;
       normalizedValue = value === '+1' ? indent + 1 : indent - 1;
+    } else if (typeof value === 'number') {
+      normalizedValue = value;
     }
     if (normalizedValue === 0) {
       this.remove(node);
