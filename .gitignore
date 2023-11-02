@@ -13,12 +13,12 @@
 *.js.map
 *.log
 
-blots/*.js
-core/*.js
-formats/*.js
-modules/*.js
-themes/*.js
-ui/*.js
+blots/**/*.js
+core/**/*.js
+formats/**/*.js
+modules/**/*.js
+themes/**/*.js
+ui/**/*.js
 e2e/**/*.js
 
 !test/unit/__helpers__/vitest.d.ts
