@@ -43,4 +43,13 @@ describe('Indent', () => {
       </ol>
     `);
   });
+
+  test('1', () => {
+    const editor = new Editor(createScroll('<p>abc</p>'));
+    editor.formatText(3, 1, { indent: 1 });
+    expect(editor.getDelta()).toEqual(
+      new Delta().insert('abc').insert('\n', { indent: 1 }),
+    );
+    expect(editor.scroll.domNode).toEqualHTML(`<p class="ql-indent-1">abc</p>`);
+  });
 });
