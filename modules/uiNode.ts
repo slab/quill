@@ -4,10 +4,12 @@ import Quill from '../core/quill';
 
 const isMac = /Mac/i.test(navigator.platform);
 
+// A loose check to see if the shortcut can move the caret before a UI node:
+// <ANY_PARENT>[CARET]<div class="ql-ui"></div>[CONTENT]</ANY_PARENT>
 const canMoveCaretBeforeUINode = (event: KeyboardEvent) => {
   if (
     event.key === 'ArrowLeft' ||
-    event.key === 'ArrowRight' ||
+    event.key === 'ArrowRight' || // RTL language or moving from the end of the previous line
     event.key === 'ArrowUp' ||
     event.key === 'ArrowDown' ||
     event.key === 'Home'

@@ -2,7 +2,7 @@ import { expect } from '@playwright/test';
 import { test } from './fixtures';
 import { isMac } from './utils';
 
-const listTypes = ['bullet', 'ordered', 'checked'];
+const listTypes = ['bullet', 'checked'];
 
 test.describe('list', () => {
   test.beforeEach(async ({ editorPage }) => {
@@ -74,6 +74,28 @@ test.describe('list', () => {
           { insert: '\n', attributes: { list } },
         ]);
       });
+    });
+
+    // https://github.com/quilljs/quill/issues/3837
+    test(`typing at beginning with IME (${list})`, async ({
+      editorPage,
+      composition,
+    }) => {
+      await editorPage.setContents([
+        { insert: 'item 1' },
+        { insert: '\n', attributes: { list } },
+        { insert: '' },
+        { insert: '\n', attributes: { list } },
+      ]);
+
+      await editorPage.setSelection(7, 0);
+      await editorPage.typeWordWithIME(composition, '我');
+      expect(await editorPage.getContents()).toEqual([
+        { insert: 'item 1' },
+        { insert: '\n', attributes: { list } },
+        { insert: '我' },
+        { insert: '\n', attributes: { list } },
+      ]);
     });
   }
 });

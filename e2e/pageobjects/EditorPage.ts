@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import type Composition from '../fixtures/Composition';
 
 interface Op {
   insert?: string | Record<string, unknown>;
@@ -79,6 +80,26 @@ export default class EditorPage {
       // @ts-expect-error
       return window.quill.getSelection();
     });
+  }
+
+  async setSelection(index: number, length: number): Promise<void>;
+  async setSelection(range: { index: number; length: number }): Promise<void>;
+  async setSelection(
+    range: { index: number; length: number } | number,
+    length?: number,
+  ) {
+    await this.page.evaluate(
+      // @ts-expect-error
+      (range) => window.quill.setSelection(range),
+      typeof range === 'number' ? { index: range, length: length || 0 } : range,
+    );
+  }
+
+  async typeWordWithIME(composition: Composition, composedWord: string) {
+    const ime = await composition.start();
+    await ime.update('w');
+    await ime.update('o');
+    await ime.commit(composedWord);
   }
 
   async cutoffHistory() {
