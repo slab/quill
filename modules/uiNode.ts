@@ -4,12 +4,12 @@ import Quill from '../core/quill';
 
 const isMac = /Mac/i.test(navigator.platform);
 
-// A loose check to see if the shortcut can move the caret before a UI node:
+// A loose check to determine if the shortcut can move the caret before a UI node:
 // <ANY_PARENT>[CARET]<div class="ql-ui"></div>[CONTENT]</ANY_PARENT>
 const canMoveCaretBeforeUINode = (event: KeyboardEvent) => {
   if (
     event.key === 'ArrowLeft' ||
-    event.key === 'ArrowRight' || // RTL language or moving from the end of the previous line
+    event.key === 'ArrowRight' || // RTL scripts or moving from the end of the previous line
     event.key === 'ArrowUp' ||
     event.key === 'ArrowDown' ||
     event.key === 'Home'
@@ -37,18 +37,28 @@ class UINode extends Module {
 
   private handleArrowKeys() {
     this.quill.keyboard.addBinding({
-      key: 'ArrowLeft',
+      key: ['ArrowLeft', 'ArrowRight'],
+      offset: 0,
       shiftKey: null,
-      handler(range, { line, offset, event }) {
-        if (offset === 0 && line instanceof ParentBlot && line.uiNode) {
-          this.quill.setSelection(
-            range.index - 1,
-            range.length + (event.shiftKey ? 1 : 0),
-            Quill.sources.USER,
-          );
-          return false;
+      handler(range, { line, event }) {
+        if (!(line instanceof ParentBlot) || !line.uiNode) {
+          return true;
         }
-        return true;
+
+        const isRTL = getComputedStyle(line.domNode)['direction'] === 'rtl';
+        if (
+          (isRTL && event.key !== 'ArrowRight') ||
+          (!isRTL && event.key !== 'ArrowLeft')
+        ) {
+          return true;
+        }
+
+        this.quill.setSelection(
+          range.index - 1,
+          range.length + (event.shiftKey ? 1 : 0),
+          Quill.sources.USER,
+        );
+        return false;
       },
     });
   }
@@ -61,6 +71,12 @@ class UINode extends Module {
     });
   }
 
+  /**
+   * We only listen to the `selectionchange` event when
+   * there is an intention of moving the caret to the beginning using shortcuts.
+   * This is primarily implemented to prevent infinite loops, as we are changing
+   * the selection within the handler of a `selectionchange` event.
+   */
   private ensureListeningToSelectionChange() {
     if (this.isListening) return;
 
