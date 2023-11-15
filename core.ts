@@ -15,6 +15,7 @@ import Keyboard from './modules/keyboard';
 import Uploader from './modules/uploader';
 import Delta, { Op, OpIterator, AttributeMap } from 'quill-delta';
 import Input from './modules/input';
+import UINode from './modules/uiNode';
 
 export { Delta, Op, OpIterator, AttributeMap };
 
@@ -34,6 +35,7 @@ Quill.register({
   'modules/keyboard': Keyboard,
   'modules/uploader': Uploader,
   'modules/input': Input,
+  'modules/uiNode': UINode,
 });
 
 export default Quill;

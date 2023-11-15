@@ -37,6 +37,18 @@ test.describe('replace selection', () => {
       expect(await editorPage.getContents()).toEqual([{ insert: '1\n\n' }]);
     });
 
+    test('with IME', async ({ editorPage, composition }) => {
+      await editorPage.setContents([
+        { insert: '1' },
+        { insert: '2', attributes: { color: 'red' } },
+        { insert: '3\n' },
+      ]);
+      await editorPage.selectText('2', '3');
+      await editorPage.typeWordWithIME(composition, '我');
+      expect(await editorPage.root.innerHTML()).toEqual('<p>1我</p>');
+      expect(await editorPage.getContents()).toEqual([{ insert: '1我\n' }]);
+    });
+
     test('after a bold text', async ({ page, editorPage }) => {
       await editorPage.setContents([
         { insert: '1', attributes: { bold: true } },

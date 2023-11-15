@@ -14,6 +14,7 @@ import { SizeClass } from '../../../formats/size';
 import Bold from '../../../formats/bold';
 import Link from '../../../formats/link';
 import { AlignClass } from '../../../formats/align';
+import UINode from '../../../modules/uiNode';
 
 const createContainer = (html = '') => {
   const container = document.body.appendChild(document.createElement('div'));
@@ -152,6 +153,7 @@ describe('Toolbar', () => {
           'modules/history': History,
           'modules/uploader': Uploader,
           'modules/input': Input,
+          'modules/uiNode': UINode,
         },
         true,
       );

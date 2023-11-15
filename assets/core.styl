@@ -71,6 +71,7 @@ resets(arr)
   li
     list-style-type: none
     padding-left: LIST_STYLE_OUTER_WIDTH
+    position: relative
 
     > .ql-ui:before
       display: inline-block
@@ -79,12 +80,6 @@ resets(arr)
       text-align: right
       white-space: nowrap
       width: LIST_STYLE_WIDTH
-
-  @supports (display: contents)
-    li[data-list=bullet],
-    li[data-list=ordered]
-      > .ql-ui
-        display: contents
 
   li[data-list=checked],
   li[data-list=unchecked]
@@ -209,10 +204,6 @@ resets(arr)
 
   .ql-ui
     position: absolute
-
-  li
-    > .ql-ui
-      position: static;
 
 .ql-editor.ql-blank::before
   color: rgba(0,0,0,0.6)

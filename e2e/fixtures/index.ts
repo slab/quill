@@ -1,12 +1,22 @@
 import { test as base } from '@playwright/test';
 import EditorPage from '../pageobjects/EditorPage';
+import Composition from './Composition';
 
 export const test = base.extend<{
   editorPage: EditorPage;
   clipboard: Clipboard;
+  composition: Composition;
 }>({
   editorPage: ({ page }, use) => {
     use(new EditorPage(page));
+  },
+  composition: ({ page, browserName, playwright }, use) => {
+    test.fail(
+      browserName === 'firefox',
+      'CDPSession is not available in Firefox',
+    );
+
+    use(new Composition(page, browserName, playwright));
   },
 });
 
