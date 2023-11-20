@@ -4,6 +4,9 @@ import Quill from '../core/quill';
 
 const isMac = /Mac/i.test(navigator.platform);
 
+// Export for testing
+export const TTL_FOR_VALID_SELECTION_CHANGE = 100;
+
 // A loose check to determine if the shortcut can move the caret before a UI node:
 // <ANY_PARENT>[CARET]<div class="ql-ui"></div>[CONTENT]</ANY_PARENT>
 const canMoveCaretBeforeUINode = (event: KeyboardEvent) => {
@@ -78,10 +81,10 @@ class UINode extends Module {
    * the selection within the handler of a `selectionchange` event.
    */
   private ensureListeningToSelectionChange() {
-    if (this.isListening) return;
+    this.selectionChangeDeadline = Date.now() + TTL_FOR_VALID_SELECTION_CHANGE;
 
+    if (this.isListening) return;
     this.isListening = true;
-    this.selectionChangeDeadline = Date.now() + 100;
 
     const listener = () => {
       this.isListening = false;
