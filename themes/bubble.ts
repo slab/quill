@@ -1,4 +1,4 @@
-import merge from 'lodash.merge';
+import { merge } from 'lodash-es';
 import Emitter from '../core/emitter';
 import BaseTheme, { BaseTooltip } from './base';
 import { Range } from '../core/selection';

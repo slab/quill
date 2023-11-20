@@ -1,5 +1,4 @@
-import cloneDeep from 'lodash.clonedeep';
-import isEqual from 'lodash.isequal';
+import { cloneDeep, isEqual } from 'lodash-es';
 import Delta, { AttributeMap } from 'quill-delta';
 import { EmbedBlot, Scope, TextBlot } from 'parchment';
 import type { Blot, BlockBlot } from 'parchment';
