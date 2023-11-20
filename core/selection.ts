@@ -1,6 +1,5 @@
 import { LeafBlot, Scope } from 'parchment';
-import cloneDeep from 'lodash.clonedeep';
-import isEqual from 'lodash.isequal';
+import { cloneDeep, isEqual } from 'lodash-es';
 import Emitter from './emitter';
 import type { EmitterSource } from './emitter';
 import logger from './logger';
