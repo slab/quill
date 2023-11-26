@@ -49,8 +49,5 @@
   "engines": {
     "npm": ">=8.2.3"
   },
-  "engineStrict": true,
-  "devDependencies": {
-    "typescript": "^5.2.2"
-  }
+  "engineStrict": true
 }

@@ -1,7 +1,6 @@
 import type {
   CDPSession,
   Page,
-  PlaywrightWorkerArgs,
   PlaywrightWorkerOptions,
 } from '@playwright/test';
 
@@ -54,38 +53,10 @@ class ChromiumCompositionSession extends CompositionSession {
   }
 }
 
-class WebkitCompositionSession extends CompositionSession {
-  constructor(
-    page: Page,
-    private session: any,
-  ) {
-    super(page);
-  }
-
-  async update(key: string) {
-    await this.withKeyboardEvents(key, async () => {
-      this.composingData += key;
-
-      await this.session.send('Page.setComposition', {
-        selectionStart: this.composingData.length,
-        selectionLength: 0,
-        text: this.composingData,
-      });
-    });
-  }
-
-  async commit(committedText: string) {
-    await this.withKeyboardEvents('Space', async () => {
-      await this.page.keyboard.insertText(committedText);
-    });
-  }
-}
-
 class Composition {
   constructor(
     private page: Page,
     private browserName: PlaywrightWorkerOptions['browserName'],
-    private playwright: PlaywrightWorkerArgs['playwright'],
   ) {}
 
   async start() {
@@ -93,11 +64,6 @@ class Composition {
       case 'chromium': {
         const session = await this.page.context().newCDPSession(this.page);
         return new ChromiumCompositionSession(this.page, session);
-      }
-      case 'webkit': {
-        const session = (await (this.playwright as any)._toImpl(this.page))
-          ._delegate._session;
-        return new WebkitCompositionSession(this.page, session);
       }
       default:
         throw new Error(`Unsupported browser: ${this.browserName}`);

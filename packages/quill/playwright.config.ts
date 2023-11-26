@@ -1,5 +1,4 @@
-import { defineConfig } from '@playwright/test';
-import { devices } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
 const port = 9001;
 

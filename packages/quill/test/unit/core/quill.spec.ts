@@ -1,4 +1,4 @@
-import '../../../quill';
+import '../../../src/quill';
 import Delta from 'quill-delta';
 import { beforeEach, describe, expect, test, vitest } from 'vitest';
 import type { MockedFunction } from 'vitest';

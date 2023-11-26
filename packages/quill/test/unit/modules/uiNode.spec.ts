@@ -1,4 +1,4 @@
-import '../../../quill';
+import '../../../src/quill';
 import { describe, expect, test } from 'vitest';
 import UINode, {
   TTL_FOR_VALID_SELECTION_CHANGE,

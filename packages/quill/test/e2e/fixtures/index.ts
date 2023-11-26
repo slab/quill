@@ -10,13 +10,13 @@ export const test = base.extend<{
   editorPage: ({ page }, use) => {
     use(new EditorPage(page));
   },
-  composition: ({ page, browserName, playwright }, use) => {
+  composition: ({ page, browserName }, use) => {
     test.fail(
-      browserName === 'firefox',
-      'CDPSession is not available in Firefox',
+      browserName !== 'chromium',
+      'CDPSession is only available in Chromium',
     );
 
-    use(new Composition(page, browserName, playwright));
+    use(new Composition(page, browserName));
   },
 });
 
