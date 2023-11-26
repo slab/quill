@@ -1,21 +1,21 @@
 import Delta from 'quill-delta';
 import { describe, expect, test, vitest } from 'vitest';
-import Quill from '../../../core';
-import { Range } from '../../../core/selection';
-import Bold from '../../../formats/bold';
-import Header from '../../../formats/header';
-import Image from '../../../formats/image';
-import IndentClass from '../../../formats/indent';
-import Italic from '../../../formats/italic';
-import Link from '../../../formats/link';
-import List, { ListContainer } from '../../../formats/list';
+import Quill from '../../../src/core';
+import { Range } from '../../../src/core/selection';
+import Bold from '../../../src/formats/bold';
+import Header from '../../../src/formats/header';
+import Image from '../../../src/formats/image';
+import IndentClass from '../../../src/formats/indent';
+import Italic from '../../../src/formats/italic';
+import Link from '../../../src/formats/link';
+import List, { ListContainer } from '../../../src/formats/list';
 import {
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
-} from '../../../formats/table';
-import Video from '../../../formats/video';
+} from '../../../src/formats/table';
+import Video from '../../../src/formats/video';
 import { createRegistry } from '../__helpers__/factory';
 import { sleep } from '../__helpers__/utils';
 

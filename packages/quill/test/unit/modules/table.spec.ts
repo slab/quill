@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import Quill from '../../../core';
+import Quill from '../../../src/core';
 import { describe, expect, test } from 'vitest';
 import { createRegistry } from '../__helpers__/factory';
 import {
@@ -7,9 +7,9 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-} from '../../../formats/table';
+} from '../../../src/formats/table';
 import { normalizeHTML } from '../__helpers__/utils';
-import Table from '../../../modules/table';
+import Table from '../../../src/modules/table';
 
 const createQuill = (html: string) => {
   Quill.register({ 'modules/table': Table }, true);

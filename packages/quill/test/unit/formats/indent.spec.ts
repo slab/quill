@@ -3,9 +3,9 @@ import {
   createScroll as baseCreateScroll,
   createRegistry,
 } from '../__helpers__/factory';
-import Editor from '../../../core/editor';
-import List, { ListContainer } from '../../../formats/list';
-import IndentClass from '../../../formats/indent';
+import Editor from '../../../src/core/editor';
+import List, { ListContainer } from '../../../src/formats/list';
+import IndentClass from '../../../src/formats/indent';
 import { describe, expect, test } from 'vitest';
 
 const createScroll = (html: string) =>

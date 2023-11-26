@@ -1,13 +1,13 @@
 import { describe, expect, test, vitest } from 'vitest';
-import Emitter from '../../../core/emitter';
-import Selection, { Range } from '../../../core/selection';
-import Cursor from '../../../blots/cursor';
-import Scroll from '../../../blots/scroll';
+import Emitter from '../../../src/core/emitter';
+import Selection, { Range } from '../../../src/core/selection';
+import Cursor from '../../../src/blots/cursor';
+import Scroll from '../../../src/blots/scroll';
 import Delta from 'quill-delta';
 import { createRegistry } from '../__helpers__/factory';
 import { normalizeHTML, sleep } from '../__helpers__/utils';
-import Underline from '../../../formats/underline';
-import Strike from '../../../formats/strike';
+import Underline from '../../../src/formats/underline';
+import Strike from '../../../src/formats/strike';
 
 const createScroll = (html: string) => {
   const emitter = new Emitter();

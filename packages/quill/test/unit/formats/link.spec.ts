@@ -3,10 +3,10 @@ import {
   createScroll as baseCreateScroll,
   createRegistry,
 } from '../__helpers__/factory';
-import Editor from '../../../core/editor';
-import Link from '../../../formats/link';
+import Editor from '../../../src/core/editor';
+import Link from '../../../src/formats/link';
 import { describe, expect, test } from 'vitest';
-import { SizeClass } from '../../../formats/size';
+import { SizeClass } from '../../../src/formats/size';
 
 const createScroll = (html: string) =>
   baseCreateScroll(html, createRegistry([Link, SizeClass]));

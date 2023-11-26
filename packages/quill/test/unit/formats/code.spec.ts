@@ -1,13 +1,13 @@
 import Delta from 'quill-delta';
-import Editor from '../../../core/editor';
+import Editor from '../../../src/core/editor';
 import {
   createScroll as baseCreateScroll,
   createRegistry,
 } from '../__helpers__/factory';
 import { describe, expect, test } from 'vitest';
-import CodeBlock, { Code, CodeBlockContainer } from '../../../formats/code';
-import Italic from '../../../formats/italic';
-import Header from '../../../formats/header';
+import CodeBlock, { Code, CodeBlockContainer } from '../../../src/formats/code';
+import Italic from '../../../src/formats/italic';
+import Header from '../../../src/formats/header';
 
 const createScroll = (html: string) =>
   baseCreateScroll(

@@ -4,7 +4,7 @@ import { devices } from '@playwright/test';
 const port = 9001;
 
 export default defineConfig({
-  testDir: './e2e',
+  testDir: './test/e2e',
   testMatch: '*.spec.ts',
   timeout: 30 * 1000,
   expect: {
@@ -23,11 +23,11 @@ export default defineConfig({
   },
   projects: [
     { name: 'Chrome', use: { ...devices['Desktop Chrome'] } },
-    // { name: 'Firefox', use: { ...devices['Desktop Firefox'] } },
-    // { name: 'Safari', use: { ...devices['Desktop Safari'] } },
+    { name: 'Firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'Safari', use: { ...devices['Desktop Safari'] } },
   ],
   webServer: {
-    command: `npx webpack serve --config e2e/__dev_server__/webpack.config.js --env port=${port}`,
+    command: `npx webpack serve --config test/e2e/__dev_server__/webpack.config.js --env port=${port}`,
     port,
     ignoreHTTPSErrors: true,
     reuseExistingServer: !process.env.CI,

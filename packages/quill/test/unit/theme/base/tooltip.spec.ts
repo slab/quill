@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import Quill from '../../../../core';
-import Video from '../../../../formats/video';
-import { BaseTooltip } from '../../../../themes/base';
+import Quill from '../../../../src/core';
+import Video from '../../../../src/formats/video';
+import { BaseTooltip } from '../../../../src/themes/base';
 import { createRegistry } from '../../__helpers__/factory';
 
 class Tooltip extends BaseTooltip {

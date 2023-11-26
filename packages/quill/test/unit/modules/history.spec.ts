@@ -1,14 +1,14 @@
 import Delta from 'quill-delta';
 import { describe, expect, test, vitest } from 'vitest';
-import Quill from '../../../core';
-import { getLastChangeIndex } from '../../../modules/history';
-import type { HistoryOptions } from '../../../modules/history';
+import Quill from '../../../src/core';
+import { getLastChangeIndex } from '../../../src/modules/history';
+import type { HistoryOptions } from '../../../src/modules/history';
 import { createRegistry, createScroll } from '../__helpers__/factory';
 import { sleep } from '../__helpers__/utils';
-import Bold from '../../../formats/bold';
-import Image from '../../../formats/image';
-import Link from '../../../formats/link';
-import { AlignClass } from '../../../formats/align';
+import Bold from '../../../src/formats/bold';
+import Image from '../../../src/formats/image';
+import Link from '../../../src/formats/link';
+import { AlignClass } from '../../../src/formats/align';
 
 describe('History', () => {
   const scroll = createScroll(

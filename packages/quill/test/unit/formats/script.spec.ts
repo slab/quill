@@ -1,5 +1,5 @@
-import Editor from '../../../core/editor';
-import Script from '../../../formats/script';
+import Editor from '../../../src/core/editor';
+import Script from '../../../src/formats/script';
 import {
   createScroll as baseCreateScroll,
   createRegistry,

@@ -2,9 +2,9 @@
 import hljs from 'highlight.js';
 import Delta from 'quill-delta';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
-import Quill from '../../../core';
-import Bold from '../../../formats/bold';
-import Syntax, { CodeBlock, CodeToken } from '../../../modules/syntax';
+import Quill from '../../../src/core';
+import Bold from '../../../src/formats/bold';
+import Syntax, { CodeBlock, CodeToken } from '../../../src/modules/syntax';
 import { createRegistry } from '../__helpers__/factory';
 import { normalizeHTML, sleep } from '../__helpers__/utils';
 

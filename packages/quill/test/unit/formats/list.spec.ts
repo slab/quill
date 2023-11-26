@@ -3,12 +3,12 @@ import {
   createScroll as baseCreateScroll,
   createRegistry,
 } from '../__helpers__/factory';
-import Editor from '../../../core/editor';
+import Editor from '../../../src/core/editor';
 import { describe, expect, test } from 'vitest';
-import List, { ListContainer } from '../../../formats/list';
-import IndentClass from '../../../formats/indent';
-import { AlignClass } from '../../../formats/align';
-import Video from '../../../formats/video';
+import List, { ListContainer } from '../../../src/formats/list';
+import IndentClass from '../../../src/formats/indent';
+import { AlignClass } from '../../../src/formats/align';
+import Video from '../../../src/formats/video';
 
 const createScroll = (html: string) =>
   baseCreateScroll(

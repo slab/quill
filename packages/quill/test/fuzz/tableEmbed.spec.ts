@@ -1,11 +1,11 @@
 import type { AttributeMap } from 'quill-delta';
 import Delta from 'quill-delta';
-import TableEmbed from '../../modules/tableEmbed';
+import TableEmbed from '../../src/modules/tableEmbed';
 import type {
   CellData,
   TableData,
   TableRowColumnOp,
-} from '../../modules/tableEmbed';
+} from '../../src/modules/tableEmbed';
 import { choose, randomInt } from './__helpers__/utils';
 import { beforeAll, describe, expect, test } from 'vitest';
 

@@ -1,17 +1,17 @@
-import Selection, { Range } from '../../../core/selection';
-import Cursor from '../../../blots/cursor';
-import Emitter from '../../../core/emitter';
+import Selection, { Range } from '../../../src/core/selection';
+import Cursor from '../../../src/blots/cursor';
+import Emitter from '../../../src/core/emitter';
 import { expect, describe, test } from 'vitest';
 import { createRegistry, createScroll } from '../__helpers__/factory';
-import Bold from '../../../formats/bold';
-import Underline from '../../../formats/underline';
-import Image from '../../../formats/image';
-import Link from '../../../formats/link';
-import Italic from '../../../formats/italic';
-import Strike from '../../../formats/strike';
-import { ColorStyle } from '../../../formats/color';
-import { BackgroundStyle } from '../../../formats/background';
-import { FontClass } from '../../../formats/font';
+import Bold from '../../../src/formats/bold';
+import Underline from '../../../src/formats/underline';
+import Image from '../../../src/formats/image';
+import Link from '../../../src/formats/link';
+import Italic from '../../../src/formats/italic';
+import Strike from '../../../src/formats/strike';
+import { ColorStyle } from '../../../src/formats/color';
+import { BackgroundStyle } from '../../../src/formats/background';
+import { FontClass } from '../../../src/formats/font';
 
 const createSelection = (html: string, container = document.body) => {
   const scroll = createScroll(

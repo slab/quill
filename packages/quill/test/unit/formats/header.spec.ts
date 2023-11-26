@@ -3,9 +3,9 @@ import {
   createScroll as baseCreateScroll,
   createRegistry,
 } from '../__helpers__/factory';
-import Editor from '../../../core/editor';
-import Header from '../../../formats/header';
-import Italic from '../../../formats/italic';
+import Editor from '../../../src/core/editor';
+import Header from '../../../src/formats/header';
+import Italic from '../../../src/formats/italic';
 import { describe, expect, test } from 'vitest';
 
 const createScroll = (html: string) =>

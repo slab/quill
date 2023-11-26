@@ -1,10 +1,11 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { ...common } = require('../../webpack.common');
-const { merge } = require('webpack-merge');
+import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import common from '../../../webpack.common';
+import { merge } from 'webpack-merge';
+import type { Configuration } from 'webpack';
 
-module.exports = (env) =>
-  merge(common, {
+export default (env: Record<string, unknown>) =>
+  merge<Configuration>(common, {
     plugins: [
       new HtmlWebpackPlugin({
         publicPath: '/',
@@ -16,7 +17,7 @@ module.exports = (env) =>
       }),
     ],
     devServer: {
-      port: env.port,
+      port: env.port as string,
       server: 'https',
       hot: false,
       liveReload: false,

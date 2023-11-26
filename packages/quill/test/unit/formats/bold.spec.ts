@@ -3,7 +3,7 @@ import {
   createRegistry,
   createScroll as baseCreateScroll,
 } from '../__helpers__/factory';
-import Bold from '../../../formats/bold';
+import Bold from '../../../src/formats/bold';
 
 const createScroll = (html: string) =>
   baseCreateScroll(html, createRegistry([Bold]));

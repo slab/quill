@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import Picker from '../../../ui/picker';
+import Picker from '../../../src/ui/picker';
 
 describe('Picker', () => {
   const setup = () => {

@@ -1,20 +1,20 @@
 import { describe, expect, test } from 'vitest';
-import Quill from '../../../core/quill';
-import { addControls } from '../../../modules/toolbar';
+import Quill from '../../../src/core/quill';
+import { addControls } from '../../../src/modules/toolbar';
 import { normalizeHTML } from '../__helpers__/utils';
-import SnowTheme from '../../../themes/snow';
-import Toolbar from '../../../modules/toolbar';
-import Clipboard from '../../../modules/clipboard';
-import Keyboard from '../../../modules/keyboard';
-import History from '../../../modules/history';
-import Uploader from '../../../modules/uploader';
+import SnowTheme from '../../../src/themes/snow';
+import Toolbar from '../../../src/modules/toolbar';
+import Clipboard from '../../../src/modules/clipboard';
+import Keyboard from '../../../src/modules/keyboard';
+import History from '../../../src/modules/history';
+import Uploader from '../../../src/modules/uploader';
 import { createRegistry } from '../__helpers__/factory';
-import Input from '../../../modules/input';
-import { SizeClass } from '../../../formats/size';
-import Bold from '../../../formats/bold';
-import Link from '../../../formats/link';
-import { AlignClass } from '../../../formats/align';
-import UINode from '../../../modules/uiNode';
+import Input from '../../../src/modules/input';
+import { SizeClass } from '../../../src/formats/size';
+import Bold from '../../../src/formats/bold';
+import Link from '../../../src/formats/link';
+import { AlignClass } from '../../../src/formats/align';
+import UINode from '../../../src/modules/uiNode';
 
 const createContainer = (html = '') => {
   const container = document.body.appendChild(document.createElement('div'));

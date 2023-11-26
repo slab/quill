@@ -1,10 +1,10 @@
 import type { Op } from 'quill-delta';
 import Delta, { AttributeMap } from 'quill-delta';
 import { choose, randomInt, runFuzz } from './__helpers__/utils';
-import { AlignClass } from '../../formats/align';
-import { FontClass } from '../../formats/font';
-import { SizeClass } from '../../formats/size';
-import Quill from '../../quill';
+import { AlignClass } from '../../src/formats/align';
+import { FontClass } from '../../src/formats/font';
+import { SizeClass } from '../../src/formats/size';
+import Quill from '../../src/quill';
 import { describe, expect, test } from 'vitest';
 
 type AttributeDef = { name: string; values: (number | string | boolean)[] };

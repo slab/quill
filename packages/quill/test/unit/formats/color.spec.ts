@@ -1,12 +1,12 @@
 import Delta from 'quill-delta';
-import Editor from '../../../core/editor';
+import Editor from '../../../src/core/editor';
 import {
   createScroll as baseCreateScroll,
   createRegistry,
 } from '../__helpers__/factory';
-import { ColorStyle } from '../../../formats/color';
+import { ColorStyle } from '../../../src/formats/color';
 import { describe, expect, test } from 'vitest';
-import Bold from '../../../formats/bold';
+import Bold from '../../../src/formats/bold';
 
 const createScroll = (html: string) =>
   baseCreateScroll(html, createRegistry([ColorStyle, Bold]));

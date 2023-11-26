@@ -1,13 +1,13 @@
 import { Registry } from 'parchment';
 
-import Block from '../../../blots/block';
-import Break from '../../../blots/break';
-import Cursor from '../../../blots/cursor';
-import Scroll from '../../../blots/scroll';
-import TextBlot from '../../../blots/text';
-import ListItem, { ListContainer } from '../../../formats/list';
-import Inline from '../../../blots/inline';
-import Emitter from '../../../core/emitter';
+import Block from '../../../src/blots/block';
+import Break from '../../../src/blots/break';
+import Cursor from '../../../src/blots/cursor';
+import Scroll from '../../../src/blots/scroll';
+import TextBlot from '../../../src/blots/text';
+import ListItem, { ListContainer } from '../../../src/formats/list';
+import Inline from '../../../src/blots/inline';
+import Emitter from '../../../src/core/emitter';
 import { normalizeHTML } from './utils';
 
 export const createRegistry = (formats: unknown[] = []) => {

@@ -2,8 +2,8 @@ import '../../../quill';
 import { describe, expect, test } from 'vitest';
 import UINode, {
   TTL_FOR_VALID_SELECTION_CHANGE,
-} from '../../../modules/uiNode';
-import Quill, { Delta } from '../../../core';
+} from '../../../src/modules/uiNode';
+import Quill, { Delta } from '../../../src/core';
 
 // Fake timer is not supported in browser mode yet.
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

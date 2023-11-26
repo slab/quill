@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import Editor from '../../../core/editor';
+import Editor from '../../../src/core/editor';
 import {
   createScroll as baseCreateScroll,
   createRegistry,
@@ -10,8 +10,8 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-} from '../../../formats/table';
-import Header from '../../../formats/header';
+} from '../../../src/formats/table';
+import Header from '../../../src/formats/header';
 
 const createScroll = (html: string) =>
   baseCreateScroll(

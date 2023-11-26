@@ -3,8 +3,8 @@ import {
   createScroll as baseCreateScroll,
   createRegistry,
 } from '../__helpers__/factory';
-import Header from '../../../formats/header';
-import Bold from '../../../formats/bold';
+import Header from '../../../src/formats/header';
+import Bold from '../../../src/formats/bold';
 
 const createScroll = (html: string) =>
   baseCreateScroll(html, createRegistry([Header, Bold]));

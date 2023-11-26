@@ -3,8 +3,8 @@ import {
   createScroll as baseCreateScroll,
   createRegistry,
 } from '../__helpers__/factory';
-import Video from '../../../formats/video';
-import Image from '../../../formats/image';
+import Video from '../../../src/formats/video';
+import Image from '../../../src/formats/image';
 
 const createScroll = (html: string) =>
   baseCreateScroll(html, createRegistry([Video, Image]));
