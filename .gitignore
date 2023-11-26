@@ -5,11 +5,13 @@
 !.gitignore
 !.github
 
-/dist
-/node_modules
+dist
+node_modules
 /selenium
 /src
 *.d.ts
+!custom.d.ts
+!vitest.d.ts
 *.js.map
 *.log
 
@@ -25,6 +27,6 @@ e2e/**/*.js
 
 core.js
 quill.js
-/test-results/
-/playwright-report/
-/playwright/.cache/
+test-results/
+playwright-report/
+playwright/.cache/

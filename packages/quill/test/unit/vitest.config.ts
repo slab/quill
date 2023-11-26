@@ -1,14 +1,15 @@
 import { defineConfig } from 'vitest/config';
+import { resolve } from 'path';
 
 export default defineConfig({
   resolve: {
     extensions: ['.ts', '.js'],
   },
   test: {
-    include: ['test/unit/**/*.spec.ts'],
+    include: [resolve(__dirname, '**/*.spec.ts')],
     setupFiles: [
-      'test/unit/__helpers__/expect.ts',
-      'test/unit/__helpers__/cleanup.ts',
+      resolve(__dirname, '__helpers__/expect.ts'),
+      resolve(__dirname, '__helpers__/cleanup.ts'),
     ],
     browser: {
       enabled: true,

@@ -4,9 +4,7 @@ import { test, CHAPTER, P1, P2 } from './fixtures';
 
 test('compose an epic', async ({ page, editorPage }) => {
   await editorPage.open();
-  await expect(page).toHaveTitle('Full Editor - Quill Rich Text Editor');
-
-  await page.type('.ql-editor', 'The Whale');
+  await editorPage.root.pressSequentially('The Whale');
   expect(await editorPage.root.innerHTML()).toEqual('<p>The Whale</p>');
 
   await page.keyboard.press('Enter');
@@ -16,10 +14,10 @@ test('compose an epic', async ({ page, editorPage }) => {
 
   await page.keyboard.press('Enter');
   await page.keyboard.press('Tab');
-  await page.type('.ql-editor', P1);
+  await editorPage.root.pressSequentially(P1);
   await page.keyboard.press('Enter');
   await page.keyboard.press('Enter');
-  await page.type('.ql-editor', P2);
+  await editorPage.root.pressSequentially(P2);
   expect(await editorPage.root.innerHTML()).toEqual(
     [
       '<p>The Whale</p>',
@@ -124,7 +122,7 @@ test('compose an epic', async ({ page, editorPage }) => {
   expect(bold).not.toBe(null);
   expect(italic).not.toBe(null);
 
-  await page.type('.ql-editor', 'Moby Dick');
+  await editorPage.root.pressSequentially('Moby Dick');
   expect(await editorPage.root.innerHTML()).toEqual(
     [
       '<p><strong><em>Moby Dick</em></strong></p>',
@@ -190,22 +188,22 @@ test('compose an epic', async ({ page, editorPage }) => {
   await page.keyboard.press('Enter');
   await page.keyboard.press('Enter');
   await page.keyboard.press('ArrowUp');
-  await page.type('.ql-editor', 'AA');
+  await editorPage.root.pressSequentially('AA');
   await page.keyboard.press('ArrowLeft');
   await page.keyboard.down(SHORTKEY);
   await page.keyboard.press('b');
   await page.keyboard.press('b');
   await page.keyboard.up(SHORTKEY);
-  await page.type('.ql-editor', 'B');
+  await editorPage.root.pressSequentially('B');
   expect(await editorPage.root.locator('p').nth(2).innerHTML()).toBe('ABA');
   await page.keyboard.down(SHORTKEY);
   await page.keyboard.press('b');
   await page.keyboard.up(SHORTKEY);
-  await page.type('.ql-editor', 'C');
+  await editorPage.root.pressSequentially('C');
   await page.keyboard.down(SHORTKEY);
   await page.keyboard.press('b');
   await page.keyboard.up(SHORTKEY);
-  await page.type('.ql-editor', 'D');
+  await editorPage.root.pressSequentially('D');
   expect(await editorPage.root.locator('p').nth(2).innerHTML()).toBe(
     'AB<strong>C</strong>DA',
   );

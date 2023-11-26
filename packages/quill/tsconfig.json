@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2020",
+    "sourceMap": true,
+    "declaration": true,
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "verbatimModuleSyntax": true,
+    "noUnusedLocals": true
+  },
+  "include": ["./**/*"]
+}

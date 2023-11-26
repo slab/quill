@@ -55,7 +55,7 @@ describe('Quill', () => {
         new Delta().insert('Test').insert('\n', { align: 'center' }),
       );
       expect(quill.root.innerHTML).toMatchInlineSnapshot(
-        '"<p class=\\"ql-align-center\\">Test</p>"',
+        '"<p class="ql-align-center">Test</p>"',
       );
     });
   });
@@ -138,7 +138,7 @@ describe('Quill', () => {
         .retain(5)
         .insert({ image: '/assets/favicon.png' }, { italic: true });
       expect(quill.root.innerHTML).toMatchInlineSnapshot(
-        '"<p>0123<em>4<img src=\\"/assets/favicon.png\\">5</em>67</p>"',
+        '"<p>0123<em>4<img src="/assets/favicon.png">5</em>67</p>"',
       );
       expect(quill.emitter.emit).toHaveBeenCalledWith(
         Emitter.events.TEXT_CHANGE,

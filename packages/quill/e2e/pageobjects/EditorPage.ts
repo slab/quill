@@ -62,7 +62,7 @@ export default class EditorPage {
   }
 
   async open() {
-    await this.page.goto('http://localhost:9000/standalone/full');
+    await this.page.goto('/');
     await this.page.waitForSelector('.ql-editor', { timeout: 10000 });
   }
 

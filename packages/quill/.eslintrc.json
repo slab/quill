@@ -9,11 +9,11 @@
   "settings": {
     "import/resolver": {
       "webpack": {
-        "config": "_develop/webpack.config.js"
+        "config": "webpack.config.js"
       }
     }
   },
-  "ignorePatterns": ["website/**/*", "*.js"],
+  "ignorePatterns": ["*.js", "*.d.ts"],
   "overrides": [
     {
       "files": ["**/*.ts"],
