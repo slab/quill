@@ -40,6 +40,7 @@ export default {
     library: {
       name: 'Quill',
       type: 'umd',
+      export: 'default',
     },
     path: resolve(__dirname, 'dist/dist'),
     clean: true,

@@ -3,6 +3,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import common from '../../../webpack.common';
 import { merge } from 'webpack-merge';
 import type { Configuration } from 'webpack';
+import 'webpack-dev-server';
 
 export default (env: Record<string, unknown>) =>
   merge<Configuration>(common, {
@@ -11,7 +12,7 @@ export default (env: Record<string, unknown>) =>
         publicPath: '/',
         filename: 'index.html',
         template: path.resolve(__dirname, 'index.html'),
-        chunks: ['quill.js', 'quill.core', 'quill.snow'],
+        chunks: ['quill'],
         inject: 'head',
         scriptLoading: 'blocking',
       }),

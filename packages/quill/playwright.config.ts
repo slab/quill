@@ -27,11 +27,11 @@ export default defineConfig({
     { name: 'Safari', use: { ...devices['Desktop Safari'] } },
   ],
   webServer: {
-    command: `npx webpack serve --config test/e2e/__dev_server__/webpack.config.js --env port=${port}`,
+    command: `npx webpack serve --config test/e2e/__dev_server__/webpack.config.ts --env port=${port}`,
     port,
     ignoreHTTPSErrors: true,
     reuseExistingServer: !process.env.CI,
     stdout: 'ignore',
-    stderr: 'ignore',
+    stderr: 'pipe',
   },
 });
