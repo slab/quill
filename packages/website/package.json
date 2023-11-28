@@ -7,7 +7,7 @@
   "author": "",
   "license": "BSD-3-Clause",
   "scripts": {
-    "start": "echo $npm_package_config_ports_gatsby && gatsby develop --port $npm_package_config_ports_gatsby",
+    "start": "gatsby develop --port $npm_package_config_ports_gatsby",
     "build": "gatsby build",
     "serve": "gatsby serve --port $npm_package_config_ports_gatsby"
   },

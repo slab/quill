@@ -5,28 +5,7 @@
 !.gitignore
 !.github
 
-dist
 node_modules
-/selenium
-/src
-*.d.ts
-!custom.d.ts
-!vitest.d.ts
-*.js.map
-*.log
 
-blots/**/*.js
-core/**/*.js
-formats/**/*.js
-modules/**/*.js
-themes/**/*.js
-ui/**/*.js
-e2e/**/*.js
-
-!test/unit/__helpers__/vitest.d.ts
-
-core.js
-quill.js
 test-results/
 playwright-report/
-playwright/.cache/
