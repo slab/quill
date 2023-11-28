@@ -16,6 +16,7 @@ class Formula extends Embed {
       window.katex.render(value, node, {
         throwOnError: false,
         errorColor: '#f00',
+        displayMode: true,
       });
       node.setAttribute('data-value', value);
     }
