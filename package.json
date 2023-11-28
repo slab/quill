@@ -7,9 +7,8 @@
   "main": "dist/quill.js",
   "config": {
     "ports": {
-      "proxy": "9000",
-      "gatsby": "4000",
-      "webpack": "9080"
+      "webpack": "9080",
+      "gatsby": "9000"
     }
   },
   "workspaces": [
@@ -30,16 +29,13 @@
     "defaults"
   ],
   "scripts": {
-    "build": "npm run build:quill && npm run build:website",
+    "build": "run-p build:*",
     "build:quill": "npm run build -w quill",
     "build:website": "npm run build -w website",
-    "start": "USE_LOCAL_FILE=true run-p start:*",
+    "start": "run-p start:*",
     "start:quill": "npm start -w quill",
-    "start:website": "run-s website:build website:serve",
-    "start:proxy": "node _develop/proxy.js",
-    "lint": "npm run lint -w quill",
-    "serve:website": "npm run serve -w website -- --port $npm_package_config_ports_gatsby",
-    "develop:website": "npm run develop -w website -- --port $npm_package_config_ports_gatsby"
+    "start:website": "USE_LOCAL_FILE=true npm start -w website",
+    "lint": "npm run lint -w quill"
   },
   "keywords": [
     "editor",
@@ -49,5 +45,8 @@
   "engines": {
     "npm": ">=8.2.3"
   },
-  "engineStrict": true
+  "engineStrict": true,
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
 }

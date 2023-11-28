@@ -73,7 +73,7 @@ const IndexPage = () => {
   const [isDemoActive, setIsDemoActive] = useState(false);
   const isFirstRenderRef = useRef(true);
   const [selectedUsers] = useState(() =>
-    userBuckets.map(bucket => {
+    userBuckets.map((bucket) => {
       const keys = Object.keys(bucket);
       const name = keys[Math.floor(Math.random() * keys.length)];
       return {
@@ -172,7 +172,7 @@ const IndexPage = () => {
             <h1>Your powerful rich text editor.</h1>
             <ul>
               <li>Trusted by:</li>
-              {selectedUsers.map(user => (
+              {selectedUsers.map((user) => (
                 <li key={user.title}>
                   <a {...user} target="_blank" />
                 </li>

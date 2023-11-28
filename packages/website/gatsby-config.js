@@ -14,7 +14,7 @@ const siteMetadata = {
     'Quill is a free, open source rich text editor built for the modern web.',
 };
 
-module.exports = {
+const config = {
   siteMetadata,
   graphqlTypegen: true,
   plugins: [
@@ -70,7 +70,7 @@ module.exports = {
         feeds: [
           {
             serialize: ({ query: { site, allMdx } }) => {
-              return allMdx.nodes.map(node => {
+              return allMdx.nodes.map((node) => {
                 return Object.assign({}, node.frontmatter, {
                   description: node.excerpt,
                   date: node.frontmatter.date,
@@ -109,3 +109,32 @@ module.exports = {
     },
   ],
 };
+
+if (process.env.USE_LOCAL_FILE) {
+  config.developMiddleware = (app) => {
+    const httpProxy = require('http-proxy');
+    const proxy = httpProxy.createProxyServer({});
+
+    if (!process.env.npm_package_config_ports_webpack) {
+      throw new Error(
+        'config.ports.webpack should be provided when USE_LOCAL_FILE is enabled.',
+      );
+    }
+
+    app.use((req, res, next) => {
+      if (/\/\d+\.\d+\.\d+/.test(req.url)) {
+        const target = `http://localhost:${
+          process.env.npm_package_config_ports_webpack
+        }/${req.url.split('/').pop()}`;
+        proxy.web(req, res, {
+          ignorePath: true,
+          target,
+        });
+      } else {
+        next();
+      }
+    });
+  };
+}
+
+module.exports = config;

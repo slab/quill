@@ -10,7 +10,7 @@ export default function HTML(props) {
       <head>
         <meta charSet="utf-8" />
         <meta name="language" content="english" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 
         <meta
           name="viewport"

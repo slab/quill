@@ -29,7 +29,6 @@ export default (env: Record<string, unknown>) =>
         directory: path.resolve(__dirname, './dist'),
       },
       hot: false,
-      port: process.env.npm_package_config_ports_webpack,
       allowedHosts: 'all',
       devMiddleware: {
         stats: 'minimal',
