@@ -6,13 +6,6 @@
     "es6": true
   },
   "parser": "@typescript-eslint/parser",
-  "settings": {
-    "import/resolver": {
-      "webpack": {
-        "config": "webpack.config.js"
-      }
-    }
-  },
   "ignorePatterns": ["*.js", "*.d.ts"],
   "overrides": [
     {
