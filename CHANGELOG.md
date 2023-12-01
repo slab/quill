@@ -1,4 +1,4 @@
-# 2.0.0-dev.1 ~ 2.0.0-dev.4
+# Next (2.0)
 
 In the 2.0 release, Quill has been significantly modernized. Leveraging the latest browser-supported APIs, Quill now delivers a more efficient and reliable editing experience.
 
@@ -68,7 +68,7 @@ Thanks to [@berylw](https://github.com/berylw) and [@erinsinger93](https://githu
 # 1.3.5
 
 - Fix indent preservation of a checked checklist item [#1818](https://github.com/quilljs/quill/issues/1818)
-- Added the asterisk "*" character as a shortcut to trigger bullet list formatting [#1819](https://github.com/quilljs/quill/pull/1819)
+- Added the asterisk "\*" character as a shortcut to trigger bullet list formatting [#1819](https://github.com/quilljs/quill/pull/1819)
 - Fix pasting text-align styles [#1873](https://github.com/quilljs/quill/issues/1873)
 - Fix cursor position after dangerouslyPasteHTML [#1886](https://github.com/quilljs/quill/issues/1886)
 - Fix value of history stack in text-change handler [#1906](https://github.com/quilljs/quill/pull/1906)
