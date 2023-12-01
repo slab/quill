@@ -1,9 +1,6 @@
 *.ts
 !*.d.ts
 .*
-Gemfile
-Gemfile.lock
-_develop
 .github
 .vscode
 docs

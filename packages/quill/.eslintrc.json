@@ -1,0 +1,32 @@
+{
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "webpack.config.ts"
+      }
+    }
+  },
+  "ignorePatterns": ["*.js", "*.d.ts"],
+  "overrides": [
+    {
+      "files": ["**/*.ts"],
+      "extends": ["plugin:@typescript-eslint/recommended"],
+      "excludedFiles": "*.d.ts",
+      "plugins": ["@typescript-eslint"],
+      "rules": {
+        "@typescript-eslint/consistent-type-imports": "error",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ]
+}

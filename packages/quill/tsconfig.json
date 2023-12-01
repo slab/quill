@@ -1,0 +1,22 @@
+{
+  "ts-node": {
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "module": "commonjs"
+    }
+  },
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2020",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "declaration": false,
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true
+  },
+  "include": ["./**/*"]
+}

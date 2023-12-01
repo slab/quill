@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES6",
+    "noEmit": false,
+    "module": "ES6"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["*.config.*"]
+}

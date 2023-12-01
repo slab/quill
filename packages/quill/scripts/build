@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -e
+
+DIST=dist
+
+rm -rf $DIST
+npx babel src --out-dir $DIST --copy-files --no-copy-ignored --extensions .ts
+npx webpack -- --mode $1
