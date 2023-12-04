@@ -7,6 +7,7 @@ import blockquoteIcon from '../assets/icons/blockquote.svg';
 import boldIcon from '../assets/icons/bold.svg';
 import cleanIcon from '../assets/icons/clean.svg';
 import codeIcon from '../assets/icons/code.svg';
+import codeBlockIcon from '../assets/icons/code-block.svg';
 import colorIcon from '../assets/icons/color.svg';
 import directionLeftToRightIcon from '../assets/icons/direction-ltr.svg';
 import directionRightToLeftIcon from '../assets/icons/direction-rtl.svg';
@@ -40,7 +41,7 @@ export default {
   bold: boldIcon,
   clean: cleanIcon,
   code: codeIcon,
-  'code-block': codeIcon,
+  'code-block': codeBlockIcon,
   color: colorIcon,
   direction: {
     '': directionLeftToRightIcon,
