@@ -1,6 +1,6 @@
-# Next (2.0)
+# v2.0.0-dev.4
 
-In the 2.0 release, Quill has been significantly modernized. Leveraging the latest browser-supported APIs, Quill now delivers a more efficient and reliable editing experience.
+In the upcoming 2.0 release, Quill has been significantly modernized. Leveraging the latest browser-supported APIs, Quill now delivers a more efficient and reliable editing experience.
 
 ### Major Improvements
 

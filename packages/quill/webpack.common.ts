@@ -42,7 +42,7 @@ export default {
       type: 'umd',
       export: 'default',
     },
-    path: resolve(__dirname, 'dist/dist'),
+    path: resolve(__dirname, 'dist/umd'),
     clean: true,
   },
   resolve: {
