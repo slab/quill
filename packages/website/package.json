@@ -1,11 +1,10 @@
 {
   "name": "website",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0",
+  "description": "Quill official website",
   "private": true,
   "main": "gatsby-browser.js",
   "keywords": [],
-  "author": "",
   "license": "BSD-3-Clause",
   "scripts": {
     "start": "gatsby develop --port $npm_package_config_ports_gatsby",

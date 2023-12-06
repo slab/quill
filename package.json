@@ -1,10 +1,10 @@
 {
   "name": "quill-monorepo",
   "version": "2.0.0-dev.4",
-  "description": "Your powerful, rich text editor",
+  "description": "Quill development environment",
+  "private": true,
   "author": "Jason Chen <jhchen7@gmail.com>",
-  "homepage": "http://quilljs.com",
-  "main": "dist/quill.js",
+  "homepage": "https://quilljs.com",
   "config": {
     "ports": {
       "webpack": "9080",
@@ -22,12 +22,6 @@
   "bugs": {
     "url": "https://github.com/quilljs/quill/issues"
   },
-  "prettier": {
-    "singleQuote": true
-  },
-  "browserslist": [
-    "defaults"
-  ],
   "scripts": {
     "build": "run-p build:*",
     "build:quill": "npm run build -w quill",
@@ -38,9 +32,13 @@
     "lint": "npm run lint -w quill"
   },
   "keywords": [
+    "quill",
     "editor",
     "rich text",
-    "wysiwyg"
+    "wysiwyg",
+    "operational transformation",
+    "ot",
+    "framework"
   ],
   "engines": {
     "npm": ">=8.2.3"
