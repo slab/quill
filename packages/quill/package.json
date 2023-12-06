@@ -3,7 +3,7 @@
   "version": "2.0.0-dev.4",
   "description": "Your powerful, rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
-  "homepage": "http://quilljs.com",
+  "homepage": "https://quilljs.com",
   "main": "dist/quill.js",
   "dependencies": {
     "eventemitter3": "^4.0.7",
@@ -55,7 +55,8 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/quilljs/quill"
+    "url": "https://github.com/quilljs/quill",
+    "directory": "packages/quill"
   },
   "bugs": {
     "url": "https://github.com/quilljs/quill/issues"
@@ -79,9 +80,13 @@
     "test:e2e": "playwright test"
   },
   "keywords": [
+    "quill",
     "editor",
     "rich text",
-    "wysiwyg"
+    "wysiwyg",
+    "operational transformation",
+    "ot",
+    "framework"
   ],
   "engines": {
     "npm": ">=8.2.3"
