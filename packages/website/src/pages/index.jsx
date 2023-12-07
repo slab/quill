@@ -1,35 +1,37 @@
-import DevelopersIcon from '../svg/features/developers.svg';
-import ScaleIcon from '../svg/features/scale.svg';
-import GitHub from '../components/GitHub';
-import CrossPlatformIcon from '../svg/features/cross-platform.svg';
-import Default from '../components/Default';
-import { useEffect, useRef, useState } from 'react';
-import Editor from '../components/Editor';
-import classNames from 'classnames';
-import SEO from '../components/SEO';
+import DevelopersIcon from "../svg/features/developers.svg";
+import ScaleIcon from "../svg/features/scale.svg";
+import GitHub from "../components/GitHub";
+import CrossPlatformIcon from "../svg/features/cross-platform.svg";
+import Default from "../components/Default";
+import { useEffect, useRef, useState } from "react";
+import Editor from "../components/Editor";
+import classNames from "classnames";
+import SEO from "../components/SEO";
+import config from "../../gatsby-config";
 
-const fonts = ['sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'];
+const site = config.siteMetadata;
+const fonts = ["sofia", "slabo", "roboto", "inconsolata", "ubuntu"];
 const userBuckets = [
   {
-    Intuit: 'https://www.intuit.com/',
-    LinkedIn: 'https://www.linkedin.com/',
-    Microsoft: 'https://www.microsoft.com/',
-    Salesforce: 'https://www.salesforce.com/',
-    Slack: 'https://slack.com/',
+    Intuit: "https://www.intuit.com/",
+    LinkedIn: "https://www.linkedin.com/",
+    Microsoft: "https://www.microsoft.com/",
+    Salesforce: "https://www.salesforce.com/",
+    Slack: "https://slack.com/",
   },
   {
-    Asana: 'https://asana.com/',
-    Airtable: 'https://airtable.com/',
-    Grammarly: 'https://www.grammarly.com/',
-    Gusto: 'https://www.gusto.com/',
-    'Vox Media': 'https://www.voxmedia.com/',
+    Asana: "https://asana.com/",
+    Airtable: "https://airtable.com/",
+    Grammarly: "https://www.grammarly.com/",
+    Gusto: "https://www.gusto.com/",
+    "Vox Media": "https://www.voxmedia.com/",
   },
   {
-    Buffer: 'https://buffer.com/',
-    Front: 'https://frontapp.com/',
-    Lever: 'https://www.lever.co/',
-    Reedsy: 'https://reedsy.com/',
-    Slab: 'https://slab.com/',
+    Buffer: "https://buffer.com/",
+    Front: "https://frontapp.com/",
+    Lever: "https://www.lever.co/",
+    Reedsy: "https://reedsy.com/",
+    Slab: "https://slab.com/",
   },
 ];
 
@@ -45,8 +47,8 @@ const Content = () => (
                 <p><br></p>
                 <h2 class="ql-align-center">Getting Started is Easy</h2>
                 <p><br></p>
-                <pre class="ql-syntax" spellcheck="false"><span class="hljs-comment">// &lt;link href="https://cdn.quilljs.com/1.2.6/quill.snow.css" rel="stylesheet"&gt;</span>
-<span class="hljs-comment">// &lt;script src="https://cdn.quilljs.com/1.2.6/quill.min.js"&gt;&lt;/script&gt;</span>
+                <pre data-language="javascript" class="ql-syntax" spellcheck="false"><span class="hljs-comment">// &lt;link href="${site.cdn}/quill.snow.css" rel="stylesheet"&gt;</span>
+<span class="hljs-comment">// &lt;script src="${site.cdn}/quill.min.js"&gt;&lt;/script&gt;</span>
 
 <span class="hljs-keyword">const</span> quill = <span class="hljs-keyword">new</span> Quill(<span class="hljs-string">'#editor'</span>, {
   modules: {
@@ -80,14 +82,14 @@ const IndexPage = () => {
         // @ts-expect-error
         href: bucket[name],
         title: name,
-        className: 'user-' + name.toLowerCase().replace(/\s/g, ''),
+        className: "user-" + name.toLowerCase().replace(/\s/g, ""),
       };
-    }),
+    })
   );
 
   useEffect(() => {
     // @ts-expect-error
-    const Font = Quill.import('formats/font');
+    const Font = Quill.import("formats/font");
     Font.whitelist = fonts;
     // @ts-expect-error
     Quill.register(Font, true);
@@ -96,19 +98,19 @@ const IndexPage = () => {
       window.WebFontConfig = {
         google: {
           families: [
-            'Inconsolata::latin',
-            'Ubuntu+Mono::latin',
-            'Slabo+27px::latin',
-            'Roboto+Slab::latin',
+            "Inconsolata::latin",
+            "Ubuntu+Mono::latin",
+            "Slabo+27px::latin",
+            "Roboto+Slab::latin",
           ],
         },
       };
       (function () {
-        var wf = document.createElement('script');
-        wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-        wf.type = 'text/javascript';
-        wf.async = 'true';
-        var s = document.getElementsByTagName('script')[0];
+        var wf = document.createElement("script");
+        wf.src = "https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js";
+        wf.type = "text/javascript";
+        wf.async = "true";
+        var s = document.getElementsByTagName("script")[0];
         s.parentNode.insertBefore(wf, s);
       })();
     }
@@ -118,7 +120,7 @@ const IndexPage = () => {
 
   useEffect(() => {
     const root = document.querySelector(
-      `#carousel-container :nth-child(${activeIndex + 1}) .ql-editor`,
+      `#carousel-container :nth-child(${activeIndex + 1}) .ql-editor`
     );
     // @ts-expect-error
     const editor = Quill.find(root);
@@ -129,10 +131,10 @@ const IndexPage = () => {
 
     if (!isFirstRenderRef.current) {
       console.log(
-        "Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: https://quilljs.com/docs/api/\n",
+        "Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: https://quilljs.com/docs/api/\n"
       );
     } else {
-      console.info('window.quill is now bound to', editor);
+      console.info("window.quill is now bound to", editor);
     }
 
     isFirstRenderRef.current = false;
@@ -142,14 +144,14 @@ const IndexPage = () => {
     <Default pageType="home">
       <div
         id="above-container"
-        className={classNames({ 'demo-active': isDemoActive })}
+        className={classNames({ "demo-active": isDemoActive })}
       >
         <div className="container">
           <div id="users-container">
             <h2>
               <button
                 className="prev"
-                style={{ visibility: activeIndex === 0 ? 'hidden' : undefined }}
+                style={{ visibility: activeIndex === 0 ? "hidden" : undefined }}
                 onClick={() => setActiveIndex(activeIndex - 1)}
               >
                 <span className="arrow">
@@ -160,7 +162,7 @@ const IndexPage = () => {
               Switch Examples
               <button
                 className="next"
-                style={{ visibility: activeIndex === 2 ? 'hidden' : undefined }}
+                style={{ visibility: activeIndex === 2 ? "hidden" : undefined }}
                 onClick={() => setActiveIndex(activeIndex + 1)}
               >
                 <span className="arrow">
@@ -183,21 +185,21 @@ const IndexPage = () => {
           <div id="laptop-container">
             <div id="camera-container">
               <span
-                className={classNames('camera', { active: activeIndex === 0 })}
+                className={classNames("camera", { active: activeIndex === 0 })}
                 onClick={() => {
                   setActiveIndex(0);
                   setIsDemoActive(true);
                 }}
               ></span>
               <span
-                className={classNames('camera', { active: activeIndex === 1 })}
+                className={classNames("camera", { active: activeIndex === 1 })}
                 onClick={() => {
                   setActiveIndex(1);
                   setIsDemoActive(true);
                 }}
               ></span>
               <span
-                className={classNames('camera', { active: activeIndex === 2 })}
+                className={classNames("camera", { active: activeIndex === 2 })}
                 onClick={() => {
                   setActiveIndex(2);
                   setIsDemoActive(true);
@@ -213,11 +215,11 @@ const IndexPage = () => {
                   <div id="bubble-container">
                     <Editor
                       config={{
-                        bounds: '#bubble-container .ql-container',
+                        bounds: "#bubble-container .ql-container",
                         modules: {
                           syntax: true,
                         },
-                        theme: 'bubble',
+                        theme: "bubble",
                       }}
                       onSelectionChange={() => setIsDemoActive(true)}
                     >
@@ -273,12 +275,12 @@ const IndexPage = () => {
                     </div>
                     <Editor
                       config={{
-                        bounds: '#snow-container .ql-container',
+                        bounds: "#snow-container .ql-container",
                         modules: {
                           syntax: true,
-                          toolbar: '#snow-container .toolbar',
+                          toolbar: "#snow-container .toolbar",
                         },
-                        theme: 'snow',
+                        theme: "snow",
                       }}
                       onSelectionChange={() => setIsDemoActive(true)}
                     >
@@ -290,32 +292,32 @@ const IndexPage = () => {
                   <div id="full-container">
                     <Editor
                       config={{
-                        bounds: '#full-container .ql-container',
+                        bounds: "#full-container .ql-container",
                         modules: {
                           syntax: true,
                           toolbar: [
                             [{ font: fonts }, { size: [] }],
-                            ['bold', 'italic', 'underline', 'strike'],
+                            ["bold", "italic", "underline", "strike"],
                             [{ color: [] }, { background: [] }],
-                            [{ script: 'super' }, { script: 'sub' }],
+                            [{ script: "super" }, { script: "sub" }],
                             [
-                              { header: '1' },
-                              { header: '2' },
-                              'blockquote',
-                              'code-block',
+                              { header: "1" },
+                              { header: "2" },
+                              "blockquote",
+                              "code-block",
                             ],
                             [
-                              { list: 'ordered' },
-                              { list: 'bullet' },
-                              { indent: '-1' },
-                              { indent: '+1' },
+                              { list: "ordered" },
+                              { list: "bullet" },
+                              { indent: "-1" },
+                              { indent: "+1" },
                             ],
-                            [{ direction: 'rtl' }, { align: [] }],
-                            ['link', 'image', 'video', 'formula'],
-                            ['clean'],
+                            [{ direction: "rtl" }, { align: [] }],
+                            ["link", "image", "video", "formula"],
+                            ["clean"],
                           ],
                         },
-                        theme: 'snow',
+                        theme: "snow",
                       }}
                       onSelectionChange={() => setIsDemoActive(true)}
                     >

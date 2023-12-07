@@ -10,16 +10,11 @@ Quill allows several ways to customize it to suit your needs. This section is de
 Quill requires a container where the editor will be appended. You can pass in either a CSS selector or a DOM object.
 
 ```javascript
-const editor = new Quill('.editor');  // First matching element will be used
+const editor = new Quill('#editor');  // First matching element will be used
 ```
 
 ```javascript
 const container = document.getElementById('editor');
-const editor = new Quill(container);
-```
-
-```javascript
-const container = $('.editor').get(0);
 const editor = new Quill(container);
 ```
 

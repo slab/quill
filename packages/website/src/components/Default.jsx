@@ -18,7 +18,6 @@ const Default = ({ children, pageType }) => {
     }
   `);
 
-  console.log({ pageType });
   return (
     <>
       <Helmet

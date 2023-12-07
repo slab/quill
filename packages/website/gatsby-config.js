@@ -1,17 +1,17 @@
 const { version, homepage } = require("./package.json");
 
-// https://cdn.jsdelivr.net/npm/quill@1.0.0/umd/quill.js
+const cdn = process.env.USE_LOCAL_FILE
+  ? `http://localhost:${process.env.npm_package_config_ports_webpack}`
+  : `https://cdn.jsdelivr.net/npm/quill@${version}/umd`;
+
 const siteMetadata = {
   version,
-  cdn: process.env.USE_LOCAL_FILE
-    ? "/"
-    : `//cdn.jsdelivr.net/npm/quill@${version}/umd/`,
+  cdn,
   github:
     "https://github.com/quilljs/quill/tree/develop/packages/website/content",
-  quill: process.env.USE_LOCAL_FILE ? "quill.js" : "quill.js",
   highlightjs: "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0",
   katex: "//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1",
-  url: pkg.homepage,
+  url: homepage,
   title: "Quill - Your powerful rich text editor",
   shortTitle: "Quill Rich Text Editor",
   description:
@@ -116,31 +116,31 @@ const config = {
   ],
 };
 
-if (process.env.USE_LOCAL_FILE) {
-  config.developMiddleware = (app) => {
-    const httpProxy = require("http-proxy");
-    const proxy = httpProxy.createProxyServer({});
-
-    if (!process.env.npm_package_config_ports_webpack) {
-      throw new Error(
-        "config.ports.webpack should be provided when USE_LOCAL_FILE is enabled."
-      );
-    }
-
-    app.use((req, res, next) => {
-      if (/\/\d+\.\d+\.\d+/.test(req.url)) {
-        const target = `http://localhost:${
-          process.env.npm_package_config_ports_webpack
-        }/${req.url.split("/").pop()}`;
-        proxy.web(req, res, {
-          ignorePath: true,
-          target,
-        });
-      } else {
-        next();
-      }
-    });
-  };
-}
+// if (process.env.USE_LOCAL_FILE) {
+//   config.developMiddleware = (app) => {
+//     const httpProxy = require("http-proxy");
+//     const proxy = httpProxy.createProxyServer({});
+//
+//     if (!process.env.npm_package_config_ports_webpack) {
+//       throw new Error(
+//         "config.ports.webpack should be provided when USE_LOCAL_FILE is enabled."
+//       );
+//     }
+//
+//     app.use((req, res, next) => {
+//       if (/\/\d+\.\d+\.\d+/.test(req.url)) {
+//         const target = `http://localhost:${
+//           process.env.npm_package_config_ports_webpack
+//         }/${req.url.split("/").pop()}`;
+//         proxy.web(req, res, {
+//           ignorePath: true,
+//           target,
+//         });
+//       } else {
+//         next();
+//       }
+//     });
+//   };
+// }
 
 module.exports = config;

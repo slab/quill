@@ -251,7 +251,7 @@ Note if you open your console and call [`getContents`](/docs/api/#getcontents), 
 
 ### Tweets
 
-Medium supports many embed types, but we will just focus on Tweets for this guide. The Tweet blot is implemented almost exactly the same as [images](#images). We take advantage of the fact that Embed blots do not have to correspond to a void node. It can be any arbitrary node and Quill will treat it like a void node and not traverse its children or descendants. This allows us to use a `<div>` and the native Twitter Javascript library to do what it pleases within the `<div>` container we specify.
+Medium supports many embed types, but we will just focus on Tweets for this guide. The Tweet blot is implemented almost exactly the same as [images](#images). We take advantage of the fact that Embed blots do not have to correspond to a void node. It can be any arbitrary node and Quill will treat it like a void node and not traverse its children or descendants. This allows us to use a `<div>` and the native Twitter JavaScript library to do what it pleases within the `<div>` container we specify.
 
 Since our root Scroll Blot also uses a `<div>`, we also specify a `className` to disambiguate. Note Inline blots use `<span>` and Block Blots use `<p>` by default, so if you would like to use these tags for your custom Blots, you will have to specify a `className` in addition to a `tagName`.
 

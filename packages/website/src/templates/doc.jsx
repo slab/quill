@@ -97,10 +97,10 @@ const Doc = ({ data, location, children }) => {
                 className={styles.editLink}
                 href={`${data.site.siteMetadata.github}${location.pathname}`}
                 target="_blank"
-                title="Edit on Github"
+                title="Edit on GitHub"
               >
                 <OctocatIcon />
-                <span>Edit on Github</span>
+                <span>Edit on GitHub</span>
               </a>
             </div>
             <hr />
