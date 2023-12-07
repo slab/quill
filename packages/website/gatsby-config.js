@@ -2,7 +2,7 @@ const { version, homepage } = require("./package.json");
 
 const cdn = process.env.USE_LOCAL_FILE
   ? `http://localhost:${process.env.npm_package_config_ports_webpack}`
-  : `https://cdn.jsdelivr.net/npm/quill@${version}/umd`;
+  : `https://cdn.jsdelivr.net/npm/quill@${version}/dist`;
 
 const siteMetadata = {
   version,
