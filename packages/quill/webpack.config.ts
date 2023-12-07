@@ -1,10 +1,13 @@
 import path from 'path';
 import { BannerPlugin, DefinePlugin } from 'webpack';
 import type { Configuration } from 'webpack';
-import pkg from './package.json';
 import common from './webpack.common';
 import { merge } from 'webpack-merge';
 import 'webpack-dev-server';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+const pkg = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'));
 
 const bannerPack = new BannerPlugin({
   banner: [
