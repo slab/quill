@@ -24,6 +24,7 @@
     "@typescript-eslint/parser": "^6.12.0",
     "@vitest/browser": "^1.0.0-beta.5",
     "babel-loader": "^9.1.3",
+    "babel-plugin-transform-define": "^2.1.4",
     "css-loader": "^6.8.1",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "^9.0.0",
