@@ -58,9 +58,9 @@ const SidebarItem = ({ item }) => {
 const Doc = ({ data, location, children }) => {
   const { title } = data.mdx.frontmatter;
   const { permalink, pageType } = data.mdx.fields;
-  const category = pageType === "guide" ? "Guides" : "Documentation";
+  const category = pageType === "guides" ? "Guides" : "Documentation";
 
-  const items = pageType === "guide" ? guideItems : docsItems;
+  const items = pageType === "guides" ? guideItems : docsItems;
   const { prev, next } = getPagination(permalink, items);
 
   useEffect(() => {

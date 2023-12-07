@@ -1,13 +1,13 @@
-import { graphql } from 'gatsby';
-import * as styles from './index.module.scss';
-import SEO from '../../components/SEO';
-import Default from '../../components/Default';
+import { graphql } from "gatsby";
+import * as styles from "./index.module.scss";
+import SEO from "../../components/SEO";
+import Default from "../../components/Default";
 
 const Blog = ({ data }) => (
-  <Default>
+  <Default pageType="blog">
     <div id="blog-container" className="container">
       <div className="post-list">
-        {data.allMdx.nodes.map(node => (
+        {data.allMdx.nodes.map((node) => (
           <div className="post-item">
             <h1>
               <a href={node.fields.permalink} title={node.frontmatter.title}>
@@ -19,9 +19,9 @@ const Blog = ({ data }) => (
                 {node.frontmatter.date}
               </time>
               <span>
-                {' - '}
+                {" - "}
                 <a href="https://twitter.com/jhchen" title="Jason Chen">
-                  {'Jason Chen'}
+                  {"Jason Chen"}
                 </a>
               </span>
             </div>

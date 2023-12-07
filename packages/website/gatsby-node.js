@@ -21,11 +21,13 @@ exports.onCreateNode = async ({ node, actions, getNode, reporter, cache }) => {
   const filePath = node.internal.contentFilePath;
   let pageType = "unknown";
   if (filePath.startsWith(path.resolve("content/guides"))) {
-    pageType = "guide";
+    pageType = "guides";
   } else if (filePath.startsWith(path.resolve("content/docs"))) {
     pageType = "docs";
   } else if (filePath.startsWith(path.resolve("content/blog"))) {
     pageType = "blog";
+  } else if (filePath.startsWith(path.resolve("content/playground"))) {
+    pageType = "playground";
   } else if (filePath.startsWith(path.resolve("content/standalone"))) {
     pageType = "standalone";
   }
@@ -88,7 +90,7 @@ exports.createPages = ({ graphql, actions }) => {
   const templates = {
     blog: path.resolve(`src/templates/post.jsx`),
     standalone: path.resolve(`src/templates/standalone.jsx`),
-    guide: docTemplate,
+    guides: docTemplate,
     docs: docTemplate,
   };
   return graphql(

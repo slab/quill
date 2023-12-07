@@ -1,31 +1,33 @@
-import classNames from 'classnames';
-import { useState } from 'react';
-import Default from '../components/Default';
-import OpenSource from '../components/OpenSource';
-import SEO from '../components/SEO';
-import slug from '../utils/slug';
+import classNames from "classnames";
+import { useState } from "react";
+import Default from "../components/Default";
+import OpenSource from "../components/OpenSource";
+import SEO from "../components/SEO";
+import slug from "../utils/slug";
 
 const pens = [
-  { title: 'Autosave', hash: 'RRYBEP' },
-  { title: 'Class vs Inline Style', hash: 'jAvpQL' },
-  { title: 'Form Submit', hash: 'kXRjQJ' },
-  { title: 'Snow Toolbar Tooltips', hash: 'ozYEro' },
-  { title: 'Autogrow Height', hash: 'dOqrVm' },
-  { title: 'Custom Fonts', hash: 'gLBYam' },
-  { title: 'Quill Playground', hash: 'KzZqZx' },
-].map(pen => ({ ...pen, slug: slug(pen.title) }));
+  { title: "Autosave", hash: "RRYBEP" },
+  { title: "Class vs Inline Style", hash: "jAvpQL" },
+  { title: "Form Submit", hash: "kXRjQJ" },
+  { title: "Snow Toolbar Tooltips", hash: "ozYEro" },
+  { title: "Autogrow Height", hash: "dOqrVm" },
+  { title: "Custom Fonts", hash: "gLBYam" },
+  { title: "Quill Playground", hash: "KzZqZx" },
+].map((pen) => ({ ...pen, slug: slug(pen.title) }));
 
-const isBrowser = typeof window !== 'undefined';
+const isBrowser = typeof window !== "undefined";
 
 const Playground = () => {
   const [selectedPen, setSelectedPen] = useState(() => {
     if (!isBrowser) return pens.length - 1;
     const { hash } = window.location;
-    const index = hash ? pens.findIndex(pen => pen.slug === hash.slice(1)) : -1;
+    const index = hash
+      ? pens.findIndex((pen) => pen.slug === hash.slice(1))
+      : -1;
     return index === -1 ? pens.length - 1 : index;
   });
   return (
-    <Default>
+    <Default pageType="playground">
       <div className="container">
         <div id="playground-container">
           <h1>Interactive Playground</h1>
@@ -39,15 +41,15 @@ const Playground = () => {
           {pens.map((pen, index) => (
             <div
               key={pen.slug}
-              className={classNames('four', 'columns', {
-                'selected-pen': selectedPen == index,
+              className={classNames("four", "columns", {
+                "selected-pen": selectedPen == index,
               })}
             >
               <a
                 href={`/playground/#${slug(pen.title)}`}
                 title={pen.title}
                 data-id={pen.hash}
-                onClick={e => {
+                onClick={(e) => {
                   setSelectedPen(index);
                 }}
               >
