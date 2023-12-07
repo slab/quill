@@ -1,21 +1,22 @@
-import { useLocation } from '@reach/router';
-import classNames from 'classnames';
-import { graphql } from 'gatsby';
-import SEO from '../components/SEO';
-import docsItems from '../data/docs';
-import guideItems from '../data/guides';
-import OctocatIcon from '../svg/octocat.svg';
-import slug from '../utils/slug';
-import Default from '../components/Default';
-import OpenSource from '../components/OpenSource';
-import React, { useEffect } from 'react';
+import { useLocation } from "@reach/router";
+import classNames from "classnames";
+import { graphql } from "gatsby";
+import SEO from "../components/SEO";
+import docsItems from "../data/docs";
+import guideItems from "../data/guides";
+import OctocatIcon from "../svg/octocat.svg";
+import slug from "../utils/slug";
+import Default from "../components/Default";
+import OpenSource from "../components/OpenSource";
+import React, { useEffect } from "react";
+import * as styles from "./doc.module.scss";
 
 const getPagination = (permalink, items) => {
   const flattenedItems = [];
 
-  const flatItems = i => {
-    i.forEach(child => {
-      if (child.url.includes('#')) return;
+  const flatItems = (i) => {
+    i.forEach((child) => {
+      if (child.url.includes("#")) return;
       flattenedItems.push(child);
       if (child.children) {
         flatItems(child.children);
@@ -25,7 +26,7 @@ const getPagination = (permalink, items) => {
 
   flatItems(items);
 
-  const index = flattenedItems.findIndex(item => item.url === permalink);
+  const index = flattenedItems.findIndex((item) => item.url === permalink);
   if (index === -1) return { prev: null, next: null };
 
   let prev = null;
@@ -45,7 +46,7 @@ const SidebarItem = ({ item }) => {
       <a href={item.url}>{item.title}</a>
       {item.children && (
         <ul>
-          {item.children.map(child => (
+          {item.children.map((child) => (
             <SidebarItem key={child.url} item={child} />
           ))}
         </ul>
@@ -57,16 +58,16 @@ const SidebarItem = ({ item }) => {
 const Doc = ({ data, location, children }) => {
   const { title } = data.mdx.frontmatter;
   const { permalink, pageType } = data.mdx.fields;
-  const category = pageType === 'guide' ? 'Guides' : 'Documentation';
+  const category = pageType === "guide" ? "Guides" : "Documentation";
 
-  const items = pageType === 'guide' ? guideItems : docsItems;
+  const items = pageType === "guide" ? guideItems : docsItems;
   const { prev, next } = getPagination(permalink, items);
 
   useEffect(() => {
     docsearch({
-      apiKey: '281facf513620e95600126795a00ab6c',
-      indexName: 'quilljs',
-      inputSelector: '.search-item input',
+      apiKey: "281facf513620e95600126795a00ab6c",
+      indexName: "quilljs",
+      inputSelector: ".search-item input",
       debug: false,
     });
   }, []);
@@ -81,19 +82,19 @@ const Doc = ({ data, location, children }) => {
               <li className="search-item">
                 <input type="text" />
               </li>
-              {items.map(item => (
+              {items.map((item) => (
                 <SidebarItem key={item.url} item={item} />
               ))}
             </ul>
           </div>
           <div id="docs-container" className="nine columns">
-            <div className="row">
-              <span className="breadcrumb">
+            <div className={classNames("row", styles.breadcrumbRow)}>
+              <div className={styles.breadcrumb}>
                 <span>{category}:</span>
                 <span>{title}</span>
-              </span>
+              </div>
               <a
-                className="edit-link"
+                className={styles.editLink}
                 href={`${data.site.siteMetadata.github}${location.pathname}`}
                 target="_blank"
                 title="Edit on Github"

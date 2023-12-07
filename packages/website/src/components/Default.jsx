@@ -1,9 +1,9 @@
-import classNames from 'classnames';
-import { graphql, useStaticQuery } from 'gatsby';
-import { useState } from 'react';
-import Helmet from 'react-helmet';
-import LogoIcon from '../svg/logo.svg';
-import GitHub from './GitHub';
+import classNames from "classnames";
+import { graphql, useStaticQuery } from "gatsby";
+import { useState } from "react";
+import Helmet from "react-helmet";
+import LogoIcon from "../svg/logo.svg";
+import GitHub from "./GitHub";
 
 const Default = ({ children, pageType }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -18,13 +18,14 @@ const Default = ({ children, pageType }) => {
     }
   `);
 
+  console.log({ pageType });
   return (
     <>
       <Helmet
-        bodyAttributes={{ class: classNames(pageType, 'layout-default') }}
+        bodyAttributes={{ class: classNames(pageType, "layout-default") }}
       />
       <header className={pageType || undefined}>
-        <nav className={classNames('navbar-drop', { active: isNavOpen })}>
+        <nav className={classNames("navbar-drop", { active: isNavOpen })}>
           <button
             className="navbar-close"
             onClick={() => setIsNavOpen(false)}
@@ -58,8 +59,8 @@ const Default = ({ children, pageType }) => {
         <nav className="container">
           <ul className="navbar-list">
             <li
-              className={classNames('navbar-item', {
-                active: pageType === 'docs',
+              className={classNames("navbar-item", {
+                active: pageType === "docs",
               })}
             >
               <a className="navbar-link" href="/docs/quickstart/">
@@ -67,8 +68,8 @@ const Default = ({ children, pageType }) => {
               </a>
             </li>
             <li
-              className={classNames('navbar-item', {
-                active: pageType === 'guides',
+              className={classNames("navbar-item", {
+                active: pageType === "guides",
               })}
             >
               <a className="navbar-link" href="/guides/why-quill/">
@@ -81,8 +82,8 @@ const Default = ({ children, pageType }) => {
               </a>
             </li>
             <li
-              className={classNames('navbar-item', {
-                active: pageType === 'playground',
+              className={classNames("navbar-item", {
+                active: pageType === "playground",
               })}
             >
               <a className="navbar-link" href="/playground/">
@@ -90,8 +91,8 @@ const Default = ({ children, pageType }) => {
               </a>
             </li>
             <li
-              className={classNames('navbar-item', {
-                active: pageType === 'blog',
+              className={classNames("navbar-item", {
+                active: pageType === "blog",
               })}
             >
               <a className="navbar-link" href="/blog/">
@@ -124,7 +125,7 @@ const Default = ({ children, pageType }) => {
             </a>
             <a href="/docs/download/" className="action">
               Download v
-              {data?.site.siteMetadata.version.split('.').slice(0, 2).join('.')}
+              {data?.site.siteMetadata.version.split(".").slice(0, 2).join(".")}
             </a>
           </div>
           <div className="users row">

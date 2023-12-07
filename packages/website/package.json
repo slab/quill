@@ -4,6 +4,7 @@
   "description": "Quill official website",
   "private": true,
   "main": "gatsby-browser.js",
+  "homepage": "https://quilljs.com",
   "keywords": [],
   "license": "BSD-3-Clause",
   "scripts": {
