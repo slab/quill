@@ -60,7 +60,7 @@ class Quill {
   };
   static events = Emitter.events;
   static sources = Emitter.sources;
-  static version = QUILL_VERSION;
+  static version = typeof QUILL_VERSION === 'undefined' ? 'dev' : QUILL_VERSION;
 
   static imports: Record<string, unknown> = {
     delta: Delta,

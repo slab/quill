@@ -116,31 +116,4 @@ const config = {
   ],
 };
 
-// if (process.env.USE_LOCAL_FILE) {
-//   config.developMiddleware = (app) => {
-//     const httpProxy = require("http-proxy");
-//     const proxy = httpProxy.createProxyServer({});
-//
-//     if (!process.env.npm_package_config_ports_webpack) {
-//       throw new Error(
-//         "config.ports.webpack should be provided when USE_LOCAL_FILE is enabled."
-//       );
-//     }
-//
-//     app.use((req, res, next) => {
-//       if (/\/\d+\.\d+\.\d+/.test(req.url)) {
-//         const target = `http://localhost:${
-//           process.env.npm_package_config_ports_webpack
-//         }/${req.url.split("/").pop()}`;
-//         proxy.web(req, res, {
-//           ignorePath: true,
-//           target,
-//         });
-//       } else {
-//         next();
-//       }
-//     });
-//   };
-// }
-
 module.exports = config;
