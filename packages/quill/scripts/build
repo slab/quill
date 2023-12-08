@@ -9,3 +9,5 @@ npx tsc --declaration --emitDeclarationOnly --outDir $DIST
 npx babel src --out-dir $DIST --copy-files --no-copy-ignored --extensions .ts --source-maps
 npx webpack -- --mode $1
 cp package.json $DIST
+cp README.md $DIST
+cp LICENSE.md $DIST
