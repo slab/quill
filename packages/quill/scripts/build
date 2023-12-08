@@ -10,4 +10,4 @@ npx babel src --out-dir $DIST --copy-files --no-copy-ignored --extensions .ts --
 npx webpack -- --mode $1
 cp package.json $DIST
 cp README.md $DIST
-cp LICENSE.md $DIST
+cp LICENSE $DIST
