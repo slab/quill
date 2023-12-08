@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import config from '../gatsby-config';
+import React from "react";
+import PropTypes from "prop-types";
+import config from "../gatsby-config";
 
 export default function HTML(props) {
   const site = config.siteMetadata;
@@ -30,16 +30,10 @@ export default function HTML(props) {
         {props.headComponents}
         <script src={`${site.katex}/katex.min.js`} />
         <script src={`${site.highlightjs}/highlight.min.js`} />
-        <script src={`${site.cdn}${site.version}/${site.quill}`} />
+        <script src={`${site.cdn}/quill.js`} />
         <link rel="stylesheet" href={`${site.katex}/katex.min.css`} />
-        <link
-          rel="stylesheet"
-          href={`${site.cdn}${site.version}/quill.snow.css`}
-        />
-        <link
-          rel="stylesheet"
-          href={`${site.cdn}${site.version}/quill.bubble.css`}
-        />
+        <link rel="stylesheet" href={`${site.cdn}/quill.snow.css`} />
+        <link rel="stylesheet" href={`${site.cdn}/quill.bubble.css`} />
         <link
           rel="stylesheet"
           href={`${site.highlightjs}/styles/monokai-sublime.min.css`}

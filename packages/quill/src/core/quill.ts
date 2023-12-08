@@ -60,8 +60,6 @@ class Quill {
   };
   static events = Emitter.events;
   static sources = Emitter.sources;
-  // eslint-disable-next-line no-undef
-  // @ts-expect-error defined in webpack
   static version = typeof QUILL_VERSION === 'undefined' ? 'dev' : QUILL_VERSION;
 
   static imports: Record<string, unknown> = {

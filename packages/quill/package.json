@@ -1,12 +1,13 @@
 {
   "name": "quill",
-  "version": "2.0.0-dev.4",
+  "version": "2.0.0-beta.0",
   "description": "Your powerful, rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "https://quilljs.com",
-  "main": "dist/quill.js",
+  "main": "quill.js",
   "dependencies": {
     "eventemitter3": "^4.0.7",
+    "lodash-es": "^4.17.21",
     "parchment": "^3.0.0-alpha.1",
     "quill-delta": "^5.1.0"
   },
@@ -23,6 +24,7 @@
     "@typescript-eslint/parser": "^6.12.0",
     "@vitest/browser": "^1.0.0-beta.5",
     "babel-loader": "^9.1.3",
+    "babel-plugin-transform-define": "^2.1.4",
     "css-loader": "^6.8.1",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "^9.0.0",
@@ -30,12 +32,10 @@
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-prettier": "^5.0.1",
-    "glob": "^10.3.10",
     "highlight.js": "^9.18.1",
     "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.3",
     "jsdom": "^22.1.0",
-    "lodash-es": "^4.17.21",
     "mini-css-extract-plugin": "^2.7.6",
     "prettier": "^3.0.3",
     "style-loader": "^3.3.3",
@@ -68,8 +68,7 @@
     "defaults"
   ],
   "scripts": {
-    "build:dev": "./scripts/build development",
-    "build:prod": "./scripts/build production",
+    "build": "./scripts/build production",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint .",
     "lint:tsc": "tsc --noEmit --skipLibCheck",

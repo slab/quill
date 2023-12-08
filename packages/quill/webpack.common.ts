@@ -50,11 +50,6 @@ export default {
   },
   module: {
     rules: [tsRules, stylRules, svgRules],
-    noParse: [
-      /\/node_modules\/clone\/clone\.js$/,
-      /\/node_modules\/eventemitter3\/index\.js$/,
-      /\/node_modules\/extend\/index\.js$/,
-    ],
   },
   plugins: [
     new MiniCssExtractPlugin({

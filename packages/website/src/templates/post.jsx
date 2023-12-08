@@ -1,16 +1,16 @@
-import { graphql } from 'gatsby';
-import Default from '../components/Default';
-import SEO from '../components/SEO';
+import { graphql } from "gatsby";
+import Default from "../components/Default";
+import SEO from "../components/SEO";
 
 const Post = ({ data, children }) => (
-  <Default>
+  <Default pageType="blog">
     <div id="blog-container" className="container">
       <div className="post">
         <h1>{data.mdx?.frontmatter?.title}</h1>
         <div className="post-meta">
           <time>{data.mdx.frontmatter.date}</time>
           <span>
-            {' - '}
+            {" - "}
             <a href="https://twitter.com/jhchen" title="Jason Chen">
               Jason Chen
             </a>

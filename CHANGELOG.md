@@ -1,6 +1,62 @@
-# 2.0.0
+# v2.0.0-beta.0
 
-In progress. Please see the [Upgrading to 2.0](http://quilljs.com/guides/upgrading-to-2-0/) guide.
+In the upcoming 2.0 release, Quill has been significantly modernized. Leveraging the latest browser-supported APIs, Quill now delivers a more efficient and reliable editing experience.
+
+### Major Improvements
+
+- Nested Quill support [#3590](https://github.com/quilljs/quill/pull/3590)
+- Improved IME and spell corrector support [#3807](https://github.com/quilljs/quill/pull/3807)
+- Semantic cleanups for TEXT_CHANGE event [#3778](https://github.com/quilljs/quill/pull/3778)
+- **History**: Record selection in history module [#3823](https://github.com/quilljs/quill/pull/3823)
+- Auto detect scrolling container [#3840](https://github.com/quilljs/quill/pull/3840)
+
+### Performance Improvements
+
+Quill 2.0 includes many performance optimizations,
+the most important of which is the improved rendering speed for large content.
+
+- Improve inserting performance [#3815](https://github.com/quilljs/quill/pull/3815)
+- Avoid fetching selections when possible [#3538](https://github.com/quilljs/quill/pull/3538)
+- No need to setContents when container is empty [#3539](https://github.com/quilljs/quill/pull/3539)
+
+### Code Modernization
+
+- Migrated to TypeScript
+- Provided official TypeScript declarations
+- Migrated to Vitest for unit testing
+- Migrated to Playwright for E2E testing
+- Migrated website to Gatsby
+
+### All Changes
+
+- Fix UI node interactions with line-level navigation shortcuts [#3898](https://github.com/quilljs/quill/pull/3898)
+- Use `&lt;strike&gt;` instead of `&lt;s&gt;` for Strike format [Commit](https://github.com/quilljs/quill/commit/16427683890374ed5acba96765757c44f5d5f2f5)
+- **Keyboard**: Backspace will keep the format when previous line is empty [#3013](https://github.com/quilljs/quill/pull/3013)
+- **Keyboard**: Discontinue inline formats on enter [#3428](https://github.com/quilljs/quill/pull/3428)
+- Fix length mismatch when copying code [#3028](https://github.com/quilljs/quill/pull/3028)
+- Keep list numbers continuous when separated by certain elements [#3086](https://github.com/quilljs/quill/pull/3086)
+- Header/paragraph doesn't reset list numbering in Firefox [#3272](https://github.com/quilljs/quill/pull/3272)
+- Fix `Quill#setContents()` on block embed ending [Commit](https://github.com/quilljs/quill/commit/84d22342d5e3eb33453d4601d2c7f55d26b47495)
+- Track all implicit newline indexes and shift for delete [Commit](https://github.com/quilljs/quill/commit/cf101f681158a48b1b477c1544680cc9614425ae)
+- **Clipboard**: Fix pasting in checklist does not preserve indentation [#3064](https://github.com/quilljs/quill/pull/3064)
+- **Clipboard**: Prefer file over html when uploading [Commit](https://github.com/quilljs/quill/commit/e164f12603f646d919c853a7db02137399dbf696)
+- **Clipboard**: Keep newlines in pre tag [#3687](https://github.com/quilljs/quill/pull/3687)
+- **Clipboard**: Cut across lines shouldn't affect the formatting of the line above [#3286](https://github.com/quilljs/quill/pull/3286)
+- getLeaf() should ignore non-leaf blots [#3489](https://github.com/quilljs/quill/pull/3489)
+- **Selection**: Fix getBounds of empty text nodes [#3491](https://github.com/quilljs/quill/pull/3491)
+- Keep cursor unlinked to avoid elements being pushed down inside [#3534](https://github.com/quilljs/quill/pull/3534)
+- Fix combineFormats with multiple values repeated [#3336](https://github.com/quilljs/quill/issues/3336)
+- Fix selection-change not firing on DOM mutations [#3591](https://github.com/quilljs/quill/pull/3591)
+- Improve Tab handling in code block [#3593](https://github.com/quilljs/quill/pull/3593)
+- Add SMS to link protocol whitelist [#2851](https://github.com/quilljs/quill/pull/2851)
+- Fix embed inherits formats unexpectedly [#3783](https://github.com/quilljs/quill/pull/3783)
+- Fix HTML and Delta not matching [#3784](https://github.com/quilljs/quill/pull/3784)
+- Fix inline embed insertions with applyDelta() [#3793](https://github.com/quilljs/quill/pull/3793)
+- Fix inserting newlines into formatted text [#3582](https://github.com/quilljs/quill/pull/3582)
+- **History**: Pass source for history actions [#3514](https://github.com/quilljs/quill/pull/3514)
+- **History**: Handle native undo/redo [#3115](https://github.com/quilljs/quill/pull/3115)
+- Fix block embed attributor errors [#3825](https://github.com/quilljs/quill/pull/3825)
+- **Clipboard**: getHTML() should include outer tag when range is entire line [#3850](https://github.com/quilljs/quill/pull/3850)
 
 # 1.3.6
 
@@ -9,11 +65,10 @@ In progress. Please see the [Upgrading to 2.0](http://quilljs.com/guides/upgradi
 
 Thanks to [@berylw](https://github.com/berylw) and [@erinsinger93](https://github.com/erinsinger93) for contributions to this release!
 
-
 # 1.3.5
 
 - Fix indent preservation of a checked checklist item [#1818](https://github.com/quilljs/quill/issues/1818)
-- * added as a shortcut to trigger bullet list formatting [#1819](https://github.com/quilljs/quill/pull/1819)
+- Added the asterisk "\*" character as a shortcut to trigger bullet list formatting [#1819](https://github.com/quilljs/quill/pull/1819)
 - Fix pasting text-align styles [#1873](https://github.com/quilljs/quill/issues/1873)
 - Fix cursor position after dangerouslyPasteHTML [#1886](https://github.com/quilljs/quill/issues/1886)
 - Fix value of history stack in text-change handler [#1906](https://github.com/quilljs/quill/pull/1906)
@@ -21,14 +76,12 @@ Thanks to [@berylw](https://github.com/berylw) and [@erinsinger93](https://githu
 
 Thank you [@araruna](https://github.com/araruna), [@bryanrsmith](https://github.com/bryanrsmith), [@haugstrup](https://github.com/haugstrup), [@icylace](https://github.com/icylace), [@leimig](https://github.com/leimig), [@LFDM](https://github.com/LFDM), [@nikparo](https://github.com/nikparo), [@rafpaf](https://github.com/rafpaf) and [@vk2sky](https://github.com/vk2sky) for your contributions to this release.
 
-
 # 1.3.4
 
 - Loosen dependency specification [#1748](https://github.com/quilljs/quill/issues/1748)
 - Loosen list autofill constraint [#1749](https://github.com/quilljs/quill/issues/1749)
 
 Thanks to [@danfuzz](https://github.com/danfuzz) and [@SoftVision-CarmenFat](https://github.com/SoftVision-CarmenFat) for contributions to this release!
-
 
 # 1.3.3
 
@@ -38,9 +91,7 @@ Thanks to [@danfuzz](https://github.com/danfuzz) and [@SoftVision-CarmenFat](htt
 - Fix list creation keyboard shortcuts [#1723](https://github.com/quilljs/quill/issues/1723)
 - Show KaTex rendering errors [#1738](https://github.com/quilljs/quill/pull/1738)
 
-
 Thank you [@altschuler](https://github.com/altschuler), [@arrocke](https://github.com/arrocke), [@guillaumepotier](https://github.com/guillaumepotier), [@sferoze](https://github.com/sferoze) and [@volser](https://github.com/volser) for your contributions to this release.
-
 
 # 1.3.2
 
@@ -52,14 +103,12 @@ Thank you [@altschuler](https://github.com/altschuler), [@arrocke](https://githu
 
 Thanks to [@abramz](https://github.com/abramz), [@amitm02](https://github.com/amitm02), [@eamodio](https://github.com/eamodio), [@HWliao](https://github.com/HWliao), [@mmitis](https://github.com/mmitis), [@nelsonpecora](https://github.com/nelsonpecora), [@nipunjain87](https://github.com/nipunjain87), and [@ValueBerry](https://github.com/ValueBerry) for contributions to this release!
 
-
 # 1.3.1
 
 - Fix placeholder when emptying text [#1594](https://github.com/quilljs/quill/issues/1594)
 - Fix inserting newline after header [#1616](https://github.com/quilljs/quill/issues/1616)
 
 Thank you [@Natim](https://github.com/Natim) and [@stephenLYao](https://github.com/stephenLYao) for your contributions to this release.
-
 
 # 1.3.0
 
@@ -79,7 +128,6 @@ Add `matchVisual` [configuration](https://quilljs.com/docs/modules/clipboard/#co
 
 Thanks to [@alexkrolick](https://github.com/alexkrolick), [@amitm02](https://github.com/amitm02), [@Christilut](https://github.com/Christilut), [@danielschwartz](https://github.com/danielschwartz), [@emanuelbsilva](https://github.com/emanuelbsilva), [@ersommer](https://github.com/ersommer), [@fiurrr](https://github.com/fiurrr), [@jackmu95](https://github.com/jackmu95), [@jmzhang](https://github.com/jmzhang), [@mdpye](https://github.com/mdpye), [@ralrom](https://github.com/ralrom), [@sferoze](https://github.com/sferoze), [@simon-at-fugu](https://github.com/simon-at-fugu), and [@yogadzx](https://github.com/yogadzx) for contributions to this release!
 
-
 # 1.2.6
 
 - Disable Grammarly by default [#574](https://github.com/quilljs/quill/issues/574)
@@ -88,7 +136,6 @@ Thanks to [@alexkrolick](https://github.com/alexkrolick), [@amitm02](https://git
 
 Thank you [@amitm02](https://github.com/amitm02), [@benbro](https://github.com/benbro)
 [@nickbaum](https://github.com/nickbaum), [@stalniy](https://github.com/stalniy) and [@ygrishajev](https://github.com/ygrishajev) for your contributions to this release.
-
 
 # 1.2.5
 
@@ -101,7 +148,6 @@ Thank you [@amitm02](https://github.com/amitm02), [@benbro](https://github.com/b
 - Fix updating active picker logic [#1468](https://github.com/quilljs/quill/issues/1468)
 
 Thanks to [@aliciawood](https://github.com/aliciawood), [@benbro](https://github.com/benbro), [@denis-aes](https://github.com/denis-aes), [@despreju](https://github.com/despreju), [@GlenKPeterson](https://github.com/GlenKPeterson), [@haugstrup](https://github.com/haugstrup), [@jziggas](https://github.com/jziggas), [@RobAley](https://github.com/RobAley), [@sheley1998](https://github.com/sheley1998), [@silverprize](https://github.com/silverprize), and [@yairy](https://github.com/yairy) for contributions to this release!
-
 
 # 1.2.4
 
@@ -117,7 +163,6 @@ Thanks to [@aliciawood](https://github.com/aliciawood), [@benbro](https://github
 
 Thanks to [@bigggge](https://github.com/bigggge), [@CoenWarmer](https://github.com/CoenWarmer), [@cutteroid](https://github.com/cutteroid), [@jay-cox](https://github.com/jay-cox), [@kiewic](https://github.com/kiewic), [@kloots](https://github.com/kloots), [@MichaelTontchev](https://github.com/MichaelTontchev), [@montlebalm](https://github.com/montlebalm), [@RichardNeill](https://github.com/RichardNeill), and [@vasconita](https://github.com/vasconita) for your contributions to this release.
 
-
 # 1.2.3
 
 - Fix scrolling when appending new lines [#1276](https://github.com/quilljs/quill/issues/1276) [#1361](https://github.com/quilljs/quill/issues/1361)
@@ -126,13 +171,11 @@ Thanks to [@bigggge](https://github.com/bigggge), [@CoenWarmer](https://github.c
 
 Thank you [@artaommahe](https://github.com/artaommahe), [@c-w](https://github.com/c-w), [@EladBet](https://github.com/EladBet), [@emenoh](https://github.com/emenoh), and [@montlebalm](https://github.com/montlebalm) for contributions to this release!
 
-
 # 1.2.2
 
 - Fix backspace/delete on Windows/Ubuntu [#1334](https://github.com/quilljs/quill/issues/1334)
 
 Thanks to [@dinusuresh](https://github.com/dinusuresh) for your contributions to this release.
-
 
 # 1.2.1
 
@@ -142,7 +185,6 @@ Thanks to [@dinusuresh](https://github.com/dinusuresh) for your contributions to
 
 Thank you [@danielschwartz](https://github.com/@danielschwartz), [@JedWatson](https://github.com/@JedWatson), [@montlebalm](https://github.com/@montlebalm), and [@simi](https://github.com/@simi) for contributions to this release!
 
-
 # 1.2.0
 
 Add concept of experimental APIs: they are APIs meant to try out support for use cases we would like to address, but gives flexibility to find the right API interface. As such they are not covered by Semantic Versioning. Several are added to start things off: `find`, `getIndex`, `getLeaf`, `getLine`, `getLines`.
@@ -150,7 +192,6 @@ Add concept of experimental APIs: they are APIs meant to try out support for use
 - Merge disabling list keyboard shortcut when list format is disabled [#1257](https://github.com/quilljs/quill/pull/1257)
 
 Thanks to [@haugstrup](https://github.com/haugstrup) for your contributions to this release.
-
 
 # 1.1.10
 
@@ -160,7 +201,6 @@ Thanks to [@haugstrup](https://github.com/haugstrup) for your contributions to t
 - Fix whitelisting block formats [#1256](https://github.com/quilljs/quill/issues/1256)
 
 Thank you [@benbro](https://github.com/benbro), [@haugstrup](https://github.com/haugstrup), [@peterweck](https://github.com/peterweck) and [@sbevels](https://github.com/sbevels) for contributions to this release!
-
 
 # 1.1.9
 
@@ -172,7 +212,6 @@ Thank you [@benbro](https://github.com/benbro), [@haugstrup](https://github.com/
 
 Thanks to [@amitguptagwl](https://github.com/amitguptagwl), [@antonlabunets](https://github.com/antonlabunets), [@benbro](https://github.com/benbro), [@eamodio](https://github.com/eamodio) and [@ygrishajev](https://github.com/ygrishajev) for your contributions to this release.
 
-
 # 1.1.8
 
 - Support pasting italics from Google Docs [#1185](https://github.com/quilljs/quill/issues/1185)
@@ -182,7 +221,6 @@ Thanks to [@amitguptagwl](https://github.com/amitguptagwl), [@antonlabunets](htt
 - Fix select-all copy and overwrite paste in Firefox [#1202](https://github.com/quilljs/quill/issues/1202)
 
 Thank you [@adfaure](https://github.com/adfaure), [@berndschimmer](https://github.com/berndschimmer), [@CoenWarmer](https://github.com/CoenWarmer), [@montlebalm](https://github.com/montlebalm), and [@TraceyYau](https://github.com/TraceyYau) for contributions to this release!
-
 
 # 1.1.7
 
@@ -194,7 +232,6 @@ Thank you [@adfaure](https://github.com/adfaure), [@berndschimmer](https://githu
 - Fix cursor jump on formatting in middle of text [#1176](https://github.com/quilljs/quill/issues/1176)
 
 Thanks to [@cutteroid](https://github.com/cutteroid), [@houxg](https://github.com/houxg), [@jasongisstl](https://github.com/jasongisstl), [@nikparo](https://github.com/nikparo), [@sbevels](https://github.com/sbevels), and [sferoze](https://github.com/sferoze) for your contributions to this release.
-
 
 # 1.1.6
 
@@ -209,7 +246,6 @@ Checklists [#759](https://github.com/quilljs/quill/issues/759) support has been 
 
 Thank you [@jgmediadesign](https://github.com/jgmediadesign) and [@julienbmobile](https://github.com/julienbmobile) for contributions to this release!
 
-
 # 1.1.5
 
 - Remove unnecessary type attribute in documentation [#1087](https://github.com/quilljs/quill/pull/1087)
@@ -218,14 +254,12 @@ Thank you [@jgmediadesign](https://github.com/jgmediadesign) and [@julienbmobile
 
 Thank you [@jleen](https://github.com/jleen), [@kaelig](https://github.com/kaelig), and [@YouHan26](https://github.com/YouHan26) for your contributions to this release.
 
-
 # 1.1.3
 
 - Update quill-delta [delta#2](https://github.com/quilljs/delta/issues/2)
 - Fix link creation [#1073](https://github.com/quilljs/quill/issues/1073)
 
 Thanks to [@eamodio](https://github.com/eamodio) and [@metsavir](https://github.com/metsavir) for contributions to this release!
-
 
 # 1.1.2
 
@@ -234,7 +268,6 @@ Thanks to [@eamodio](https://github.com/eamodio) and [@metsavir](https://github.
 - Improve documentation [#1069](https://github.com/quilljs/quill/pull/1069) [#1070](https://github.com/quilljs/quill/pull/1070)
 
 Thank you [@benbro](https://github.com/benbro), [@derickruiz](https://github.com/derickruiz), [@eamodio](https://github.com/eamodio), [@hallaathrad](https://github.com/hallaathrad), and [@philly385](https://github.com/philly385) for your contributions to this release.
-
 
 # 1.1.1
 
@@ -249,7 +282,6 @@ Thank you [@benbro](https://github.com/benbro), [@derickruiz](https://github.com
 Thanks to [@artaommahe](https://github.com/artaommahe), [@benbro](https://github.com/benbro), [@fuffalist](https://github.com/fuffalist), [@sachinrekhi](https://github.com/sachinrekhi), [@sergop321](https://github.com/sergop321), and [@tlg](https://github.com/tlg) for contributions to this release!
 
 Special thanks to [@DadaMonad](https://github.com/DadaMonad) for contributions on [fast-diff](https://github.com/jhchen/fast-diff) that enabled the [#746](https://github.com/quilljs/quill/issues/746) fix.
-
 
 # 1.1.0
 
@@ -273,7 +305,6 @@ So a `strict` configuration option has been added. It is true by default so the 
 
 Thank you [@benbro](https://github.com/benbro), [@cutteroid](https://github.com/cutteroid), [@evansolomon](https://github.com/evansolomon), [@felipeochoa](https://github.com/felipeochoa), [jackmu95](https://github.com/jackmu95), [@joedynamite](https://github.com/joedynamite), [@lance13c](https://github.com/lance13c), [@leebenson](https://github.com/leebenson), [@maartenvanvliet](https://github.com/maartenvanvliet), [@sarbbottam](https://github.com/sarbbottam), [@viljark](https://github.com/viljark), [@w00fz](https://github.com/w00fz) for their contributions to this release.
 
-
 # 1.0.6
 
 Documentation clarifications and bug fixes.
@@ -285,11 +316,9 @@ Documentation clarifications and bug fixes.
 
 Thanks to [@dropfen](https://github.com/dropfen), [@evansolomon](https://github.com/evansolomon), [@hallaathrad](https://github.com/hallaathrad), [@janyksteenbeek](https://github.com/janyksteenbeek), [@jackmu95](https://github.com/jackmu95), [@marktron](https://github.com/marktron), [@mcat-ee](https://github.com/mcat-ee), [@unhammer](https://github.com/unhammer), and [@zeke](https://github.com/zeke) for contributions to this release!
 
-
 # 1.0.5
 
 Became 1.0.6 with a build/deploy fix.
-
 
 # 1.0.4
 
@@ -301,13 +330,11 @@ Became 1.0.6 with a build/deploy fix.
 
 Thank you [jackmu95](https://github.com/jackmu95), [kristeehan](https://github.com/kristeehan), [ruffle1986](https://github.com/ruffle1986), [sergop321](https://github.com/sergop321), [sferoze](https://github.com/sferoze), and [sijad](https://github.com/sijad) for contributions to this release.
 
-
 # 1.0.3
 
 - Fix [#928](https://github.com/quilljs/quill/issues/928)
 
 Thank you [@scottmessinger](https://github.com/scottmessinger) for the bug report.
-
 
 # 1.0.2
 
@@ -316,16 +343,13 @@ Thank you [@scottmessinger](https://github.com/scottmessinger) for the bug repor
 
 Thanks to [@eamodio](https://github.com/eamodio) and [@neandrake](https://github.com/neandrake) for their contributions to this release.
 
-
 # 1.0.0
 
 Quill 1.0 is released! Read the [official announcement](https://quilljs.com/blog/announcing-quill-1-0/).
 
-
 # 1.0.0-rc.4
 
 Fix one important bug [fdd920](https://github.com/quilljs/quill/commit/fdd920250c05403ed9e5d6d86826a00167ba0b09)
-
 
 # 1.0.0-rc.3
 
@@ -342,7 +366,6 @@ A few bug fixes, one with with possibly significant implications. See the [issue
 
 Thank you [@benbro](https://github.com/benbro), [@cgilboy](https://github.com/cgilboy), [@cutteroid](https://github.com/cutteroid), and [@routman](https://github.com/routman) for contributions to this release!
 
-
 # 1.0.0-rc.2
 
 A few bug fixes, including one significant [one](https://github.com/quilljs/quill/issues/883)
@@ -354,7 +377,6 @@ A few bug fixes, including one significant [one](https://github.com/quilljs/quil
 - Fix optimized change calculation with preformatted text [#883](https://github.com/quilljs/quill/issues/883)
 
 Thanks to [benbro](https://github.com/benbro), [cutteroid](https://github.com/cutteroid), and [CapTec](https://github.com/CapTec) for their contributions to this release.
-
 
 # 1.0.0-rc.1
 
@@ -374,7 +396,6 @@ A few bug fixes and performance improvements.
 - Fix indent interaction with text direction [#874](https://github.com/quilljs/quill/issues/874)
 
 Thank you [@benbro](https://github.com/benbro), [@fernandogmar](https://github.com/fernandogmar), [@sachinrekhi](https://github.com/sachinrekhi), [@sferoze](https://github.com/sferoze), and [@stalniy](https://github.com/stalniy) for contributions to this release!
-
 
 # 1.0.0-rc.0
 
@@ -428,7 +449,6 @@ A huge thank you to all contributors to through the beta! Special thanks goes to
 - [@u9520107](https://github.com/u9520107)
 - [@WriterStat](https://github.com/WriterStat)
 
-
 # 1.0.0-beta.11
 
 Fixed some regressive bugs from previous release.
@@ -440,7 +460,6 @@ Fixed some regressive bugs from previous release.
 - Fix merging theme configurations [#844](https://github.com/quilljs/quill/issues/844), [#845](845)
 
 Thanks [benbro](https://github.com/benbro), [jackmu95](https://github.com/jackmu95), and [george-norris-salesforce](https://github.com/george-norris-salesforce) for the bug reports.
-
 
 # 1.0.0-beta.10
 
@@ -471,7 +490,6 @@ Lots of bug fixes and performance improvements.
 
 Thanks to [benbro](https://github.com/benbro), [clemmy](https://github.com/clemmy), [crisbeto](https://github.com/crisbeto), [cutteroid](https://github.com/cutteroid), [jackmu95](https://github.com/jackmu95), [kylebragger](https://github.com/kylebragger), [sachinrekhi](https://github.com/sachinrekhi), [stalniy](https://github.com/stalniy), and [tOgg1](https://github.com/tOgg1) for their contributions to this release.
 
-
 # 1.0.0-beta.9
 
 Potentially the final beta before a release candidate, if no major issues are discovered.
@@ -496,7 +514,6 @@ Potentially the final beta before a release candidate, if no major issues are di
 - Scroll position is now automatically preserved between editor blur and focus
 
 Thank you [@benbro](https://github.com/benbro), [@KameSama](https://github.com/KameSama), and [@sachinrekhi](https://github.com/sachinrekhi) for contributions to this release!
-
 
 # 1.0.0-beta.8
 
@@ -528,11 +545,9 @@ Image insertion is being reworked in the provided Snow and Bubble themes. The ol
 
 Thanks to [benbro](https://github.com/benbro), [bram2w](https://github.com/bram2w), [clemmy](https://github.com/clemmy), [DadaMonad](https://github.com/DadaMonad), [ersommer](https://github.com/ersommer), [michaeljosephrosenthal](https://github.com/michaeljosephrosenthal), [mmorearty](https://github.com/mmorearty), [mshamaiev-intel471](https://github.com/mshamaiev-intel471), and [sachinrekhi](https://github.com/sachinrekhi) for their contributions to this release.
 
-
 # 1.0.0-beta.7
 
 Became 1.0.0-beta.8 with a fix.
-
 
 # 1.0.0-beta.6
 
@@ -557,7 +572,6 @@ Weekly beta preview release.
 
 Thank you [abejdaniels](https://github.com/abejdaniels), [benbro](https://github.com/benbro), [davelozier](https://github.com/davelozier), [fernandogmar](https://github.com/fernandogmar), [KameSama](https://github.com/KameSama), and [WriterStat](https://github.com/WriterStat) for contributions to this release.
 
-
 # 1.0.0-beta.5
 
 Weekly beta preview release.
@@ -575,7 +589,6 @@ Weekly beta preview release.
 - Fix 'user' source on API calls [#739](https://github.com/quilljs/quill/issues/739)
 
 Thanks to [benbro](https://github.com/benbro), [lukechapman](https://github.com/lukechapman), [sachinrekhi](https://github.com/sachinrekhi), and [saw](https://github.com/saw) for their contributions to this release.
-
 
 # 1.0.0-beta.4
 
@@ -603,7 +616,6 @@ Weekly beta preview release.
 - Fix `setSelection(null)` [#722](https://github.com/quilljs/quill/issues/722)
 
 Thank you [@benbro](https://github.com/benbro), [@brynjagr](https://github.com/brynjagr), and [@sachinrekhi](https://github.com/sachinrekhi) for contributions to this release.
-
 
 # 1.0.0-beta.3
 
@@ -633,7 +645,6 @@ Weekly beta preview release.
 - Fix indent becoming NaN [#698](https://github.com/quilljs/quill/issues/698)
 
 Thanks to [@benbro](https://github.com/benbro), [@Cinamonas](https://github.com/Cinamonas), [@emanuelbsilva](https://github.com/emanuelbsilva), [@jasonmng](https://github.com/jasonmng), [@jonnolen](https://github.com/jonnolen), [@LucVanPelt](https://github.com/LucVanPelt), [@sachinrekhi](https://github.com/sachinrekhi), [@sagacitysite](https://github.com/sagacitysite), [@WriterStat](https://github.com/WriterStat) for their contributions to this release.
-
 
 # 1.0.0-beta.2
 
@@ -665,7 +676,6 @@ Weekly beta preview release. Major emphasis on keyboard API and customization.
 
 Thanks to [@anovi](https://github.com/anovi), [@benbro](https://github.com/benbro), [@jbrowning](https://github.com/jbrowning), [@kei-ito](https://github.com/kei-ito), [@quentez](https://github.com/quentez), [@u9520107](https://github.com/u9520107) for their contributions to this release!
 
-
 # 1.0.0-beta.1
 
 Weekly beta preview release.
@@ -693,11 +703,9 @@ Weekly beta preview release.
 
 Thanks to [@benbro](https://github.com/benbro) for the bug reports for this release!
 
-
 # 1.0.0-beta.0
 
 Please see the [Upgrading to 1.0](http://beta.quilljs.com/guides/upgrading-to-1-0/) guide.
-
 
 # 0.20.1
 
@@ -717,18 +725,20 @@ Patch release for everything prior to Parchment's integration into Quill.
 
 Thanks to [@devtimi](https://github.com/devtimi), [@emannes](https://github.com/emannes), [@ivan-i](https://github.com/ivan-i), [@magus](https://github.com/magus), [@Nick-The-Uncharted](https://github.com/Nick-The-Uncharted), [@rlivsey](https://github.com/rlivsey), [@thomsbg](https://github.com/thomsbg), [@wallylawless](https://github.com/wallylawless) for their bug reports and pull requests!
 
-
 # 0.20.0
 
 ### Breaking Changes
+
 - `getBounds` now returns `null` instead of throwing an error [#412](https://github.com/quilljs/quill/pull/412)
 
 ### Features
+
 - Allow `Document` module to be `Quill.require`'d [#400](https://github.com/quilljs/quill/pull/400)
 - Paste manager can optionally accept a custom conversion function [#401](https://github.com/quilljs/quill/pull/401)
 - Undo manager can optionally only affect user initiated changes [#413](https://github.com/quilljs/quill/pull/413)
 
 ### Bug Fixes
+
 - Retain formats between lines [#403](https://github.com/quilljs/quill/pull/403)
 - Fix bug that allows nested format tags [#406](https://github.com/quilljs/quill/pull/406)
 - Flatten nested list instead of truncating on paste [#421](https://github.com/quilljs/quill/issues/421)

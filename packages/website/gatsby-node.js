@@ -1,15 +1,15 @@
 const path = require(`path`);
-const { siteMetadata } = require('./gatsby-config');
-const runtime = require('react/jsx-runtime');
-const { compileMDX } = require('gatsby-plugin-mdx');
-const { renderToStaticMarkup } = require('react-dom/server');
+const { siteMetadata } = require("./gatsby-config");
+const runtime = require("react/jsx-runtime");
+const { compileMDX } = require("gatsby-plugin-mdx");
+const { renderToStaticMarkup } = require("react-dom/server");
 
 // https://github.com/gatsbyjs/gatsby/issues/28657
 exports.onCreateBabelConfig = ({ actions }) => {
   actions.setBabelPreset({
-    name: 'babel-preset-gatsby',
+    name: "babel-preset-gatsby",
     options: {
-      reactRuntime: 'automatic',
+      reactRuntime: "automatic",
     },
   });
 };
@@ -19,20 +19,22 @@ exports.onCreateNode = async ({ node, actions, getNode, reporter, cache }) => {
   if (node.internal.type !== `Mdx`) return;
 
   const filePath = node.internal.contentFilePath;
-  let pageType = 'unknown';
-  if (filePath.startsWith(path.resolve('content/guides'))) {
-    pageType = 'guide';
-  } else if (filePath.startsWith(path.resolve('content/docs'))) {
-    pageType = 'doc';
-  } else if (filePath.startsWith(path.resolve('content/blog'))) {
-    pageType = 'blog';
-  } else if (filePath.startsWith(path.resolve('content/standalone'))) {
-    pageType = 'standalone';
+  let pageType = "unknown";
+  if (filePath.startsWith(path.resolve("content/guides"))) {
+    pageType = "guides";
+  } else if (filePath.startsWith(path.resolve("content/docs"))) {
+    pageType = "docs";
+  } else if (filePath.startsWith(path.resolve("content/blog"))) {
+    pageType = "blog";
+  } else if (filePath.startsWith(path.resolve("content/playground"))) {
+    pageType = "playground";
+  } else if (filePath.startsWith(path.resolve("content/standalone"))) {
+    pageType = "standalone";
   }
 
-  const relativePath = path.relative(path.resolve('content'), filePath);
+  const relativePath = path.relative(path.resolve("content"), filePath);
   const extension = path.extname(filePath);
-  const slug = relativePath.replace(extension, '');
+  const slug = relativePath.replace(extension, "");
   createNodeField({
     node,
     name: `pageType`,
@@ -50,10 +52,10 @@ exports.onCreateNode = async ({ node, actions, getNode, reporter, cache }) => {
   });
 
   const fileNode = getNode(node.parent);
-  if (fileNode && pageType === 'blog') {
+  if (fileNode && pageType === "blog") {
     const result = await compileMDX(
       {
-        source: node.body.split('{/* more */}')[0],
+        source: node.body.split("{/* more */}")[0],
         path: node.internal.contentFilePath,
       },
       {
@@ -63,10 +65,10 @@ exports.onCreateNode = async ({ node, actions, getNode, reporter, cache }) => {
         // Add any custom options or plugins here
       },
       cache,
-      reporter,
+      reporter
     );
     if (result && result.processedMDX) {
-      const { run } = await import('@mdx-js/mdx');
+      const { run } = await import("@mdx-js/mdx");
       const args = {
         ...runtime,
       };
@@ -88,8 +90,8 @@ exports.createPages = ({ graphql, actions }) => {
   const templates = {
     blog: path.resolve(`src/templates/post.jsx`),
     standalone: path.resolve(`src/templates/standalone.jsx`),
-    guide: docTemplate,
-    doc: docTemplate,
+    guides: docTemplate,
+    docs: docTemplate,
   };
   return graphql(
     `
@@ -114,7 +116,7 @@ exports.createPages = ({ graphql, actions }) => {
         }
       }
     `,
-    { limit: 1000 },
+    { limit: 1000 }
   ).then((result) => {
     if (result.errors) {
       throw result.errors;

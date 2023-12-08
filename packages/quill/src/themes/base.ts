@@ -110,7 +110,7 @@ class BaseTheme extends Theme {
 
   buildButtons(
     buttons: NodeListOf<HTMLElement>,
-    icons: Record<string, Record<string, string>>,
+    icons: Record<string, Record<string, string> | string>,
   ) {
     Array.from(buttons).forEach((button) => {
       const className = button.getAttribute('class') || '';
@@ -119,6 +119,7 @@ class BaseTheme extends Theme {
         name = name.slice('ql-'.length);
         if (icons[name] == null) return;
         if (name === 'direction') {
+          // @ts-expect-error
           button.innerHTML = icons[name][''] + icons[name].rtl;
         } else if (typeof icons[name] === 'string') {
           // @ts-expect-error
@@ -126,7 +127,9 @@ class BaseTheme extends Theme {
         } else {
           // @ts-expect-error
           const value = button.value || '';
+          // @ts-expect-error
           if (value != null && icons[name][value]) {
+            // @ts-expect-error
             button.innerHTML = icons[name][value];
           }
         }
