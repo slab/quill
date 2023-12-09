@@ -963,9 +963,6 @@ body:not(.home) .feature h2 {
   margin-bottom: 1.5em;
 }
 
-body:not(.home) .feature .github-button {
-  margin-top: 1.78em;
-}
 body:not(.home) .navbar-list .download-item .action:hover {
   background-color: #fff;
   border-color: #fff;

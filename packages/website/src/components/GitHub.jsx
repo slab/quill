@@ -21,7 +21,7 @@ const GitHub = ({ dark = false }) => {
   }, []);
 
   return (
-    <span className={classNames(styles.button, { [styles.isDark]: dark })}>
+    <div className={classNames(styles.button, { [styles.isDark]: dark })}>
       <a
         className={styles.action}
         target="_blank"
@@ -39,7 +39,7 @@ const GitHub = ({ dark = false }) => {
       >
         {count}
       </a>
-    </span>
+    </div>
   );
 };
 
