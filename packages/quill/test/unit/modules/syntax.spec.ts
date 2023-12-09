@@ -1,4 +1,3 @@
-// @ts-expect-error
 import hljs from 'highlight.js';
 import Delta from 'quill-delta';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
