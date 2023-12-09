@@ -13,7 +13,7 @@
 
   .editLink {
     margin-left: auto;
-    font-family: "Sofia Pro", sans-serif;
+    font-family: 'Sofia Pro', sans-serif;
     font-size: 1.08rem;
     font-weight: bold;
     height: 2.5em;
@@ -28,5 +28,19 @@
     height: 2.5em;
     margin-left: 1em;
     width: 2.5em;
+  }
+}
+
+.content {
+  code {
+    background: #f1f1f1;
+  }
+
+  pre {
+    border-radius: 2px;
+
+    code {
+      background: transparent;
+    }
   }
 }

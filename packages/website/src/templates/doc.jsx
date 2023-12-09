@@ -1,22 +1,22 @@
-import { useLocation } from "@reach/router";
-import classNames from "classnames";
-import { graphql } from "gatsby";
-import SEO from "../components/SEO";
-import docsItems from "../data/docs";
-import guideItems from "../data/guides";
-import OctocatIcon from "../svg/octocat.svg";
-import slug from "../utils/slug";
-import Default from "../components/Default";
-import OpenSource from "../components/OpenSource";
-import React, { useEffect } from "react";
-import * as styles from "./doc.module.scss";
+import { useLocation } from '@reach/router';
+import classNames from 'classnames';
+import { graphql } from 'gatsby';
+import SEO from '../components/SEO';
+import docsItems from '../data/docs';
+import guideItems from '../data/guides';
+import OctocatIcon from '../svg/octocat.svg';
+import slug from '../utils/slug';
+import Default from '../components/Default';
+import OpenSource from '../components/OpenSource';
+import React, { useEffect } from 'react';
+import * as styles from './doc.module.scss';
 
 const getPagination = (permalink, items) => {
   const flattenedItems = [];
 
   const flatItems = (i) => {
     i.forEach((child) => {
-      if (child.url.includes("#")) return;
+      if (child.url.includes('#')) return;
       flattenedItems.push(child);
       if (child.children) {
         flatItems(child.children);
@@ -58,16 +58,16 @@ const SidebarItem = ({ item }) => {
 const Doc = ({ data, children }) => {
   const { title } = data.mdx.frontmatter;
   const { permalink, pageType } = data.mdx.fields;
-  const category = pageType === "guides" ? "Guides" : "Documentation";
+  const category = pageType === 'guides' ? 'Guides' : 'Documentation';
 
-  const items = pageType === "guides" ? guideItems : docsItems;
+  const items = pageType === 'guides' ? guideItems : docsItems;
   const { prev, next } = getPagination(permalink, items);
 
   useEffect(() => {
     docsearch({
-      apiKey: "281facf513620e95600126795a00ab6c",
-      indexName: "quilljs",
-      inputSelector: ".search-item input",
+      apiKey: '281facf513620e95600126795a00ab6c',
+      indexName: 'quilljs',
+      inputSelector: '.search-item input',
       debug: false,
     });
   }, []);
@@ -88,7 +88,7 @@ const Doc = ({ data, children }) => {
             </ul>
           </div>
           <div id="docs-container" className="nine columns">
-            <div className={classNames("row", styles.breadcrumbRow)}>
+            <div className={classNames('row', styles.breadcrumbRow)}>
               <div className={styles.breadcrumb}>
                 <span>{category}:</span>
                 <span>{title}</span>
@@ -104,10 +104,10 @@ const Doc = ({ data, children }) => {
               </a>
             </div>
             <hr />
-            <div id="content-container">
+            <article id="content-container" className={styles.content}>
               <h1 id={slug(title)}>{title}</h1>
               {children}
-            </div>
+            </article>
             <div className="row" id="pagination-container">
               {prev && (
                 <a className="prev" href={prev.url}>
