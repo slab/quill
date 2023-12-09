@@ -949,6 +949,7 @@ body.home .arrow .shaft {
 }
 #demo-container .ql-editor pre,
 #demo-container .ql-editor .ql-code-block-container {
+  font-family: "Inconsolata", monospace;
   font-size: 0.8em;
 }
 
