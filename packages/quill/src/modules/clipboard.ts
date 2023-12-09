@@ -105,7 +105,7 @@ class Clipboard extends Module<ClipboardOptions> {
       });
     }
     if (!html) {
-      return new Delta().insert(text || '');
+      return new Delta().insert(text || '', formats);
     }
     const delta = this.convertHTML(html);
     // Remove trailing newline
