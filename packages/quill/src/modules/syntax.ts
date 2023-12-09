@@ -329,7 +329,6 @@ class Syntax extends Module<SyntaxOptions> {
 }
 Syntax.DEFAULTS = {
   hljs: (() => {
-    // @ts-expect-error
     return window.hljs;
   })(),
   interval: 1000,
