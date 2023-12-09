@@ -55,7 +55,7 @@ const SidebarItem = ({ item }) => {
   );
 };
 
-const Doc = ({ data, location, children }) => {
+const Doc = ({ data, children }) => {
   const { title } = data.mdx.frontmatter;
   const { permalink, pageType } = data.mdx.fields;
   const category = pageType === "guides" ? "Guides" : "Documentation";
@@ -95,7 +95,7 @@ const Doc = ({ data, location, children }) => {
               </div>
               <a
                 className={styles.editLink}
-                href={`${data.site.siteMetadata.github}${location.pathname}`}
+                href={data.mdx.fields.githubPath}
                 target="_blank"
                 title="Edit on GitHub"
               >
@@ -143,16 +143,12 @@ const Doc = ({ data, location, children }) => {
 
 export const query = graphql`
   query ($id: String) {
-    site {
-      siteMetadata {
-        github
-      }
-    }
     mdx(id: { eq: $id }) {
       fields {
         slug
         permalink
         pageType
+        githubPath
       }
       frontmatter {
         title

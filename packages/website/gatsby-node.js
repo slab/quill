@@ -37,6 +37,11 @@ exports.onCreateNode = async ({ node, actions, getNode, reporter, cache }) => {
   const slug = relativePath.replace(extension, "");
   createNodeField({
     node,
+    name: `githubPath`,
+    value: path.join(siteMetadata.github, relativePath),
+  });
+  createNodeField({
+    node,
     name: `pageType`,
     value: pageType,
   });

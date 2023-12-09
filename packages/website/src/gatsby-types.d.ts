@@ -576,6 +576,7 @@ type FileFieldsEnum =
   | 'childMdx.children.parent.id'
   | 'childMdx.excerpt'
   | 'childMdx.fields.excerpt'
+  | 'childMdx.fields.githubPath'
   | 'childMdx.fields.pageType'
   | 'childMdx.fields.permalink'
   | 'childMdx.fields.slug'
@@ -629,6 +630,7 @@ type FileFieldsEnum =
   | 'childrenMdx.children.parent.id'
   | 'childrenMdx.excerpt'
   | 'childrenMdx.fields.excerpt'
+  | 'childrenMdx.fields.githubPath'
   | 'childrenMdx.fields.pageType'
   | 'childrenMdx.fields.permalink'
   | 'childrenMdx.fields.slug'
@@ -990,6 +992,7 @@ type MdxEdge = {
 
 type MdxFields = {
   readonly excerpt: Maybe<Scalars['String']>;
+  readonly githubPath: Maybe<Scalars['String']>;
   readonly pageType: Maybe<Scalars['String']>;
   readonly permalink: Maybe<Scalars['String']>;
   readonly slug: Maybe<Scalars['String']>;
@@ -1041,6 +1044,7 @@ type MdxFieldsEnum =
   | 'children.parent.parent.id'
   | 'excerpt'
   | 'fields.excerpt'
+  | 'fields.githubPath'
   | 'fields.pageType'
   | 'fields.permalink'
   | 'fields.slug'
@@ -1102,6 +1106,7 @@ type MdxFieldsEnum =
 
 type MdxFieldsFilterInput = {
   readonly excerpt: InputMaybe<StringQueryOperatorInput>;
+  readonly githubPath: InputMaybe<StringQueryOperatorInput>;
   readonly pageType: InputMaybe<StringQueryOperatorInput>;
   readonly permalink: InputMaybe<StringQueryOperatorInput>;
   readonly slug: InputMaybe<StringQueryOperatorInput>;
