@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import OctocatIcon from "../svg/octocat.svg";
 import * as styles from "./GitHub.module.scss";
 
-const placeholderCount = (33825).toLocaleString();
+const placeholderCount = (37622).toLocaleString();
 
 const GitHub = ({ dark = false }) => {
   const [count, setCount] = useState(placeholderCount);
