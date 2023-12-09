@@ -329,7 +329,6 @@ class Syntax extends Module<SyntaxOptions> {
 }
 Syntax.DEFAULTS = {
   hljs: (() => {
-    // @ts-expect-error
     return window.hljs;
   })(),
   interval: 1000,
@@ -342,7 +341,7 @@ Syntax.DEFAULTS = {
     { key: 'diff', label: 'Diff' },
     { key: 'xml', label: 'HTML/XML' },
     { key: 'java', label: 'Java' },
-    { key: 'javascript', label: 'Javascript' },
+    { key: 'javascript', label: 'JavaScript' },
     { key: 'markdown', label: 'Markdown' },
     { key: 'php', label: 'PHP' },
     { key: 'python', label: 'Python' },

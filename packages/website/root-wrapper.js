@@ -1,5 +1,5 @@
 import { MDXProvider } from '@mdx-js/react';
-import Highlight, { defaultProps } from 'prism-react-renderer';
+import { Highlight, themes, defaultProps } from 'prism-react-renderer';
 import CodePen from './src/components/CodePen';
 import Editor from './src/components/Editor';
 import {

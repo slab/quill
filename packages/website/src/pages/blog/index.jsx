@@ -7,38 +7,40 @@ const Blog = ({ data }) => (
   <Default pageType="blog">
     <div id="blog-container" className="container">
       <div className="post-list">
-        {data.allMdx.nodes.map((node) => (
-          <div className="post-item">
-            <h1>
-              <a href={node.fields.permalink} title={node.frontmatter.title}>
-                {node.frontmatter.title}
-              </a>
-            </h1>
-            <div className="post-meta">
-              <time dateTime={node.frontmatter.date}>
-                {node.frontmatter.date}
-              </time>
-              <span>
-                {" - "}
-                <a href="https://twitter.com/jhchen" title="Jason Chen">
-                  {"Jason Chen"}
+        {data.allMdx.nodes.map((node) => {
+          return (
+            <div key={node.id} className="post-item">
+              <h1>
+                <a href={node.fields.permalink} title={node.frontmatter.title}>
+                  {node.frontmatter.title}
                 </a>
-              </span>
+              </h1>
+              <div className="post-meta">
+                <time dateTime={node.frontmatter.date}>
+                  {node.frontmatter.date}
+                </time>
+                <span>
+                  {" - "}
+                  <a href="https://twitter.com/jhchen" title="Jason Chen">
+                    {"Jason Chen"}
+                  </a>
+                </span>
+              </div>
+              <div
+                className={styles.excerpt}
+                dangerouslySetInnerHTML={{ __html: node.fields.excerpt }}
+              />
+              <a
+                className="more-link"
+                title="Read more"
+                href={node.frontmatter.permalink}
+              >
+                Read more
+              </a>
+              <hr />
             </div>
-            <div
-              className={styles.excerpt}
-              dangerouslySetInnerHTML={{ __html: node.fields.excerpt }}
-            />
-            <a
-              className="more-link"
-              title="Read more"
-              href={node.frontmatter.permalink}
-            >
-              Read more
-            </a>
-            <hr />
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   </Default>

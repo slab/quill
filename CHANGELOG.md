@@ -1,3 +1,7 @@
+# [Unreleased]
+
+- Fix syntax label from "Javascript" to "JavaScript".
+
 # v2.0.0-beta.0
 
 In the upcoming 2.0 release, Quill has been significantly modernized. Leveraging the latest browser-supported APIs, Quill now delivers a more efficient and reliable editing experience.

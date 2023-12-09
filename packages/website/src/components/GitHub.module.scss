@@ -1,17 +1,19 @@
 .button {
   background-color: #1d1e30;
   border: 3px solid #1d1e30;
-  display: inline-block;
-  font-family: 'Sofia Pro', sans-serif;
+  display: flex;
+  flex-direction: row;
+  font-family: "Sofia Pro", sans-serif;
   font-weight: bold;
   letter-spacing: 0.15rem;
   text-transform: uppercase;
+  width: min-content;
 }
 
 .action {
   color: #fff;
-  display: inline-block;
-  float: left;
+  display: flex;
+  flex-direction: row;
   font-size: 1.33rem;
   line-height: 32px;
   padding: 10px 22px;
@@ -34,8 +36,6 @@
 
 .count {
   background-color: #fff;
-  display: inline-block;
-  float: left;
   font-size: 1.75rem;
   line-height: 32px;
   padding: 10px 30px;
@@ -57,4 +57,8 @@
 .button.isDark .count {
   background-color: #1d1e30;
   color: #fff;
+}
+
+body:not(:global(.home)) .button {
+  margin-top: 1.78em;
 }

@@ -62,7 +62,7 @@ const Content = () => (
                 <p><br></p>
                 <p><br></p>
                 <p class="ql-align-center"><strong>Built with</strong></p>
-                <p class="ql-align-center"><span class="ql-formula" data-value="x^2 + (y - \sqrt[3]{x^2})^2 = 1"></span></p>
+                <p class="ql-align-center"><span class="ql-formula" data-value="x^2 + (y - \\sqrt[3]{x^2})^2 = 1"></span></p>
                 <p><br></p>
 
 `,

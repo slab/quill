@@ -1,4 +1,3 @@
-// @ts-expect-error
 import hljs from 'highlight.js';
 import Delta from 'quill-delta';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
@@ -15,7 +14,7 @@ describe('Syntax', () => {
     Quill.register({ 'modules/syntax': Syntax }, true);
     Syntax.register();
     Syntax.DEFAULTS.languages = [
-      { key: 'javascript', label: 'Javascript' },
+      { key: 'javascript', label: 'JavaScript' },
       { key: 'ruby', label: 'Ruby' },
     ];
   });
@@ -166,7 +165,7 @@ describe('Syntax', () => {
         `
           <div class="ql-code-block-container" spellcheck="false">
             <select class="ql-ui" contenteditable="false">
-              <option value="javascript">Javascript</option>
+              <option value="javascript">JavaScript</option>
               <option value="ruby">Ruby</option>
             </select>
             <div class="ql-code-block" data-language="javascript"><span class="ql-token hljs-keyword">var</span> test = <span class="ql-token hljs-number">1</span>;</div>
@@ -174,7 +173,7 @@ describe('Syntax', () => {
           <p><br></p>
           <div class="ql-code-block-container" spellcheck="false">
             <select class="ql-ui" contenteditable="false">
-              <option value="javascript">Javascript</option>
+              <option value="javascript">JavaScript</option>
               <option value="ruby">Ruby</option>
             </select>
             <div class="ql-code-block" data-language="javascript"><span class="ql-token hljs-keyword">var</span> bugz = <span class="ql-token hljs-number">0</span>;</div>
@@ -201,7 +200,7 @@ describe('Syntax', () => {
         `
             <div class="ql-code-block-container" spellcheck="false">
               <select class="ql-ui" contenteditable="false">
-                <option value="javascript">Javascript</option>
+                <option value="javascript">JavaScript</option>
                 <option value="ruby">Ruby</option>
               </select>
               <div class="ql-code-block" data-language="javascript"><span class="ql-token hljs-keyword">var</span> test = <span class="ql-token hljs-number">1</span>;</div>

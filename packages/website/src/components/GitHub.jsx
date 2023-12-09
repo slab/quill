@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import OctocatIcon from "../svg/octocat.svg";
 import * as styles from "./GitHub.module.scss";
 
-const placeholderCount = (33825).toLocaleString();
+const placeholderCount = (37622).toLocaleString();
 
 const GitHub = ({ dark = false }) => {
   const [count, setCount] = useState(placeholderCount);
@@ -21,7 +21,7 @@ const GitHub = ({ dark = false }) => {
   }, []);
 
   return (
-    <span className={classNames(styles.button, { [styles.isDark]: dark })}>
+    <div className={classNames(styles.button, { [styles.isDark]: dark })}>
       <a
         className={styles.action}
         target="_blank"
@@ -39,7 +39,7 @@ const GitHub = ({ dark = false }) => {
       >
         {count}
       </a>
-    </span>
+    </div>
   );
 };
 
