@@ -1401,13 +1401,17 @@ type Query_mdxArgs = {
 type Query_siteArgs = {
   buildTime: InputMaybe<DateQueryOperatorInput>;
   children: InputMaybe<NodeFilterListInput>;
-  graphqlTypegen: InputMaybe<BooleanQueryOperatorInput>;
+  graphqlTypegen: InputMaybe<SiteGraphqlTypegenFilterInput>;
   host: InputMaybe<StringQueryOperatorInput>;
   id: InputMaybe<StringQueryOperatorInput>;
   internal: InputMaybe<InternalFilterInput>;
+  jsxRuntime: InputMaybe<StringQueryOperatorInput>;
   parent: InputMaybe<NodeFilterInput>;
+  pathPrefix: InputMaybe<StringQueryOperatorInput>;
+  polyfill: InputMaybe<BooleanQueryOperatorInput>;
   port: InputMaybe<IntQueryOperatorInput>;
   siteMetadata: InputMaybe<SiteSiteMetadataFilterInput>;
+  trailingSlash: InputMaybe<StringQueryOperatorInput>;
 };
 
 
@@ -1469,13 +1473,17 @@ type Query_sitePluginArgs = {
 type Site = Node & {
   readonly buildTime: Maybe<Scalars['Date']>;
   readonly children: ReadonlyArray<Node>;
-  readonly graphqlTypegen: Maybe<Scalars['Boolean']>;
+  readonly graphqlTypegen: Maybe<SiteGraphqlTypegen>;
   readonly host: Maybe<Scalars['String']>;
   readonly id: Scalars['ID'];
   readonly internal: Internal;
+  readonly jsxRuntime: Maybe<Scalars['String']>;
   readonly parent: Maybe<Node>;
+  readonly pathPrefix: Maybe<Scalars['String']>;
+  readonly polyfill: Maybe<Scalars['Boolean']>;
   readonly port: Maybe<Scalars['Int']>;
   readonly siteMetadata: Maybe<SiteSiteMetadata>;
+  readonly trailingSlash: Maybe<Scalars['String']>;
 };
 
 
@@ -1786,7 +1794,8 @@ type SiteFieldsEnum =
   | 'children.parent.internal.type'
   | 'children.parent.parent.children'
   | 'children.parent.parent.id'
-  | 'graphqlTypegen'
+  | 'graphqlTypegen.generateOnBuild'
+  | 'graphqlTypegen.typesOutputPath'
   | 'host'
   | 'id'
   | 'internal.content'
@@ -1798,6 +1807,7 @@ type SiteFieldsEnum =
   | 'internal.mediaType'
   | 'internal.owner'
   | 'internal.type'
+  | 'jsxRuntime'
   | 'parent.children'
   | 'parent.children.children'
   | 'parent.children.children.children'
@@ -1839,6 +1849,8 @@ type SiteFieldsEnum =
   | 'parent.parent.internal.type'
   | 'parent.parent.parent.children'
   | 'parent.parent.parent.id'
+  | 'pathPrefix'
+  | 'polyfill'
   | 'port'
   | 'siteMetadata.cdn'
   | 'siteMetadata.description'
@@ -1849,18 +1861,23 @@ type SiteFieldsEnum =
   | 'siteMetadata.shortTitle'
   | 'siteMetadata.title'
   | 'siteMetadata.url'
-  | 'siteMetadata.version';
+  | 'siteMetadata.version'
+  | 'trailingSlash';
 
 type SiteFilterInput = {
   readonly buildTime: InputMaybe<DateQueryOperatorInput>;
   readonly children: InputMaybe<NodeFilterListInput>;
-  readonly graphqlTypegen: InputMaybe<BooleanQueryOperatorInput>;
+  readonly graphqlTypegen: InputMaybe<SiteGraphqlTypegenFilterInput>;
   readonly host: InputMaybe<StringQueryOperatorInput>;
   readonly id: InputMaybe<StringQueryOperatorInput>;
   readonly internal: InputMaybe<InternalFilterInput>;
+  readonly jsxRuntime: InputMaybe<StringQueryOperatorInput>;
   readonly parent: InputMaybe<NodeFilterInput>;
+  readonly pathPrefix: InputMaybe<StringQueryOperatorInput>;
+  readonly polyfill: InputMaybe<BooleanQueryOperatorInput>;
   readonly port: InputMaybe<IntQueryOperatorInput>;
   readonly siteMetadata: InputMaybe<SiteSiteMetadataFilterInput>;
+  readonly trailingSlash: InputMaybe<StringQueryOperatorInput>;
 };
 
 type SiteFunction = Node & {
@@ -2082,6 +2099,16 @@ type SiteFunctionGroupConnection_sumArgs = {
 type SiteFunctionSortInput = {
   readonly fields: InputMaybe<ReadonlyArray<InputMaybe<SiteFunctionFieldsEnum>>>;
   readonly order: InputMaybe<ReadonlyArray<InputMaybe<SortOrderEnum>>>;
+};
+
+type SiteGraphqlTypegen = {
+  readonly generateOnBuild: Maybe<Scalars['Boolean']>;
+  readonly typesOutputPath: Maybe<Scalars['String']>;
+};
+
+type SiteGraphqlTypegenFilterInput = {
+  readonly generateOnBuild: InputMaybe<BooleanQueryOperatorInput>;
+  readonly typesOutputPath: InputMaybe<StringQueryOperatorInput>;
 };
 
 type SiteGroupConnection = {
