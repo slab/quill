@@ -24,7 +24,7 @@ const Heading = ({ level, children, anchor = 'on' }) => {
     { id },
     <>
       {id && <a className="anchor" href={`#${id}`}></a>}
-      {children}
+      {title}
       {isExperimental && <span className="experimental">experimental</span>}
     </>,
   );
