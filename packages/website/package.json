@@ -23,6 +23,9 @@
     "react-helmet": "^6.1.0",
     "slugify": "^1.6.5"
   },
+  "prettier": {
+    "singleQuote": true
+  },
   "devDependencies": {
     "gatsby": "4.24.5",
     "gatsby-plugin-feed": "4.24.0",
