@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Helmet from 'react-helmet';
 import LogoIcon from '../svg/logo.svg';
 import GitHub from './GitHub';
+import * as styles from './Default.module.scss';
 
 const Default = ({ children, pageType }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -50,7 +51,7 @@ const Default = ({ children, pageType }) => {
                 Blog
               </a>
             </li>
-            <li className="navbar-item">
+            <li className={classNames('navbar-item', styles.githubMenuItem)}>
               <GitHub dark />
             </li>
           </ul>
@@ -99,7 +100,7 @@ const Default = ({ children, pageType }) => {
                 Blog
               </a>
             </li>
-            <li className="navbar-link">
+            <li className="download-item">
               <a className="action" href="/docs/download/">
                 Download
               </a>
