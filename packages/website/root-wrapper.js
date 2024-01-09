@@ -1,5 +1,5 @@
 import { MDXProvider } from '@mdx-js/react';
-import { Highlight, themes, defaultProps } from 'prism-react-renderer';
+import { Highlight, themes } from 'prism-react-renderer';
 import CodePen from './src/components/CodePen';
 import Editor from './src/components/Editor';
 import {
@@ -26,8 +26,8 @@ const components = {
     const matches = className.match(/language-(?<lang>.*)/);
     return (
       <Highlight
-        {...defaultProps}
         code={children.props.children}
+        theme={themes.oneDark}
         language={
           matches && matches.groups && matches.groups.lang
             ? matches.groups.lang
