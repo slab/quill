@@ -309,7 +309,7 @@ header:not(.home) .logo path {
   list-style: none;
   padding: 5em 0 1em;
   position: absolute;
-  transition: margin-bottom 1s ease-out 0s;
+  transition: margin-bottom 0.4s ease-out 0s;
   width: 100%;
   z-index: 10;
 }
@@ -1270,8 +1270,8 @@ body:not(.home) .navbar-link:before {
     display: inline-block;
   }
   .navbar-drop.active {
-    margin-bottom: -25em;
-    transition: margin-bottom 1s ease-out 0s;
+    margin-bottom: -22em;
+    transition: margin-bottom 0.4s ease-out 0s;
   }
   .navbar-list .navbar-item,
   .navbar-list .download-item {
