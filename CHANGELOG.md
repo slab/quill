@@ -1,6 +1,7 @@
 # [Unreleased]
 
 - Fix syntax label from "Javascript" to "JavaScript".
+- Fix typing errors for emitter.
 
 # v2.0.0-beta.0
 
