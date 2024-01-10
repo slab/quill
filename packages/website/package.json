@@ -17,7 +17,6 @@
     "@mdx-js/react": "^2.1.5",
     "babel-preset-gatsby": "^2.24.0",
     "classnames": "^2.3.2",
-    "gatsby-plugin-google-analytics": "^4.24.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
@@ -29,6 +28,7 @@
   "devDependencies": {
     "gatsby": "4.24.5",
     "gatsby-plugin-feed": "4.24.0",
+    "gatsby-plugin-google-gtag": "^4.24.0",
     "gatsby-plugin-mdx": "4.3.0",
     "gatsby-plugin-react-svg": "3.1.0",
     "gatsby-plugin-sass": "5.24.0",
