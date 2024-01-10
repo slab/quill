@@ -1,3 +1,4 @@
+<a href=https://engineering-metrics.typeform.tf/standards-adoption-tool/reports/quill/><img src=https://api.typeform.com/repositories/quill/badges.svg /></a>
 Note: This branch and README covers the upcoming 2.0 release. View [1.x docs here](https://github.com/quilljs/quill/tree/1.3.6).
 
 <h1 align="center">
