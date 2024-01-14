@@ -25,7 +25,6 @@ jobs:
           node-version: 20
 
       - run: npm ci
-      # - run: ./scripts/release.js ${{ github.event.inputs.version }}
-      - run: ./scripts/release.js 2.0.0-beta.1
+      - run: ./scripts/release.js ${{ github.event.inputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
