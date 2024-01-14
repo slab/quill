@@ -9,9 +9,5 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  unit:
-    uses: ./.github/workflows/_unit.yml
-  fuzz:
-    uses: ./.github/workflows/_fuzz.yml
-  e2e:
-    uses: ./.github/workflows/_e2e.yml
+  test:
+    uses: ./.github/workflows/_test.yml
