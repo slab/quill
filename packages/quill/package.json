@@ -57,7 +57,7 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/quilljs/quill",
+    "url": "git+https://github.com/quilljs/quill.git",
     "directory": "packages/quill"
   },
   "bugs": {

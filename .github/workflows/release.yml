@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'npm version. E.g. "2.0.0"'
+        required: true
+
+jobs:
+  test:
+    uses: ./.github/workflows/_test.yml
+
+  release:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - run: npm ci
+      # - run: ./scripts/release.js ${{ github.event.inputs.version }}
+      - run: ./scripts/release.js 2.0.0-beta.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
