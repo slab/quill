@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'npm version. E.g. "2.0.0"'
+        description: 'npm version. Examples: "2.0.0", "2.0.0-beta.0"'
         required: true
 
 jobs:
