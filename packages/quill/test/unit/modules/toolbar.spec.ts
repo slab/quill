@@ -178,10 +178,10 @@ describe('Toolbar', () => {
       ) as HTMLButtonElement;
       quill.setSelection(7);
       expect(boldButton.classList.contains('ql-active')).toBe(true);
-      expect(boldButton.attributes['aria-pressed'].value).toBe('true');
+      expect(boldButton.getAttribute('aria-pressed')).toBe('true');
       quill.setSelection(2);
       expect(boldButton.classList.contains('ql-active')).toBe(false);
-      expect(boldButton.attributes['aria-pressed'].value).toBe('false');
+      expect(boldButton.getAttribute('aria-pressed')).toBe('false');
     });
 
     test('link', () => {
@@ -191,10 +191,10 @@ describe('Toolbar', () => {
       ) as HTMLButtonElement;
       quill.setSelection(12);
       expect(linkButton.classList.contains('ql-active')).toBe(true);
-      expect(linkButton.attributes['aria-pressed'].value).toBe('true');
+      expect(linkButton.getAttribute('aria-pressed')).toBe('true');
       quill.setSelection(2);
       expect(linkButton.classList.contains('ql-active')).toBe(false);
-      expect(linkButton.attributes['aria-pressed'].value).toBe('false');
+      expect(linkButton.getAttribute('aria-pressed')).toBe('false');
     });
 
     test('dropdown', () => {
@@ -223,18 +223,18 @@ describe('Toolbar', () => {
       quill.setSelection(17);
       expect(centerButton.classList.contains('ql-active')).toBe(true);
       expect(leftButton.classList.contains('ql-active')).toBe(false);
-      expect(centerButton.attributes['aria-pressed'].value).toBe('true');
-      expect(leftButton.attributes['aria-pressed'].value).toBe('false');
+      expect(centerButton.getAttribute('aria-pressed')).toBe('true');
+      expect(leftButton.getAttribute('aria-pressed')).toBe('false');
       quill.setSelection(2);
       expect(centerButton.classList.contains('ql-active')).toBe(false);
       expect(leftButton.classList.contains('ql-active')).toBe(true);
-      expect(centerButton.attributes['aria-pressed'].value).toBe('false');
-      expect(leftButton.attributes['aria-pressed'].value).toBe('true');
+      expect(centerButton.getAttribute('aria-pressed')).toBe('false');
+      expect(leftButton.getAttribute('aria-pressed')).toBe('true');
       quill.blur();
       expect(centerButton.classList.contains('ql-active')).toBe(false);
       expect(leftButton.classList.contains('ql-active')).toBe(false);
-      expect(centerButton.attributes['aria-pressed'].value).toBe('false');
-      expect(leftButton.attributes['aria-pressed'].value).toBe('false');
+      expect(centerButton.getAttribute('aria-pressed')).toBe('false');
+      expect(leftButton.getAttribute('aria-pressed')).toBe('false');
     });
   });
 });
