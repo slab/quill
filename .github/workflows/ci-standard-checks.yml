@@ -14,14 +14,4 @@ on:
       - main
 jobs:
   ci-standard-checks:
-    runs-on:
-      - ubuntu-latest
-    steps:
-      - name: Check Out Source Code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: CI Standard Checks
-        uses: Typeform/ci-standard-checks@v1
-        with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
+    uses: Typeform/.github/.github/workflows/ci-standard-checks-workflow.yaml@v1
