@@ -1,4 +1,5 @@
 import { Registry } from 'parchment';
+import type { Attributor } from 'parchment';
 
 import Block from '../../../src/blots/block';
 import Break from '../../../src/blots/break';
@@ -14,7 +15,7 @@ export const createRegistry = (formats: unknown[] = []) => {
   const registry = new Registry();
 
   formats.forEach((format) => {
-    registry.register(format);
+    registry.register(format as Attributor);
   });
   registry.register(Block);
   registry.register(Break);

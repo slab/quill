@@ -5,7 +5,6 @@ import Delta from 'quill-delta';
 import type { BlockEmbed } from '../blots/block';
 import type Block from '../blots/block';
 import type Scroll from '../blots/scroll';
-import type { ScrollConstructor } from '../blots/scroll';
 import type Clipboard from '../modules/clipboard';
 import type History from '../modules/history';
 import type Keyboard from '../modules/keyboard';
@@ -169,13 +168,16 @@ class Quill {
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
     this.emitter = new Emitter();
-    // @ts-expect-error TODO: fix BlotConstructor
-    const ScrollBlot = this.options.registry.query(
-      Parchment.ScrollBlot.blotName,
-    ) as ScrollConstructor;
+    const scrollBlotName = Parchment.ScrollBlot.blotName;
+    const ScrollBlot = this.options.registry.query(scrollBlotName);
+    if (!ScrollBlot || !('blotName' in ScrollBlot)) {
+      throw new Error(
+        `Cannot initialize Quill without "${scrollBlotName}" blot`,
+      );
+    }
     this.scroll = new ScrollBlot(this.options.registry, this.root, {
       emitter: this.emitter,
-    });
+    }) as Scroll;
     this.editor = new Editor(this.scroll);
     this.selection = new Selection(this.scroll, this.emitter);
     this.composition = new Composition(this.scroll, this.emitter);

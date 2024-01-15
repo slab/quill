@@ -440,12 +440,4 @@ function insertInlineContents(
   }, index);
 }
 
-export interface ScrollConstructor {
-  new (
-    registry: Registry,
-    domNode: HTMLDivElement,
-    options: { emitter: Emitter },
-  ): Scroll;
-}
-
 export default Scroll;
