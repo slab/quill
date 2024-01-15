@@ -7,7 +7,7 @@ class Link extends Inline {
   static PROTOCOL_WHITELIST = ['http', 'https', 'mailto', 'tel', 'sms'];
 
   static create(value: string) {
-    const node = super.create(value) as Element;
+    const node = super.create(value) as HTMLElement;
     node.setAttribute('href', this.sanitize(value));
     node.setAttribute('rel', 'noopener noreferrer');
     node.setAttribute('target', '_blank');

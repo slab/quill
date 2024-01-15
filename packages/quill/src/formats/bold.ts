@@ -5,7 +5,6 @@ class Bold extends Inline {
   static tagName = ['STRONG', 'B'];
 
   static create() {
-    // @ts-expect-error
     return super.create();
   }
 
