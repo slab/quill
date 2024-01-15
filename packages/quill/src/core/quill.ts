@@ -120,6 +120,8 @@ class Quill {
       this.imports[path] = target;
       if (
         (path.startsWith('blots/') || path.startsWith('formats/')) &&
+        target &&
+        typeof target !== 'boolean' &&
         // @ts-expect-error
         target.blotName !== 'abstract'
       ) {

@@ -61,7 +61,6 @@ class SyntaxCodeBlock extends CodeBlock {
   static create(value: unknown) {
     const domNode = super.create(value);
     if (typeof value === 'string') {
-      // @ts-expect-error
       domNode.setAttribute('data-language', value);
     }
     return domNode;
