@@ -3,9 +3,24 @@
 const exec = require("node:child_process").execSync;
 const fs = require("node:fs");
 const path = require("node:path");
+const crypto = require("node:crypto");
+const { parseArgs } = require("node:util");
+
+const args = parseArgs({
+  options: {
+    version: { type: "string" },
+    "dry-run": { type: "boolean", default: false },
+  },
+});
+
+const dryRun = args.values["dry-run"];
+
+if (dryRun) {
+  console.log('Running in "dry-run" mode');
+}
 
 const exitWithError = (message) => {
-  console.error(message);
+  console.error(`Exit with error: ${message}`);
   process.exit(1);
 };
 
@@ -29,15 +44,34 @@ if (exec("git status --porcelain").length) {
  * Check that the version is valid. Also extract the dist-tag from the version.
  */
 const [version, distTag] = (() => {
-  const [, , v] = process.argv;
-  const match = v.match(
+  const inputVersion = args.values.version;
+  if (!inputVersion) {
+    exitWithError('Missing required argument: "--version <version>"');
+  }
+
+  if (inputVersion === "experimental") {
+    const randomId = crypto
+      .randomBytes(Math.ceil(9 / 2))
+      .toString("hex")
+      .slice(0, 9);
+
+    return [
+      `0.0.0-experimental-${randomId}-${new Date()
+        .toISOString()
+        .slice(0, 10)
+        .replace(/-/g, "")}`,
+      "experimental",
+    ];
+  }
+
+  const match = inputVersion.match(
     /^(?:[0-9]+\.){2}(?:[0-9]+)(?:-(dev|alpha|beta|rc)\.[0-9]+)?$/
   );
   if (!match) {
-    exitWithError(`Invalid version: ${v || "<empty>"}`);
+    exitWithError(`Invalid version: ${inputVersion}`);
   }
 
-  return [v, match[1] || "latest"];
+  return [inputVersion, match[1] || "latest"];
 })();
 
 /*
@@ -85,7 +119,13 @@ exec("git add CHANGELOG.md");
 exec(`npm version ${version} --workspaces --force`);
 exec("git add **/package.json");
 exec(`npm version ${version} --include-workspace-root --force`);
-exec("git push --tags");
+
+const pushCommand = "git push --tags";
+if (dryRun) {
+  console.log(`Skipping: "${pushCommand}" in dry-run mode`);
+} else {
+  exec(pushCommand);
+}
 
 /*
  * Build Quill package
@@ -104,7 +144,10 @@ if (
 ) {
   exitWithError("Version mismatch between package.json and dist/package.json");
 }
-exec(`npm publish --tag ${distTag} --dry-run`, { cwd: distFolder });
+
+exec(`npm publish --tag ${distTag}${dryRun ? " --dry-run" : ""}`, {
+  cwd: distFolder,
+});
 
 /*
  * Create GitHub release
@@ -113,9 +156,18 @@ const filename = `release-note-${version}-${(Math.random() * 1000) | 0}.txt`;
 fs.writeFileSync(filename, releaseNots);
 try {
   const prereleaseFlag = distTag === "latest" ? "--latest" : " --prerelease";
-  exec(
-    `gh release create v${version} ${prereleaseFlag} -t "Version ${version}" --notes-file "${filename}" --draft`
-  );
+  const releaseCommand = `gh release create v${version} ${prereleaseFlag} -t "Version ${version}" --notes-file "${filename}" --draft`;
+  if (dryRun) {
+    console.log(`Skipping: "${releaseCommand}" in dry-run mode`);
+    console.log(`Release note:\n${releaseNots}`);
+  } else {
+    exec(releaseCommand);
+  }
 } finally {
   fs.unlinkSync(filename);
 }
+
+/*
+ * Create npm package tarball
+ */
+exec("npm pack", { cwd: distFolder });
