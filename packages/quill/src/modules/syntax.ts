@@ -30,7 +30,6 @@ class CodeToken extends Inline {
   constructor(scroll: ScrollBlot, domNode: Node, value: unknown) {
     // @ts-expect-error
     super(scroll, domNode, value);
-    // @ts-expect-error
     TokenAttributor.add(this.domNode, value);
   }
 
@@ -38,7 +37,6 @@ class CodeToken extends Inline {
     if (format !== CodeToken.blotName) {
       super.format(format, value);
     } else if (value) {
-      // @ts-expect-error
       TokenAttributor.add(this.domNode, value);
     } else {
       TokenAttributor.remove(this.domNode);
