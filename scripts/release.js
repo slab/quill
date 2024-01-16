@@ -28,6 +28,8 @@ if (!process.env.CI) {
   exitWithError("The script should only be run in CI");
 }
 
+exec('echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc');
+
 exec('git config --global user.name "Zihua Li"');
 exec('git config --global user.email "635902+luin@users.noreply.github.com"');
 
@@ -97,7 +99,7 @@ if (index === -1) {
 }
 let nextVersionIndex = changelog.indexOf("\n# v", index);
 if (nextVersionIndex === -1) {
-  nextVersionIndex = change.length - 1;
+  nextVersionIndex = changelog.length - 1;
 }
 
 const releaseNots = changelog
@@ -120,7 +122,7 @@ exec(`npm version ${version} --workspaces --force`);
 exec("git add **/package.json");
 exec(`npm version ${version} --include-workspace-root --force`);
 
-const pushCommand = "git push --tags";
+const pushCommand = `git push origin ${process.env.GITHUB_REF_NAME} --follow-tags`;
 if (dryRun) {
   console.log(`Skipping: "${pushCommand}" in dry-run mode`);
 } else {

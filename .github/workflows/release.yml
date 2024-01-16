@@ -10,6 +10,7 @@ on:
       dry-run:
         description: "Only create a tarball, do not publish to npm or create a release on GitHub."
         type: boolean
+        default: true
         required: true
 
 jobs:
@@ -33,6 +34,7 @@ jobs:
       - run: ./scripts/release.js --version ${{ github.event.inputs.version }} ${{ github.event.inputs.dry-run == 'true' && '--dry-run' || '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Archive npm package tarball
         uses: actions/upload-artifact@v3
