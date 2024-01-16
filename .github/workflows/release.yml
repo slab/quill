@@ -9,6 +9,7 @@ on:
         required: true
       dry-run:
         description: "Only create a tarball, do not publish to npm or create a release on GitHub."
+        type: boolean
         required: true
 
 jobs:
