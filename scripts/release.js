@@ -152,19 +152,23 @@ exec(`npm publish --tag ${distTag}${dryRun ? " --dry-run" : ""}`, {
 /*
  * Create GitHub release
  */
-const filename = `release-note-${version}-${(Math.random() * 1000) | 0}.txt`;
-fs.writeFileSync(filename, releaseNots);
-try {
-  const prereleaseFlag = distTag === "latest" ? "--latest" : " --prerelease";
-  const releaseCommand = `gh release create v${version} ${prereleaseFlag} -t "Version ${version}" --notes-file "${filename}" --draft`;
-  if (dryRun) {
-    console.log(`Skipping: "${releaseCommand}" in dry-run mode`);
-    console.log(`Release note:\n${releaseNots}`);
-  } else {
-    exec(releaseCommand);
+if (version === "experimental") {
+  console.log("Skipping GitHub release for experimental version");
+} else {
+  const filename = `release-note-${version}-${(Math.random() * 1000) | 0}.txt`;
+  fs.writeFileSync(filename, releaseNots);
+  try {
+    const prereleaseFlag = distTag === "latest" ? "--latest" : " --prerelease";
+    const releaseCommand = `gh release create v${version} ${prereleaseFlag} -t "Version ${version}" --notes-file "${filename}" --draft`;
+    if (dryRun) {
+      console.log(`Skipping: "${releaseCommand}" in dry-run mode`);
+      console.log(`Release note:\n${releaseNots}`);
+    } else {
+      exec(releaseCommand);
+    }
+  } finally {
+    fs.unlinkSync(filename);
   }
-} finally {
-  fs.unlinkSync(filename);
 }
 
 /*
