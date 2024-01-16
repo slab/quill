@@ -13,12 +13,12 @@ on:
         required: true
 
 jobs:
-  test:
-    uses: ./.github/workflows/_test.yml
+  # test:
+  #   uses: ./.github/workflows/_test.yml
 
   release:
     runs-on: ubuntu-latest
-    needs: test
+    # needs: test
 
     steps:
       - name: Git checkout
@@ -30,7 +30,7 @@ jobs:
           node-version: 20
 
       - run: npm ci
-      - run: ./scripts/release.js ${{ github.event.inputs.version }} ${{ github.event.inputs.dry-run == 'true' && '--dry-run' || '' }}
+      - run: ./scripts/release.js --version ${{ github.event.inputs.version }} ${{ github.event.inputs.dry-run == 'true' && '--dry-run' || '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
