@@ -4,7 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'npm version. Examples: "2.0.0", "2.0.0-beta.0"'
+        description: 'npm version. Examples: "2.0.0", "2.0.0-beta.0". To deploy an experimental version, type "experimental".'
+        default: "experimental"
+        required: true
+      dry-run:
+        description: "Only create a tarball, do not publish to npm or create a release on GitHub."
         required: true
 
 jobs:
@@ -25,6 +29,13 @@ jobs:
           node-version: 20
 
       - run: npm ci
-      - run: ./scripts/release.js ${{ github.event.inputs.version }}
+      - run: ./scripts/release.js ${{ github.event.inputs.version }} ${{ github.event.inputs.dry-run == 'true' && '--dry-run' || '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Archive npm package tarball
+        uses: actions/upload-artifact@v3
+        with:
+          name: npm
+          path: |
+            packages/quill/dist/*.tgz
