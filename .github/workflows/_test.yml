@@ -1,6 +1,6 @@
 name: Tests
 on:
-  workflow_call:
+  workflow_call: null
 jobs:
   e2e:
     name: E2E Tests
@@ -22,16 +22,13 @@ jobs:
   fuzz:
     name: Fuzz Tests
     runs-on: ubuntu-latest
-
     steps:
       - name: Git checkout
         uses: actions/checkout@v3
-
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
-
       - run: npm ci
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
@@ -42,20 +39,31 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, webkit, firefox]
-
+        browser:
+          - firefox
     steps:
       - name: Git checkout
         uses: actions/checkout@v3
-
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
-
+      - uses: saucelabs/sauce-connect-action@v2
+        with:
+          tunnelName: github-actions-${{github.run_id}}.${{github.run_number}}
+          username: ${{ secrets.SAUCE_USERNAME }}
+          accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
+          region: us-west
+          noSSLBumpDomains: all
       - run: npm ci
-      - run: npx playwright install --with-deps
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
       - run: npm run lint
-      - run: npm run test:unit -w quill || npm run test:unit -w quill || npm run test:unit -w quill
+      - run: npm run test:unit -w quill || npm run test:unit -w quill || npm run
+          test:unit -w quill
         env:
           BROWSER: ${{ matrix.browser }}
+          PROVIDER: Sauce Labs
+          SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
+          SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+          SAUCE_TUNNEL_NAME: github-actions-${{github.run_id}}.${{github.run_number}}

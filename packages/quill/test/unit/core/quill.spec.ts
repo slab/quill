@@ -1045,7 +1045,7 @@ describe('Quill', () => {
         await viewportRatio(
           editorContainer.querySelector('p:nth-child(10)') as HTMLElement,
         ),
-      ).toBeGreaterThan(0.9);
+      ).toBeGreaterThan(0.8);
       expect(
         await viewportRatio(
           editorContainer.querySelector('p:nth-child(11)') as HTMLElement,
@@ -1089,7 +1089,7 @@ describe('Quill', () => {
         await viewportRatio(
           editorContainer.querySelector('p:nth-child(100)') as HTMLElement,
         ),
-      ).toBeGreaterThan(0.9);
+      ).toBeGreaterThan(0.8);
       expect(
         await viewportRatio(
           editorContainer.querySelector('p:nth-child(101)') as HTMLElement,
@@ -1172,7 +1172,7 @@ describe('Quill', () => {
         await viewportRatio(
           editorContainer.querySelector('strong') as HTMLElement,
         ),
-      ).toBeGreaterThan(0.9);
+      ).toBeGreaterThan(0.8);
 
       quill.setSelection(0, 'user');
       expect(

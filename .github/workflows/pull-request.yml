@@ -7,3 +7,4 @@ on:
 jobs:
   test:
     uses: ./.github/workflows/_test.yml
+    secrets: inherit
