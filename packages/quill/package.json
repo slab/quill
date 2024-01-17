@@ -8,7 +8,7 @@
   "dependencies": {
     "eventemitter3": "^5.0.1",
     "lodash-es": "^4.17.21",
-    "parchment": "github:quilljs/parchment#9d148df41cc3d62ab07c25ebcead46a3d513d2c6",
+    "parchment": "^3.0.0-alpha.2",
     "quill-delta": "^5.1.0"
   },
   "devDependencies": {
