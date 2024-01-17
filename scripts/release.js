@@ -122,11 +122,15 @@ exec(`npm version ${version} --workspaces --force`);
 exec("git add **/package.json");
 exec(`npm version ${version} --include-workspace-root --force`);
 
-const pushCommand = `git push origin ${process.env.GITHUB_REF_NAME} --follow-tags`;
-if (dryRun) {
-  console.log(`Skipping: "${pushCommand}" in dry-run mode`);
+if (distTag === "experimental") {
+  console.log(`Skipping: "${pushCommand}" for experimental version`);
 } else {
-  exec(pushCommand);
+  const pushCommand = `git push origin ${process.env.GITHUB_REF_NAME} --follow-tags`;
+  if (dryRun) {
+    console.log(`Skipping: "${pushCommand}" in dry-run mode`);
+  } else {
+    exec(pushCommand);
+  }
 }
 
 /*
@@ -154,14 +158,14 @@ exec(`npm publish --tag ${distTag}${dryRun ? " --dry-run" : ""}`, {
 /*
  * Create GitHub release
  */
-if (version === "experimental") {
+if (distTag === "experimental") {
   console.log("Skipping GitHub release for experimental version");
 } else {
   const filename = `release-note-${version}-${(Math.random() * 1000) | 0}.txt`;
   fs.writeFileSync(filename, releaseNots);
   try {
     const prereleaseFlag = distTag === "latest" ? "--latest" : " --prerelease";
-    const releaseCommand = `gh release create v${version} ${prereleaseFlag} -t "Version ${version}" --notes-file "${filename}" --draft`;
+    const releaseCommand = `gh release create v${version} ${prereleaseFlag} -t "Version ${version}" --notes-file "${filename}"`;
     if (dryRun) {
       console.log(`Skipping: "${releaseCommand}" in dry-run mode`);
       console.log(`Release note:\n${releaseNots}`);
