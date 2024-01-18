@@ -13,6 +13,7 @@
     "serve": "gatsby serve --port $npm_package_config_ports_gatsby"
   },
   "dependencies": {
+    "@codesandbox/sandpack-react": "^2.11.3",
     "@mdx-js/mdx": "^2.1.5",
     "@mdx-js/react": "^2.1.5",
     "babel-preset-gatsby": "^2.24.0",

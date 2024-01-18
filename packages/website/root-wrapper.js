@@ -1,6 +1,7 @@
 import { MDXProvider } from '@mdx-js/react';
 import { Highlight, themes } from 'prism-react-renderer';
 import CodePen from './src/components/CodePen';
+import Sandpack from './src/components/Sandpack';
 import Editor from './src/components/Editor';
 import {
   Heading1,
@@ -13,6 +14,7 @@ import {
 
 const components = {
   CodePen,
+  Sandpack,
   Editor,
   More: () => <div style={{ display: 'none' }}>{/* more */}</div>,
   h1: Heading1,
