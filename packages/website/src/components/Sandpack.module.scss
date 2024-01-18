@@ -1,0 +1,27 @@
+.container {
+  margin: 24px 0 32px;
+}
+
+.bar {
+  display: flex;
+  margin: 0 0 10px;
+
+  button {
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    padding: 4px 8px;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #fafafa;
+    }
+
+    &:active {
+      background: #eee;
+    }
+  }
+
+  .togglePreviewButton {
+    margin-left: auto;
+  }
+}
