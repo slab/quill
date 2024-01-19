@@ -3,17 +3,9 @@ import env from './env.js';
 
 /** @type {import('next').NextConfig} */
 export default withMDX()({
-  eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
-    // ignoreDuringBuilds: true,
-  },
+  output: 'export',
   images: {
-    remotePatterns: [
-      {
-        hostname: 'codepen.io',
-      },
-    ],
+    unoptimized: true,
   },
   env: env,
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],

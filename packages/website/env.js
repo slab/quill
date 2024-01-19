@@ -1,6 +1,6 @@
 const { version, homepage } = require('./package.json');
 
-const cdn = process.env.USE_LOCAL_FILE
+const cdn = process.env.NEXT_PUBLIC_LOCAL_QUILL
   ? `http://localhost:${process.env.npm_package_config_ports_webpack}`
   : `https://cdn.jsdelivr.net/npm/quill@${version}/dist`;
 

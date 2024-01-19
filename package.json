@@ -8,7 +8,7 @@
   "config": {
     "ports": {
       "webpack": "9080",
-      "gatsby": "9000"
+      "website": "9000"
     }
   },
   "workspaces": [
@@ -28,7 +28,7 @@
     "build:website": "npm run build -w website",
     "start": "run-p start:*",
     "start:quill": "npm start -w quill",
-    "start:website": "USE_LOCAL_FILE=true npm start -w website",
+    "start:website": "NEXT_PUBLIC_LOCAL_QUILL=true npm start -w website",
     "lint": "npm run lint -w quill"
   },
   "keywords": [
