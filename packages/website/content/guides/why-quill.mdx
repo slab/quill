@@ -11,7 +11,7 @@ Rich text editors are built to help people write text. Yet surprisingly, most ri
 
 There is no DOM API where characters is the unit of measure. With this limitation, most rich text editors cannot answer simple questions such as "What text is in this range?" or "Is the cursor on bolded text?" Trying to build rich editing experiences on top of such primitives is very difficult and frustrating.
 
-Quill was designed for editing and characters in mind, and built its APIs on top of these natural text centric units. To find out if something is bold, Quill does not require traversing the DOM looking for `<b>` or `<strong>` nodes or a font-weight style attributes&mdash;just call [`getFormat(5, 1)`](/docs/api/#getformat). All of its core [API](/docs/api/) calls allow arbitrary indexes and lengths for access or modification. Its [event API](/docs/api/#events) also reports changes in an intuitive JSON format. No need to parse HTML or diff DOM trees.
+Quill was designed for editing and characters in mind, and built its APIs on top of these natural text centric units. To find out if something is bold, Quill does not require traversing the DOM looking for `<b>` or `<strong>` nodes or a font-weight style attributes&mdash;just call [`getFormat(5, 1)`](/docs/api/#getformat). All of its core [API](/docs/api) calls allow arbitrary indexes and lengths for access or modification. Its [event API](/docs/api/#events) also reports changes in an intuitive JSON format. No need to parse HTML or diff DOM trees.
 
 
 ### Custom Content and Formatting
@@ -32,12 +32,16 @@ Cross platform support is important to many JavaScript libraries, but the criter
 
 All of these benefits come in an easy to use package. Quill ships with sane defaults you can immediately use with just a few lines of JavaScript:
 
-```js
+<SandpackWithQuillTemplate
+  files={{
+    'index.js': `
 const quill = new Quill('#editor', {
   modules: { toolbar: true },
   theme: 'snow'
 });
-```
+`
+  }}
+/>
 
 If your application never demands it, you never have to customize Quill&mdash;just enjoy the rich and consistent experience that comes out of the box.
 

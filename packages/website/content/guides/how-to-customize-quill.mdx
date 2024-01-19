@@ -2,7 +2,7 @@
 title: How to Customize Quill
 ---
 
-Quill was designed with customization and extension in mind. This is achieved by implementing a small editor core exposed by a granular, well defined [API](/docs/api/). The core is augmented by [modules](/docs/modules), using the same [APIs](/docs/api/) you have access to.
+Quill was designed with customization and extension in mind. This is achieved by implementing a small editor core exposed by a granular, well defined [API](/docs/api). The core is augmented by [modules](/docs/modules), using the same [APIs](/docs/api) you have access to.
 
 In general, common customizations are handled in [configurations](#configurations/), user interfaces by [Themes](#themes) and CSS, functionality by [modules](#modules), and editor contents by [Parchment](#content-and-formatting).
 
@@ -29,20 +29,24 @@ From there you can implement and attach your own UI elements like custom dropdow
 
 ### Modules
 
-Quill is designed with a modular architecture composed of a small editing core, surrounded by modules that augment its functionality. Some of this functionality is quite integral to editing, such as the [History](/docs/modules/history/) module, which manages undo and redo. Because all modules use the same public [API](/docs/api/) exposed to the developer, even interchanging core modules is possible, when necessary.
+Quill is designed with a modular architecture composed of a small editing core, surrounded by modules that augment its functionality. Some of this functionality is quite integral to editing, such as the [History](/docs/modules/history/) module, which manages undo and redo. Because all modules use the same public [API](/docs/api) exposed to the developer, even interchanging core modules is possible, when necessary.
 
 Like Quill's core itself, many [modules](/docs/modules/) expose additional configuration options and APIs. Before deciding to replace a module, take a look at its documentation. Often your desired customization is already implemented as a configuration or API call.
 
-Otherwise, if you would like to drastically change functionality an existing module already covers, you can simply not include it&mdash;or explicitly exclude it when a theme includes it by default&mdash;and implement the functionality to your liking external to Quill, using the same [API](/docs/api/) the default module uses.
+Otherwise, if you would like to drastically change functionality an existing module already covers, you can simply not include it&mdash;or explicitly exclude it when a theme includes it by default&mdash;and implement the functionality to your liking external to Quill, using the same [API](/docs/api) the default module uses.
 
-```js
+<SandpackWithQuillTemplate
+  files={{
+    'index.js': `
 const quill = new Quill('#editor', {
   modules: {
     toolbar: false    // Snow includes toolbar by default
   },
   theme: 'snow'
 });
-```
+`
+  }}
+/>
 
 A few modules&mdash;[Clipboard](/docs/modules/clipboard/), [Keyboard](/docs/modules/keyboard/), and [History](/docs/modules/history/)&mdash;need to be included as core functionality depend on the APIs they provide. For example, even though undo and redo is basic, expected, editor functionality, the native browser behavior handling of this is inconsistent and unpredictable. The History module bridges the gap by implementing its own undo manager and exposing `undo()` and `redo()` as APIs.
 
@@ -101,7 +105,9 @@ Note you still need to add styling for these classes into your CSS files.
 
 Formats represented by Blots can also be customized. Here is how you would change the DOM Node used to represent bold formatting.
 
-```js
+<SandpackWithQuillTemplate
+  files={{
+    'index.js': `
 const Bold = Quill.import('formats/bold');
 Bold.tagName = 'B';   // Quill uses <strong> by default
 Quill.register(Bold, true);
@@ -113,7 +119,16 @@ const quill = new Quill('#editor', {
   },
   theme: 'snow'
 });
-```
+
+const Delta = Quill.import('delta');
+quill.setContents(
+  new Delta()
+    .insert('Rendered with <b>!', { bold: true })
+    .insert('\\n')
+);
+`
+  }}
+/>
 
 #### Extending Blots
 
