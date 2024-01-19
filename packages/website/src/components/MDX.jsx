@@ -67,14 +67,14 @@ const components = {
   },
 };
 
-export default function MDX({ mdxSource }) {
+export default function MDX({ mdxSource, data }) {
   return (
     <>
       <SEO title={mdxSource.frontmatter.title} />
       <MDXRemote
         {...mdxSource}
         components={components}
-        scope={{ data: { api, docs } }}
+        scope={{ data: { api, docs }, scope: data }}
       />
     </>
   );

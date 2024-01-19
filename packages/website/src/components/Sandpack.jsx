@@ -1,6 +1,7 @@
 import {
   SandpackProvider,
   SandpackCodeEditor,
+  SandpackFileExplorer,
   SandpackPreview,
   useSandpack,
 } from '@codesandbox/sandpack-react';
@@ -25,7 +26,14 @@ const TogglePreviewButton = ({ isPreviewEnabled, setIsPreviewEnabled }) => {
   );
 };
 
-const Sandpack = ({ showPreview, files, visibleFiles, activeFile }) => {
+const Sandpack = ({
+  showPreview,
+  files,
+  visibleFiles,
+  activeFile,
+  externalResources,
+  showFileTree,
+}) => {
   const [isPreviewEnabled, setIsPreviewEnabled] = useState(showPreview);
   const [isReady, setIsReady] = useState(false);
 
@@ -40,7 +48,12 @@ const Sandpack = ({ showPreview, files, visibleFiles, activeFile }) => {
   return (
     <div className={styles.container} style={isReady ? {} : { opacity: '0' }}>
       <SandpackProvider
-        options={{ autorun: showPreview, visibleFiles, activeFile }}
+        options={{
+          autorun: showPreview,
+          visibleFiles,
+          activeFile,
+          externalResources,
+        }}
         template="static"
         files={Object.keys(files).reduce(
           (f, name) => ({
@@ -52,8 +65,19 @@ const Sandpack = ({ showPreview, files, visibleFiles, activeFile }) => {
       >
         <div className={styles.wrapper}>
           <div className={styles.editorWrapper}>
-            <div className={styles.editor}>
-              <SandpackCodeEditor wrapContent showRunButton={false} />
+            <div className={styles.codeArea}>
+              {showFileTree && (
+                <div className={styles.fileTree}>
+                  <SandpackFileExplorer autoHiddenFiles />
+                </div>
+              )}
+              <div className={styles.editor}>
+                <SandpackCodeEditor
+                  showTabs={!showFileTree}
+                  wrapContent
+                  showRunButton={false}
+                />
+              </div>
             </div>
             {!showPreview && (
               <div className={styles.editorFooter}>

@@ -5,47 +5,47 @@ import { join } from 'node:path';
 import DocTemplate from '../../templates/doc';
 import env from '../../../env';
 import MDX from '../../components/MDX';
+import flattenData from '../../utils/flattenData';
 
 export async function getStaticPaths() {
-  const flattenedItems = [];
-
-  const flatItems = (i) => {
-    i.forEach((child) => {
-      if (child.url.includes('#')) return;
-      flattenedItems.push(child);
-      if (child.children) {
-        flatItems(child.children);
-      }
-    });
-  };
-
-  flatItems(guides);
   return {
-    paths: flattenedItems.map((d) => d.url),
+    paths: flattenData(guides).map((d) => d.url),
     fallback: false,
   };
 }
 
 export async function getStaticProps({ params }) {
-  const filePath = join('content', 'guides', `${params.id.join('/')}.mdx`);
+  const basePath = join('content', 'guides', `${params.id.join('/')}`);
+  const filePath = `${basePath}.mdx`;
   const markdown = await readFile(join(process.cwd(), filePath), 'utf8');
+  let data = {};
+  try {
+    data = await import(`../../../content/guides/${params.id.join('/')}`);
+  } catch {}
   const mdxSource = await serialize(
     markdown.replace(/\{\{site\.(\w+)\}\}/g, (...args) => {
       return env[args[1]];
     }),
     { parseFrontmatter: true },
   );
-  return { props: { mdxSource, filePath, permalink: `/guides/${params.id}` } };
+  return {
+    props: {
+      mdxSource,
+      filePath,
+      permalink: `/guides/${params.id}`,
+      data: JSON.parse(JSON.stringify(data)),
+    },
+  };
 }
 
-export default function Guides({ mdxSource, permalink }) {
+export default function Guides({ mdxSource, permalink, data }) {
   return (
     <DocTemplate
       pageType="guides"
       permalink={permalink}
       {...mdxSource.frontmatter}
     >
-      <MDX mdxSource={mdxSource} />
+      <MDX mdxSource={mdxSource} data={data} />
     </DocTemplate>
   );
 }

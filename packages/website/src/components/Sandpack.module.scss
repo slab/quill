@@ -25,9 +25,21 @@
     display: flex;
     flex-direction: column;
 
+    .codeArea {
+      display: flex;
+      flex-direction: row;
+      min-height: 0;
+    }
+
+    .fileTree {
+      border-right: 1px solid $borderColor;
+      width: 200px;
+      overflow: auto;
+    }
+
     .editor {
       display: flex;
-      min-height: 0;
+      flex: 1;
     }
 
     .editorFooter {
