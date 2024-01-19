@@ -8,16 +8,22 @@
   "keywords": [],
   "license": "BSD-3-Clause",
   "scripts": {
-    "start": "gatsby develop --port $npm_package_config_ports_gatsby",
-    "build": "gatsby build",
-    "serve": "gatsby serve --port $npm_package_config_ports_gatsby"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.11.3",
+    "@mdx-js/loader": "^3.0.0",
     "@mdx-js/mdx": "^2.1.5",
-    "@mdx-js/react": "^2.1.5",
-    "babel-preset-gatsby": "^2.24.0",
+    "@mdx-js/react": "^2.3.0",
+    "@next/mdx": "^14.0.4",
+    "@svgr/webpack": "^8.1.0",
+    "@types/mdx": "^2.0.10",
     "classnames": "^2.3.2",
+    "eslint-config-next": "^14.1.0",
+    "next": "^14.0.4",
+    "next-mdx-remote": "^4.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
@@ -27,15 +33,6 @@
     "singleQuote": true
   },
   "devDependencies": {
-    "gatsby": "4.24.5",
-    "gatsby-plugin-feed": "4.24.0",
-    "gatsby-plugin-google-gtag": "^4.24.0",
-    "gatsby-plugin-mdx": "4.3.0",
-    "gatsby-plugin-react-svg": "3.1.0",
-    "gatsby-plugin-sass": "5.24.0",
-    "gatsby-remark-find-replace": "0.3.0",
-    "gatsby-remark-prismjs": "6.24.0",
-    "gatsby-source-filesystem": "4.24.0",
     "http-proxy": "^1.18.1",
     "prism-react-renderer": "^2.3.0",
     "prismjs": "^1.29.0",

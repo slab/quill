@@ -1,5 +1,3 @@
 node_modules
 
-# Gatsby files
-/.cache/
-/public
+.next

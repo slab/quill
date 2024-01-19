@@ -1,12 +1,10 @@
-import { graphql, useStaticQuery } from 'gatsby';
 import {
   SandpackProvider,
-  SandpackLayout,
   SandpackCodeEditor,
   SandpackPreview,
   useSandpack,
 } from '@codesandbox/sandpack-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as styles from './Sandpack.module.scss';
 
 const TogglePreviewButton = ({ isPreviewEnabled, setIsPreviewEnabled }) => {
@@ -22,31 +20,27 @@ const TogglePreviewButton = ({ isPreviewEnabled, setIsPreviewEnabled }) => {
         setIsPreviewEnabled(!isPreviewEnabled);
       }}
     >
-      {isPreviewEnabled ? 'Hide Preview' : 'Run Code'}
+      {isPreviewEnabled ? 'Hide Result' : 'Run Code'}
     </button>
   );
 };
 
-const Sandpack = ({ files, showConsole }) => {
-  const [isPreviewEnabled, setIsPreviewEnabled] = useState(false);
-  const [clientId, setClientId] = useState(null);
+const Sandpack = ({ showPreview, files, visibleFiles, activeFile }) => {
+  const [isPreviewEnabled, setIsPreviewEnabled] = useState(showPreview);
+  const [isReady, setIsReady] = useState(false);
 
-  const data = useStaticQuery(graphql`
-    query {
-      site {
-        siteMetadata {
-          cdn
-        }
-      }
-    }
-  `);
+  const cdn = process.env.cdn;
 
-  const cdn = data?.site.siteMetadata.cdn;
+  useEffect(() => {
+    setTimeout(() => {
+      setIsReady(true);
+    }, 100);
+  }, []);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={isReady ? {} : { opacity: '0' }}>
       <SandpackProvider
-        options={{ autorun: false, autoReload: false }}
+        options={{ autorun: showPreview, visibleFiles, activeFile }}
         template="static"
         files={Object.keys(files).reduce(
           (f, name) => ({
@@ -56,29 +50,52 @@ const Sandpack = ({ files, showConsole }) => {
           {},
         )}
       >
-        <div className={styles.bar}>
-          <TogglePreviewButton
-            isPreviewEnabled={isPreviewEnabled}
-            setIsPreviewEnabled={setIsPreviewEnabled}
-          />
-        </div>
-        <SandpackLayout>
-          <SandpackCodeEditor
-            showLineNumbers
-            wrapContent
-            showRunButton={false}
-          />
+        <div className={styles.wrapper}>
+          <div className={styles.editorWrapper}>
+            <div className={styles.editor}>
+              <SandpackCodeEditor wrapContent showRunButton={false} />
+            </div>
+            {!showPreview && (
+              <div className={styles.editorFooter}>
+                <TogglePreviewButton
+                  defaultShowPreview={showPreview}
+                  isPreviewEnabled={isPreviewEnabled}
+                  setIsPreviewEnabled={setIsPreviewEnabled}
+                />
+              </div>
+            )}
+          </div>
           {isPreviewEnabled && (
-            <SandpackPreview
-              ref={(p) => {
-                setClientId(p?.clientId);
-              }}
-              showOpenInCodeSandbox={false}
-            />
+            <div className={styles.preview}>
+              <SandpackPreview showOpenInCodeSandbox={false} />
+            </div>
           )}
-        </SandpackLayout>
+        </div>
       </SandpackProvider>
     </div>
+  );
+};
+
+export const SandpackWithQuillTemplate = ({ files }) => {
+  return (
+    <Sandpack
+      files={{
+        'index.html': `
+<!-- Include stylesheet -->
+<link href="{{site.cdn}}/quill.snow.css" rel="stylesheet" />
+
+<!-- Create the editor container -->
+<div id="editor">
+</div>
+
+<!-- Include the Quill library -->
+<script src="{{site.cdn}}/quill.js"></script>
+<script src="/index.js"></script>`,
+        ...files,
+      }}
+      visibleFiles={Object.keys(files)}
+      activeFile={Object.keys(files)[0]}
+    />
   );
 };
 

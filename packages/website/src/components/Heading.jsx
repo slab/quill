@@ -1,4 +1,4 @@
-import { createElement, ReactNode } from 'react';
+import { createElement } from 'react';
 import slug from '../utils/slug';
 
 const EXPERIMENTAL_FLAG = ' #experimental';

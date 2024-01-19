@@ -110,9 +110,8 @@ code {
 
 pre > code {
   display: block;
-  border: none;
-  box-shadow: 0 0 6px 2px rgba(28, 31, 47, 0.1);
-  padding: 1em;
+  border: 1px solid #dadcdc;
+  padding: 0.5em 1em;
   white-space: pre-wrap;
   overflow-x: auto;
 }

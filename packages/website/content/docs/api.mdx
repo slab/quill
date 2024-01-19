@@ -2,10 +2,8 @@
 title: API
 ---
 
-import api from '../../src/data/api';
-
 <div className="table-of-contents">
-  {api.map(({ hashes, title }) => (
+  {data.api.map(({ hashes, title }) => (
     <nav key={title}>
       <h4 anchor="off">{title}</h4>
       <ul>

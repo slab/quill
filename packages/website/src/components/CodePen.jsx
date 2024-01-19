@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect, useCallback, ReactNode } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { withoutSSR } from './NoSSR';
 
 const SCRIPT_URL = 'https://static.codepen.io/assets/embed/ei.js'; // new embed
 const LOAD_STATE = {
@@ -8,7 +9,7 @@ const LOAD_STATE = {
   loaded: '__loaded__',
 };
 
-const CodePen = props => {
+const CodePen = (props) => {
   const [loadState, setLoadState] = useState(LOAD_STATE.booting);
   const _isMounted = useRef(false);
 
@@ -70,4 +71,4 @@ const CodePen = props => {
   );
 };
 
-export default CodePen;
+export default withoutSSR(CodePen);
