@@ -647,7 +647,7 @@ quill.off('text-change', handler);
 
 ## Model
 
-### find #experimental
+### find
 
 Static method returning the Quill or [Blot](https://github.com/quilljs/parchment) instance for the given DOM node. In the latter case, passing in true for the `bubble` parameter will search up the given DOM's ancestors until it finds a corresponding [Blot](https://github.com/quilljs/parchment).
 
@@ -669,7 +669,7 @@ const linkNode = document.querySelector('#container a');
 const linkBlot = Quill.find(linkNode);
 ```
 
-### getIndex #experimental
+### getIndex
 
 Returns the distance between the beginning of document to the occurrence of the given [Blot](https://github.com/quilljs/parchment).
 
@@ -686,7 +686,7 @@ let [line, offset] = quill.getLine(10);
 let index = quill.getIndex(line); // index + offset should == 10
 ```
 
-### getLeaf #experimental
+### getLeaf
 
 Returns the leaf [Blot](https://github.com/quilljs/parchment) at the specified index within the document.
 
@@ -707,7 +707,7 @@ let [leaf, offset] = quill.getLeaf(7);
 // offset should be 1, since the returned leaf started at index 6
 ```
 
-### getLine #experimental
+### getLine
 
 Returns the line [Blot](https://github.com/quilljs/parchment) at the specified index within the document.
 
@@ -727,7 +727,7 @@ let [line, offset] = quill.getLine(7);
 // offset should be 1, since the returned line started at index 6
 ```
 
-### getLines #experimental
+### getLines
 
 Returns the lines contained within the specified location.
 

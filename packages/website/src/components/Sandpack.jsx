@@ -98,6 +98,7 @@ const Sandpack = ({
 
 export const SandpackWithQuillTemplate = ({
   files,
+  afterEditor,
   beforeEditor,
   content,
   ...props
@@ -113,7 +114,7 @@ ${beforeEditor || ''}
 <!-- Create the editor container -->
 <div id="editor">${content || ''}
 </div>
-
+${afterEditor || ''}
 <!-- Include the Quill library -->
 <script src="{{site.cdn}}/quill.js"></script>
 <script src="/index.js"></script>`,
