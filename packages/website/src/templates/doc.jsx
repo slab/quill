@@ -1,31 +1,18 @@
-import { useLocation } from '@reach/router';
 import classNames from 'classnames';
-import { graphql } from 'gatsby';
-import SEO from '../components/SEO';
+import { usePathname } from 'next/navigation';
 import docsItems from '../data/docs';
 import guideItems from '../data/guides';
 import OctocatIcon from '../svg/octocat.svg';
+import Link from 'next/link';
 import slug from '../utils/slug';
 import Default from '../components/Default';
 import OpenSource from '../components/OpenSource';
 import React, { useEffect } from 'react';
 import * as styles from './doc.module.scss';
+import flattenData from '../utils/flattenData';
 
 const getPagination = (permalink, items) => {
-  const flattenedItems = [];
-
-  const flatItems = (i) => {
-    i.forEach((child) => {
-      if (child.url.includes('#')) return;
-      flattenedItems.push(child);
-      if (child.children) {
-        flatItems(child.children);
-      }
-    });
-  };
-
-  flatItems(items);
-
+  const flattenedItems = flattenData(items);
   const index = flattenedItems.findIndex((item) => item.url === permalink);
   if (index === -1) return { prev: null, next: null };
 
@@ -39,11 +26,11 @@ const getPagination = (permalink, items) => {
 };
 
 const SidebarItem = ({ item }) => {
-  const { pathname } = useLocation();
+  const pathname = usePathname();
 
   return (
     <li className={classNames({ active: pathname.includes(item.url) })}>
-      <a href={item.url}>{item.title}</a>
+      <Link href={item.url}>{item.title}</Link>
       {item.children && (
         <ul>
           {item.children.map((child) => (
@@ -55,9 +42,7 @@ const SidebarItem = ({ item }) => {
   );
 };
 
-const Doc = ({ data, children }) => {
-  const { title } = data.mdx.frontmatter;
-  const { permalink, pageType } = data.mdx.fields;
+const Doc = ({ title, pageType, filePath, permalink, children }) => {
   const category = pageType === 'guides' ? 'Guides' : 'Documentation';
 
   const items = pageType === 'guides' ? guideItems : docsItems;
@@ -95,7 +80,7 @@ const Doc = ({ data, children }) => {
               </div>
               <a
                 className={styles.editLink}
-                href={data.mdx.fields.githubPath}
+                href={process.env.github + filePath}
                 target="_blank"
                 title="Edit on GitHub"
               >
@@ -140,32 +125,5 @@ const Doc = ({ data, children }) => {
     </Default>
   );
 };
-
-export const query = graphql`
-  query ($id: String) {
-    mdx(id: { eq: $id }) {
-      fields {
-        slug
-        permalink
-        pageType
-        githubPath
-      }
-      frontmatter {
-        title
-      }
-    }
-  }
-`;
-
-export const Head = ({ data }) => (
-  <>
-    <SEO
-      title={data.mdx.frontmatter.title}
-      permalink={data.mdx.fields.permalink}
-    />
-    <link rel="stylesheet" href="/assets/css/base.css" />
-    <link rel="stylesheet" href="/assets/css/styles.css" />
-  </>
-);
 
 export default Doc;

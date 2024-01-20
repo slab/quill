@@ -1,22 +1,31 @@
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from 'react';
+import { withoutSSR } from './NoSSR';
 
 const Editor = ({
   children,
   rootStyle,
   config,
   onSelectionChange,
+  onLoad,
   ...props
 }) => {
   const ref = useRef(null);
   const rootStyleRef = useRef(rootStyle);
   const onSelectionChangeRef = useRef(onSelectionChange);
+  const onLoadRef = useRef(onLoad);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     onSelectionChangeRef.current = onSelectionChange;
   }, [onSelectionChange]);
 
-  useEffect(() => {
-    const quill = new window.Quill(ref.current, config);
+  useLayoutEffect(() => {
+    onLoadRef.current = onLoad;
+  }, [onLoad]);
+
+  const configRef = useRef(config);
+
+  useLayoutEffect(() => {
+    const quill = new window.Quill(ref.current, configRef.current);
     if (rootStyleRef) {
       Object.assign(quill.root.style, rootStyleRef.current);
     }
@@ -24,16 +33,14 @@ const Editor = ({
       onSelectionChangeRef.current?.();
     });
 
-    window.quill = quill;
+    onLoadRef.current?.(quill);
   }, []);
 
   return (
-    <>
-      <div ref={ref} {...props}>
-        {children}
-      </div>
-    </>
+    <div ref={ref} {...props}>
+      {children}
+    </div>
   );
 };
 
-export default Editor;
+export default withoutSSR(Editor);

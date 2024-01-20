@@ -1,8 +1,10 @@
-import { MDXProvider } from '@mdx-js/react';
+import { MDXRemote } from 'next-mdx-remote';
+import Link from 'next/link';
+import docs from '../data/docs';
 import { Highlight, themes } from 'prism-react-renderer';
-import CodePen from './src/components/CodePen';
-import Sandpack from './src/components/Sandpack';
-import Editor from './src/components/Editor';
+import api from '../data/api';
+import Sandpack, { SandpackWithQuillTemplate } from './Sandpack';
+import Editor from './Editor';
 import {
   Heading1,
   Heading2,
@@ -10,26 +12,33 @@ import {
   Heading4,
   Heading5,
   Heading6,
-} from './src/components/Heading';
+} from './Heading';
+import CodePen from './CodePen';
+import Hint from './Hint';
+import FullEditor from './standalone/FullEditor';
+import SEO from './SEO';
 
 const components = {
-  CodePen,
-  Sandpack,
-  Editor,
-  More: () => <div style={{ display: 'none' }}>{/* more */}</div>,
   h1: Heading1,
   h2: Heading2,
   h3: Heading3,
   h4: Heading4,
   h5: Heading5,
   h6: Heading6,
+  a: Link,
+  Sandpack,
+  SandpackWithQuillTemplate,
+  CodePen,
+  Hint,
+  Editor,
+  FullEditor,
   pre: ({ children }) => {
     const className = children.props.className || '';
     const matches = className.match(/language-(?<lang>.*)/);
     return (
       <Highlight
         code={children.props.children}
-        theme={themes.oneDark}
+        theme={themes.vsLight}
         language={
           matches && matches.groups && matches.groups.lang
             ? matches.groups.lang
@@ -43,9 +52,9 @@ const components = {
                 i === tokens.length - 1 &&
                 line[0].empty &&
                 line.length === 1 ? null : (
-                  <div {...getLineProps({ line, key: i })}>
+                  <div key={i} {...getLineProps({ line, key: i })}>
                     {line.map((token, key) => (
-                      <span {...getTokenProps({ token, key })} />
+                      <span key={key} {...getTokenProps({ token, key })} />
                     ))}
                   </div>
                 ),
@@ -58,6 +67,15 @@ const components = {
   },
 };
 
-export const wrapRootElement = ({ element }) => (
-  <MDXProvider components={components}>{element}</MDXProvider>
-);
+export default function MDX({ mdxSource, data }) {
+  return (
+    <>
+      <SEO title={mdxSource.frontmatter.title} />
+      <MDXRemote
+        {...mdxSource}
+        components={components}
+        scope={{ data: { api, docs }, scope: data }}
+      />
+    </>
+  );
+}

@@ -1,9 +1,12 @@
+'use client';
+
 import classNames from 'classnames';
 import { useState } from 'react';
 import Default from '../components/Default';
 import OpenSource from '../components/OpenSource';
-import SEO from '../components/SEO';
 import slug from '../utils/slug';
+import Image from 'next/image';
+import { withoutSSR } from '../components/NoSSR';
 
 const pens = [
   { title: 'Autosave', hash: 'RRYBEP' },
@@ -26,8 +29,9 @@ const Playground = () => {
       : -1;
     return index === -1 ? pens.length - 1 : index;
   });
+
   return (
-    <Default pageType="playground">
+    <Default title="Interactive Playground" pageType="playground">
       <div className="container">
         <div id="playground-container">
           <h1>Interactive Playground</h1>
@@ -53,6 +57,7 @@ const Playground = () => {
                   setSelectedPen(index);
                 }}
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   alt={`${pen.title} Screenshot`}
                   src={`https://codepen.io/quill/pen/${pen.hash}/image/small.png`}
@@ -68,12 +73,4 @@ const Playground = () => {
   );
 };
 
-export default Playground;
-
-export const Head = () => (
-  <>
-    <SEO title="Interactive Playground" />
-    <link rel="stylesheet" href="/assets/css/base.css" />
-    <link rel="stylesheet" href="/assets/css/styles.css" />
-  </>
-);
+export default withoutSSR(Playground);

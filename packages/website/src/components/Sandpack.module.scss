@@ -1,27 +1,98 @@
 .container {
   margin: 24px 0 32px;
+  transition: opacity 0.2s;
 }
 
 .bar {
   display: flex;
   margin: 0 0 10px;
 
-  button {
-    border: 1px solid #ccc;
-    border-radius: 2px;
-    padding: 4px 8px;
-    transition: background 0.2s;
-
-    &:hover {
-      background: #fafafa;
-    }
-
-    &:active {
-      background: #eee;
-    }
-  }
-
   .togglePreviewButton {
     margin-left: auto;
   }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+
+  $borderColor: #dadcdc;
+
+  .editorWrapper {
+    border: 1px solid $borderColor;
+    position: relative;
+    max-height: 480px;
+    display: flex;
+    flex-direction: column;
+
+    .codeArea {
+      display: flex;
+      flex-direction: row;
+      min-height: 0;
+    }
+
+    .fileTree {
+      border-right: 1px solid $borderColor;
+      width: 200px;
+      overflow: auto;
+    }
+
+    .editor {
+      display: flex;
+      flex: 1;
+    }
+
+    .editorFooter {
+      background: #fafafa;
+      padding: 8px 12px;
+      border-top: 1px solid $borderColor;
+
+      button {
+        border: 1px solid $borderColor;
+        border-radius: 2px;
+        padding: 8px 12px;
+        transition: background 0.2s;
+        background: #fefefe;
+
+        &:hover {
+          background: #f1f1f1;
+        }
+
+        &:active {
+          background: #e1e1e1;
+        }
+      }
+    }
+  }
+  .preview {
+    border: 1px solid #ccc;
+    border-top: 0;
+    min-height: 283px;
+    display: flex;
+  }
+}
+
+.widget {
+  border: 1px solid #1ea7fd;
+  border-radius: 2px;
+  padding: 2px 4px 2px 12px;
+  margin-left: 6px;
+  position: relative;
+  cursor: pointer;
+}
+
+.widget:before {
+  content: attr(data-id);
+  background: #1ea7fd;
+  border-radius: 100%;
+  position: absolute;
+  width: 16px;
+  display: block;
+  height: 16px;
+  left: -8px;
+  top: 2px;
+  font-size: 11px;
+  text-align: center;
+  color: white;
+  line-height: 17px;
 }

@@ -1,0 +1,15 @@
+.container {
+  padding: 0 0 0 20px;
+  border-left: 4px solid #45aad8;
+  margin: 20px 0 30px;
+
+  .title {
+    color: #45aad8;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  :last-child {
+    margin-bottom: 0;
+  }
+}

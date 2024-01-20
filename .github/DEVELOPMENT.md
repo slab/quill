@@ -1,6 +1,6 @@
 # Development
 
-Quill's source is in [ES6](http://www.ecma-international.org/ecma-262/6.0/index.html) and utilizes [Webpack](https://webpack.github.io/) to organize its files. The documentation site (hosted at [quilljs.com](https://quilljs.com/)) is built with [Gatsby](https://www.gatsbyjs.com/). [Vitest](https://vitest.dev/) and [Playwright](https://playwright.dev/) are used for testing.
+Quill's source is in [TypeScript](https://www.typescriptlang.org/) and utilizes [Webpack](https://webpack.js.org/) to organize its files. The documentation site (hosted at [quilljs.com](https://quilljs.com/)) is built with [Next.js](https://nextjs.org/). [Vitest](https://vitest.dev/) and [Playwright](https://playwright.dev/) are used for testing.
 
 To develop Quill locally, you will want a copy of Quill's codebase, with the build pipeline and documentation site running locally. The documentation site lives in `doc/` but will use your local build instead of the CDN that the public site uses. This allows you to test changes on a local copy of all of the quilljs.com demos, such as the [standalone examples](https://github.com/quilljs/quill/blob/develop/docs/docs/standalone).
 
@@ -17,9 +17,9 @@ You can now try out the unit test suite by running:
 
     npm run test:unit
 
-Webpack provides a server to dynamically build and serve the latest copy of the source code. Gatsby does the same for the documentation site.
+Webpack provides a server to dynamically build and serve the latest copy of the source code. Next.js does the same for the documentation site.
 
-With two independent servers, it is useful to have a proxy to as a front end single point of access to Gatsby and Webpack. The documentation site is normally set up to fetch Quill from Quill's CDN, but the local proxy will serve a local build from webpack dev server instead.
+With two independent servers, it is useful to have a proxy to as a front end single point of access to Next.js and Webpack. The documentation site is normally set up to fetch Quill from Quill's CDN, but the local proxy will serve a local build from webpack dev server instead.
 
 All four services can be run with a single command thanks to [foreman](http://ddollar.github.io/foreman/):
 

@@ -2,13 +2,87 @@
 title: Formats
 ---
 
-import FullEditor from '../../src/components/standalone/FullEditor';
-
 Quill supports a number of formats, both in UI controls and API calls.
 
-By default all formats are enabled and allowed to exist within a Quill editor and can be configured with the [formats](/docs/configuration/#formats) option. This is separate from adding a control in the [Toolbar](/docs/modules/toolbar/). For example, you can configure Quill to allow bolded content to be pasted into an editor that has no bold button in the toolbar.
+By default, all formats are enabled and allowed in a Quill editor. They can be configured with the [formats](/docs/configuration/#formats) option. This is separate from adding a control in the [Toolbar](/docs/modules/toolbar/). For example, you can configure Quill to allow bolded content to be pasted into an editor that has no bold button in the toolbar.
 
-<FullEditor />
+<Sandpack
+  showPreview
+  files={{
+'index.html': `
+<link href="/styles.css" rel="stylesheet" />
+<link href="{{site.cdn}}/quill.snow.css" rel="stylesheet" />
+<script src="{{site.highlightjs}}/highlight.min.js"></script>
+<script src="{{site.cdn}}/quill.js"></script>
+<link
+  rel="stylesheet"
+  href="{{site.highlightjs}}/styles/monokai-sublime.min.css"
+/>
+<script src="{{site.katex}}/katex.min.js"></script>
+<link rel="stylesheet" href="{{site.katex}}/katex.min.css" />
+
+<div id="toolbar-container">
+  <span class="ql-formats">
+    <select class="ql-font"></select>
+    <select class="ql-size"></select>
+  </span>
+  <span class="ql-formats">
+    <button class="ql-bold"></button>
+    <button class="ql-italic"></button>
+    <button class="ql-underline"></button>
+    <button class="ql-strike"></button>
+  </span>
+  <span class="ql-formats">
+    <select class="ql-color"></select>
+    <select class="ql-background"></select>
+  </span>
+  <span class="ql-formats">
+    <button class="ql-script" value="sub"></button>
+    <button class="ql-script" value="super"></button>
+  </span>
+  <span class="ql-formats">
+    <button class="ql-header" value="1"></button>
+    <button class="ql-header" value="2"></button>
+    <button class="ql-blockquote"></button>
+    <button class="ql-code-block"></button>
+  </span>
+  <span class="ql-formats">
+    <button class="ql-list" value="ordered"></button>
+    <button class="ql-list" value="bullet"></button>
+    <button class="ql-indent" value="-1"></button>
+    <button class="ql-indent" value="+1"></button>
+  </span>
+  <span class="ql-formats">
+    <button class="ql-direction" value="rtl"></button>
+    <select class="ql-align"></select>
+  </span>
+  <span class="ql-formats">
+    <button class="ql-link"></button>
+    <button class="ql-image"></button>
+    <button class="ql-video"></button>
+    <button class="ql-formula"></button>
+  </span>
+  <span class="ql-formats">
+    <button class="ql-clean"></button>
+  </span>
+</div>
+<div id="editor">
+</div>
+
+<!-- Initialize Quill editor -->
+<script>
+  const quill = new Quill('#editor', {
+    modules: {
+      syntax: true,
+      toolbar: '#toolbar-container',
+    },
+    placeholder: 'Compose an epic...',
+    theme: 'snow',
+  });
+</script>
+`,
+  }}
+/>
 
 <a className="standalone-link" href="/standalone/full/">
   Standalone
@@ -40,6 +114,6 @@ By default all formats are enabled and allowed to exist within a Quill editor an
 
 #### Embeds
 
-- Formula - `formula` (requires [KaTex](https://khan.github.io/KaTeX/))
+- Formula - `formula` (requires [KaTex](https://katex.org/))
 - Image - `image`
 - Video - `video`
