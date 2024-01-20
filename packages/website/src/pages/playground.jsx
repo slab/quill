@@ -57,9 +57,9 @@ const Playground = () => {
                   setSelectedPen(index);
                 }}
               >
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   alt={`${pen.title} Screenshot`}
-                  fill
                   src={`https://codepen.io/quill/pen/${pen.hash}/image/small.png`}
                 />
                 <span className="pen-label">{pen.title}</span>

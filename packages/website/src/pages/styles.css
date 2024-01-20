@@ -800,7 +800,7 @@ body.home .arrow .shaft {
 }
 #gallery-container a {
   border: 2px solid #000;
-  display: inline-block;
+  display: block;
   margin-bottom: 25px;
   position: relative;
 }
