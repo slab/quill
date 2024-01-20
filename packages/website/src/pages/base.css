@@ -668,7 +668,6 @@ ul ol,
 ol ol,
 ol ul {
   margin: 1.5rem 0 1.5rem 3rem;
-  font-size: 90%;
 }
 li {
   margin-bottom: 1rem;
@@ -687,8 +686,8 @@ pre > code {
 }
 
 hr {
-  margin-top: 3rem;
-  margin-bottom: 3.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2.5rem;
   border-width: 0;
   border-top: 1px solid #e1e1e1;
 }

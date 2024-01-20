@@ -3,3 +3,111 @@
   align-items: center;
   justify-content: center;
 }
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-bottom: 1px solid #e2e0e0;
+  padding: 18px 0;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+
+  .headerContent {
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 40px;
+    justify-content: space-around;
+
+    .mainNav {
+      display: flex;
+      align-items: center;
+      margin-left: 30px;
+      font-size: 16px;
+
+      a {
+        display: block;
+        margin: 0 8px;
+        color: #323131;
+        transition: background 0.4s;
+        padding: 8px 12px;
+        border-radius: 3px;
+        line-height: 1;
+
+        &:hover,
+        &.active {
+          color: #333;
+          background: #efefef;
+        }
+        &:active {
+          color: #000;
+        }
+      }
+    }
+
+    .secondaryNav {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+
+      a {
+        margin-left: 18px;
+        display: block;
+        width: 26px;
+        transition: opacity 0.2s;
+
+        svg {
+          display: block;
+        }
+
+        &:hover {
+          opacity: 0.6;
+        }
+      }
+
+      :global {
+        .DocSearch-Button {
+          width: 200px;
+        }
+      }
+    }
+  }
+
+  .searchBarContainer {
+    margin-left: auto;
+    font-size: 14px;
+
+    input {
+      width: 200px;
+      background: #eaeaea;
+      border-radius: 3px;
+      border: 0;
+      padding: 8px 12px;
+      line-height: 1;
+    }
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+
+    .version {
+      margin-left: 12px;
+      font-size: 13px;
+      border-radius: 4px;
+      line-height: 1;
+      background: #f2d123;
+      font-family: 'Sofia Pro', sans-serif;
+      padding: 5px 8px 3px;
+    }
+
+    &:hover {
+      .version {
+        opacity: 0.8;
+      }
+    }
+  }
+}

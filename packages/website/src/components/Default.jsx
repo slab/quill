@@ -3,9 +3,12 @@ import { useState } from 'react';
 import Helmet from 'react-helmet';
 import LogoIcon from '../svg/logo.svg';
 import Link from 'next/link';
+import OctocatIcon from '../svg/octocat.svg';
+import XIcon from '../svg/x.svg';
 import GitHub from './GitHub';
 import * as styles from './Default.module.scss';
 import SEO from './SEO';
+import { DocSearch } from '@docsearch/react';
 
 const Default = ({ children, title, pageType }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -14,7 +17,7 @@ const Default = ({ children, title, pageType }) => {
     <>
       <SEO title={title} />
       <Helmet bodyAttributes={{ class: pageType }} />
-      <header className={pageType || undefined}>
+      <header className={classNames(styles.header, pageType || undefined)}>
         <nav className={classNames('navbar-drop', { active: isNavOpen })}>
           <button
             className="navbar-close"
@@ -41,62 +44,60 @@ const Default = ({ children, title, pageType }) => {
                 Blog
               </Link>
             </li>
-            <li className={classNames('navbar-item', styles.githubMenuItem)}>
+            <li className={classNames(styles.githubMenuItem)}>
               <GitHub dark />
             </li>
           </ul>
         </nav>
-        <nav className="container">
-          <ul className="navbar-list">
-            <li
-              className={classNames('navbar-item', {
-                active: pageType === 'docs',
-              })}
+        <div className={styles.headerContent}>
+          <Link className={styles.logo} href="/">
+            <LogoIcon width="60" />
+            <div className={styles.version}>v2</div>
+          </Link>
+          <nav className={styles.mainNav}>
+            <Link
+              className={classNames({ [styles.active]: pageType === 'docs' })}
+              href="/docs/quickstart"
             >
-              <Link className="navbar-link" href="/docs/quickstart">
-                Documentation
-              </Link>
-            </li>
-            <li
-              className={classNames('navbar-item', {
-                active: pageType === 'guides',
-              })}
+              Documentation
+            </Link>
+            <Link
+              className={classNames({ [styles.active]: pageType === 'guides' })}
+              href="/guides/why-quill"
             >
-              <Link className="navbar-link" href="/guides/why-quill/">
-                Guides
-              </Link>
-            </li>
-            <li className="logo-item">
-              <Link className="logo" href="/">
-                <LogoIcon />
-              </Link>
-            </li>
-            <li
-              className={classNames('navbar-item', {
-                active: pageType === 'playground',
+              Guides
+            </Link>
+            <Link
+              className={classNames({
+                [styles.active]: pageType === 'playground',
               })}
+              href="/playground"
             >
-              <Link className="navbar-link" href="/playground">
-                Playground
-              </Link>
-            </li>
-            <li
-              className={classNames('navbar-item', {
-                active: pageType === 'blog',
-              })}
-              style={{ display: 'none' }}
+              Playground
+            </Link>
+          </nav>
+          <nav className={styles.secondaryNav}>
+            <a
+              href="https://github.com/quilljs/quill"
+              target="_blank"
+              title="Edit on GitHub"
             >
-              <Link className="navbar-link" href="/blog">
-                Blog
-              </Link>
-            </li>
-            <li className="download-item">
-              <Link className="action" href="/docs/download/">
-                Download
-              </Link>
-            </li>
-          </ul>
-        </nav>
+              <OctocatIcon />
+            </a>
+            <a
+              href="https://twitter.com/quilljs"
+              target="_blank"
+              title="Quill on X"
+            >
+              <XIcon />
+            </a>
+            <DocSearch
+              appId="quilljs"
+              indexName="quilljs"
+              apiKey="281facf513620e95600126795a00ab6c"
+            />
+          </nav>
+        </div>
         <button className="navbar-open" onClick={() => setIsNavOpen(true)}>
           <span></span>
           <span></span>

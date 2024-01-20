@@ -4,6 +4,17 @@
 
   .breadcrumb {
     font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+
+    span:not(:last-child) {
+      &::after {
+        content: '>';
+        font-weight: normal;
+        margin: 0 4px 0 6px;
+      }
+    }
   }
 
   .breadcrumb span:first-child {

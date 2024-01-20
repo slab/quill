@@ -18,10 +18,6 @@ export default function Document() {
           strategy="beforeInteractive"
           src={`${process.env.cdn}/quill.js`}
         />
-        <Script
-          strategy="beforeInteractive"
-          src="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"
-        />
         <link
           rel="icon"
           type="image/x-icon"
@@ -30,6 +26,10 @@ export default function Document() {
         <link rel="stylesheet" href={`${process.env.katex}/katex.min.css`} />
         <link rel="stylesheet" href={`${process.env.cdn}/quill.snow.css`} />
         <link rel="stylesheet" href={`${process.env.cdn}/quill.bubble.css`} />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"
+        />
         <link
           rel="stylesheet"
           href={`${process.env.highlightjs}/styles/monokai-sublime.min.css`}
