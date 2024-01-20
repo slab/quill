@@ -111,7 +111,7 @@ export const SandpackWithQuillTemplate = ({
 <link href="{{site.cdn}}/quill.snow.css" rel="stylesheet" />
 ${beforeEditor || ''}
 <!-- Create the editor container -->
-<div id="editor">${content}
+<div id="editor">${content || ''}
 </div>
 
 <!-- Include the Quill library -->

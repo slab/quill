@@ -65,19 +65,45 @@ To fully customize your Quill build, you can import the core library and add onl
 Learn more about how to [make your own formats](/guides/cloning-medium-with-parchment).
 </Hint>
 
-## NPM
+CDN builds expose `Quill` to the global `window` object.
+`Quill` provides an [`import()`](/docs/api#import) method for accessing components of the Quill library, including its formats, modules, or themes.
 
-If your project uses bundlers such as [Webpack](https://webpack.js.org/) or [Vite](https://vitejs.dev/), it's recommended to install Quill via NPM.
+## npm
+
+If your project uses bundlers such as [Webpack](https://webpack.js.org/) or [Vite](https://vitejs.dev/), it's recommended to install Quill via [npm](https://www.npmjs.com/).
 
 ```bash
 npm install quill@{{site.version}}
 ```
 
-Similar to the CDN approach, you can import the preset build or the core build.
+Similar to the CDN approach, you can import the full build from `"quill"` or the core build from `"quill/core"`.
 
 ```js
 import Quill from 'quill';
-// Or import Quill from 'quill/core'; if you only want to import the core build
+// Or if you only need the core build
+// import Quill from 'quill/core';
 
 const quill = new Quill('#editor');
 ```
+
+<Hint>
+If you want to use the core build, avoid importing `"quill"` directly throughout your project.
+Doing so results in a full build, as `"quill"` registers the full build's formats and modules upon import.
+</Hint>
+
+`Quill.import()` is also available for the npm build to access Quill's library.
+However, a more natural approach in npm enviroment is to import the formats and modules directly.
+
+```js
+import Quill from 'quill';
+// Or if you only need the core build
+// import Quill from 'quill/core';
+
+import { Delta } from 'quill';
+// Or if you only need the core build
+// import { Delta } from 'quill/core';
+// Or const Delta = Quill.import('delta');
+
+import Link from 'quill/formats/link';
+// Or const Link = Quill.import('formats/link');
+```js
