@@ -8,8 +8,9 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "dev": "PORT=$npm_package_config_ports_website next dev",
+    "start": "npm run dev",
     "build": "next build",
-    "start": "npm run dev"
+    "serve": "npm run serve"
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.11.3",

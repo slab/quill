@@ -72,11 +72,7 @@ const Sandpack = ({
                 </div>
               )}
               <div className={styles.editor}>
-                <SandpackCodeEditor
-                  showTabs={!showFileTree}
-                  wrapContent
-                  showRunButton={false}
-                />
+                <SandpackCodeEditor wrapContent showRunButton={false} />
               </div>
             </div>
             {!showPreview && (
@@ -100,16 +96,22 @@ const Sandpack = ({
   );
 };
 
-export const SandpackWithQuillTemplate = ({ files }) => {
+export const SandpackWithQuillTemplate = ({
+  files,
+  beforeEditor,
+  content,
+  ...props
+}) => {
   return (
     <Sandpack
+      {...props}
       files={{
         'index.html': `
 <!-- Include stylesheet -->
 <link href="{{site.cdn}}/quill.snow.css" rel="stylesheet" />
-
+${beforeEditor || ''}
 <!-- Create the editor container -->
-<div id="editor">
+<div id="editor">${content}
 </div>
 
 <!-- Include the Quill library -->

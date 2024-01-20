@@ -37,6 +37,26 @@ deleteText(index: Number, length: Number, source: String = 'api'): Delta
 quill.deleteText(6, 4);
 ```
 
+<SandpackWithQuillTemplate
+  beforeEditor={`
+<button id="deleteButton">Delete Text</button>
+
+<hr/>
+  `}
+  content={`
+<p>Hello, World!</p>
+  `}
+  files={{
+    'index.js': `
+const quill = new Quill('#editor', { theme: 'snow' });
+
+document.querySelector('#deleteButton').addEventListener('click', () => {
+  quill.deleteText(5, 7);
+});
+    `
+  }}
+/>
+
 ### getContents
 
 Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/delta/) object.
