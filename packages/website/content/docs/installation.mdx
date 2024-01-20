@@ -9,12 +9,12 @@ Quill comes ready to use in several convenient forms.
 A globally distributed and available CDN is provided, backed by [jsDelivr](https://www.jsdelivr.com/).
 This is the most convenience way to get started with Quill, and requires no build steps or package managers.
 
-### Preset Build
+### Full Build
 
-For most users, the preset builds are the easiest way to get started with Quill.
-They include the core Quill library, as well as the most popular themes and modules.
+For most users, the full build is the easiest way to get started with Quill.
+It include the core Quill library, as well as common themes, formats, and modules.
 
-To import a preset build, you will need to include "quill.js" script and the stylesheet for the theme you wish to use.
+To import the full build, you will need to include "quill.js" script and the stylesheet for the theme you wish to use.
 
 <Sandpack
   files={{
@@ -23,6 +23,7 @@ To import a preset build, you will need to include "quill.js" script and the sty
 <link href="{{site.cdn}}/quill.snow.css" rel="stylesheet">
 
 <div id="editor">
+  <h2>Demo Content</h2>
   <p>Preset build with <code>snow</code> theme, and some common formats.</p>
 </div>
 
@@ -34,6 +35,10 @@ To import a preset build, you will need to include "quill.js" script and the sty
     `
   }}
 />
+
+<Hint>
+Learn more about how to [customizing the toolbar](/docs/formats).
+</Hint>
 
 ### Core Build
 
@@ -55,6 +60,10 @@ To fully customize your Quill build, you can import the core library and add onl
     `
   }}
 />
+
+<Hint>
+Learn more about how to [make your own formats](/guides/cloning-medium-with-parchment).
+</Hint>
 
 ## NPM
 
