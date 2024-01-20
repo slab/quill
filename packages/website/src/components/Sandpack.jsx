@@ -72,7 +72,11 @@ const Sandpack = ({
                 </div>
               )}
               <div className={styles.editor}>
-                <SandpackCodeEditor wrapContent showRunButton={false} />
+                <SandpackCodeEditor
+                  showTabs={false}
+                  wrapContent
+                  showRunButton={false}
+                />
               </div>
             </div>
             {!showPreview && (
