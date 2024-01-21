@@ -38,6 +38,9 @@ const Sandpack = ({
   const [isReady, setIsReady] = useState(false);
 
   const cdn = process.env.cdn;
+  const replaceCDN = (value) => {
+    return value.replace(/\{\{site\.cdn\}\}/g, cdn);
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -52,13 +55,14 @@ const Sandpack = ({
           autorun: showPreview,
           visibleFiles,
           activeFile,
-          externalResources,
+          externalResources:
+            externalResources && externalResources.map(replaceCDN),
         }}
         template="static"
         files={Object.keys(files).reduce(
           (f, name) => ({
             ...f,
-            [name]: files[name].replace(/\{\{site\.cdn\}\}/g, cdn).trim(),
+            [name]: replaceCDN(files[name]).trim(),
           }),
           {},
         )}
@@ -73,7 +77,12 @@ const Sandpack = ({
               )}
               <div className={styles.editor}>
                 <SandpackCodeEditor
-                  showTabs={false}
+                  showTabs={
+                    !showFileTree &&
+                    (visibleFiles
+                      ? visibleFiles.length > 1
+                      : Object.keys(files).length > 1)
+                  }
                   wrapContent
                   showRunButton={false}
                 />
