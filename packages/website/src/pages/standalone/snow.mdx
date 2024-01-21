@@ -1,5 +1,29 @@
-import SnowEditor from '../../components/standalone/SnowEditor';
-
 <title>Snow Theme</title>
 
-<SnowEditor />
+import Sandpack from '../../components/Sandpack';
+
+<div style={{margin: '20px auto', maxWidth: 800}}>
+<Sandpack
+  preferPreview
+  externalResources={[
+    "{{site.highlightjs}}/highlight.min.js",
+    "{{site.highlightjs}}/styles/monokai-sublime.min.css",
+    "{{site.katex}}/katex.min.css",
+    "{{site.cdn}}/quill.snow.css",
+    "{{site.cdn}}/quill.js"
+  ]}
+  files={{
+    'index.html': `
+<div id="editor" style="height: 220px">
+</div>
+<script src="/index.js"></script>
+    `,
+    'index.js': `
+const quill = new Quill('#editor', {
+ placeholder: 'Compose an epic...',
+ theme: 'snow' 
+});
+    `
+  }}
+/>
+</div>

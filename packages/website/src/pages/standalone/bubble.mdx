@@ -1,5 +1,29 @@
 <title>Bubble Theme</title>
 
-import BubbleEditor from '../../components/standalone/BubbleEditor';
+import Sandpack from '../../components/Sandpack';
 
-<BubbleEditor />
+<div style={{margin: '20px auto', maxWidth: 800}}>
+<Sandpack
+  preferPreview
+  externalResources={[
+    "{{site.highlightjs}}/highlight.min.js",
+    "{{site.highlightjs}}/styles/monokai-sublime.min.css",
+    "{{site.katex}}/katex.min.css",
+    "{{site.cdn}}/quill.bubble.css",
+    "{{site.cdn}}/quill.js"
+  ]}
+  files={{
+    'index.html': `
+<div id="editor" style="height: 220px">
+</div>
+<script src="/index.js"></script>
+    `,
+    'index.js': `
+const quill = new Quill('#editor', {
+ placeholder: 'Compose an epic...',
+ theme: 'bubble' 
+});
+    `
+  }}
+/>
+</div>

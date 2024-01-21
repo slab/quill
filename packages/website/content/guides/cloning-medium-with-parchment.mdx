@@ -12,7 +12,7 @@ Let's start without even using Quill, with just a textarea and button, hooked up
 
 <Sandpack
   externalResources={scope.externalResources}
-  showPreview
+  defaultShowPreview
   showFileTree
   files={{
     'index.html': `
@@ -67,7 +67,7 @@ Next, we'll replace the textarea with Quill core, absent of themes, formats and 
 <Sandpack
   externalResources={scope.externalResources}
   showFileTree
-  showPreview
+  defaultShowPreview
   files={{
     'index.html': scope.html,
     'styles.css': `
@@ -138,7 +138,7 @@ Open your developer console and try out Quill's [APIs](/docs/api) on your new bo
 <Sandpack
   externalResources={scope.externalResources}
   showFileTree
-  showPreview
+  defaultShowPreview
   activeFile="index.js"
   files={{
     'index.html': scope.html,
@@ -205,7 +205,7 @@ Now we can hook our link button up to a fancy `prompt`, again to keep things sim
 <Sandpack
   externalResources={scope.externalResources}
   showFileTree
-  showPreview
+  defaultShowPreview
   activeFile="formats/linkBlot.js"
   files={{
     'index.html': scope.html,
@@ -275,7 +275,7 @@ Let's hook these new blots up to their respective buttons and add some CSS for t
 <Sandpack
   externalResources={scope.externalResources}
   showFileTree
-  showPreview
+  defaultShowPreview
   activeFile="formats/blockquoteBlot.js"
   files={{
     'index.html': scope.html,
@@ -350,7 +350,7 @@ Our click handler calls [`insertEmbed()`](/docs/api/#insertembed), which does no
 <Sandpack
   externalResources={scope.externalResources}
   showFileTree
-  showPreview
+  defaultShowPreview
   activeFile="formats/dividerBlot.js"
   files={{
     'index.html': scope.html,
@@ -440,7 +440,7 @@ class ImageBlot extends BlockEmbed {
 <Sandpack
   externalResources={scope.externalResources}
   showFileTree
-  showPreview
+  defaultShowPreview
   activeFile="formats/imageBlot.js"
   files={{
     'index.html': scope.html,
@@ -584,7 +584,7 @@ Note if you open your console and call [`getContents`](/docs/api/#getcontents), 
 <Sandpack
   externalResources={scope.externalResources}
   showFileTree
-  showPreview
+  defaultShowPreview
   activeFile="formats/videoBlot.js"
   files={{
     'index.html': scope.html,
@@ -698,7 +698,7 @@ class TweetBlot extends BlockEmbed {
 <Sandpack
   externalResources={scope.externalResources}
   showFileTree
-  showPreview
+  defaultShowPreview
   activeFile="formats/tweetBlot.js"
   files={{
     'index.html': scope.html,

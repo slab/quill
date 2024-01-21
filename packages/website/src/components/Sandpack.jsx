@@ -6,14 +6,16 @@ import {
   useSandpack,
 } from '@codesandbox/sandpack-react';
 import { useEffect, useState } from 'react';
+import env from '../../env';
 import * as styles from './Sandpack.module.scss';
+import classNames from 'classnames';
 
 const TogglePreviewButton = ({ isPreviewEnabled, setIsPreviewEnabled }) => {
   const { sandpack } = useSandpack();
 
   return (
     <button
-      className={styles.togglePreviewButton}
+      className={styles.button}
       onClick={() => {
         if (!isPreviewEnabled) {
           sandpack.runSandpack();
@@ -26,20 +28,46 @@ const TogglePreviewButton = ({ isPreviewEnabled, setIsPreviewEnabled }) => {
   );
 };
 
+const ToggleCodeButton = ({ isCodeEnabled, setIsCodeEnabled }) => {
+  const { sandpack } = useSandpack();
+
+  return (
+    <button
+      className={styles.button}
+      onClick={() => {
+        if (!isCodeEnabled) {
+          sandpack.runSandpack();
+        }
+        setIsCodeEnabled(!isCodeEnabled);
+      }}
+    >
+      {isCodeEnabled ? 'Hide Code' : 'Show Code'}
+    </button>
+  );
+};
+
 const Sandpack = ({
-  showPreview,
+  defaultShowPreview,
+  preferPreview,
   files,
   visibleFiles,
   activeFile,
   externalResources,
   showFileTree,
+  defaultShowCode,
 }) => {
-  const [isPreviewEnabled, setIsPreviewEnabled] = useState(showPreview);
+  const [isPreviewEnabled, setIsPreviewEnabled] = useState(
+    preferPreview || defaultShowPreview,
+  );
+  const [isCodeEnabled, setIsCodeEnabled] = useState(
+    !preferPreview || defaultShowCode,
+  );
   const [isReady, setIsReady] = useState(false);
 
-  const cdn = process.env.cdn;
   const replaceCDN = (value) => {
-    return value.replace(/\{\{site\.cdn\}\}/g, cdn);
+    return value.replace(/\{\{site\.(\w+)\}\}/g, (_, matched) => {
+      return matched === 'cdn' ? process.env.cdn : env[matched];
+    });
   };
 
   useEffect(() => {
@@ -52,7 +80,7 @@ const Sandpack = ({
     <div className={styles.container} style={isReady ? {} : { opacity: '0' }}>
       <SandpackProvider
         options={{
-          autorun: showPreview,
+          autorun: defaultShowPreview,
           visibleFiles,
           activeFile,
           externalResources:
@@ -67,38 +95,60 @@ const Sandpack = ({
           {},
         )}
       >
-        <div className={styles.wrapper}>
-          <div className={styles.editorWrapper}>
-            <div className={styles.codeArea}>
-              {showFileTree && (
-                <div className={styles.fileTree}>
-                  <SandpackFileExplorer autoHiddenFiles />
-                </div>
-              )}
-              <div className={styles.editor}>
-                <SandpackCodeEditor
-                  showTabs={
-                    !showFileTree &&
-                    (visibleFiles
-                      ? visibleFiles.length > 1
-                      : Object.keys(files).length > 1)
-                  }
-                  wrapContent
-                  showRunButton={false}
+        <div
+          className={classNames(styles.wrapper, {
+            [styles.preferPreview]: preferPreview,
+          })}
+        >
+          {isPreviewEnabled && preferPreview && (
+            <div className={styles.previewWrapper}>
+              <div className={styles.preview}>
+                <SandpackPreview
+                  showOpenInCodeSandbox={false}
+                  showRefreshButton={false}
+                />
+              </div>
+              <div className={styles.footer}>
+                <ToggleCodeButton
+                  isCodeEnabled={isCodeEnabled}
+                  setIsCodeEnabled={setIsCodeEnabled}
                 />
               </div>
             </div>
-            {!showPreview && (
-              <div className={styles.editorFooter}>
-                <TogglePreviewButton
-                  defaultShowPreview={showPreview}
-                  isPreviewEnabled={isPreviewEnabled}
-                  setIsPreviewEnabled={setIsPreviewEnabled}
-                />
+          )}
+          {isCodeEnabled && (
+            <div className={styles.editorWrapper}>
+              <div className={styles.codeArea}>
+                {showFileTree && (
+                  <div className={styles.fileTree}>
+                    <SandpackFileExplorer autoHiddenFiles />
+                  </div>
+                )}
+                <div className={styles.editor}>
+                  <SandpackCodeEditor
+                    showTabs={
+                      !showFileTree &&
+                      (visibleFiles
+                        ? visibleFiles.length > 1
+                        : Object.keys(files).length > 1)
+                    }
+                    wrapContent
+                    showRunButton={false}
+                  />
+                </div>
               </div>
-            )}
-          </div>
-          {isPreviewEnabled && (
+              {!preferPreview && (
+                <div className={styles.footer}>
+                  <TogglePreviewButton
+                    defaultShowPreview={defaultShowPreview}
+                    isPreviewEnabled={isPreviewEnabled}
+                    setIsPreviewEnabled={setIsPreviewEnabled}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+          {isPreviewEnabled && !preferPreview && (
             <div className={styles.preview}>
               <SandpackPreview showOpenInCodeSandbox={false} />
             </div>

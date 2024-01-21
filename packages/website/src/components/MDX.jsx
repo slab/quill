@@ -14,7 +14,6 @@ import {
   Heading6,
 } from './Heading';
 import Hint from './Hint';
-import FullEditor from './standalone/FullEditor';
 import SEO from './SEO';
 
 const components = {
@@ -29,7 +28,6 @@ const components = {
   SandpackWithQuillTemplate,
   Hint,
   Editor,
-  FullEditor,
   pre: ({ children }) => {
     const className = children.props.className || '';
     const matches = className.match(/language-(?<lang>.*)/);

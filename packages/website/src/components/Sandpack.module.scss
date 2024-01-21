@@ -12,11 +12,10 @@
   }
 }
 
+$borderColor: #dadcdc;
 .wrapper {
   display: flex;
   flex-direction: column;
-
-  $borderColor: #dadcdc;
 
   .editorWrapper {
     border: 1px solid $borderColor;
@@ -41,38 +40,20 @@
       display: flex;
       flex: 1;
     }
-
-    .editorFooter {
-      background: var(--color-bg-inset);
-      padding: 8px 12px;
-      border-top: 1px solid $borderColor;
-
-      button {
-        font-family: 'Sofia Pro', sans-serif;
-        font-weight: bold;
-        border: 0;
-        border-radius: 2px;
-        padding: 8px 12px;
-        transition: all 0.2s;
-        background: var(--color-accent);
-        border: 2px solid transparent;
-
-        &:hover {
-          background: white;
-          border: 2px solid var(--color-accent);
-        }
-
-        &:active {
-          border: 2px solid var(--color-accent-emphasis);
-        }
-      }
-    }
   }
   .preview {
     border: 1px solid #ccc;
     border-top: 0;
     min-height: 283px;
     display: flex;
+  }
+
+  &.preferPreview {
+    .preview {
+      border: 1px solid #ccc;
+      border-bottom: 0;
+      min-height: 320px;
+    }
   }
 }
 
@@ -99,4 +80,30 @@
   text-align: center;
   color: white;
   line-height: 17px;
+}
+
+.footer {
+  background: var(--color-bg-inset);
+  padding: 8px 12px;
+  border-top: 1px solid $borderColor;
+
+  .button {
+    font-family: 'Sofia Pro', sans-serif;
+    font-weight: bold;
+    border: 0;
+    border-radius: 2px;
+    padding: 8px 12px;
+    transition: all 0.2s;
+    background: var(--color-accent);
+    border: 2px solid transparent;
+
+    &:hover {
+      background: white;
+      border: 2px solid var(--color-accent);
+    }
+
+    &:active {
+      border: 2px solid var(--color-accent-emphasis);
+    }
+  }
 }

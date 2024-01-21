@@ -19,7 +19,7 @@ At its core a word counter simply counts the number of words in the editor and d
 Let's jump straight in with a complete example!
 
 <Sandpack
-  showPreview
+  defaultShowPreview
   externalResources={[
     "{{site.cdn}}/quill.snow.css",
     "{{site.cdn}}/quill.js",
@@ -76,7 +76,7 @@ That's all it takes to add a custom module to Quill! A function can be [register
 Modules are passed an options object that can be used to fine tune the desired behavior. We can use this to accept a selector for the counter container instead of a hard-coded string. Let's also customize the counter to either count words or characters:
 
 <Sandpack
-  showPreview
+  defaultShowPreview
   externalResources={[
     "{{site.cdn}}/quill.snow.css",
     "{{site.cdn}}/quill.js",
@@ -137,7 +137,7 @@ const quill = new Quill('#editor', {
 Since any function can be registered as a Quill module, we could have implemented our counter as an ES5 constructor or ES6 class. This allows us to access and utilize the module directly.
 
 <Sandpack
-  showPreview
+  defaultShowPreview
   externalResources={[
     "{{site.cdn}}/quill.snow.css",
     "{{site.cdn}}/quill.js",
@@ -208,7 +208,7 @@ const quill = new Quill('#editor', {
 Now let's polish off the module in ES6 and fix a few pesky bugs. That's all there is to it!
 
 <Sandpack
-  showPreview
+  defaultShowPreview
   externalResources={[
     "{{site.cdn}}/quill.snow.css",
     "{{site.cdn}}/quill.js",

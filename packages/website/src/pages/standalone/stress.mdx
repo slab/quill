@@ -1,23 +1,46 @@
-import SnowEditor from '../../components/standalone/SnowEditor';
-
 <title>Stress</title>
 
-<div style={{ margin: '50px auto', maxWidth: 720 }}>
-  <SnowEditor>
-  {
-    new Array(200).fill(0).map((_, index) => {
-      return <>
-        <h2>Heading <i>{index}</i></h2>
-        <p>List items:</p>
-        <ul>
-        {
-          new Array(20).fill(0).map((_, index) => {
-            return <li>List <strong>item</strong> {index}</li>
-          })
-        }
-        </ul>
-      </>
-    })
-  }
-  </SnowEditor>
+import Sandpack from '../../components/Sandpack';
+
+<div style={{margin: '20px auto', maxWidth: 800}}>
+<Sandpack
+  preferPreview
+  externalResources={[
+    "{{site.highlightjs}}/highlight.min.js",
+    "{{site.highlightjs}}/styles/monokai-sublime.min.css",
+    "{{site.katex}}/katex.min.css",
+    "{{site.cdn}}/quill.snow.css",
+    "{{site.cdn}}/quill.js"
+  ]}
+  files={{
+    'index.html': `
+<div id="editor" style="height: 220px">
+</div>
+<script src="/index.js"></script>
+    `,
+    'index.js': `
+
+const editor = document.getElementById('editor');
+
+editor.innerHTML = new Array(200).fill(0).map((_, index) => {
+  return \`
+    <h2>Heading <i>\${index}</i></h2>
+    <p>List items:</p>
+    <ul>
+    \${
+      new Array(20).fill(0).map((_, index) => {
+        return \`<li>List <strong>item</strong> \${index}</li>\`
+      }).join('')
+    }
+    </ul>
+  </>\`
+}).join('')
+
+const quill = new Quill('#editor', {
+ placeholder: 'Compose an epic...',
+ theme: 'snow' 
+});
+    `
+  }}
+/>
 </div>
