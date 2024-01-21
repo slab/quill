@@ -42,6 +42,13 @@ const quill = new Quill('#editor', options);
 
 The following keys are recognized:
 
+### bounds
+
+Default: `document.body`
+
+DOM Element or a CSS selector for a DOM Element, within which the editor's ui elements (i.e. tooltips, etc.) should be confined. Currently, it only considers left and right boundaries.
+
+
 ### debug
 
 Default: `warn`

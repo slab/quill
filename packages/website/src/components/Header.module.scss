@@ -1,0 +1,120 @@
+.githubMenuItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-bottom: 1px solid #e2e0e0;
+  padding: 18px 0;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+
+  .headerContent {
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 40px;
+    justify-content: space-around;
+
+    .mainNav {
+      display: flex;
+      align-items: center;
+      margin-left: 30px;
+      font-size: 16px;
+
+      a {
+        display: block;
+        margin: 0 8px;
+        color: #323131;
+        transition: background 0.2s;
+        padding: 8px 12px 7px;
+        border-radius: 3px;
+        line-height: 1;
+
+        &:hover,
+        &.active {
+          background: var(--color-bg-inset);
+        }
+        &:active {
+          background: var(--color-bg-inset-emphasis);
+        }
+      }
+    }
+
+    .secondaryNav {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+
+      a {
+        margin-left: 18px;
+        display: block;
+        width: 26px;
+        transition: opacity 0.2s;
+
+        svg {
+          display: block;
+        }
+
+        &:hover {
+          opacity: 0.6;
+        }
+      }
+
+      :global {
+        .DocSearch-Button {
+          width: 200px;
+        }
+      }
+    }
+  }
+
+  .searchBarContainer {
+    margin-left: auto;
+    font-size: 14px;
+
+    input {
+      width: 200px;
+      background: #eaeaea;
+      border-radius: 3px;
+      border: 0;
+      padding: 8px 12px;
+      line-height: 1;
+    }
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+
+    .version {
+      margin-left: 10px;
+      font-size: 13px;
+      border-radius: 8px;
+      line-height: 1;
+      background: var(--color-accent);
+      font-family: 'Sofia Pro', sans-serif;
+      padding: 5px 8px 3px;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+
+    &:hover {
+      .version {
+        background: transparent;
+        border: 2px solid var(--color-accent);
+      }
+    }
+  }
+
+  :global(.DocSearch-Button-Placeholder) {
+    font-size: 14px;
+    margin-top: 2px;
+  }
+}

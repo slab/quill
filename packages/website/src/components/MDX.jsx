@@ -13,7 +13,6 @@ import {
   Heading5,
   Heading6,
 } from './Heading';
-import CodePen from './CodePen';
 import Hint from './Hint';
 import FullEditor from './standalone/FullEditor';
 import SEO from './SEO';
@@ -28,7 +27,6 @@ const components = {
   a: Link,
   Sandpack,
   SandpackWithQuillTemplate,
-  CodePen,
   Hint,
   Editor,
   FullEditor,

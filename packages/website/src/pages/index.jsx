@@ -2,7 +2,7 @@ import DevelopersIcon from '../svg/features/developers.svg';
 import ScaleIcon from '../svg/features/scale.svg';
 import GitHub from '../components/GitHub';
 import CrossPlatformIcon from '../svg/features/cross-platform.svg';
-import Default from '../components/Default';
+import Layout from '../components/Layout';
 import { useEffect, useRef, useState } from 'react';
 import Editor from '../components/Editor';
 import classNames from 'classnames';
@@ -162,7 +162,7 @@ const IndexPage = () => {
   }, [activeIndex, quills]);
 
   return (
-    <Default pageType="home">
+    <Layout pageType="home">
       <div
         id="above-container"
         className={classNames({ 'demo-active': isDemoActive })}
@@ -355,8 +355,8 @@ const IndexPage = () => {
 
       <div id="detail-container">
         <div className="container">
-          <Link className="action" href="/docs/download/">
-            Download Now
+          <Link className="action" href="/docs/quickstart">
+            Documentation
           </Link>
           <h1>An API Driven Rich Text Editor</h1>
         </div>
@@ -424,7 +424,7 @@ const IndexPage = () => {
           </div>
         </div>
       </div>
-    </Default>
+    </Layout>
   );
 };
 

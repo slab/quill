@@ -27,15 +27,17 @@ Deletes text from the editor, returning a [Delta](/docs/delta/) representing the
 
 **Methods**
 
-```javascript
-deleteText(index: Number, length: Number, source: String = 'api'): Delta
+```typescript
+deleteText(index: number, length: number, source: string = 'api'): Delta
 ```
 
-**Examples**
+**Example 1**
 
-```javascript
+```typescript
 quill.deleteText(6, 4);
 ```
+
+**Example 2**
 
 <SandpackWithQuillTemplate
   beforeEditor={`
@@ -63,13 +65,13 @@ Retrieves contents of the editor, with formatting data, represented by a [Delta]
 
 **Methods**
 
-```javascript
-getContents(index: Number = 0, length: Number = remaining): Delta
+```typescript
+getContents(index: number = 0, length: number = remaining): Delta
 ```
 
 **Examples**
 
-```javascript
+```typescript
 const delta = quill.getContents();
 ```
 
@@ -79,13 +81,13 @@ Retrieves the length of the editor contents. Note even when Quill is empty, ther
 
 **Methods**
 
-```javascript
-getLength(): Number
+```typescript
+getLength(): number
 ```
 
 **Examples**
 
-```javascript
+```typescript
 const length = quill.getLength();
 ```
 
@@ -97,13 +99,13 @@ The `length` parameter defaults to the length of the remaining document.
 
 **Methods**
 
-```javascript
-getText(index: Number = 0, length: Number = remaining): String
+```typescript
+getText(index: number = 0, length: number = remaining): string
 ```
 
 **Examples**
 
-```javascript
+```typescript
 const text = quill.getText(0, 10);
 ```
 
@@ -113,13 +115,13 @@ Insert embedded content into the editor, returning a [Delta](/docs/delta/) repre
 
 **Methods**
 
-```javascript
-insertEmbed(index: Number, type: String, value: any, source: String = 'api'): Delta
+```typescript
+insertEmbed(index: number, type: string, value: any, source: string = 'api'): Delta
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.insertEmbed(10, 'image', 'https://quilljs.com/images/cloud.png');
 ```
 
@@ -129,17 +131,17 @@ Inserts text into the editor, optionally with a specified format or multiple [fo
 
 **Methods**
 
-```javascript
-insertText(index: Number, text: String, source: String = 'api'): Delta
-insertText(index: Number, text: String, format: String, value: any,
-           source: String = 'api'): Delta
-insertText(index: Number, text: String, formats: { [String]: any },
-           source: String = 'api'): Delta
+```typescript
+insertText(index: number, text: string, source: string = 'api'): Delta
+insertText(index: number, text: string, format: string, value: any,
+           source: string = 'api'): Delta
+insertText(index: number, text: string, formats: { [String]: any },
+           source: string = 'api'): Delta
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.insertText(0, 'Hello', 'bold', true);
 
 quill.insertText(5, 'Quill', {
@@ -154,13 +156,13 @@ Overwrites editor with given contents. Contents should end with a [newline](/doc
 
 **Methods**
 
-```javascript
-setContents(delta: Delta, source: String = 'api'): Delta
+```typescript
+setContents(delta: Delta, source: string = 'api'): Delta
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.setContents([
   { insert: 'Hello ' },
   { insert: 'World!', attributes: { bold: true } },
@@ -174,13 +176,13 @@ Sets contents of editor with given text, returning a [Delta](/docs/delta/) repre
 
 **Methods**
 
-```javascript
-setText(text: String, source: String = 'api'): Delta
+```typescript
+setText(text: string, source: string = 'api'): Delta
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.setText('Hello\n');
 ```
 
@@ -190,13 +192,13 @@ Applies Delta to editor contents, returning a [Delta](/docs/delta/) representing
 
 **Methods**
 
-```javascript
-updateContents(delta: Delta, source: String = 'api'): Delta
+```typescript
+updateContents(delta: Delta, source: string = 'api'): Delta
 ```
 
 **Examples**
 
-```javascript
+```typescript
 // Assuming editor currently contains [{ insert: 'Hello World!' }]
 quill.updateContents(new Delta()
   .retain(6)                  // Keep 'Hello '
@@ -218,13 +220,13 @@ Format text at user's current selection, returning a [Delta](/docs/delta/) repre
 
 **Methods**
 
-```javascript
-format(name: String, value: any, source: String = 'api'): Delta
+```typescript
+format(name: string, value: any, source: string = 'api'): Delta
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.format('color', 'red');
 quill.format('align', 'right');
 ```
@@ -235,17 +237,17 @@ Formats all lines in given range, returning a [Delta](/docs/delta/) representing
 
 **Methods**
 
-```javascript
-formatLine(index: Number, length: Number, source: String = 'api'): Delta
-formatLine(index: Number, length: Number, format: String, value: any,
-           source: String = 'api'): Delta
-formatLine(index: Number, length: Number, formats: { [String]: any },
-           source: String = 'api'): Delta
+```typescript
+formatLine(index: number, length: number, source: string = 'api'): Delta
+formatLine(index: number, length: number, format: string, value: any,
+           source: string = 'api'): Delta
+formatLine(index: number, length: number, formats: { [String]: any },
+           source: string = 'api'): Delta
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.setText('Hello\nWorld!\n');
 
 quill.formatLine(1, 2, 'align', 'right');   // right aligns the first line
@@ -258,17 +260,17 @@ Formats text in the editor, returning a [Delta](/docs/delta/) representing the c
 
 **Methods**
 
-```javascript
-formatText(index: Number, length: Number, source: String = 'api'): Delta
-formatText(index: Number, length: Number, format: String, value: any,
-           source: String = 'api'): Delta
-formatText(index: Number, length: Number, formats: { [String]: any },
-           source: String = 'api'): Delta
+```typescript
+formatText(index: number, length: number, source: string = 'api'): Delta
+formatText(index: number, length: number, format: string, value: any,
+           source: string = 'api'): Delta
+formatText(index: number, length: number, formats: { [String]: any },
+           source: string = 'api'): Delta
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.setText('Hello\nWorld!\n');
 
 quill.formatText(0, 5, 'bold', true);      // bolds 'hello'
@@ -287,14 +289,14 @@ Retrieves common formatting of the text in the given range. For a format to be r
 
 **Methods**
 
-```javascript
+```typescript
 getFormat(range: Range = current): { [String]: any }
-getFormat(index: Number, length: Number = 0): { [String]: any }
+getFormat(index: number, length: number = 0): { [String]: any }
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.setText('Hello World!');
 quill.formatText(0, 2, 'bold', true);
 quill.formatText(1, 2, 'italic', true);
@@ -322,13 +324,13 @@ Removes all formatting and embeds within given range, returning a [Delta](/docs/
 
 **Methods**
 
-```javascript
-removeFormat(index: Number, length: Number, source: String = 'api'): Delta
+```typescript
+removeFormat(index: number, length: number, source: string = 'api'): Delta
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.setContents([
   { insert: 'Hello', { bold: true } },
   { insert: '\n', { align: 'center' } },
@@ -357,14 +359,14 @@ Retrieves the pixel position (relative to the editor container) and dimensions o
 
 **Methods**
 
-```javascript
-getBounds(index: Number, length: Number = 0):
-  { left: Number, top: Number, height: Number, width: Number }
+```typescript
+getBounds(index: number, length: number = 0):
+  { left: number, top: number, height: number, width: number }
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.setText('Hello\nWorld\n');
 quill.getBounds(7); // Returns { height: 15, width: 0, left: 27, top: 31 }
 ```
@@ -375,13 +377,13 @@ Retrieves the user's selection range, optionally to focus the editor first. Othe
 
 **Methods**
 
-```javascript
-getSelection(focus = false): { index: Number, length: Number }
+```typescript
+getSelection(focus = false): { index: number, length: number }
 ```
 
 **Examples**
 
-```javascript
+```typescript
 const range = quill.getSelection();
 if (range) {
   if (range.length == 0) {
@@ -401,17 +403,40 @@ Sets user selection to given range, which will also focus the editor. Providing 
 
 **Methods**
 
-```javascript
-setSelection(index: Number, length: Number = 0, source: String = 'api')
-setSelection(range: { index: Number, length: Number },
-             source: String = 'api')
+```typescript
+setSelection(index: number, length: number = 0, source: string = 'api')
+setSelection(range: { index: number, length: number },
+             source: string = 'api')
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.setSelection(0, 5);
 ```
+
+
+### scrollSelectionIntoView
+
+Scroll the current selection into the visible area.
+If the selection is already visible, no scrolling will occur.
+
+<Hint>
+Quill calls this method automatically when [setSelection](#setselection) is called, unless the source is `"silent"`.
+</Hint>
+
+**Methods**
+
+```typescript
+scrollSelectionIntoView();
+```
+
+**Examples**
+
+```typescript
+quill.scrollSelectionIntoView();
+```
+
 
 ## Editor
 
@@ -421,13 +446,13 @@ Removes focus from the editor.
 
 **Methods**
 
-```javascript
+```typescript
 blur();
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.blur();
 ```
 
@@ -437,17 +462,17 @@ Shorthand for [`enable(false)`](#enable).
 
 ### enable
 
-Set ability for user to edit, via input devices like the mouse or keyboard. Does not affect capabilities of API calls, when the `source` is `"api"` or `"silent".
+Set ability for user to edit, via input devices like the mouse or keyboard. Does not affect capabilities of API calls, when the `source` is `"api"` or `"silent"`.
 
 **Methods**
 
-```javascript
-enable(((enabled: boolean) = true));
+```typescript
+enable(enabled: boolean = true);
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.enable();
 quill.enable(false);   // Disables user input
 ```
@@ -458,14 +483,18 @@ Focuses the editor and restores its last range.
 
 **Methods**
 
-```javascript
-focus();
+```typescript
+focus(options: { preventScroll?: boolean } = {});
 ```
 
 **Examples**
 
-```javascript
+```typescript
+// Focus the editor, and scroll the selection into view
 quill.focus();
+
+// Focus the editor, but don't scroll
+quill.focus({ preventScroll: true });
 ```
 
 ### hasFocus
@@ -474,13 +503,13 @@ Checks if editor has focus. Note focus on toolbar, tooltips, does not count as t
 
 **Methods**
 
-```javascript
+```typescript
 hasFocus(): Boolean
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.hasFocus();
 ```
 
@@ -490,15 +519,64 @@ Synchronously check editor for user updates and fires events, if changes have oc
 
 **Methods**
 
-```javascript
-update(((source: String) = 'user'));
+```typescript
+update(((source: string) = 'user'));
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.update();
 ```
+
+### scrollRectIntoView #experimental
+
+Scrolls the editor to the given pixel position.
+[`scrollSelectionIntoView`](#scrollselectionintoview) is implemented by calling this method with the bounds of the current selection.
+
+```typescript
+scrollRectIntoView(bounds: {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+});
+```
+
+**Example 1**
+
+```typescript
+// Scroll the editor to reveal the range of { index: 20, length: 5 }
+const bounds = this.selection.getBounds(20, 5);
+if (bounds) {
+  quill.scrollRectIntoView(bounds);
+}
+```
+
+**Example 2**
+
+<SandpackWithQuillTemplate
+  files={{
+    'index.js': `
+let text = "";
+for (let i = 0; i < 100; i += 1) {
+  text += \`line \${i + 1}\\n\`;
+}
+
+const quill = new Quill('#editor', { theme: 'snow' });
+quill.setText(text);
+
+const target = 'line 50';
+const bounds = quill.selection.getBounds(
+  text.indexOf(target),
+  target.length
+);
+if (bounds) {
+  quill.scrollRectIntoView(bounds);
+}
+    `
+  }}
+/>
 
 ## Events
 
@@ -519,14 +597,14 @@ Changes to text may cause changes to the selection (ex. typing advances the curs
 
 **Callback Signature**
 
-```javascript
-handler(delta: Delta, oldContents: Delta, source: String)
+```typescript
+handler(delta: Delta, oldContents: Delta, source: string)
 ```
 
 **Examples**
 
-```javascript
-quill.on('text-change', function (delta, oldDelta, source) {
+```typescript
+quill.on('text-change', (delta, oldDelta, source) => {
   if (source == 'api') {
     console.log('An API call triggered this change.');
   } else if (source == 'user') {
@@ -543,16 +621,16 @@ APIs causing the selection to change may also be called with a `"silent"` source
 
 **Callback Signature**
 
-```javascript
-handler(range: { index: Number, length: Number },
-        oldRange: { index: Number, length: Number },
-        source: String)
+```typescript
+handler(range: { index: number, length: number },
+        oldRange: { index: number, length: number },
+        source: string)
 ```
 
 **Examples**
 
-```javascript
-quill.on('selection-change', function (range, oldRange, source) {
+```typescript
+quill.on('selection-change', (range, oldRange, source) => {
   if (range) {
     if (range.length == 0) {
       console.log('User cursor is on', range.index);
@@ -572,14 +650,14 @@ Emitted when either `text-change` or `selection-change` would be emitted, even w
 
 **Callback Signature**
 
-```javascript
-handler(name: String, ...args)
+```typescript
+handler(name: string, ...args)
 ```
 
 **Examples**
 
-```javascript
-quill.on('editor-change', function (eventName, ...args) {
+```typescript
+quill.on('editor-change', (eventName, ...args) => {
   if (eventName === 'text-change') {
     // args[0] will be delta
   } else if (eventName === 'selection-change') {
@@ -594,14 +672,14 @@ Adds event handler. See [text-change](#text-change) or [selection-change](#selec
 
 **Methods**
 
-```javascript
-on(name: String, handler: Function): Quill
+```typescript
+on(name: string, handler: Function): Quill
 ```
 
 **Examples**
 
-```javascript
-quill.on('text-change', function () {
+```typescript
+quill.on('text-change', () => {
   console.log('Text change!');
 });
 ```
@@ -612,14 +690,14 @@ Adds handler for one emission of an event. See [text-change](#text-change) or [s
 
 **Methods**
 
-```javascript
-once(name: String, handler: Function): Quill
+```typescript
+once(name: string, handler: Function): Quill
 ```
 
 **Examples**
 
-```javascript
-quill.once('text-change', function () {
+```typescript
+quill.once('text-change', () => {
   console.log('First text change!');
 });
 ```
@@ -630,13 +708,13 @@ Removes event handler.
 
 **Methods**
 
-```javascript
-off(name: String, handler: Function): Quill
+```typescript
+off(name: string, handler: Function): Quill
 ```
 
 **Examples**
 
-```javascript
+```typescript
 function handler() {
   console.log('Hello!');
 }
@@ -653,13 +731,13 @@ Static method returning the Quill or [Blot](https://github.com/quilljs/parchment
 
 **Methods**
 
-```javascript
+```typescript
 Quill.find(domNode: Node, bubble: boolean = false): Blot | Quill
 ```
 
 **Examples**
 
-```javascript
+```typescript
 const container = document.querySelector('#container');
 const quill = new Quill(container);
 console.log(Quill.find(container) === quill); // Should be true
@@ -667,6 +745,9 @@ console.log(Quill.find(container) === quill); // Should be true
 quill.insertText(0, 'Hello', 'link', 'https://world.com');
 const linkNode = document.querySelector('#container a');
 const linkBlot = Quill.find(linkNode);
+
+// Find Quill instance from a blot
+console.log(Quill.find(linkBlot.scroll.domNode.parentElement));
 ```
 
 ### getIndex
@@ -675,13 +756,13 @@ Returns the distance between the beginning of document to the occurrence of the 
 
 **Methods**
 
-```javascript
-getIndex(blot: Blot): Number
+```typescript
+getIndex(blot: Blot): number
 ```
 
 **Examples**
 
-```javascript
+```typescript
 let [line, offset] = quill.getLine(10);
 let index = quill.getIndex(line); // index + offset should == 10
 ```
@@ -692,13 +773,13 @@ Returns the leaf [Blot](https://github.com/quilljs/parchment) at the specified i
 
 **Methods**
 
-```javascript
-getLeaf(index: Number): Blot
+```typescript
+getLeaf(index: number): Blot
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.setText('Hello Good World!');
 quill.formatText(6, 4, 'bold', true);
 
@@ -713,13 +794,13 @@ Returns the line [Blot](https://github.com/quilljs/parchment) at the specified i
 
 **Methods**
 
-```javascript
-getLine(index: Number): [Blot, Number]
+```typescript
+getLine(index: number): [Blot, Number]
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.setText('Hello\nWorld!');
 
 let [line, offset] = quill.getLine(7);
@@ -733,14 +814,14 @@ Returns the lines contained within the specified location.
 
 **Methods**
 
-```javascript
-getLines(index: Number = 0, length: Number = remaining): Blot[]
+```typescript
+getLines(index: number = 0, length: number = remaining): Blot[]
 getLines(range: Range): Blot[]
 ```
 
 **Examples**
 
-```javascript
+```typescript
 quill.setText('Hello\nGood\nWorld!');
 quill.formatLine(1, 1, 'list', 'bullet');
 
@@ -757,13 +838,13 @@ Static method enabling logging messages at a given level: `'error'`, `'warn'`, `
 
 **Methods**
 
-```javascript
-Quill.debug(level: String | Boolean)
+```typescript
+Quill.debug(level: string | Boolean)
 ```
 
 **Examples**
 
-```javascript
+```typescript
 Quill.debug('info');
 ```
 
@@ -773,13 +854,13 @@ Static method returning Quill library, format, module, or theme. In general the 
 
 **Methods**
 
-```javascript
+```typescript
 Quill.import(path): any
 ```
 
 **Examples**
 
-```javascript
+```typescript
 const Parchment = Quill.import('parchment');
 const Delta = Quill.import('delta');
 
@@ -799,15 +880,15 @@ Registers a module, theme, or format(s), making them available to be added to an
 
 **Methods**
 
-```javascript
+```typescript
 Quill.register(format: Attributor | BlotDefinintion, supressWarning: Boolean = false)
-Quill.register(path: String, def: any, supressWarning: Boolean = false)
+Quill.register(path: string, def: any, supressWarning: Boolean = false)
 Quill.register(defs: { [String]: any }, supressWarning: Boolean = false)
 ```
 
 **Examples**
 
-```javascript
+```typescript
 const Module = Quill.import('core/module');
 
 class CustomModule extends Module {}
@@ -815,7 +896,7 @@ class CustomModule extends Module {}
 Quill.register('modules/custom-module', CustomModule);
 ```
 
-```javascript
+```typescript
 Quill.register({
   'formats/custom-format': CustomFormat,
   'modules/custom-module-a': CustomModuleA,
@@ -832,14 +913,14 @@ Adds and returns a container element inside the Quill container, sibling to the 
 
 **Methods**
 
-```javascript
-addContainer(className: String, refNode?: Node): Element
+```typescript
+addContainer(className: string, refNode?: Node): Element
 addContainer(domNode: Node, refNode?: Node): Element
 ```
 
 **Examples**
 
-```javascript
+```typescript
 const container = quill.addContainer('ql-custom');
 ```
 
@@ -849,12 +930,12 @@ Retrieves a module that has been added to the editor.
 
 **Methods**
 
-```javascript
-getModule(name: String): any
+```typescript
+getModule(name: string): any
 ```
 
 **Examples**
 
-```javascript
+```typescript
 const toolbar = quill.getModule('toolbar');
 ```

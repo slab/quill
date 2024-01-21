@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.11.3",
+    "@docsearch/react": "^3.5.2",
     "@mdx-js/loader": "^3.0.0",
     "@mdx-js/mdx": "^2.1.5",
     "@mdx-js/react": "^2.3.0",

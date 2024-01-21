@@ -5,7 +5,7 @@ import guideItems from '../data/guides';
 import OctocatIcon from '../svg/octocat.svg';
 import Link from 'next/link';
 import slug from '../utils/slug';
-import Default from '../components/Default';
+import Layout from '../components/Layout';
 import OpenSource from '../components/OpenSource';
 import React, { useEffect } from 'react';
 import * as styles from './doc.module.scss';
@@ -48,25 +48,15 @@ const Doc = ({ title, pageType, filePath, permalink, children }) => {
   const items = pageType === 'guides' ? guideItems : docsItems;
   const { prev, next } = getPagination(permalink, items);
 
-  useEffect(() => {
-    docsearch({
-      apiKey: '281facf513620e95600126795a00ab6c',
-      indexName: 'quilljs',
-      inputSelector: '.search-item input',
-      debug: false,
-    });
-  }, []);
+  useEffect(() => {}, []);
 
   return (
-    <Default pageType={pageType}>
+    <Layout pageType={pageType}>
       <div id="docs-wrapper" className="container">
         <div className="row">
           <div id="sidebar-container" className="three columns">
             <button className="sidebar-button">Document Navigation</button>
             <ul className="sidebar-list">
-              <li className="search-item">
-                <input type="text" />
-              </li>
               {items.map((item) => (
                 <SidebarItem key={item.url} item={item} />
               ))}
@@ -75,20 +65,10 @@ const Doc = ({ title, pageType, filePath, permalink, children }) => {
           <div id="docs-container" className="nine columns">
             <div className={classNames('row', styles.breadcrumbRow)}>
               <div className={styles.breadcrumb}>
-                <span>{category}:</span>
+                <span>{category}</span>
                 <span>{title}</span>
               </div>
-              <a
-                className={styles.editLink}
-                href={process.env.github + filePath}
-                target="_blank"
-                title="Edit on GitHub"
-              >
-                <OctocatIcon />
-                <span>Edit on GitHub</span>
-              </a>
             </div>
-            <hr />
             <article id="content-container" className={styles.content}>
               <h1 id={slug(title)}>{title}</h1>
               {children}
@@ -114,6 +94,15 @@ const Doc = ({ title, pageType, filePath, permalink, children }) => {
               )}
             </div>
           </div>
+          <a
+            className={styles.editLink}
+            href={process.env.github + filePath}
+            target="_blank"
+            title="Edit on GitHub"
+          >
+            <OctocatIcon width="28" />
+            <span>Edit on GitHub</span>
+          </a>
         </div>
 
         <div className="row">
@@ -122,7 +111,7 @@ const Doc = ({ title, pageType, filePath, permalink, children }) => {
 
         <OpenSource />
       </div>
-    </Default>
+    </Layout>
   );
 };
 
