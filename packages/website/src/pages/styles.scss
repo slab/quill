@@ -387,12 +387,16 @@ footer h1 {
 
 footer .actions.row {
   text-align: center;
+  display: flex;
+  justify-content: center;
 }
 
 footer .action {
   font-size: 1.5rem;
   height: 4.44em;
-  line-height: 6.67rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 1.4em;
   vertical-align: middle;
   width: 14.5em;

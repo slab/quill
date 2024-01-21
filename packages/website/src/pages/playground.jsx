@@ -2,7 +2,7 @@
 
 import classNames from 'classnames';
 import { useState } from 'react';
-import Default from '../components/Default';
+import Layout from '../components/Layout';
 import OpenSource from '../components/OpenSource';
 import slug from '../utils/slug';
 import Image from 'next/image';
@@ -31,7 +31,7 @@ const Playground = () => {
   });
 
   return (
-    <Default title="Interactive Playground" pageType="playground">
+    <Layout title="Interactive Playground" pageType="playground">
       <div className="container">
         <div id="playground-container">
           <h1>Interactive Playground</h1>
@@ -69,7 +69,7 @@ const Playground = () => {
         </div>
         <OpenSource />
       </div>
-    </Default>
+    </Layout>
   );
 };
 

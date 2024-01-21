@@ -32,18 +32,17 @@
         display: block;
         margin: 0 8px;
         color: #323131;
-        transition: background 0.4s;
+        transition: background 0.2s;
         padding: 8px 12px;
         border-radius: 3px;
         line-height: 1;
 
         &:hover,
         &.active {
-          color: #333;
-          background: #f0efea;
+          background: var(--color-bg-inset);
         }
         &:active {
-          color: #000;
+          background: var(--color-bg-inset-emphasis);
         }
       }
     }
@@ -95,19 +94,27 @@
     align-items: center;
 
     .version {
-      margin-left: 12px;
+      margin-left: 10px;
       font-size: 13px;
-      border-radius: 4px;
+      border-radius: 8px;
       line-height: 1;
-      background: #f2d123;
+      background: var(--color-accent);
       font-family: 'Sofia Pro', sans-serif;
       padding: 5px 8px 3px;
+      transition: all 0.2s;
+      border: 2px solid transparent;
     }
 
     &:hover {
       .version {
-        opacity: 0.8;
+        background: transparent;
+        border: 2px solid var(--color-accent);
       }
     }
+  }
+
+  :global(.DocSearch-Button-Placeholder) {
+    font-size: 14px;
+    margin-top: 2px;
   }
 }

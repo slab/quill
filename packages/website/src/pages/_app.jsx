@@ -1,3 +1,4 @@
+import './variables.scss';
 import './base.css';
 import './styles.scss';
 

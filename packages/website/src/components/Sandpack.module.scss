@@ -43,23 +43,27 @@
     }
 
     .editorFooter {
-      background: #fafafa;
+      background: var(--color-bg-inset);
       padding: 8px 12px;
       border-top: 1px solid $borderColor;
 
       button {
-        border: 1px solid $borderColor;
+        font-family: 'Sofia Pro', sans-serif;
+        font-weight: bold;
+        border: 0;
         border-radius: 2px;
         padding: 8px 12px;
-        transition: background 0.2s;
-        background: #fefefe;
+        transition: all 0.2s;
+        background: var(--color-accent);
+        border: 2px solid transparent;
 
         &:hover {
-          background: #f1f1f1;
+          background: white;
+          border: 2px solid var(--color-accent);
         }
 
         &:active {
-          background: #e1e1e1;
+          border: 2px solid var(--color-accent-emphasis);
         }
       }
     }

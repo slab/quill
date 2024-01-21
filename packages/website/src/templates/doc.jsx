@@ -5,7 +5,7 @@ import guideItems from '../data/guides';
 import OctocatIcon from '../svg/octocat.svg';
 import Link from 'next/link';
 import slug from '../utils/slug';
-import Default from '../components/Default';
+import Layout from '../components/Layout';
 import OpenSource from '../components/OpenSource';
 import React, { useEffect } from 'react';
 import * as styles from './doc.module.scss';
@@ -51,7 +51,7 @@ const Doc = ({ title, pageType, filePath, permalink, children }) => {
   useEffect(() => {}, []);
 
   return (
-    <Default pageType={pageType}>
+    <Layout pageType={pageType}>
       <div id="docs-wrapper" className="container">
         <div className="row">
           <div id="sidebar-container" className="three columns">
@@ -111,7 +111,7 @@ const Doc = ({ title, pageType, filePath, permalink, children }) => {
 
         <OpenSource />
       </div>
-    </Default>
+    </Layout>
   );
 };
 
