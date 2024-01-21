@@ -355,8 +355,8 @@ const IndexPage = () => {
 
       <div id="detail-container">
         <div className="container">
-          <Link className="action" href="/docs/download/">
-            Download Now
+          <Link className="action" href="/docs/quickstart">
+            Documentation
           </Link>
           <h1>An API Driven Rich Text Editor</h1>
         </div>

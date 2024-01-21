@@ -19,11 +19,24 @@ const items = [
   },
   {
     title: 'Selection',
-    hashes: ['getBounds', 'getSelection', 'setSelection'],
+    hashes: [
+      'getBounds',
+      'getSelection',
+      'setSelection',
+      'scrollSelectionIntoView',
+    ],
   },
   {
     title: 'Editor',
-    hashes: ['blur', 'focus', 'disable', 'enable', 'hasFocus', 'update'],
+    hashes: [
+      'blur',
+      'focus',
+      'disable',
+      'enable',
+      'hasFocus',
+      'update',
+      'scrollRectIntoView',
+    ],
   },
   {
     title: 'Events',

@@ -413,6 +413,29 @@ setSelection(range: { index: Number, length: Number },
 quill.setSelection(0, 5);
 ```
 
+
+### scrollSelectionIntoView
+
+Scroll the current selection into the visible area.
+If the selection is already visible, no scrolling will occur.
+
+<Hint>
+Quill calls this method automatically when [setSelection](#setselection) is called, unless the source is `"silent"`.
+</Hint>
+
+**Methods**
+
+```javascript
+scrollSelectionIntoView();
+```
+
+**Examples**
+
+```javascript
+quill.scrollSelectionIntoView();
+```
+
+
 ## Editor
 
 ### blur
@@ -499,6 +522,55 @@ update(((source: String) = 'user'));
 ```javascript
 quill.update();
 ```
+
+### scrollRectIntoView
+
+Scrolls the editor to the given pixel position.
+[`scrollSelectionIntoView`](#scrollselectionintoview) is implemented by calling this method with the bounds of the current selection.
+
+```javascript
+scrollRectIntoView(bounds: {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+});
+```
+
+**Examples 1**
+
+```javascript
+// Scroll the editor to reveal the range of { index: 20, length: 5 }
+const bounds = this.selection.getBounds(20, 5);
+if (bounds) {
+  quill.scrollRectIntoView(bounds);
+}
+```
+
+**Examples 2**
+
+<SandpackWithQuillTemplate
+  files={{
+    'index.js': `
+let text = "";
+for (let i = 0; i < 100; i += 1) {
+  text += \`line \${i + 1}\\n\`;
+}
+
+const quill = new Quill('#editor', { theme: 'snow' });
+quill.setText(text);
+
+const target = 'line 50';
+const bounds = quill.selection.getBounds(
+  text.indexOf(target),
+  target.length
+);
+if (bounds) {
+  quill.scrollRectIntoView(bounds);
+}
+    `
+  }}
+/>
 
 ## Events
 
