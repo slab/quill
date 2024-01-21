@@ -1,5 +1,7 @@
 # [Unreleased]
 
+# 2.0.0-beta.1
+
 - Fix syntax label from "Javascript" to "JavaScript".
 - Fix typing errors for emitter.
 - Inline SVG images for easier bundler setup.
