@@ -35,7 +35,7 @@ const items = [
       'enable',
       'hasFocus',
       'update',
-      'scrollRectIntoView',
+      'scrollRectIntoView-experimental',
     ],
   },
   {
@@ -51,13 +51,7 @@ const items = [
   },
   {
     title: 'Model',
-    hashes: [
-      'find-experimental',
-      'getIndex-experimental',
-      'getLeaf-experimental',
-      'getLine-experimental',
-      'getLines-experimental',
-    ],
+    hashes: ['find', 'getIndex', 'getLeaf', 'getLine', 'getLines'],
   },
   {
     title: 'Extension',
