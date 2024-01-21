@@ -2,16 +2,16 @@
 
 This repo is a monorepo powered by npm's official [workspace feature](https://docs.npmjs.com/cli/v10/using-npm/workspaces). It contains the following packages:
 
-1. quill
+### quill
 
 This is the Quill library. It's written in [TypeScript](https://www.typescriptlang.org/), and use [Webpack](https://webpack.js.org/) as the bundler.
 It uses [Vitest](https://vitest.dev) for unit testing, and [Playwright](https://playwright.dev/) for E2E testing.
 
-2. website
+### website
 
 It's Quill's website (hosted at [quilljs.com](https://quilljs.com/)). It's built with [Next.js](https://nextjs.org/).
 
-### Setup
+## Setup
 
 To prepare your local environment for development, ensure you have Node.js installed. The repo uses npm, and doesn't support Yarn and pnpm.
 
@@ -38,7 +38,7 @@ Access the running website at [localhost:9000](http://localhost:9000/). By defau
 
 If you need to modify only the website's code, start the website with `npm start -w website``. This makes the website use the latest CDN version.
 
-### Testing
+## Testing
 
 To run the unit tests in watch mode, run:
 
@@ -48,7 +48,7 @@ To execute the E2E tests, run:
 
     npm run test:e2e -w quill
 
-### Workflow
+## Workflow
 
 A standard development workflow involves:
 
