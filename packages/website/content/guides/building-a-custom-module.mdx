@@ -49,7 +49,7 @@ Let's jump straight in with a complete example!
     'index.js': `
 function Counter(quill, options) {
   const container = document.querySelector('#counter');
-  quill.on(Quill.events.TEXT_CHANGE, function() {
+  quill.on(Quill.events.TEXT_CHANGE, () => {
     const text = quill.getText();
     // There are a couple issues with counting words
     // this way but we'll fix these later
