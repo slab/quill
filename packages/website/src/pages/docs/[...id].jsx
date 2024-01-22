@@ -2,7 +2,7 @@ import { serialize } from 'next-mdx-remote/serialize';
 import docs from '../../data/docs';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import DocTemplate from '../../templates/doc';
+import PostLayout from '../../components/PostLayout';
 import env from '../../../env';
 import MDX from '../../components/MDX';
 import flattenData from '../../utils/flattenData';
@@ -28,13 +28,13 @@ export async function getStaticProps({ params }) {
 
 export default function Doc({ mdxSource, filePath, permalink }) {
   return (
-    <DocTemplate
+    <PostLayout
       pageType="docs"
       filePath={filePath}
       permalink={permalink}
       {...mdxSource.frontmatter}
     >
       <MDX mdxSource={mdxSource} />
-    </DocTemplate>
+    </PostLayout>
   );
 }

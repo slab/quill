@@ -7,8 +7,8 @@ import Link from 'next/link';
 import slug from '../utils/slug';
 import Layout from '../components/Layout';
 import OpenSource from '../components/OpenSource';
-import React, { useEffect } from 'react';
-import * as styles from './doc.module.scss';
+import React from 'react';
+import * as styles from './PostLayout.module.scss';
 import flattenData from '../utils/flattenData';
 
 const getPagination = (permalink, items) => {
@@ -42,16 +42,14 @@ const SidebarItem = ({ item }) => {
   );
 };
 
-const Doc = ({ title, pageType, filePath, permalink, children }) => {
+const PostLayout = ({ title, pageType, filePath, permalink, children }) => {
   const category = pageType === 'guides' ? 'Guides' : 'Documentation';
 
   const items = pageType === 'guides' ? guideItems : docsItems;
   const { prev, next } = getPagination(permalink, items);
 
-  useEffect(() => {}, []);
-
   return (
-    <Layout pageType={pageType}>
+    <Layout>
       <div id="docs-wrapper" className="container">
         <div className="row">
           <div id="sidebar-container" className="three columns">
@@ -93,16 +91,17 @@ const Doc = ({ title, pageType, filePath, permalink, children }) => {
                 </a>
               )}
             </div>
+            <div className={styles.editOnGitHub}>
+              <a
+                className={styles.editLink}
+                href={process.env.github + filePath}
+                target="_blank"
+                title="Edit on GitHub"
+              >
+                Edit this page on GitHub
+              </a>
+            </div>
           </div>
-          <a
-            className={styles.editLink}
-            href={process.env.github + filePath}
-            target="_blank"
-            title="Edit on GitHub"
-          >
-            <OctocatIcon width="28" />
-            <span>Edit on GitHub</span>
-          </a>
         </div>
 
         <div className="row">
@@ -115,4 +114,4 @@ const Doc = ({ title, pageType, filePath, permalink, children }) => {
   );
 };
 
-export default Doc;
+export default PostLayout;

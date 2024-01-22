@@ -1,14 +1,12 @@
-import Helmet from 'react-helmet';
 import LogoIcon from '../svg/logo.svg';
 import Link from 'next/link';
 import SEO from './SEO';
 import Header from './Header';
 
-const Layout = ({ children, title, pageType }) => {
+const Layout = ({ children, title }) => {
   return (
     <>
       <SEO title={title} />
-      <Helmet bodyAttributes={{ class: pageType }} />
       <Header />
       {children}
       <footer>

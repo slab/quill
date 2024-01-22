@@ -2,7 +2,7 @@ import { serialize } from 'next-mdx-remote/serialize';
 import guides from '../../data/guides';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import DocTemplate from '../../templates/doc';
+import PostLayout from '../../components/PostLayout';
 import env from '../../../env';
 import MDX from '../../components/MDX';
 import flattenData from '../../utils/flattenData';
@@ -40,12 +40,12 @@ export async function getStaticProps({ params }) {
 
 export default function Guides({ mdxSource, permalink, data }) {
   return (
-    <DocTemplate
+    <PostLayout
       pageType="guides"
       permalink={permalink}
       {...mdxSource.frontmatter}
     >
       <MDX mdxSource={mdxSource} data={data} />
-    </DocTemplate>
+    </PostLayout>
   );
 }

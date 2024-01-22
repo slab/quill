@@ -162,7 +162,7 @@ const IndexPage = () => {
   }, [activeIndex, quills]);
 
   return (
-    <Layout pageType="home">
+    <Layout>
       <div
         id="above-container"
         className={classNames({ 'demo-active': isDemoActive })}

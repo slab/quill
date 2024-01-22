@@ -1100,7 +1100,7 @@ body:not(.home) .navbar-link:before {
 }
 #content-container {
   margin-bottom: 6.67em;
-  max-width: 800px;
+  max-width: var(--width-readable);
 }
 #content-container > blockquote:before {
   color: #d9dce1;
@@ -1158,7 +1158,7 @@ body:not(.home) .navbar-link:before {
 
 #pagination-container {
   font-size: 2.5rem;
-  max-width: 800px;
+  max-width: var(--width-readable);
 }
 #pagination-container .prev:after {
   content: 'Previous';
@@ -1185,7 +1185,7 @@ body:not(.home) .navbar-link:before {
 
 #blog-container {
   margin-top: 5.5em;
-  max-width: 800px;
+  max-width: var(--width-readable);
 }
 #blog-container .post-meta {
   margin-bottom: 2.78em;
