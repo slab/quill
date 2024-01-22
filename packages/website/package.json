@@ -19,6 +19,7 @@
     "@mdx-js/mdx": "^2.1.5",
     "@mdx-js/react": "^2.3.0",
     "@next/mdx": "^14.0.4",
+    "@next/third-parties": "^14.1.0",
     "@svgr/webpack": "^8.1.0",
     "@types/mdx": "^2.0.10",
     "classnames": "^2.3.2",
