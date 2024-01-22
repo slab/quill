@@ -2,13 +2,28 @@
 title: Upgrading to 2.0
 ---
 
-In progress
+Quill has been significantly modernized. Leveraging the latest browser-supported APIs, Quill now delivers a more efficient and reliable editing experience.
 
 ## Quill
 
-- `strict` *removed* - Previously some changes that were small in practice (renames) but would warrant a semver major bump would be hidden under this configuration. This ended up being more confusing than helpful as we will no longer make use of this.
-- `registry` - added to allow multiple editors with different formats to coexist on the same page.
+The Quill repository has been rewritten in TypeScript, providing an official TypeScript definition file.
+
+- If you have `@types/quill` installed, uninstall it, as it is no longer needed
+- SVG icons are now inlined in the source code, eliminating the need to set up loaders for .svg files in your bundler.
+
+### Options
+
+- `strict` *removed*
+
+    Previously some changes that were small in practice (renames) but would warrant a semver major bump would be hidden under this configuration.
+    This ended up being more confusing than helpful as we will no longer make use of this.
+
+- `registry` - added to allow multiple editors with different formats to coexist on the same page. [Learn more](/docs/registries).
 - `formats` *removed* - `registry` is now strictly more powerful and safer.
+
+- `scrollingContainer` *removed*
+
+    Quill will now automatically detect the scrollable ancestor, eliminating the need to provide this option. This new behavior is more robust and works seamlessly with nested scrollable elements.
 
 ## Clipboard
 
@@ -40,5 +55,4 @@ In progress
 
 ## Browser
 
-- Quill builds now use `babel-env` to determine the right level of transpiling and polyfilling.
-- IE11 support is dropped build size reduced ~25% as a result.
+- Internet Explorer support is dropped.
