@@ -30,10 +30,9 @@ To configure Quill, pass in an options object:
 const options = {
   debug: 'info',
   modules: {
-    toolbar: '#toolbar'
+    toolbar: true,
   },
   placeholder: 'Compose an epic...',
-  readOnly: true,
   theme: 'snow'
 };
 const quill = new Quill('#editor', options);
