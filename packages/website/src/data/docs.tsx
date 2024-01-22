@@ -80,6 +80,10 @@ const items = [
     ],
   },
   {
+    title: 'Registries',
+    url: '/docs/registries',
+  },
+  {
     title: 'Themes',
     url: '/docs/themes',
   },
