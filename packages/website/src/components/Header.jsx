@@ -19,6 +19,34 @@ const shortVersion = (version) => {
   return `${matched[1]}.${matched[2]}`;
 };
 
+const MainNav = ({ ...props }) => {
+  return (
+    <nav {...props}>
+      <ActiveLink
+        activeClassName={styles.active}
+        activePath="/docs"
+        href="/docs/quickstart"
+      >
+        Documentation
+      </ActiveLink>
+      <ActiveLink
+        activeClassName={styles.active}
+        activePath="/guides"
+        href="/guides/why-quill"
+      >
+        Guides
+      </ActiveLink>
+      <ActiveLink
+        activeClassName={styles.active}
+        activePath="/playground"
+        href="/playground"
+      >
+        Playground
+      </ActiveLink>
+    </nav>
+  );
+};
+
 const VersionSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -79,37 +107,6 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
-      <nav className={classNames('navbar-drop', { active: isNavOpen })}>
-        <button
-          className="navbar-close"
-          onClick={() => setIsNavOpen(false)}
-        ></button>
-        <ul>
-          <li className="navbar-item">
-            <Link className="navbar-link" href="/docs/quickstart">
-              Documentation
-            </Link>
-          </li>
-          <li className="navbar-item">
-            <Link className="navbar-link" href="/guides/why-quill">
-              Guides
-            </Link>
-          </li>
-          <li className="navbar-item">
-            <Link className="navbar-link" href="/playground">
-              Playground
-            </Link>
-          </li>
-          <li className="navbar-item" style={{ display: 'none' }}>
-            <Link className="navbar-link" href="/blog/">
-              Blog
-            </Link>
-          </li>
-          <li className={classNames(styles.githubMenuItem)}>
-            <GitHub dark />
-          </li>
-        </ul>
-      </nav>
       <div className={styles.headerContent}>
         <div className={styles.logo}>
           <Link href="/">
@@ -117,29 +114,7 @@ const Header = () => {
           </Link>
           <VersionSelector />
         </div>
-        <nav className={styles.mainNav}>
-          <ActiveLink
-            activeClassName={styles.active}
-            activePath="/docs"
-            href="/docs/quickstart"
-          >
-            Documentation
-          </ActiveLink>
-          <ActiveLink
-            activeClassName={styles.active}
-            activePath="/guides"
-            href="/guides/why-quill"
-          >
-            Guides
-          </ActiveLink>
-          <ActiveLink
-            activeClassName={styles.active}
-            activePath="/playground"
-            href="/playground"
-          >
-            Playground
-          </ActiveLink>
-        </nav>
+        <MainNav className={styles.mainNav} />
         <nav className={styles.secondaryNav}>
           <a
             href="https://github.com/quilljs/quill"
@@ -154,12 +129,22 @@ const Header = () => {
             apiKey="281facf513620e95600126795a00ab6c"
           />
         </nav>
+        <button
+          className={styles.mobileNavToggle}
+          onClick={() => setIsNavOpen(!isNavOpen)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
-      <button className="navbar-open" onClick={() => setIsNavOpen(true)}>
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <div
+        className={classNames(styles.mobileNav, {
+          [styles.isNavOpen]: isNavOpen,
+        })}
+      >
+        <MainNav className={styles.mobileMainNav} />
+      </div>
     </header>
   );
 };
