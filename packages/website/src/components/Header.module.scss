@@ -4,6 +4,8 @@
   justify-content: center;
 }
 
+$linkBorderRadius: 8px;
+
 .header {
   display: flex;
   align-items: center;
@@ -34,7 +36,7 @@
         color: #323131;
         transition: background 0.2s;
         padding: 8px 12px 7px;
-        border-radius: 5px;
+        border-radius: $linkBorderRadius;
         line-height: 1;
 
         &:hover,
@@ -143,7 +145,7 @@
   .versionDropdown {
     margin-top: 8px;
     position: absolute;
-    padding: 12px 0 12px;
+    padding: 12px 8px 12px;
     width: max-content;
     text-align: left;
     font-size: 16px;
@@ -160,10 +162,13 @@
     .versionLabel {
       padding: 0 18px;
       color: #999;
-      padding-top: 8px;
+      text-transform: uppercase;
+      font-size: 12px;
+      border-top: 1px solid #eee;
+      padding-top: 12px;
 
       &:not(:first-child) {
-        margin-top: 4px;
+        margin-top: 8px;
       }
     }
 
@@ -171,6 +176,7 @@
       padding: 8px 18px;
       line-height: 1;
       transition: background 0.2s;
+      border-radius: $linkBorderRadius;
 
       span {
         text-transform: uppercase;
