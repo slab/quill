@@ -7,7 +7,7 @@ import Link from 'next/link';
 import slug from '../utils/slug';
 import Layout from '../components/Layout';
 import OpenSource from '../components/OpenSource';
-import React from 'react';
+import React, { useState } from 'react';
 import * as styles from './PostLayout.module.scss';
 import flattenData from '../utils/flattenData';
 
@@ -48,12 +48,26 @@ const PostLayout = ({ title, pageType, filePath, permalink, children }) => {
   const items = pageType === 'guides' ? guideItems : docsItems;
   const { prev, next } = getPagination(permalink, items);
 
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
   return (
     <Layout>
       <div id="docs-wrapper" className="container">
         <div className="row">
-          <div id="sidebar-container" className="three columns">
-            <button className="sidebar-button">Document Navigation</button>
+          <div
+            id="sidebar-container"
+            className={classNames('three', 'columns', {
+              active: isNavOpen,
+            })}
+          >
+            <button
+              className="sidebar-button"
+              onClick={() => {
+                setIsNavOpen(!isNavOpen);
+              }}
+            >
+              Document Navigation
+            </button>
             <ul className="sidebar-list">
               {items.map((item) => (
                 <SidebarItem key={item.url} item={item} />
