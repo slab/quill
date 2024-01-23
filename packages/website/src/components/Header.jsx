@@ -2,12 +2,66 @@ import classNames from 'classnames';
 import LogoIcon from '../svg/logo.svg';
 import Link from 'next/link';
 import OctocatIcon from '../svg/octocat.svg';
+import ExternalLinkIcon from '../svg/external-link.svg';
+import DropdownIcon from '../svg/dropdown.svg';
 import XIcon from '../svg/x.svg';
 import GitHub from './GitHub';
 import * as styles from './Header.module.scss';
 import { DocSearch } from '@docsearch/react';
 import { useState } from 'react';
 import ActiveLink from './ActiveLink';
+import ClickOutsideHandler from './ClickOutsideHandler';
+
+const shortVersion = (version) => {
+  const parts = version.split('-');
+  const matched = parts[0].match(/(\d+)\.(\d+)\.\d+/);
+  if (!matched) return version;
+  return `${matched[1]}.${matched[2]}`;
+};
+
+const VersionSelector = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <ClickOutsideHandler
+      onClickOutside={() => {
+        setIsOpen(false);
+      }}
+      className={styles.versionWrapper}
+    >
+      <div
+        role="button"
+        className={styles.version}
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
+      >
+        v{shortVersion(process.env.version)} <DropdownIcon />
+      </div>
+      <div
+        className={classNames(styles.versionDropdown, {
+          [styles.isOpen]: isOpen,
+        })}
+      >
+        <a
+          href={`https://github.com/quilljs/quill/releases/tag/v${process.env.version}`}
+          className={styles.versionDropdownItem}
+          target="_blank"
+        >
+          Release Notes <ExternalLinkIcon />
+        </a>
+        <div className={styles.versionLabel}>Previous Versions</div>
+        <a
+          href="https://quilljs.com"
+          className={styles.versionDropdownItem}
+          target="_blank"
+        >
+          v{'1.3.7'} <ExternalLinkIcon />
+        </a>
+      </div>
+    </ClickOutsideHandler>
+  );
+};
 
 const Header = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -46,10 +100,12 @@ const Header = () => {
         </ul>
       </nav>
       <div className={styles.headerContent}>
-        <Link className={styles.logo} href="/">
-          <LogoIcon width="60" />
-          <div className={styles.version}>v2</div>
-        </Link>
+        <div className={styles.logo}>
+          <Link href="/">
+            <LogoIcon width="60" />
+          </Link>
+          <VersionSelector />
+        </div>
         <nav className={styles.mainNav}>
           <ActiveLink
             activeClassName={styles.active}
