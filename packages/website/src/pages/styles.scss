@@ -1450,7 +1450,7 @@ body:not(.home) .navbar-link:before {
     max-height: 8em;
     overflow: hidden;
     padding: 2em 0 0;
-    position: absolute;
+    height: auto;
     right: 0;
     text-align: center;
     transition:
@@ -1458,18 +1458,18 @@ body:not(.home) .navbar-link:before {
       background-color 500ms linear 0s;
   }
   #sidebar-container.active {
-    background-color: #ececec;
-    max-height: 100em;
+    max-height: none;
   }
   #sidebar-container .sidebar-button {
-    display: inline-block;
+    display: block;
     padding: 2em;
     width: 100%;
   }
   #sidebar-container .sidebar-list {
     font-size: 2rem;
-    margin-bottom: 2.5em;
-    margin-top: 2.5em;
+    margin-bottom: 0;
+    margin-top: 0;
+    position: relative;
   }
   #sidebar-container .sidebar-list ul {
     display: none;
