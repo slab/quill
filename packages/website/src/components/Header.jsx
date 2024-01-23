@@ -39,19 +39,30 @@ const VersionSelector = () => {
         v{shortVersion(process.env.version)} <DropdownIcon />
       </div>
       <div
+        role="menu"
         className={classNames(styles.versionDropdown, {
           [styles.isOpen]: isOpen,
         })}
       >
         <a
+          role="menuitem"
           href={`https://github.com/quilljs/quill/releases/tag/v${process.env.version}`}
           className={styles.versionDropdownItem}
           target="_blank"
         >
           Release Notes <ExternalLinkIcon />
         </a>
+        <a
+          role="menuitem"
+          href={`https://github.com/quilljs/quill/blob/v${process.env.version}/.github/CONTRIBUTING.md`}
+          className={styles.versionDropdownItem}
+          target="_blank"
+        >
+          Contributing <ExternalLinkIcon />
+        </a>
         <div className={styles.versionLabel}>Previous Versions</div>
         <a
+          role="menuitem"
           href="https://quilljs.com"
           className={styles.versionDropdownItem}
           target="_blank"
@@ -136,13 +147,6 @@ const Header = () => {
             title="Edit on GitHub"
           >
             <OctocatIcon />
-          </a>
-          <a
-            href="https://twitter.com/quilljs"
-            target="_blank"
-            title="Quill on X"
-          >
-            <XIcon />
           </a>
           <DocSearch
             appId="quilljs"
