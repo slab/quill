@@ -1,33 +1,16 @@
 import * as React from 'react';
-import { graphql, useStaticQuery } from 'gatsby';
+import Head from 'next/head';
 
 const SEO = ({ title, permalink }) => {
-  const data = useStaticQuery(graphql`
-    query {
-      site {
-        siteMetadata {
-          url
-          title
-          shortTitle
-          description
-          shortDescription
-        }
-      }
-    }
-  `);
-
   const pageTitle = title
-    ? `${title} - ${data.site.siteMetadata.shortTitle}`
-    : data.site.siteMetadata.title;
+    ? `${title} - ${process.env.shortTitle}`
+    : process.env.title;
 
   return (
-    <>
+    <Head>
       <meta name="twitter:site" content="@quilljs" />
       <meta name="twitter:title" content={pageTitle} />
-      <meta
-        name="twitter:description"
-        content={data.site.siteMetadata.shortDescription}
-      />
+      <meta name="twitter:description" content={process.env.shortDescription} />
       <meta
         name="twitter:image"
         content="https://quilljs.com/assets/images/brand-asset.png"
@@ -35,11 +18,7 @@ const SEO = ({ title, permalink }) => {
       <meta property="og:type" content="website" />
       <meta
         property="og:url"
-        content={
-          permalink
-            ? data.site.siteMetadata.url + permalink
-            : data.site.siteMetadata.url
-        }
+        content={permalink ? process.env.url + permalink : process.env.url}
       />
       <meta
         property="og:image"
@@ -48,8 +27,8 @@ const SEO = ({ title, permalink }) => {
       <meta property="og:title" content={pageTitle} />
       <meta property="og:site_name" content="Quill" />
       <title>{pageTitle}</title>
-      <meta name="description" content={data.site.siteMetadata.description} />
-    </>
+      <meta name="description" content={process.env.description} />
+    </Head>
   );
 };
 

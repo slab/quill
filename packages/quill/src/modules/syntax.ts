@@ -30,7 +30,6 @@ class CodeToken extends Inline {
   constructor(scroll: ScrollBlot, domNode: Node, value: unknown) {
     // @ts-expect-error
     super(scroll, domNode, value);
-    // @ts-expect-error
     TokenAttributor.add(this.domNode, value);
   }
 
@@ -38,7 +37,6 @@ class CodeToken extends Inline {
     if (format !== CodeToken.blotName) {
       super.format(format, value);
     } else if (value) {
-      // @ts-expect-error
       TokenAttributor.add(this.domNode, value);
     } else {
       TokenAttributor.remove(this.domNode);
@@ -61,7 +59,6 @@ class SyntaxCodeBlock extends CodeBlock {
   static create(value: unknown) {
     const domNode = super.create(value);
     if (typeof value === 'string') {
-      // @ts-expect-error
       domNode.setAttribute('data-language', value);
     }
     return domNode;
@@ -329,7 +326,6 @@ class Syntax extends Module<SyntaxOptions> {
 }
 Syntax.DEFAULTS = {
   hljs: (() => {
-    // @ts-expect-error
     return window.hljs;
   })(),
   interval: 1000,
@@ -342,7 +338,7 @@ Syntax.DEFAULTS = {
     { key: 'diff', label: 'Diff' },
     { key: 'xml', label: 'HTML/XML' },
     { key: 'java', label: 'Java' },
-    { key: 'javascript', label: 'Javascript' },
+    { key: 'javascript', label: 'JavaScript' },
     { key: 'markdown', label: 'Markdown' },
     { key: 'php', label: 'PHP' },
     { key: 'python', label: 'Python' },

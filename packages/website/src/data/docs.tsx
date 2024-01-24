@@ -1,23 +1,23 @@
 const items = [
   {
     title: 'Quickstart',
-    url: '/docs/quickstart/',
+    url: '/docs/quickstart',
   },
   {
-    title: 'Download',
-    url: '/docs/download/',
+    title: 'Installation',
+    url: '/docs/installation',
   },
   {
     title: 'Configuration',
-    url: '/docs/configuration/',
+    url: '/docs/configuration',
   },
   {
     title: 'Formats',
-    url: '/docs/formats/',
+    url: '/docs/formats',
   },
   {
     title: 'API',
-    url: '/docs/api/',
+    url: '/docs/api',
     children: [
       {
         title: 'Content',
@@ -51,37 +51,41 @@ const items = [
   },
   {
     title: 'Delta',
-    url: '/docs/delta/',
+    url: '/docs/delta',
   },
   {
     title: 'Modules',
-    url: '/docs/modules/',
+    url: '/docs/modules',
     children: [
       {
         title: 'Toolbar',
-        url: '/docs/modules/toolbar/',
+        url: '/docs/modules/toolbar',
       },
       {
         title: 'Keyboard',
-        url: '/docs/modules/keyboard/',
+        url: '/docs/modules/keyboard',
       },
       {
         title: 'History',
-        url: '/docs/modules/history/',
+        url: '/docs/modules/history',
       },
       {
         title: 'Clipboard',
-        url: '/docs/modules/clipboard/',
+        url: '/docs/modules/clipboard',
       },
       {
         title: 'Syntax',
-        url: '/docs/modules/syntax/',
+        url: '/docs/modules/syntax',
       },
     ],
   },
   {
+    title: 'Registries',
+    url: '/docs/registries',
+  },
+  {
     title: 'Themes',
-    url: '/docs/themes/',
+    url: '/docs/themes',
   },
 ];
 

@@ -1,4 +1,5 @@
-Note: This branch and README covers the upcoming 2.0 release. View [1.x docs here](https://github.com/quilljs/quill/tree/1.3.6).
+> [!NOTE]
+> This branch and README covers the upcoming 2.0 release. View [1.x docs here](https://github.com/quilljs/quill/tree/1.3.6).
 
 <h1 align="center">
   <a href="https://quilljs.com/" title="Quill">Quill Rich Text Editor</a>
@@ -28,11 +29,8 @@ Note: This branch and README covers the upcoming 2.0 release. View [1.x docs her
     <img src="https://img.shields.io/npm/dm/quill.svg" alt="Downloads">
   </a>
 </p>
-<p align="center">
-  <a href="https://saucelabs.com/u/quill" title="Test Status">
-    <img src="https://cdn.quilljs.com/badge.svg?v=2" alt="Test Status">
-  </a>
-</p>
+
+<hr/>
 
 [Quill](https://quilljs.com/) is a modern rich text editor built for compatibility and extensibility. It was created by [Jason Chen](https://twitter.com/jhchen) and [Byron Milligan](https://twitter.com/byronmilligan) and actively maintained by [Slab](https://slab.com).
 
@@ -44,7 +42,10 @@ Instantiate a new Quill object with a css selector for the div that should becom
 
 ```html
 <!-- Include Quill stylesheet -->
-<link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
+<link
+  href="https://cdn.jsdelivr.net/npm/quill@2.0.0-beta.0/dist/quill.snow.css"
+  rel="stylesheet"
+/>
 
 <!-- Create the toolbar container -->
 <div id="toolbar">
@@ -55,16 +56,17 @@ Instantiate a new Quill object with a css selector for the div that should becom
 <!-- Create the editor container -->
 <div id="editor">
   <p>Hello World!</p>
+  <p>Some initial <strong>bold</strong> text</p>
+  <p><br /></p>
 </div>
 
 <!-- Include the Quill library -->
-<script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-beta.0/dist/quill.js"></script>
 
 <!-- Initialize Quill editor -->
 <script>
-  var editor = new Quill('#editor', {
-    modules: { toolbar: '#toolbar' },
-    theme: 'snow',
+  const quill = new Quill("#editor", {
+    theme: "snow",
   });
 </script>
 ```
@@ -73,23 +75,31 @@ Take a look at the [Quill](https://quilljs.com/) website for more documentation,
 
 ## Download
 
-- [npm](https://www.npmjs.com/package/quill) - `npm install quill`
+- [npm](https://www.npmjs.com/package/quill) - `npm install quill@beta`
 - tar - https://github.com/quilljs/quill/releases
 
 ### CDN
 
 ```html
 <!-- Main Quill library -->
-<script src="//cdn.quilljs.com/1.0.0/quill.js"></script>
-<script src="//cdn.quilljs.com/1.0.0/quill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-beta.0/dist/quill.js"></script>
 
 <!-- Theme included stylesheets -->
-<link href="//cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
-<link href="//cdn.quilljs.com/1.0.0/quill.bubble.css" rel="stylesheet" />
+<link
+  href="https://cdn.jsdelivr.net/npm/quill@2.0.0-beta.0/dist/quill.snow.css"
+  rel="stylesheet"
+/>
+<link
+  href="https://cdn.jsdelivr.net/npm/quill@2.0.0-beta.0/dist/quill.bubble.css"
+  rel="stylesheet"
+/>
 
 <!-- Core build with no theme, formatting, non-essential modules -->
-<link href="//cdn.quilljs.com/1.0.0/quill.core.css" rel="stylesheet" />
-<script src="//cdn.quilljs.com/1.0.0/quill.core.js"></script>
+<link
+  href="https://cdn.jsdelivr.net/npm/quill@2.0.0-beta.0/dist/quill.core.css"
+  rel="stylesheet"
+/>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-beta.0/dist/quill.core.js"></script>
 ```
 
 ## Community

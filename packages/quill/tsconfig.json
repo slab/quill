@@ -13,10 +13,10 @@
     "resolveJsonModule": true,
     "declaration": false,
     "module": "ES2020",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "strictNullChecks": true,
     "noImplicitAny": true,
     "noUnusedLocals": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "test/**/*"]
 }

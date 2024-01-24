@@ -4,11 +4,15 @@ title: Delta
 
 Deltas are a simple, yet expressive format that can be used to describe Quill's contents and changes. The format is a strict subset of JSON, is human readable, and easily parsible by machines. Deltas can describe any Quill document, includes all text and formatting information, without the ambiguity and complexity of HTML.
 
-Don't be confused by its name Delta&mdash;Deltas represents both documents and changes to documents. If you think of Deltas as the instructions from going from one document to another, the way Deltas represent a document is by expressing the instructions starting from an empty document.
+<Hint>
+Don't be confused by its name <em>Delta</em>&mdash;Deltas represents both documents and changes to documents. If you think of Deltas as the instructions from going from one document to another, the way Deltas represent a document is by expressing the instructions starting from an empty document.
+</Hint>
 
 Deltas are implemented as a separate [standalone library](https://github.com/quilljs/delta/), allowing its use outside of Quill. It is suitable for [Operational Transform](https://en.wikipedia.org/wiki/Operational_transformation) and can be used in realtime, Google Docs like applications. For a more in depth explanation behind Deltas, see [Designing the Delta Format](/guides/designing-the-delta-format/).
 
-**Note:** It is not recommended to construct Deltas by hand&mdash;rather use the chainable [`insert()`](https://github.com/quilljs/delta#insert), [`delete()`](https://github.com/quilljs/delta#delete), and [`retain()`](https://github.com/quilljs/delta#retain) methods to create new Deltas. You can use [`import()`](/docs/api/#import) to access Delta from Quill.
+<Hint>
+It is not recommended to construct Deltas by hand&mdash;rather use the chainable [`insert()`](https://github.com/quilljs/delta#insert), [`delete()`](https://github.com/quilljs/delta#delete), and [`retain()`](https://github.com/quilljs/delta#retain) methods to create new Deltas. You can use [`import()`](/docs/api/#import) to access Delta from Quill.
+</Hint>
 
 ## Document
 
@@ -120,4 +124,33 @@ Note that a Delta's instructions always starts at the beginning of the document.
 
 Play around with Quill and take a look at how its content and changes look. Open your developer console for another view into the Deltas.
 
-<CodePen height="470" hash="dMQGmq" defaultTab="result" />
+<SandpackWithQuillTemplate
+  preferPreview
+  afterEditor={`
+  <pre id="playground" style="font-size: 12px">
+  </pre>
+  `}
+  files={{
+    'index.js': `
+const quill = new Quill('#editor', { theme: 'snow' });
+
+quill.on(Quill.events.TEXT_CHANGE, update);
+const playground = document.querySelector('#playground');
+update();
+
+function formatDelta(delta) {
+  return \`<div>\${JSON.stringify(delta.ops, null, 2)}</div>\`;
+}
+
+function update(delta) {
+  const contents = quill.getContents();
+  let html = \`<h3>contents</h3>\${formatDelta(contents)}\`
+  if (delta) {
+    html = \`\${html}<h3>change</h3>\${formatDelta(contents)}\`;
+  }
+  playground.innerHTML = html;
+}
+
+    `
+  }}
+/>

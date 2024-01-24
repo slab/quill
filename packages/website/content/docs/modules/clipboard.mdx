@@ -25,12 +25,12 @@ addMatcher(nodeType: Number, (node: Node, delta: Delta) => Delta)
 **Examples**
 
 ```javascript
-quill.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {
+quill.clipboard.addMatcher(Node.TEXT_NODE, (node, delta) => {
   return new Delta().insert(node.data);
 });
 
 // Interpret a <b> tag as bold
-quill.clipboard.addMatcher('B', function(node, delta) {
+quill.clipboard.addMatcher('B', (node, delta) => {
   return delta.compose(new Delta().retain(delta.length(), { bold: true }));
 });
 ```

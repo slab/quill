@@ -7,8 +7,7 @@ class TableCell extends Block {
   static tagName = 'TD';
 
   static create(value: string) {
-    // @ts-expect-error
-    const node = super.create() as Element;
+    const node = super.create() as HTMLElement;
     if (value) {
       node.setAttribute('data-row', value);
     } else {

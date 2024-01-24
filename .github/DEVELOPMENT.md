@@ -1,59 +1,58 @@
 # Development
 
-Quill's source is in [ES6](http://www.ecma-international.org/ecma-262/6.0/index.html) and utilizes [Webpack](https://webpack.github.io/) to organize its files. The documentation site (hosted at [quilljs.com](https://quilljs.com/)) is built with [Gatsby](https://www.gatsbyjs.com/). [Vitest](https://vitest.dev/) and [Playwright](https://playwright.dev/) are used for testing.
+This repo is a monorepo powered by npm's official [workspace feature](https://docs.npmjs.com/cli/v10/using-npm/workspaces). It contains the following packages:
 
-To develop Quill locally, you will want a copy of Quill's codebase, with the build pipeline and documentation site running locally. The documentation site lives in `doc/` but will use your local build instead of the CDN that the public site uses. This allows you to test changes on a local copy of all of the quilljs.com demos, such as the [standalone examples](https://github.com/quilljs/quill/blob/develop/docs/docs/standalone).
+### quill
 
-### Setup
+This is the Quill library. It's written in [TypeScript](https://www.typescriptlang.org/), and use [Webpack](https://webpack.js.org/) as the bundler.
+It uses [Vitest](https://vitest.dev) for unit testing, and [Playwright](https://playwright.dev/) for E2E testing.
 
-The local development environment requires Node.js.
+### website
 
-After installing Node.js:
+It's Quill's website (hosted at [quilljs.com](https://quilljs.com/)). It's built with [Next.js](https://nextjs.org/).
 
-    npm install
-    npm run build
+## Setup
 
-You can now try out the unit test suite by running:
+To prepare your local environment for development, ensure you have Node.js installed. The repo uses npm, and doesn't support Yarn and pnpm.
 
-    npm run test:unit
+Install the necessary dependencies with the command below:
 
-Webpack provides a server to dynamically build and serve the latest copy of the source code. Gatsby does the same for the documentation site.
+```shell
+npm install
+```
 
-With two independent servers, it is useful to have a proxy to as a front end single point of access to Gatsby and Webpack. The documentation site is normally set up to fetch Quill from Quill's CDN, but the local proxy will serve a local build from webpack dev server instead.
+Start the development environment using:
 
-All four services can be run with a single command thanks to [foreman](http://ddollar.github.io/foreman/):
+```shell
+npm start
+```
 
-    npm start
+This command starts two services:
 
-Once the terminal settles (with messages indicating success from `jekyll`, `karma`, `proxy`, and `webpack`), you may access the different services as follows:
+- Quill's webpack dev server
+- Website's Next.js dev server
 
-| Service                      | URL                                                                          |
-| :--------------------------- | :--------------------------------------------------------------------------- |
-| Jekyll Documentation Site    | [localhost:9000](http://localhost:9000)                                      |
-| Standalone Editor (Full)     | [localhost:9000/standalone/full](http://localhost:9000/standalone/full/)     |
-| Standalone Editor (Snow)     | [localhost:9000/standalone/snow](http://localhost:9000/standalone/snow/)     |
-| Standalone Editor (Bubble)   | [localhost:9000/standalone/bubble](http://localhost:9000/standalone/bubble/) |
-| Webpack Locally Hosted Build | [localhost:9080](http://localhost:9080)                                      |
+These servers dynamically build and serve the latest copy of the source code.
 
-### Testing
+Access the running website at [localhost:9000](http://localhost:9000/). By default, the website will use your local Quill build, that includes all the examples in the website. This convenient setup allows for seamless development and ensures changes to Quill do not disrupt the website's content.
 
-While Quill features an extensive javascript test suite, which you can run with:
+If you need to modify only the website's code, start the website with `npm start -w website``. This makes the website use the latest CDN version.
 
-    npm run test:unit
+## Testing
 
-However some functionality can only be tested with webdriver. To set up or update webdriver run:
+To run the unit tests in watch mode, run:
 
-    npm run webdriver:update
+    npm run test:unit -w quill
 
-Once webdriver is installed, you can run the test suite with
+To execute the E2E tests, run:
 
-    npm run test:functional
+    npm run test:e2e -w quill
 
-### Workflow
+## Workflow
 
 A standard development workflow involves:
 
 1. `npm start` - to run development services
-2. [localhost:9000/standalone/snow](http://localhost:9000/standalone/snow/) - to interactively develop and test an isolated example
-3. `npm run test:unit` - to run unit tests
-4. If everything is working, run the webdriver tests.
+2. [localhost:9000/standalone/snow](http://localhost:9000/standalone/snow) - to interactively develop and test an isolated example
+3. `npm run test:unit -w quill` - to run unit tests
+4. If everything is working, run the E2E tests

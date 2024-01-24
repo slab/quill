@@ -1,4 +1,4 @@
-import { createElement, ReactNode } from 'react';
+import { createElement } from 'react';
 import slug from '../utils/slug';
 
 const EXPERIMENTAL_FLAG = ' #experimental';
@@ -24,7 +24,7 @@ const Heading = ({ level, children, anchor = 'on' }) => {
     { id },
     <>
       {id && <a className="anchor" href={`#${id}`}></a>}
-      {children}
+      {title}
       {isExperimental && <span className="experimental">experimental</span>}
     </>,
   );

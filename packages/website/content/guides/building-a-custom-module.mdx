@@ -4,7 +4,9 @@ title: Building a Custom Module
 
 Quill's core strength as an editor is its rich API and powerful customization capabilities. As you implement functionality on top of Quill's API, it may be convenient to organize this as a module. For the purpose of this guide, we will walk through one way to build a word counter module, a commonly found feature in many word processors.
 
-_Note: Internally modules are how much of Quill's functionality is organized. You can overwrite these default [modules](/docs/modules/) by implementing your own and registering it with the same name._
+<Hint>
+Internally modules are how much of Quill's functionality is organized. You can overwrite these default [modules](/docs/modules/) by implementing your own and registering it with the same name.
+</Hint>
 
 ### Counting Words
 
@@ -16,7 +18,56 @@ At its core a word counter simply counts the number of words in the editor and d
 
 Let's jump straight in with a complete example!
 
-<CodePen height="379" hash="bZkWKA" />
+<Sandpack
+  defaultShowPreview
+  externalResources={[
+    "{{site.cdn}}/quill.snow.css",
+    "{{site.cdn}}/quill.js",
+  ]}
+  files={{
+    'index.html': `
+<link href="/index.css" rel="stylesheet">
+
+<div id="editor"></div>
+<div id="counter">0</div>
+
+<script src="/index.js"></script>
+    `,
+    'index.css': `
+#editor {
+  border: 1px solid #ccc;
+}
+
+#counter {
+  border: 1px solid #ccc;
+  border-width: 0px 1px 1px 1px;
+  color: #aaa;
+  padding: 5px 15px;
+  text-align: right;
+}
+    `,
+    'index.js': `
+function Counter(quill, options) {
+  const container = document.querySelector('#counter');
+  quill.on(Quill.events.TEXT_CHANGE, () => {
+    const text = quill.getText();
+    // There are a couple issues with counting words
+    // this way but we'll fix these later
+    container.innerText = text.split(/\\s+/).length;
+  });
+}
+
+Quill.register('modules/counter', Counter);
+
+// We can now initialize Quill with something like this:
+const quill = new Quill('#editor', {
+  modules: {
+    counter: true
+  }
+});
+    `
+  }}
+/>
 
 That's all it takes to add a custom module to Quill! A function can be [registered](/docs/api/#quillregistermodule/) as a module and it will be passed the corresponding Quill editor object along with any options.
 
@@ -24,16 +75,208 @@ That's all it takes to add a custom module to Quill! A function can be [register
 
 Modules are passed an options object that can be used to fine tune the desired behavior. We can use this to accept a selector for the counter container instead of a hard-coded string. Let's also customize the counter to either count words or characters:
 
-<CodePen height="430" hash="OXqmEp" />
+<Sandpack
+  defaultShowPreview
+  externalResources={[
+    "{{site.cdn}}/quill.snow.css",
+    "{{site.cdn}}/quill.js",
+  ]}
+  files={{
+    'index.html': `
+<link href="/index.css" rel="stylesheet">
+
+<div id="editor"></div>
+<div id="counter">0</div>
+
+<script src="/index.js"></script>
+    `,
+    'index.css': `
+#editor {
+  border: 1px solid #ccc;
+}
+
+#counter {
+  border: 1px solid #ccc;
+  border-width: 0px 1px 1px 1px;
+  color: #aaa;
+  padding: 5px 15px;
+  text-align: right;
+}
+    `,
+    'index.js': `
+function Counter(quill, options) {
+  const container = document.querySelector(options.container);
+  quill.on(Quill.events.TEXT_CHANGE, () => {
+    const text = quill.getText();
+    if (options.unit === 'word') {
+      container.innerText = text.split(/\\s+/).length + ' words';
+    } else {
+      container.innerText = text.length + ' characters';
+    }
+
+  });
+}
+
+Quill.register('modules/counter', Counter);
+
+// We can now initialize Quill with something like this:
+const quill = new Quill('#editor', {
+  modules: {
+    counter: {
+      container: '#counter',
+      unit: 'word'
+    }
+  }
+});
+    `
+  }}
+/>
 
 ### Constructors
 
 Since any function can be registered as a Quill module, we could have implemented our counter as an ES5 constructor or ES6 class. This allows us to access and utilize the module directly.
 
-<CodePen height="688" hash="BzbRVR" />
+<Sandpack
+  defaultShowPreview
+  externalResources={[
+    "{{site.cdn}}/quill.snow.css",
+    "{{site.cdn}}/quill.js",
+  ]}
+  files={{
+    'index.html': `
+<link href="/index.css" rel="stylesheet">
+
+<div id="editor"></div>
+<div id="counter">0</div>
+
+<script src="/index.js"></script>
+    `,
+    'index.css': `
+#editor {
+  border: 1px solid #ccc;
+}
+
+#counter {
+  border: 1px solid #ccc;
+  border-width: 0px 1px 1px 1px;
+  color: #aaa;
+  padding: 5px 15px;
+  text-align: right;
+}
+    `,
+    'index.js': `
+class Counter {
+  constructor(quill, options) {
+    const container = document.querySelector(options.container);
+    quill.on(Quill.events.TEXT_CHANGE, () => {
+      const text = quill.getText();
+      if (options.unit === 'word') {
+        container.innerText = text.split(/\\s+/).length + ' words';
+      } else {
+        container.innerText = text.length + ' characters';
+      }
+
+    });
+  }
+
+  calculate() {
+    const text = this.quill.getText();
+
+    return this.options.unit === 'word' ?
+      text.split(/\\s+/).length :
+      text.length;
+  }
+}
+
+Quill.register('modules/counter', Counter);
+
+// We can now initialize Quill with something like this:
+const quill = new Quill('#editor', {
+  modules: {
+    counter: {
+      container: '#counter',
+      unit: 'word'
+    }
+  }
+});
+    `
+  }}
+/>
 
 ### Wrapping It All Up
 
 Now let's polish off the module in ES6 and fix a few pesky bugs. That's all there is to it!
 
-<CodePen height="772" hash="wWOdXZ" />
+<Sandpack
+  defaultShowPreview
+  externalResources={[
+    "{{site.cdn}}/quill.snow.css",
+    "{{site.cdn}}/quill.js",
+  ]}
+  files={{
+    'index.html': `
+<link href="/index.css" rel="stylesheet">
+
+<div id="editor"></div>
+<div id="counter">0</div>
+
+<script src="/index.js"></script>
+    `,
+    'index.css': `
+#editor {
+  border: 1px solid #ccc;
+}
+
+#counter {
+  border: 1px solid #ccc;
+  border-width: 0px 1px 1px 1px;
+  color: #aaa;
+  padding: 5px 15px;
+  text-align: right;
+}
+    `,
+    'index.js': `
+class Counter {
+  constructor(quill, options) {
+    this.quill = quill;
+    this.options = options;
+    this.container = document.querySelector(options.container);
+    quill.on(Quill.events.TEXT_CHANGE, this.update.bind(this));
+  }
+
+  calculate() {
+    const text = this.quill.getText();
+
+    if (this.options.unit === 'word') {
+      const trimmed = text.trim();
+      // Splitting empty text returns a non-empty array
+      return trimmed.length > 0 ? trimmed.split(/\\s+/).length : 0;
+    } else {
+      return text.length;
+    }
+  }
+
+  update() {
+    const length = this.calculate();
+    let label = this.options.unit;
+    if (length !== 1) {
+      label += 's';
+    }
+    this.container.innerText = \`\${length} \${label}\`;
+  }
+}
+
+Quill.register('modules/counter', Counter);
+
+// We can now initialize Quill with something like this:
+const quill = new Quill('#editor', {
+  modules: {
+    counter: {
+      container: '#counter',
+      unit: 'word'
+    }
+  }
+});
+    `
+  }}
+/>

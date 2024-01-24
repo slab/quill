@@ -22,16 +22,25 @@ Themes allow you to easily make your editor look good with minimal effort. Quill
 
 Bubble is a simple tooltip based theme.
 
-<div className="standalone-container">
-  <Editor
-    rootStyle={{ height: '350px' }}
-    style={{ border: '1px solid #ccc' }}
-    config={{
-      placeholder: 'Compose an epic...',
-      theme: 'bubble',
-    }}
-  />
+<Sandpack
+  preferPreview
+  files={{
+    'index.html': `
+<link href="{{site.cdn}}/quill.bubble.css" rel="stylesheet" />
+
+<div id="editor" style="margin: 50px 0;">
+  <p>Hello, <strong>World</strong></p>
 </div>
+
+<script src="{{site.cdn}}/quill.js"></script>
+<script>
+  const quill = new Quill('#editor', {
+    placeholder: 'Compose an epic...',
+    theme: 'bubble',
+  });
+</script>`
+  }}
+/>
 <a className="standalone-link" href="/standalone/bubble/">
   Standalone
 </a>
@@ -40,24 +49,25 @@ Bubble is a simple tooltip based theme.
 
 Snow is a clean, flat toolbar theme.
 
-<div className="standalone-container">
-  <Editor
-    rootStyle={{ height: '350px' }}
-    config={{
-      placeholder: 'Compose an epic...',
-      modules: {
-        toolbar: [
-          [{ header: [] }],
-          ['bold', 'italic', 'underline', 'link'],
-          [{ color: [] }, { background: [] }],
-          [{ list: 'ordered' }, { list: 'bullet' }],
-          ['clean'],
-        ],
-      },
-      theme: 'snow',
-    }}
-  />
+<Sandpack
+  preferPreview
+  files={{
+    'index.html': `
+<link href="{{site.cdn}}/quill.snow.css" rel="stylesheet" />
+
+<div id="editor">
+  <p>Hello, <strong>World</strong></p>
 </div>
+
+<script src="{{site.cdn}}/quill.js"></script>
+<script>
+  const quill = new Quill('#editor', {
+    placeholder: 'Compose an epic...',
+    theme: 'snow',
+  });
+</script>`
+  }}
+/>
 <a className="standalone-link" href="/standalone/snow/">
   Standalone
 </a>

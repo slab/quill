@@ -2,7 +2,7 @@ import { ClassAttributor, Scope, StyleAttributor } from 'parchment';
 
 class ColorAttributor extends StyleAttributor {
   value(domNode: HTMLElement) {
-    let value = super.value(domNode);
+    let value = super.value(domNode) as string;
     if (!value.startsWith('rgb(')) return value;
     value = value.replace(/^[^\d]+/, '').replace(/[^\d]+$/, '');
     const hex = value

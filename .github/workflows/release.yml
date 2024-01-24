@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'npm version. Examples: "2.0.0", "2.0.0-beta.0". To deploy an experimental version, type "experimental".'
+        default: "experimental"
+        required: true
+      dry-run:
+        description: "Only create a tarball, do not publish to npm or create a release on GitHub."
+        type: boolean
+        default: true
+        required: true
+
+jobs:
+  # test:
+  #   uses: ./.github/workflows/_test.yml
+
+  release:
+    runs-on: ubuntu-latest
+    # needs: test
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - run: npm ci
+      - run: ./scripts/release.js --version ${{ github.event.inputs.version }} ${{ github.event.inputs.dry-run == 'true' && '--dry-run' || '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Archive npm package tarball
+        uses: actions/upload-artifact@v3
+        with:
+          name: npm
+          path: |
+            packages/quill/dist/*.tgz

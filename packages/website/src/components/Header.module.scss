@@ -1,0 +1,310 @@
+.githubMenuItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+$linkBorderRadius: 8px;
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-bottom: 1px solid #e2e0e0;
+  padding: 14px 0;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+
+  .headerContent {
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 40px;
+    justify-content: space-around;
+
+    .mainNav {
+      display: flex;
+      align-items: center;
+      margin-left: 30px;
+      font-size: 16px;
+
+      a {
+        display: block;
+        margin: 0 8px;
+        color: #323131;
+        transition: background 0.2s;
+        padding: 8px 12px 7px;
+        border-radius: $linkBorderRadius;
+        line-height: 1;
+
+        &:hover,
+        &.active {
+          background: var(--color-bg-inset);
+        }
+        &:active {
+          background: var(--color-bg-inset-emphasis);
+        }
+      }
+    }
+
+    .secondaryNav {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+
+      a {
+        margin-left: 18px;
+        display: block;
+        width: 26px;
+        transition: opacity 0.2s;
+
+        svg {
+          display: block;
+        }
+
+        &:hover {
+          opacity: 0.6;
+        }
+      }
+
+      :global {
+        .DocSearch-Button {
+          width: 200px;
+        }
+      }
+    }
+
+    .mobileNavToggle {
+      border: none;
+      padding: 0;
+      right: 0;
+      top: 7.5em;
+
+      span {
+        background-color: #333;
+        display: block;
+        height: 3px;
+        margin: 0.53em;
+        width: 2.5em;
+      }
+    }
+
+    @media (min-width: 800px) {
+    }
+  }
+
+  .searchBarContainer {
+    margin-left: auto;
+    font-size: 14px;
+
+    input {
+      width: 200px;
+      background: #eaeaea;
+      border-radius: 3px;
+      border: 0;
+      padding: 8px 12px;
+      line-height: 1;
+    }
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+
+    a {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  :global(.DocSearch-Button-Placeholder) {
+    font-size: 14px;
+    margin-top: 2px;
+  }
+
+  :global(.DocSearch-Button-Keys) {
+    display: flex;
+    justify-content: center;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    min-width: 30px;
+    text-align: center;
+    padding: 1px 5px 0;
+    margin-right: 8px;
+    height: 20px;
+  }
+
+  :global(.DocSearch-Search-Icon) {
+    color: var(--docsearch-muted-color);
+  }
+
+  :global(.DocSearch-Button-Key) {
+    margin: 0;
+    padding: 0;
+    width: auto;
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      Oxygen,
+      Ubuntu,
+      Cantarell,
+      'Open Sans',
+      'Helvetica Neue',
+      sans-serif;
+    line-height: 1;
+  }
+}
+
+.versionWrapper {
+  position: relative;
+  margin-left: 4px;
+
+  .version {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    border-radius: 8px;
+    line-height: 1;
+    background: var(--color-accent);
+    font-family: 'Sofia Pro', sans-serif;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+    padding: 5px 6px 3px 8px;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      background: transparent;
+      border: 2px solid var(--color-accent);
+    }
+
+    svg {
+      height: 12px;
+      width: 12px;
+      fill: #333;
+    }
+  }
+
+  .version,
+  .versionDropdown {
+    margin-left: 10px;
+  }
+
+  .versionDropdown {
+    margin-top: 8px;
+    position: absolute;
+    padding: 12px 8px 12px;
+    width: max-content;
+    text-align: left;
+    font-size: 16px;
+    transition: opacity 0.2s;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.15);
+
+    &:not(.isOpen) {
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .versionLabel {
+      padding: 0 8px;
+      color: #999;
+      text-transform: uppercase;
+      font-size: 12px;
+      border-top: 1px solid #eee;
+      padding-top: 12px;
+      user-select: none;
+
+      &:not(:first-child) {
+        margin-top: 8px;
+      }
+    }
+
+    .versionDropdownItem {
+      padding: 8px 10px 7px;
+      line-height: 1;
+      transition: background 0.2s;
+      border-radius: $linkBorderRadius;
+
+      span {
+        text-transform: uppercase;
+        font-size: 12px;
+        margin-left: 20px;
+        background: var(--color-accent);
+        padding: 4px 8px;
+        border-radius: 4px;
+        line-height: 1;
+      }
+
+      svg {
+        width: 12px;
+        height: 12px;
+        color: #ccc;
+        margin-left: 4px;
+        margin-top: -1px;
+
+        fill: #999;
+      }
+
+      &.isActive {
+        background: #f5f5f5;
+      }
+
+      &:hover {
+        background: #f5f5f5;
+      }
+    }
+  }
+}
+
+.header {
+  .mobileNav,
+  .mobileNavToggle {
+    display: none;
+  }
+
+  .mobileMainNav {
+    margin-top: 24px;
+
+    a {
+      display: block;
+      font-size: 16px;
+      padding: 8px 0;
+    }
+  }
+
+  @media (max-width: 960px) {
+    :global(.DocSearch-Button) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 800px) {
+    .headerContent {
+      .mainNav,
+      .secondaryNav {
+        display: none;
+      }
+
+      & {
+        justify-content: space-between;
+      }
+    }
+
+    .mobileNavToggle {
+      display: block;
+    }
+
+    .mobileNav.isNavOpen {
+      display: block;
+    }
+  }
+}

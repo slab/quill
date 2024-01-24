@@ -39,12 +39,11 @@ class Emitter extends EventEmitter<string> {
     USER: 'user',
   } as const;
 
-  // @ts-expect-error listeners is declared in EventEmitter as a function
-  listeners: Record<string, { node: Node; handler: Function }[]>;
+  protected domListeners: Record<string, { node: Node; handler: Function }[]>;
 
   constructor() {
     super();
-    this.listeners = {};
+    this.domListeners = {};
     this.on('error', debug.error);
   }
 
@@ -55,7 +54,7 @@ class Emitter extends EventEmitter<string> {
   }
 
   handleDOM(event: Event, ...args: unknown[]) {
-    (this.listeners[event.type] || []).forEach(({ node, handler }) => {
+    (this.domListeners[event.type] || []).forEach(({ node, handler }) => {
       if (event.target === node || node.contains(event.target as Node)) {
         handler(event, ...args);
       }
@@ -63,10 +62,10 @@ class Emitter extends EventEmitter<string> {
   }
 
   listenDOM(eventName: string, node: Node, handler: EventListener) {
-    if (!this.listeners[eventName]) {
-      this.listeners[eventName] = [];
+    if (!this.domListeners[eventName]) {
+      this.domListeners[eventName] = [];
     }
-    this.listeners[eventName].push({ node, handler });
+    this.domListeners[eventName].push({ node, handler });
   }
 }
 

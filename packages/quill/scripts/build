@@ -4,8 +4,13 @@ set -e
 
 DIST=dist
 
+TMPDIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir')
+npx tsc --declaration --emitDeclarationOnly --outDir $TMPDIR
+
 rm -rf $DIST
-npx tsc --declaration --emitDeclarationOnly --outDir $DIST
+mkdir $DIST
+mv $TMPDIR/src/* $DIST
+rm -rf $TMPDIR
 npx babel src --out-dir $DIST --copy-files --no-copy-ignored --extensions .ts --source-maps
 npx webpack -- --mode $1
 cp package.json $DIST

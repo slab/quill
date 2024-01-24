@@ -9,11 +9,11 @@ To enable a module, simply include it in Quill's configuration.
 ```javascript
 const quill = new Quill('#editor', {
   modules: {
-    'history': {          // Enable with custom configurations
-      'delay': 2500,
-      'userOnly': true
+    history: {          // Enable with custom configurations
+      delay: 2500,
+      userOnly: true
     },
-    'syntax': true        // Enable with default configuration
+    syntax: true        // Enable with default configuration
   }
 });
 ```
@@ -46,4 +46,6 @@ Quill.register('modules/clipboard', PlainClipboard, true);
 const quill = new Quill('#editor');
 ```
 
-*Note: This particular example was selected to show what is possible. It is often easier to just use an API or configuration the existing module exposes. In this example, the existing Clipboard's [addMatcher](/docs/modules/clipboard/#addmatcher) API is suitable for most paste customization scenarios.*
+<Hint>
+This particular example was selected to show what is possible. It is often easier to just use an API or configuration the existing module exposes. In this example, the existing Clipboard's [addMatcher](/docs/modules/clipboard/#addmatcher) API is suitable for most paste customization scenarios.
+</Hint>

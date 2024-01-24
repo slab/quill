@@ -20,8 +20,7 @@ class IndentAttributor extends ClassAttributor {
     return super.canAdd(node, value) || super.canAdd(node, parseInt(value, 10));
   }
 
-  // @ts-expect-error TODO: ClassAttributor may support numbers
-  value(node) {
+  value(node: HTMLElement) {
     return parseInt(super.value(node), 10) || undefined; // Don't return NaN
   }
 }
