@@ -10,6 +10,7 @@
     "dev": "PORT=$npm_package_config_ports_website next dev",
     "start": "npm run dev",
     "build": "next build",
+    "lint": "next lint",
     "serve": "npm run serve"
   },
   "dependencies": {
