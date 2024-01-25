@@ -122,10 +122,10 @@ exec(`npm version ${version} --workspaces --force`);
 exec("git add **/package.json");
 exec(`npm version ${version} --include-workspace-root --force`);
 
+const pushCommand = `git push origin ${process.env.GITHUB_REF_NAME} --follow-tags`;
 if (distTag === "experimental") {
   console.log(`Skipping: "${pushCommand}" for experimental version`);
 } else {
-  const pushCommand = `git push origin ${process.env.GITHUB_REF_NAME} --follow-tags`;
   if (dryRun) {
     console.log(`Skipping: "${pushCommand}" in dry-run mode`);
   } else {
