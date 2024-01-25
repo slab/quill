@@ -33,6 +33,9 @@ export default (env: Record<string, unknown>) =>
         directory: path.resolve(__dirname, './dist'),
       },
       hot: false,
+      client: {
+        webSocketURL: `wss://localhost:${process.env.npm_package_config_ports_website}/webpack-dev-server/ws`,
+      },
       allowedHosts: 'all',
       devMiddleware: {
         stats: 'minimal',
