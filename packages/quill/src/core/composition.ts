@@ -21,7 +21,12 @@ class Composition {
 
     this.scroll.domNode.addEventListener('compositionend', (event) => {
       if (this.isComposing) {
-        this.handleCompositionEnd(event);
+        // Webkit makes DOM changes after compositionend, so we use microtask to
+        // ensure the order.
+        // https://bugs.webkit.org/show_bug.cgi?id=31902
+        queueMicrotask(() => {
+          this.handleCompositionEnd(event);
+        });
       }
     });
   }

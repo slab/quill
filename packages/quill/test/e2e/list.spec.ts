@@ -123,6 +123,19 @@ test.describe('list', () => {
           { insert: '\n', attributes: { list } },
         ]);
       });
+
+      test('typing in an empty editor with IME and press Backspace', async ({
+        page,
+        editorPage,
+        composition,
+      }) => {
+        await editorPage.setContents([{ insert: '\n' }]);
+
+        await editorPage.setSelection(9, 0);
+        await editorPage.typeWordWithIME(composition, '我');
+        await page.keyboard.press('Backspace');
+        expect(await editorPage.getContents()).toEqual([{ insert: '\n' }]);
+      });
     });
   }
 

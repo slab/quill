@@ -1,5 +1,7 @@
 # [Unreleased]
 
+- Fix IME not working correctly in Safari.
+
 # 2.0.0-beta.1
 
 - Fix syntax label from "Javascript" to "JavaScript".
