@@ -51,6 +51,27 @@ describe('Clipboard', () => {
         expect(quill.getSelection()).toEqual(new Range(3));
       });
 
+      test('pastes with "paste and match style"', async () => {
+        const quill = createQuill();
+        quill.setContents([
+          { insert: 'abc', attributes: { bold: true } },
+          { insert: '\n' },
+        ]);
+        quill.setSelection(3, 0);
+        quill.clipboard.onCapturePaste({
+          clipboardData: {
+            getData: (type: string) =>
+              type === 'text/plain' ? 'def' : undefined,
+          },
+          preventDefault: () => {},
+        } as ClipboardEvent);
+        await sleep(2);
+        expect(quill.getContents().ops).toEqual([
+          { insert: 'abcdef', attributes: { bold: true } },
+          { insert: '\n' },
+        ]);
+      });
+
       // Copying from Word includes both html and files
       test('pastes html data if present with file', async () => {
         const quill = createQuill();
