@@ -1,6 +1,7 @@
 # [Unreleased]
 
 - Fix IME not working correctly in Safari.
+- **Clipboard** Support paste as plain text.
 
 # 2.0.0-beta.1
 
