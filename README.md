@@ -107,9 +107,7 @@ Take a look at the [Quill](https://quilljs.com/) website for more documentation,
 Get help or stay up to date.
 
 - [Contribute](https://github.com/quilljs/quill/blob/develop/.github/CONTRIBUTING.md) on [Issues](https://github.com/quilljs/quill/issues)
-- Follow [@jhchen](https://twitter.com/jhchen) and [@quilljs](https://twitter.com/quilljs) on Twitter
 - Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/quill)
-- If privacy is required, email support@quilljs.com
 
 ## License
 
