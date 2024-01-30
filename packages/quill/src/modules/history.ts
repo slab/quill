@@ -57,7 +57,7 @@ class History extends Module<HistoryOptions> {
       this.undo.bind(this),
     );
     this.quill.keyboard.addBinding(
-      { key: 'z', shortKey: true, shiftKey: true },
+      { key: ['z', 'Z'], shortKey: true, shiftKey: true },
       this.redo.bind(this),
     );
     if (/Win/i.test(navigator.platform)) {

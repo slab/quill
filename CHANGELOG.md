@@ -3,6 +3,7 @@
 - Fix IME not working correctly in Safari.
 - **Clipboard** Support paste as plain text.
 - Fix `Quill.getText()` not respecting `length` parameter.
+- **History** Fix redo shortcut not working on Linux and Windows.
 
 # 2.0.0-beta.1
 
