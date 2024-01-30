@@ -15,7 +15,7 @@ Handlers will be called with `this` bound to the keyboard instance and be passed
 
 ```js
 quill.keyboard.addBinding({
-  key: 'B',
+  key: 'b',
   shortKey: true
 }, function(range, context) {
   this.quill.formatText(range, 'bold', true);
@@ -24,7 +24,7 @@ quill.keyboard.addBinding({
 // addBinding may also be called with one parameter,
 // in the same form as in initialization
 quill.keyboard.addBinding({
-  key: 'B',
+  key: 'b',
   shortKey: true,
   handler: function(range, context) {
 
@@ -36,13 +36,13 @@ If a modifier key is `false`, it is assumed to mean that modifier is not active.
 
 ```js
 // Only b with no modifier will trigger
-quill.keyboard.addBinding({ key: 'B' }, handler);
+quill.keyboard.addBinding({ key: 'b' }, handler);
 
 // Only shift+b will trigger
-quill.keyboard.addBinding({ key: 'B', shiftKey: true }, handler);
+quill.keyboard.addBinding({ key: ['b', 'B'], shiftKey: true }, handler);
 
 // Either b or shift+b will trigger
-quill.keyboard.addBinding({ key: 'B', shiftKey: null }, handler);
+quill.keyboard.addBinding({ key: ['b', 'B'], shiftKey: null }, handler);
 
 ```
 
@@ -50,7 +50,7 @@ Multiple handlers may be bound to the same key and modifier combination. Handler
 
 
 ```js
-quill.keyboard.addBinding({ key: 'tab' }, function(range) {
+quill.keyboard.addBinding({ key: 'Tab' }, function(range) {
   // I will normally prevent handlers of the tab key
   // Return true to let later handlers be called
   return true;
@@ -67,7 +67,7 @@ Contexts enable further specification for handlers to be called only in particul
 ```js
 // If the user hits backspace at the beginning of list or blockquote,
 // remove the format instead delete any text
-quill.keyboard.addBinding({ key: Keyboard.keys.BACKSPACE }, {
+quill.keyboard.addBinding({ key: 'Backspace' }, {
   collapsed: true,
   format: ['blockquote', 'list'],
   offset: 0
@@ -91,7 +91,7 @@ If `true`, called only if user's selection is on an empty line, `false` for a no
 
 ```js
 // If the user hits enter on an empty list, remove the list instead
-quill.keyboard.addBinding({ key: Keyboard.keys.ENTER }, {
+quill.keyboard.addBinding({ key: 'Enter' }, {
   empty: true,    // implies collapsed: true and offset: 0
   format: ['list']
 }, function(range, context) {
@@ -174,7 +174,7 @@ const bindings = {
   // There is no default binding named 'custom'
   // so this will be added without overwriting anything
   custom: {
-    key: 'B',
+    key: ['b', 'B'],
     shiftKey: true,
     handler: function(range, context) {
       // Handle shift+b
@@ -182,7 +182,7 @@ const bindings = {
   },
 
   list: {
-    key: 'backspace',
+    key: 'Backspace',
     format: ['list'],
     handler: function(range, context) {
       if (context.offset === 0) {
