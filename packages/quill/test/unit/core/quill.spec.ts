@@ -506,6 +506,43 @@ describe('Quill', () => {
       `);
     });
 
+    test('works when provide index and length', () => {
+      const quill = new Quill(createContainer('<h1>Welcome</h1>'));
+      expect(quill.getText(2, 3)).toMatchInlineSnapshot(`
+        "lco"
+      `);
+    });
+
+    test('works with range', () => {
+      const quill = new Quill(createContainer('<h1>Welcome</h1>'));
+      expect(quill.getText({ index: 1, length: 2 })).toMatchInlineSnapshot(
+        '"el"',
+      );
+    });
+  });
+
+  describe('getSemanticHTML()', () => {
+    test('return all html by default', () => {
+      const quill = new Quill(createContainer('<h1>Welcome</h1>'));
+      expect(quill.getSemanticHTML()).toMatchInlineSnapshot(`
+        "<h1>Welcome</h1>"
+      `);
+    });
+
+    test('works when only provide index', () => {
+      const quill = new Quill(createContainer('<h1>Welcome</h1>'));
+      expect(quill.getSemanticHTML(2)).toMatchInlineSnapshot(`
+        "lcome"
+      `);
+    });
+
+    test('works when provide index and length', () => {
+      const quill = new Quill(createContainer('<h1>Welcome</h1>'));
+      expect(quill.getSemanticHTML(2, 3)).toMatchInlineSnapshot(`
+        "lco"
+      `);
+    });
+
     test('works with range', () => {
       const quill = new Quill(createContainer('<h1>Welcome</h1>'));
       expect(quill.getText({ index: 1, length: 2 })).toMatchInlineSnapshot(

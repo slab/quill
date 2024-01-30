@@ -2,6 +2,7 @@
 
 - Fix IME not working correctly in Safari.
 - **Clipboard** Support paste as plain text.
+- Fix `Quill.getText()` not respecting `length` parameter.
 
 # 2.0.0-beta.1
 
