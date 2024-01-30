@@ -499,7 +499,7 @@ class Quill {
     length?: number,
   ) {
     if (typeof index === 'number') {
-      length = this.getLength() - index;
+      length = length ?? this.getLength() - index;
     }
     // @ts-expect-error
     [index, length] = overload(index, length);
@@ -513,7 +513,7 @@ class Quill {
     length?: number,
   ): string {
     if (typeof index === 'number') {
-      length = this.getLength() - index;
+      length = length ?? this.getLength() - index;
     }
     // @ts-expect-error
     [index, length] = overload(index, length);
