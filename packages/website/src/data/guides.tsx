@@ -8,10 +8,6 @@ const items = [
     url: '/guides/how-to-customize-quill',
   },
   {
-    title: 'Adding Quill to Your Build Pipeline',
-    url: '/guides/adding-quill-to-your-build-pipeline',
-  },
-  {
     title: 'Building a Custom Module',
     url: '/guides/building-a-custom-module',
   },
