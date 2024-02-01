@@ -4,8 +4,6 @@ import Link from 'next/link';
 import OctocatIcon from '../svg/octocat.svg';
 import ExternalLinkIcon from '../svg/external-link.svg';
 import DropdownIcon from '../svg/dropdown.svg';
-import XIcon from '../svg/x.svg';
-import GitHub from './GitHub';
 import * as styles from './Header.module.scss';
 import { DocSearch } from '@docsearch/react';
 import { useState } from 'react';

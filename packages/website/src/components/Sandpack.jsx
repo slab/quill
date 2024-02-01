@@ -3,12 +3,18 @@ import {
   SandpackCodeEditor,
   SandpackFileExplorer,
   SandpackPreview,
+  Sandpack as RawSandpack,
   useSandpack,
 } from '@codesandbox/sandpack-react';
 import { useEffect, useState } from 'react';
 import env from '../../env';
 import * as styles from './Sandpack.module.scss';
 import classNames from 'classnames';
+import {
+  compressToEncodedURIComponent,
+  decompressFromEncodedURIComponent,
+} from 'lz-string';
+import { withoutSSR } from './NoSSR';
 
 const TogglePreviewButton = ({ isPreviewEnabled, setIsPreviewEnabled }) => {
   const { sandpack } = useSandpack();
@@ -46,6 +52,104 @@ const ToggleCodeButton = ({ isCodeEnabled, setIsCodeEnabled }) => {
   );
 };
 
+const replaceCDN = (value) => {
+  return value.replace(/\{\{site\.(\w+)\}\}/g, (_, matched) => {
+    return matched === 'cdn' ? process.env.cdn : env[matched];
+  });
+};
+
+const LocationOverride = ({ filenames }) => {
+  const { sandpack } = useSandpack();
+  const [isCopied, setIsCopied] = useState(false);
+
+  useEffect(() => {
+    if (!isCopied) return undefined;
+    const timeout = setTimeout(() => {
+      setIsCopied(false);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [isCopied]);
+
+  return (
+    <div className={styles.shareButton}>
+      <div
+        className={classNames(styles.copied, { [styles.active]: isCopied })}
+      ></div>
+      <button
+        className={styles.button}
+        onClick={() => {
+          const map = {};
+          filenames.forEach((name) => {
+            const fullName = name.startsWith('/') ? name : `/${name}`;
+            map[fullName] = sandpack.files[fullName]?.code;
+          });
+          const encoded = compressToEncodedURIComponent(JSON.stringify(map));
+          location.hash = `code${encoded}`;
+          navigator.clipboard.writeText(location.href);
+          setIsCopied(true);
+        }}
+      >
+        Share Your Edits
+      </button>
+    </div>
+  );
+};
+
+export const StandaloneSandpack = withoutSSR(
+  ({ files, visibleFiles, activeFile, externalResources }) => {
+    const [overrides] = useState(() => {
+      if (location.hash.startsWith('#code')) {
+        const code = location.hash.replace('#code', '').trim();
+        let userCode;
+        try {
+          userCode = JSON.parse(decompressFromEncodedURIComponent(code));
+        } catch (err) {}
+        return userCode || {};
+      }
+      return {};
+    });
+
+    return (
+      <SandpackProvider
+        options={{
+          visibleFiles,
+          activeFile,
+          externalResources:
+            externalResources && externalResources.map(replaceCDN),
+        }}
+        template="static"
+        files={Object.keys(files).reduce((f, name) => {
+          const fullName = name.startsWith('/') ? name : `/${name}`;
+          return {
+            ...f,
+            [name]: replaceCDN(overrides[fullName] ?? files[name]).trim(),
+          };
+        }, {})}
+      >
+        <LocationOverride filenames={Object.keys(files)} />
+        <div className={styles.standaloneWrapper}>
+          <div className={styles.standaloneFileTree}>
+            <SandpackFileExplorer autoHiddenFiles />
+          </div>
+          <div className={styles.standaloneEditor}>
+            <SandpackCodeEditor
+              showTabs={false}
+              wrapContent
+              showRunButton={false}
+            />
+          </div>
+          <div className={styles.standalonePreview}>
+            <SandpackPreview showOpenInCodeSandbox={false} />
+          </div>
+        </div>
+      </SandpackProvider>
+    );
+  },
+);
+
 const Sandpack = ({
   defaultShowPreview,
   preferPreview,
@@ -63,12 +167,6 @@ const Sandpack = ({
     !preferPreview || defaultShowCode,
   );
   const [isReady, setIsReady] = useState(false);
-
-  const replaceCDN = (value) => {
-    return value.replace(/\{\{site\.(\w+)\}\}/g, (_, matched) => {
-      return matched === 'cdn' ? process.env.cdn : env[matched];
-    });
-  };
 
   useEffect(() => {
     setTimeout(() => {
