@@ -1,9 +1,8 @@
 <title>Bubble Theme</title>
 
-import Sandpack from '../../components/Sandpack';
+import { StandaloneSandpack } from '../../components/Sandpack';
 
-<div style={{margin: '20px auto', maxWidth: 800}}>
-<Sandpack
+<StandaloneSandpack
   preferPreview
   externalResources={[
     "{{site.highlightjs}}/highlight.min.js",
@@ -26,4 +25,3 @@ const quill = new Quill('#editor', {
     `
   }}
 />
-</div>
