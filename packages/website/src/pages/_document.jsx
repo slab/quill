@@ -32,7 +32,7 @@ export default function Document() {
         />
         <link
           rel="stylesheet"
-          href={`${process.env.highlightjs}/styles/monokai-sublime.min.css`}
+          href={`${process.env.highlightjs}/styles/atom-one-dark.min.css`}
         />
         <link
           rel="stylesheet"

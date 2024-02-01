@@ -188,7 +188,18 @@ SyntaxCodeBlock.allowedChildren = [CodeToken, CursorBlot, TextBlot, BreakBlot];
 interface SyntaxOptions {
   interval: number;
   languages: { key: string; label: string }[];
+  hljs: any;
 }
+
+const highlight = (lib: any, language: string, text: string) => {
+  if (typeof lib.versionString === 'string') {
+    const majorVersion = lib.versionString.split('.')[0];
+    if (parseInt(majorVersion, 10) >= 11) {
+      return lib.highlight(text, { language }).value;
+    }
+  }
+  return lib.highlight(language, text).value;
+};
 
 class Syntax extends Module<SyntaxOptions> {
   static DEFAULTS: SyntaxOptions & { hljs: any };
@@ -204,7 +215,6 @@ class Syntax extends Module<SyntaxOptions> {
 
   constructor(quill: Quill, options: Partial<SyntaxOptions>) {
     super(quill, options);
-    // @ts-expect-error
     if (this.options.hljs == null) {
       throw new Error(
         'Syntax module requires highlight.js. Please include the library on the page before Quill.',
@@ -292,8 +302,7 @@ class Syntax extends Module<SyntaxOptions> {
     }
     const container = this.quill.root.ownerDocument.createElement('div');
     container.classList.add(CodeBlock.className);
-    // @ts-expect-error
-    container.innerHTML = this.options.hljs.highlight(language, text).value;
+    container.innerHTML = highlight(this.options.hljs, language, text);
     return traverse(
       this.quill.scroll,
       container,

@@ -4,15 +4,15 @@ import { StandaloneSandpack } from '../../components/Sandpack';
 
 <StandaloneSandpack
   preferPreview
-  externalResources={[
-    "{{site.highlightjs}}/highlight.min.js",
-    "{{site.highlightjs}}/styles/monokai-sublime.min.css",
-    "{{site.katex}}/katex.min.css",
-    "{{site.cdn}}/quill.snow.css",
-    "{{site.cdn}}/quill.js"
-  ]}
+  activeFile="index.js"
   files={{
     'index.html': `
+<script src="{{site.highlightjs}}/highlight.min.js"></script>
+<link rel="stylesheet" href="{{site.highlightjs}}/styles/atom-one-dark.min.css" />
+<script src="{{site.katex}}/katex.min.js"></script>
+<link rel="stylesheet" href="{{site.katex}}/katex.min.css" />
+<link rel="stylesheet" href="{{site.cdn}}/quill.snow.css" />
+<script src="{{site.cdn}}/quill.js"></script>
 <div id="editor" style="height: 220px">
 </div>
 <script src="/index.js"></script>
