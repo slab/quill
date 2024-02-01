@@ -1,6 +1,7 @@
 # [Unreleased]
 
 - **Clipboard** Convert newlines between inline elements to a space.
+- **Syntax** Support highlight.js v10 and v11.
 
 # 2.0.0-beta.2
 

@@ -4,23 +4,28 @@ title: Syntax Highlighter Module
 
 The Syntax Module enhances the Code Block format by automatically detecting and applying syntax highlighting. The excellent [highlight.js](https://highlightjs.org/) library is used as a dependency to parse and tokenize code blocks.
 
-In general, you may [configure](https://highlightjs.readthedocs.io/en/latest/api.html#configure-options) highlight.js as needed. However, Quill expects and requires the `useBR` option to be `false`.
+In general, you may [configure](https://highlightjs.readthedocs.io/en/latest/api.html#configure-options) highlight.js as needed. However, Quill expects and requires the `useBR` option to be `false` if you are using highlight.js &lt; v11.
 
+Quill supports highlight.js v9.12.0 and later.
 
-### Example
+### Usage
 
-```html
+<Sandpack
+  defaultShowPreview
+  files={{
+  "/index.html":  `
 <!-- Include your favorite highlight.js stylesheet -->
-<link href="highlight.js/monokai-sublime.min.css" rel="stylesheet">
+<link href="{{site.highlightjs}}/styles/atom-one-dark.min.css" rel="stylesheet">
 
 <!-- Include the highlight.js library -->
-<script href="highlight.js"></script>
+<script src="{{site.highlightjs}}/highlight.min.js"></script>
+
+<link href="{{site.cdn}}/quill.snow.css" rel="stylesheet" />
+<script src="{{site.cdn}}/quill.js"></script>
+
+<div id="editor"></div>
 
 <script>
-hljs.configure({   // optionally configure hljs
-  languages: ['javascript', 'ruby', 'python']
-});
-
 const quill = new Quill('#editor', {
   modules: {
     syntax: true,              // Include syntax module
@@ -28,5 +33,28 @@ const quill = new Quill('#editor', {
   },
   theme: 'snow'
 });
+
+const Delta = Quill.import('delta');
+quill.setContents(
+  new Delta()
+    .insert('const language = "JavaScript";')
+    .insert('\\n', { 'code-block': 'javascript' })
+    .insert('console.log("I love " + language + "!");')
+    .insert('\\n', { 'code-block': 'javascript' })
+);
 </script>
+`}}
+/>
+
+If you install highlight.js as an npm package and don't want to expose it to `window`, you need to pass it to syntax module as an option:
+
+```js
+import Quill from 'quill';
+import hljs from 'highlight.js';
+
+const quill = new Quill('#editor', {
+  modules: {
+    syntax: { hljs },
+  },
+});
 ```
