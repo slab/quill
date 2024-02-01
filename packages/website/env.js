@@ -1,7 +1,7 @@
 const { version, homepage } = require('./package.json');
 
 const cdn = process.env.NEXT_PUBLIC_LOCAL_QUILL
-  ? `https://localhost:${process.env.npm_package_config_ports_website}/webpack-dev-server`
+  ? `http://localhost:${process.env.npm_package_config_ports_webpack}`
   : `https://cdn.jsdelivr.net/npm/quill@${version}/dist`;
 
 module.exports = {

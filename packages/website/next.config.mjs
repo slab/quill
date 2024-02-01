@@ -45,12 +45,4 @@ export default withMDX()({
 
     return config;
   },
-  async rewrites() {
-    return [
-      {
-        source: '/webpack-dev-server/:path*',
-        destination: `http://localhost:${process.env.npm_package_config_ports_webpack}/:path*`,
-      },
-    ];
-  },
 });

@@ -27,9 +27,6 @@ Start the development environment using:
 npm start
 ```
 
-> [!NOTE]
-> You might be prompted to enter your password. It's needed to set up the local SSL certificate. [Learn More](https://nextjs.org/docs/pages/api-reference/next-cli#https-for-local-development).
-
 This command starts two services:
 
 - Quill's webpack dev server
@@ -37,7 +34,7 @@ This command starts two services:
 
 These servers dynamically build and serve the latest copy of the source code.
 
-Access the running website at [localhost:9000](https://localhost:9000/). By default, the website will use your local Quill build, that includes all the examples in the website. This convenient setup allows for seamless development and ensures changes to Quill do not disrupt the website's content.
+Access the running website at [localhost:9000](http://localhost:9000/). By default, the website will use your local Quill build, that includes all the examples in the website. This convenient setup allows for seamless development and ensures changes to Quill do not disrupt the website's content.
 
 If you need to modify only the website's code, start the website with `npm start -w website``. This makes the website use the latest CDN version.
 
@@ -56,6 +53,6 @@ To execute the E2E tests, run:
 A standard development workflow involves:
 
 1. `npm start` - to run development services
-2. [localhost:9000/standalone/snow](https://localhost:9000/standalone/snow) - to interactively develop and test an isolated example
+2. [localhost:9000/standalone/snow](http://localhost:9000/standalone/snow) - to interactively develop and test an isolated example
 3. `npm run test:unit -w quill` - to run unit tests
 4. If everything is working, run the E2E tests

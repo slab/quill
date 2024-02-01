@@ -7,7 +7,7 @@
   "keywords": [],
   "license": "BSD-3-Clause",
   "scripts": {
-    "dev": "PORT=$npm_package_config_ports_website next dev --experimental-https",
+    "dev": "PORT=$npm_package_config_ports_website next dev",
     "start": "npm run dev",
     "build": "next build",
     "lint": "next lint",
