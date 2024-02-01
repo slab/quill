@@ -9,7 +9,7 @@ module.exports = {
   cdn,
   github: 'https://github.com/quilljs/quill/tree/develop/packages/website/',
   highlightjs: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0',
-  katex: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1',
+  katex: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist',
   url: homepage,
   title: 'Quill - Your powerful rich text editor',
   shortTitle: 'Quill Rich Text Editor',
