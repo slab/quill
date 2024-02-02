@@ -40,9 +40,9 @@ const CLIPBOARD_CONFIG: [Selector, Matcher][] = [
   ['ol, ul', matchList],
   ['pre', matchCodeBlock],
   ['tr', matchTable],
-  ['b', matchAlias.bind(matchAlias, 'bold')],
-  ['i', matchAlias.bind(matchAlias, 'italic')],
-  ['strike', matchAlias.bind(matchAlias, 'strike')],
+  ['b', createMatchAlias('bold')],
+  ['i', createMatchAlias('italic')],
+  ['strike', createMatchAlias('strike')],
   ['style', matchIgnore],
 ];
 
@@ -254,18 +254,16 @@ Clipboard.DEFAULTS = {
   matchers: [],
 };
 
-function applyFormat(delta: Delta, formats: Record<string, unknown>): Delta;
-function applyFormat(delta: Delta, format: string, value: unknown): Delta;
 function applyFormat(
   delta: Delta,
-  format: string | Record<string, unknown>,
-  value?: unknown,
+  format: string,
+  value: unknown,
+  scroll: ScrollBlot,
 ): Delta {
-  if (typeof format === 'object') {
-    return Object.keys(format).reduce((newDelta, key) => {
-      return applyFormat(newDelta, key, format[key]);
-    }, delta);
+  if (!scroll.query(format)) {
+    return delta;
   }
+
   return delta.reduce((newDelta, op) => {
     if (op.attributes && op.attributes[format]) {
       return newDelta.push(op);
@@ -392,8 +390,10 @@ function traverse(
   return new Delta();
 }
 
-function matchAlias(format: string, node: Element, delta: Delta) {
-  return applyFormat(delta, format, true);
+function createMatchAlias(format: string) {
+  return (_node: Element, delta: Delta, scroll: ScrollBlot) => {
+    return applyFormat(delta, format, true, scroll);
+  };
 }
 
 function matchAttributor(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
@@ -420,10 +420,11 @@ function matchAttributor(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
         formats[attr.attrName] = attr.value(node) || undefined;
       }
     });
-  if (Object.keys(formats).length > 0) {
-    return applyFormat(delta, formats);
-  }
-  return delta;
+
+  return Object.entries(formats).reduce(
+    (newDelta, [name, value]) => applyFormat(newDelta, name, value, scroll),
+    delta,
+  );
 }
 
 function matchBlot(node: Node, delta: Delta, scroll: ScrollBlot) {
@@ -445,10 +446,17 @@ function matchBlot(node: Node, delta: Delta, scroll: ScrollBlot) {
     if (match.prototype instanceof BlockBlot && !deltaEndsWith(delta, '\n')) {
       delta.insert('\n');
     }
-    // @ts-expect-error
-    if (typeof match.formats === 'function') {
-      // @ts-expect-error
-      return applyFormat(delta, match.blotName, match.formats(node, scroll));
+    if (
+      'blotName' in match &&
+      'formats' in match &&
+      typeof match.formats === 'function'
+    ) {
+      return applyFormat(
+        delta,
+        match.blotName,
+        match.formats(node, scroll),
+        scroll,
+      );
     }
   }
   return delta;
@@ -463,9 +471,11 @@ function matchBreak(node: Node, delta: Delta) {
 
 function matchCodeBlock(node: Node, delta: Delta, scroll: ScrollBlot) {
   const match = scroll.query('code-block');
-  // @ts-expect-error
-  const language = match ? match.formats(node, scroll) : true;
-  return applyFormat(delta, 'code-block', language);
+  const language =
+    match && 'formats' in match && typeof match.formats === 'function'
+      ? match.formats(node, scroll)
+      : true;
+  return applyFormat(delta, 'code-block', language, scroll);
 }
 
 function matchIgnore() {
@@ -501,10 +511,10 @@ function matchIndent(node: Node, delta: Delta, scroll: ScrollBlot) {
   }, new Delta());
 }
 
-function matchList(node: Node, delta: Delta) {
+function matchList(node: Node, delta: Delta, scroll: ScrollBlot) {
   // @ts-expect-error
   const list = node.tagName === 'OL' ? 'ordered' : 'bullet';
-  return applyFormat(delta, 'list', list);
+  return applyFormat(delta, 'list', list, scroll);
 }
 
 function matchNewline(node: Node, delta: Delta, scroll: ScrollBlot) {
@@ -532,7 +542,7 @@ function matchNewline(node: Node, delta: Delta, scroll: ScrollBlot) {
   return delta;
 }
 
-function matchStyles(node: HTMLElement, delta: Delta) {
+function matchStyles(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
   const formats: Record<string, unknown> = {};
   const style: Partial<CSSStyleDeclaration> = node.style || {};
   if (style.fontStyle === 'italic') {
@@ -551,9 +561,10 @@ function matchStyles(node: HTMLElement, delta: Delta) {
   ) {
     formats.bold = true;
   }
-  if (Object.keys(formats).length > 0) {
-    delta = applyFormat(delta, formats);
-  }
+  delta = Object.entries(formats).reduce(
+    (newDelta, [name, value]) => applyFormat(newDelta, name, value, scroll),
+    delta,
+  );
   // @ts-expect-error
   if (parseFloat(style.textIndent || 0) > 0) {
     // Could be 0.5in
@@ -562,7 +573,11 @@ function matchStyles(node: HTMLElement, delta: Delta) {
   return delta;
 }
 
-function matchTable(node: HTMLTableRowElement, delta: Delta) {
+function matchTable(
+  node: HTMLTableRowElement,
+  delta: Delta,
+  scroll: ScrollBlot,
+) {
   const table =
     node.parentElement?.tagName === 'TABLE'
       ? node.parentElement
@@ -570,8 +585,9 @@ function matchTable(node: HTMLTableRowElement, delta: Delta) {
   if (table != null) {
     const rows = Array.from(table.querySelectorAll('tr'));
     const row = rows.indexOf(node) + 1;
-    return applyFormat(delta, 'table', row);
+    return applyFormat(delta, 'table', row, scroll);
   }
+  return delta;
 }
 
 function matchText(node: HTMLElement, delta: Delta) {
