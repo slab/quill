@@ -18,6 +18,14 @@ import {
 import Video from '../../../src/formats/video';
 import { createRegistry } from '../__helpers__/factory';
 import { sleep } from '../__helpers__/utils';
+import type { RegistryDefinition } from 'parchment';
+import {
+  DirectionAttribute,
+  DirectionClass,
+  DirectionStyle,
+} from '../../../src/formats/direction';
+import CodeBlock from '../../../src/formats/code';
+import { ColorClass, ColorStyle } from '../../../src/formats/color';
 
 describe('Clipboard', () => {
   describe('events', () => {
@@ -165,7 +173,7 @@ describe('Clipboard', () => {
   });
 
   describe('convert', () => {
-    const createClipboard = () => {
+    const createClipboard = (extraFormats: RegistryDefinition[] = []) => {
       const container = document.body.appendChild(
         document.createElement('div'),
       );
@@ -183,6 +191,7 @@ describe('Clipboard', () => {
         Image,
         Video,
         Link,
+        ...extraFormats,
       ]);
       const quill = new Quill(container, { registry });
       quill.setSelection(2, 5);
@@ -291,15 +300,17 @@ describe('Clipboard', () => {
 
     test('pre', () => {
       const html = '<pre> 01 \n 23 </pre>';
-      const delta = createClipboard().convert({ html });
-      expect(delta).toEqual(
+      expect(createClipboard([CodeBlock]).convert({ html })).toEqual(
         new Delta().insert(' 01 \n 23 \n', { 'code-block': true }),
+      );
+      expect(createClipboard().convert({ html })).toEqual(
+        new Delta().insert(' 01 \n 23 '),
       );
     });
 
     test('pre with \\n node', () => {
       const html = '<pre><span> 01 </span>\n<span> 23 </span></pre>';
-      const delta = createClipboard().convert({ html });
+      const delta = createClipboard([CodeBlock]).convert({ html });
       expect(delta).toEqual(
         new Delta().insert(' 01 \n 23 \n', { 'code-block': true }),
       );
@@ -446,17 +457,32 @@ describe('Clipboard', () => {
     });
 
     test('attributor and style match', () => {
-      const delta = createClipboard().convert({
-        html: '<p style="direction:rtl;">Test</p>',
+      const html = '<p style="direction:rtl;">Test</p>';
+      const attributors = [DirectionStyle, DirectionClass, DirectionAttribute];
+      attributors.forEach((attributor) => {
+        expect(createClipboard([attributor]).convert({ html })).toEqual(
+          new Delta().insert('Test\n', { direction: 'rtl' }),
+        );
       });
-      expect(delta).toEqual(new Delta().insert('Test\n', { direction: 'rtl' }));
+
+      expect(createClipboard().convert({ html })).toEqual(
+        new Delta().insert('Test'),
+      );
     });
 
     test('nested styles', () => {
-      const delta = createClipboard().convert({
-        html: '<span style="color: red;"><span style="color: blue;">Test</span></span>',
+      const html =
+        '<span style="color: red;"><span style="color: blue;">Test</span></span>';
+      const attributors = [ColorStyle, ColorClass];
+      attributors.forEach((attributor) => {
+        expect(createClipboard([attributor]).convert({ html })).toEqual(
+          new Delta().insert('Test', { color: 'blue' }),
+        );
       });
-      expect(delta).toEqual(new Delta().insert('Test', { color: 'blue' }));
+
+      expect(createClipboard().convert({ html })).toEqual(
+        new Delta().insert('Test'),
+      );
     });
 
     test('custom matcher', () => {
