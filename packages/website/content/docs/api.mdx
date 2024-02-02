@@ -212,6 +212,11 @@ quill.updateContents(new Delta()
 // ]
 ```
 
+<Hint>
+This method updates the contents from the beginning, not from the current selection.
+Use `Delta#retain(length: number)` to skip the contents you wish to leave unchanged.
+</Hint>
+
 ## Formatting
 
 ### format
