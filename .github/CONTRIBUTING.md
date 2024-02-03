@@ -15,11 +15,9 @@ After becoming familiar with Quill and the codebase, likely through using Quill 
 - Publishing guides, tutorials, and examples
 - Supporting Quill in other ecosystems (Angular, React, etc)
 
-
 ## Questions
 
 If you have a question, it is best to ask on StackOverflow and tag with [quill](http://stackoverflow.com/questions/tagged/quill). This tag is monitored by Quill maintainers and community members.
-
 
 ## Bug Reports
 
@@ -34,7 +32,6 @@ New bug reports must include:
 5. Version of Quill
 
 Lacking reports it may be autoclosed with a link to these instructions.
-
 
 ## Feature Requests
 
@@ -51,7 +48,6 @@ Features are prioritized based on real world users and use cases, not theoretica
 
 The more complete and compelling the request, the more likely it will ultimately be implemented. Garnering community support will help as well!
 
-
 ## Pull Requests
 
 Please check to make sure your plans fall within Quill's scope. This often means opening up a [discussion](https://github.com/quilljs/quill/labels/discussion).
@@ -62,7 +58,7 @@ Pull Requests modifying public facing interfaces or APIs, including backwards co
 
 Pull requests must:
 
-1. Be forked off the [develop](https://github.com/quilljs/quill/tree/develop) branch.
+1. Be forked off the [main](https://github.com/quilljs/quill/tree/main) branch.
 2. Pass the linter and conform to existing coding styles.
 3. Commits are [squashed](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History#Squashing-Commits) to minimally coherent units of changes.
 4. Are accompanied by tests covering the new feature or demonstrating the bug for fixes.
