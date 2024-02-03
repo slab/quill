@@ -1,5 +1,7 @@
 # [Unreleased]
 
+# 2.0.0-rc.0
+
 - **Clipboard** Convert newlines between inline elements to a space.
 - **Clipboard** Avoid generating unsupported formats on paste.
 - **Clipboard** Improve support for pasting from Google Docs and Microsoft Word.
