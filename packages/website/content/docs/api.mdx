@@ -109,6 +109,25 @@ getText(index: number = 0, length: number = remaining): string
 const text = quill.getText(0, 10);
 ```
 
+### getSemanticHTML
+
+Get the HTML representation of the editor contents.
+This method is useful for exporting the contents of the editor in a format that can be used in other applications.
+
+The `length` parameter defaults to the length of the remaining document.
+
+**Methods**
+
+```typescript
+getSemanticHTML(index: number = 0, length: number = remaining): string
+```
+
+**Examples**
+
+```typescript
+const html = quill.getSemanticHTML(0, 10);
+```
+
 ### insertEmbed
 
 Insert embedded content into the editor, returning a [Delta](/docs/delta/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.

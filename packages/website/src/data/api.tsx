@@ -6,6 +6,7 @@ const items = [
       'getContents',
       'getLength',
       'getText',
+      'getSemanticHTML',
       'insertEmbed',
       'insertText',
       'setContents',
