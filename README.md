@@ -1,22 +1,22 @@
 > [!NOTE]
-> This branch and README covers the upcoming 2.0 release. View [1.x docs here](https://github.com/quilljs/quill/tree/1.3.6).
+> This branch and README covers the upcoming 2.0 release. View [1.x docs here](https://github.com/quilljs/quill/tree/1.3.7).
 
 <h1 align="center">
-  <a href="https://quilljs.com/" title="Quill">Quill Rich Text Editor</a>
+  <a href="https://v2.quilljs.com/" title="Quill">Quill Rich Text Editor</a>
 </h1>
 <p align="center">
-  <a href="https://quilljs.com/" title="Quill"><img alt="Quill Logo" src="https://quilljs.com/assets/images/logo.svg" width="180"></a>
+  <a href="https://v2.quilljs.com/" title="Quill"><img alt="Quill Logo" src="https://quilljs.com/assets/images/logo.svg" width="180"></a>
 </p>
 <p align="center">
   <a title="Quickstart" href="#quickstart"><strong>Quickstart</strong></a>
   &#x2022;
-  <a title="Documentation" href="https://quilljs.com/docs/"><strong>Documentation</strong></a>
+  <a title="Documentation" href="https://v2.quilljs.com/docs/"><strong>Documentation</strong></a>
   &#x2022;
   <a title="Development" href="https://github.com/quilljs/quill/blob/master/.github/DEVELOPMENT.md"><strong>Development</strong></a>
   &#x2022;
   <a title="Contributing" href="https://github.com/quilljs/quill/blob/master/.github/CONTRIBUTING.md"><strong>Contributing</strong></a>
   &#x2022;
-  <a title="Interactive Playground" href="https://quilljs.com/playground/"><strong>Interactive Playground</strong></a>
+  <a title="Interactive Playground" href="https://v2.quilljs.com/playground/"><strong>Interactive Playground</strong></a>
 </p>
 <p align="center">
   <a href="https://github.com/quilljs/quill/actions" title="Build Status">
@@ -32,9 +32,9 @@
 
 <hr/>
 
-[Quill](https://quilljs.com/) is a modern rich text editor built for compatibility and extensibility. It was created by [Jason Chen](https://twitter.com/jhchen) and [Byron Milligan](https://twitter.com/byronmilligan) and actively maintained by [Slab](https://slab.com).
+[Quill](https://v2.quilljs.com/) is a modern rich text editor built for compatibility and extensibility. It was created by [Jason Chen](https://twitter.com/jhchen) and [Byron Milligan](https://twitter.com/byronmilligan) and actively maintained by [Slab](https://slab.com).
 
-To get started, check out [https://quilljs.com/](https://quilljs.com/) for documentation, guides, and live demos!
+To get started, check out [https://quilljs.com/](https://v2.quilljs.com/) for documentation, guides, and live demos!
 
 ## Quickstart
 
@@ -71,7 +71,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 </script>
 ```
 
-Take a look at the [Quill](https://quilljs.com/) website for more documentation, guides and [live playground](https://quilljs.com/playground/)!
+Take a look at the [Quill](https://v2.quilljs.com/) website for more documentation, guides and [live playground](https://v2.quilljs.com/playground/)!
 
 ## Download
 
