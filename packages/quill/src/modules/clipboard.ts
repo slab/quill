@@ -294,8 +294,12 @@ function deltaEndsWith(delta: Delta, text: string) {
   return endText.slice(-1 * text.length) === text;
 }
 
-function isLine(node: Element) {
-  if (node.childNodes.length === 0) return false; // Exclude embed blocks
+function isLine(node: Node, scroll: ScrollBlot) {
+  if (!(node instanceof Element)) return false;
+  const match = scroll.query(node);
+  // @ts-expect-error
+  if (match && match.prototype instanceof EmbedBlot) return false;
+
   return [
     'address',
     'article',
@@ -334,12 +338,12 @@ function isLine(node: Element) {
   ].includes(node.tagName.toLowerCase());
 }
 
-function isBetweenInlineElements(node: HTMLElement) {
+function isBetweenInlineElements(node: HTMLElement, scroll: ScrollBlot) {
   return (
     node.previousElementSibling &&
     node.nextElementSibling &&
-    !isLine(node.previousElementSibling) &&
-    !isLine(node.nextElementSibling)
+    !isLine(node.previousElementSibling, scroll) &&
+    !isLine(node.nextElementSibling, scroll)
   );
 }
 
@@ -525,15 +529,13 @@ function matchList(node: Node, delta: Delta, scroll: ScrollBlot) {
 
 function matchNewline(node: Node, delta: Delta, scroll: ScrollBlot) {
   if (!deltaEndsWith(delta, '\n')) {
-    // @ts-expect-error
-    if (isLine(node)) {
+    if (isLine(node, scroll)) {
       return delta.insert('\n');
     }
     if (delta.length() > 0 && node.nextSibling) {
       let nextSibling: Node | null = node.nextSibling;
       while (nextSibling != null) {
-        // @ts-expect-error
-        if (isLine(nextSibling)) {
+        if (isLine(nextSibling, scroll)) {
           return delta.insert('\n');
         }
         const match = scroll.query(nextSibling);
@@ -596,7 +598,7 @@ function matchTable(
   return delta;
 }
 
-function matchText(node: HTMLElement, delta: Delta) {
+function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
   // @ts-expect-error
   let text = node.data;
   // Word represents empty line with <o:p>&nbsp;</o:p>
@@ -607,7 +609,7 @@ function matchText(node: HTMLElement, delta: Delta) {
     if (
       text.trim().length === 0 &&
       text.includes('\n') &&
-      !isBetweenInlineElements(node)
+      !isBetweenInlineElements(node, scroll)
     ) {
       return delta;
     }
@@ -620,16 +622,17 @@ function matchText(node: HTMLElement, delta: Delta) {
     if (
       (node.previousSibling == null &&
         node.parentElement != null &&
-        isLine(node.parentElement)) ||
-      (node.previousSibling instanceof Element && isLine(node.previousSibling))
+        isLine(node.parentElement, scroll)) ||
+      (node.previousSibling instanceof Element &&
+        isLine(node.previousSibling, scroll))
     ) {
       text = text.replace(/^\s+/, replacer.bind(replacer, false));
     }
     if (
       (node.nextSibling == null &&
         node.parentElement != null &&
-        isLine(node.parentElement)) ||
-      (node.nextSibling instanceof Element && isLine(node.nextSibling))
+        isLine(node.parentElement, scroll)) ||
+      (node.nextSibling instanceof Element && isLine(node.nextSibling, scroll))
     ) {
       text = text.replace(/\s+$/, replacer.bind(replacer, false));
     }

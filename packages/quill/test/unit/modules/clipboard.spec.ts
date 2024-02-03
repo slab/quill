@@ -262,6 +262,18 @@ describe('Clipboard', () => {
       expect(delta).toEqual(new Delta().insert('foo\nbar'));
     });
 
+    test('space between empty paragraphs', () => {
+      const html = '<p></p> <p></p>';
+      const delta = createClipboard().convert({ html });
+      expect(delta).toEqual(new Delta().insert('\n'));
+    });
+
+    test('newline between empty paragraphs', () => {
+      const html = '<p></p>\n<p></p>';
+      const delta = createClipboard().convert({ html });
+      expect(delta).toEqual(new Delta().insert('\n'));
+    });
+
     test('break', () => {
       const html =
         '<div>0<br>1</div><div>2<br></div><div>3</div><div><br>4</div><div><br></div><div>5</div>';
