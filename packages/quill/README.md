@@ -35,7 +35,7 @@ To get started, check out [https://quilljs.com/](https://quilljs.com/) for docum
 
 Get help or stay up to date.
 
-- [Contribute](https://github.com/quilljs/quill/blob/develop/.github/CONTRIBUTING.md) on [Issues](https://github.com/quilljs/quill/issues)
+- [Contribute](https://github.com/quilljs/quill/blob/main/.github/CONTRIBUTING.md) on [Issues](https://github.com/quilljs/quill/issues)
 - Follow [@jhchen](https://twitter.com/jhchen) and [@quilljs](https://twitter.com/quilljs) on Twitter
 - Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/quill)
 - If privacy is required, email support@quilljs.com

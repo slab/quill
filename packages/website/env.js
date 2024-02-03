@@ -7,7 +7,7 @@ const cdn = process.env.NEXT_PUBLIC_LOCAL_QUILL
 module.exports = {
   version,
   cdn,
-  github: 'https://github.com/quilljs/quill/tree/develop/packages/website/',
+  github: 'https://github.com/quilljs/quill/tree/main/packages/website/',
   highlightjs: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0',
   katex: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist',
   url: homepage,
