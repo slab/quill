@@ -14,12 +14,12 @@ on:
         required: true
 
 jobs:
-  # test:
-  #   uses: ./.github/workflows/_test.yml
+  test:
+    uses: ./.github/workflows/_test.yml
 
   release:
     runs-on: ubuntu-latest
-    # needs: test
+    needs: test
 
     steps:
       - name: Git checkout

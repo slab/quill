@@ -2,7 +2,7 @@ name: Main
 
 on:
   push:
-    branches: [develop]
+    branches: [main]
 
 concurrency:
   group: main-build
