@@ -75,8 +75,9 @@ Take a look at the [Quill](https://v2.quilljs.com/) website for more documentati
 
 ## Download
 
-- [npm](https://www.npmjs.com/package/quill) - `npm install quill@beta`
-- tar - https://github.com/quilljs/quill/releases
+```shell
+npm install quill@rc
+```
 
 ### CDN
 
