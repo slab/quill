@@ -2,6 +2,7 @@
 
 - **Clipboard** Convert newlines between inline elements to a space.
 - **Clipboard** Avoid generating unsupported formats on paste.
+- **Clipboard** Improve support for pasting from Google Docs and Microsoft Word.
 - **Syntax** Support highlight.js v10 and v11.
 
 # 2.0.0-beta.2

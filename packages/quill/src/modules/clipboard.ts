@@ -22,6 +22,7 @@ import { DirectionAttribute, DirectionStyle } from '../formats/direction';
 import { FontStyle } from '../formats/font';
 import { SizeStyle } from '../formats/size';
 import { deleteRange } from './keyboard';
+import normalizeExternalHTML from './normalizeExternalHTML';
 
 const debug = logger('quill:clipboard');
 
@@ -118,8 +119,13 @@ class Clipboard extends Module<ClipboardOptions> {
     return delta;
   }
 
-  convertHTML(html: string) {
+  protected normalizeHTML(doc: Document) {
+    normalizeExternalHTML(doc);
+  }
+
+  protected convertHTML(html: string) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
+    this.normalizeHTML(doc);
     const container = doc.body;
     const nodeMatches = new WeakMap();
     const [elementMatchers, textMatchers] = this.prepareMatching(
