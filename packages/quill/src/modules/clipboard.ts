@@ -335,6 +335,8 @@ function isLine(node: Node, scroll: ScrollBlot) {
     'tr',
     'ul',
     'video',
+    'strong',
+    'i',
   ].includes(node.tagName.toLowerCase());
 }
 
