@@ -335,8 +335,6 @@ function isLine(node: Node, scroll: ScrollBlot) {
     'tr',
     'ul',
     'video',
-    'strong',
-    'i',
   ].includes(node.tagName.toLowerCase());
 }
 
@@ -534,7 +532,7 @@ function matchNewline(node: Node, delta: Delta, scroll: ScrollBlot) {
     if (isLine(node, scroll)) {
       return delta.insert('\n');
     }
-    if (delta.length() > 0 && node.nextSibling) {
+    if (delta.length() >= 0 && node.nextSibling) {
       let nextSibling: Node | null = node.nextSibling;
       while (nextSibling != null) {
         if (isLine(nextSibling, scroll)) {
