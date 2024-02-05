@@ -122,9 +122,9 @@ const Header = () => {
             <OctocatIcon />
           </a>
           <DocSearch
-            appId="quilljs"
-            indexName="quilljs"
-            apiKey="281facf513620e95600126795a00ab6c"
+            appId="ZTZN3V01SS"
+            indexName="quilljsdev"
+            apiKey="7e6ff70a985e6af9bfea77c780411b9a"
           />
         </nav>
         <button
