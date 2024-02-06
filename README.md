@@ -10,7 +10,7 @@
 <p align="center">
   <a title="Quickstart" href="#quickstart"><strong>Quickstart</strong></a>
   &#x2022;
-  <a title="Documentation" href="https://v2.quilljs.com/docs/"><strong>Documentation</strong></a>
+  <a title="Documentation" href="https://v2.quilljs.com/docs/quickstart"><strong>Documentation</strong></a>
   &#x2022;
   <a title="Development" href="https://github.com/quilljs/quill/blob/master/.github/DEVELOPMENT.md"><strong>Development</strong></a>
   &#x2022;
