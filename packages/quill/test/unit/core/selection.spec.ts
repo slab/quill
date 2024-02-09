@@ -11,7 +11,7 @@ import Italic from '../../../src/formats/italic';
 import Strike from '../../../src/formats/strike';
 import { ColorStyle } from '../../../src/formats/color';
 import { BackgroundStyle } from '../../../src/formats/background';
-import { FontClass } from '../../../src/formats/font';
+import { SizeClass } from '../../../src/formats/size';
 
 const createSelection = (html: string, container = document.body) => {
   const scroll = createScroll(
@@ -25,7 +25,7 @@ const createSelection = (html: string, container = document.body) => {
       Link,
       ColorStyle,
       BackgroundStyle,
-      FontClass,
+      SizeClass,
     ]),
     container,
   );
