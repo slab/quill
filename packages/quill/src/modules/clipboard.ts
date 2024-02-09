@@ -106,7 +106,8 @@ class Clipboard extends Module<ClipboardOptions> {
       });
     }
     if (!html) {
-      return new Delta().insert(text || '', formats);
+      const converted = this.convertText(text || '');
+      return converted.compose(new Delta().retain(converted.length(), formats));
     }
     const delta = this.convertHTML(html);
     // Remove trailing newline
@@ -123,8 +124,19 @@ class Clipboard extends Module<ClipboardOptions> {
     normalizeExternalHTML(doc);
   }
 
+  protected convertText(text: string) {
+    const doc = new DOMParser().parseFromString('', 'text/html');
+    const node = doc.createTextNode(text);
+    doc.body.appendChild(node);
+    return this.convertDoc(doc);
+  }
+
   protected convertHTML(html: string) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
+    return this.convertDoc(doc);
+  }
+
+  private convertDoc(doc: Document) {
     this.normalizeHTML(doc);
     const container = doc.body;
     const nodeMatches = new WeakMap();

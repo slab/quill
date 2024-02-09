@@ -522,6 +522,31 @@ describe('Clipboard', () => {
       expect(delta).toEqual(expected);
     });
 
+    test('runs a text node matcher on a plain text paste', function () {
+      const clipboard = createClipboard();
+      clipboard.addMatcher(Node.TEXT_NODE, (node, delta) => {
+        let index = 0;
+        const regex = /https?:\/\/[^\s]+/g;
+        let match = null;
+        const composer = new Delta();
+        // eslint-disable-next-line no-cond-assign
+        while ((match = regex.exec((node as Text).data))) {
+          composer.retain(match.index - index);
+          index = regex.lastIndex;
+          composer.retain(match[0].length, { link: match[0] });
+        }
+        return delta.compose(composer);
+      });
+      const delta = clipboard.convert({
+        text: 'http://github.com https://quilljs.com',
+      });
+      const expected = new Delta()
+        .insert('http://github.com', { link: 'http://github.com' })
+        .insert(' ')
+        .insert('https://quilljs.com', { link: 'https://quilljs.com' });
+      expect(delta).toEqual(expected);
+    });
+
     test('does not execute javascript', () => {
       // @ts-expect-error
       window.unsafeFunction = vitest.fn();
