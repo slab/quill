@@ -1270,8 +1270,13 @@ body:not(.home) .navbar-link:before {
     display: inline-block;
   }
   .navbar-drop.active {
-    margin-bottom: -25em;
+    margin-bottom: -22em;
     transition: margin-bottom 1s ease-out 0s;
+  }
+  .navbar-drop .navbar-item:last-child {
+    align-items: center;
+    display: flex;
+    justify-content: center;
   }
   .navbar-list .navbar-item,
   .navbar-list .download-item {

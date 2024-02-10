@@ -46,11 +46,6 @@ const Default = ({ children, pageType }) => {
               </a>
             </li>
             <li className="navbar-item">
-              <a className="navbar-link" href="/blog/">
-                Blog
-              </a>
-            </li>
-            <li className="navbar-item">
               <GitHub dark />
             </li>
           </ul>
@@ -87,15 +82,6 @@ const Default = ({ children, pageType }) => {
             >
               <a className="navbar-link" href="/playground/">
                 Playground
-              </a>
-            </li>
-            <li
-              className={classNames("navbar-item", {
-                active: pageType === "blog",
-              })}
-            >
-              <a className="navbar-link" href="/blog/">
-                Blog
               </a>
             </li>
             <li className="download-item">

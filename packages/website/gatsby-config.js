@@ -61,58 +61,6 @@ const config = {
         ],
       },
     },
-    {
-      resolve: `gatsby-plugin-feed`,
-      options: {
-        query: `
-          {
-            site {
-              siteMetadata {
-                url
-              }
-            }
-          }
-        `,
-        feeds: [
-          {
-            serialize: ({ query: { site, allMdx } }) => {
-              return allMdx.nodes.map((node) => {
-                return Object.assign({}, node.frontmatter, {
-                  description: node.excerpt,
-                  date: node.frontmatter.date,
-                  url: site.siteMetadata.url + node.fields.permalink,
-                  guid: site.siteMetadata.url + node.fields.permalink,
-                });
-              });
-            },
-            query: `
-              {
-                allMdx(
-                  sort: { fields: frontmatter___date, order: DESC }
-                  filter: { fields: { pageType: { eq: "blog" } } }
-                ) {
-                  nodes {
-                    frontmatter {
-                      date(formatString: "DD MMM yyyy")
-                      title
-                    }
-                    fields {
-                      permalink
-                    }
-                    id
-                    body
-                    excerpt
-                  }
-                }
-              }
-            `,
-            output: "/feed.xml",
-            title: siteMetadata.title,
-            match: "^/blog/",
-          },
-        ],
-      },
-    },
   ],
 };
 
