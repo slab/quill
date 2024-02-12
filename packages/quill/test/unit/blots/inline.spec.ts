@@ -25,7 +25,7 @@ describe('Inline', () => {
     );
     const p = scroll.domNode.firstChild as HTMLParagraphElement;
     const em = document.createElement('em');
-    Array.from(p.childNodes).forEach(function (node) {
+    Array.from(p.childNodes).forEach((node) => {
       em.appendChild(node);
     });
     p.appendChild(em);

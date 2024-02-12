@@ -34,7 +34,8 @@
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/ban-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "import/no-named-as-default-member": "off"
+        "import/no-named-as-default-member": "off",
+        "prefer-arrow-callback": "error"
       }
     }
   ]
