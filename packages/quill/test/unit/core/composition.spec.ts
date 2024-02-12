@@ -5,7 +5,7 @@ import { describe, expect, test, vitest } from 'vitest';
 import { createRegistry } from '../__helpers__/factory';
 import Quill from '../../../src/core';
 
-describe('Composition', function () {
+describe('Composition', () => {
   test('triggers events on compositionstart', async () => {
     const emitter = new Emitter();
     const scroll = new Scroll(createRegistry(), document.createElement('div'), {
