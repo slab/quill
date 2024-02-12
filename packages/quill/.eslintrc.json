@@ -1,5 +1,9 @@
 {
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:import/recommended"
+  ],
   "env": {
     "browser": true,
     "commonjs": true,
@@ -9,15 +13,19 @@
   "settings": {
     "import/resolver": {
       "webpack": {
-        "config": "webpack.config.ts"
-      }
+        "env": "development"
+      },
+      "typescript": true
     }
   },
   "ignorePatterns": ["*.js", "*.d.ts"],
   "overrides": [
     {
       "files": ["**/*.ts"],
-      "extends": ["plugin:@typescript-eslint/recommended"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/typescript"
+      ],
       "excludedFiles": "*.d.ts",
       "plugins": ["@typescript-eslint"],
       "rules": {
@@ -25,7 +33,8 @@
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/ban-types": "off",
-        "@typescript-eslint/no-explicit-any": "off"
+        "@typescript-eslint/no-explicit-any": "off",
+        "import/no-named-as-default-member": "off"
       }
     }
   ]

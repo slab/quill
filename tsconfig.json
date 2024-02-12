@@ -1,4 +1,10 @@
 {
+  "ts-node": {
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "module": "commonjs"
+    }
+  },
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "target": "ES2020",
@@ -9,7 +15,6 @@
     "noEmit": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "verbatimModuleSyntax": true,
     "noUnusedLocals": true
   },
   "include": ["./**/*"]

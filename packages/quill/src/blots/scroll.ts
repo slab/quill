@@ -3,10 +3,9 @@ import type { Blot, Parent, EmbedBlot, ParentBlot, Registry } from 'parchment';
 import Delta, { AttributeMap, Op } from 'quill-delta';
 import Emitter from '../core/emitter';
 import type { EmitterSource } from '../core/emitter';
-import Block, { BlockEmbed } from './block';
+import Block, { BlockEmbed, bubbleFormats } from './block';
 import Break from './break';
 import Container from './container';
-import { bubbleFormats } from './block';
 
 type RenderBlock =
   | {
