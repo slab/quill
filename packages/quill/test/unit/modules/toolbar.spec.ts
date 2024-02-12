@@ -236,5 +236,14 @@ describe('Toolbar', () => {
       expect(centerButton.getAttribute('aria-pressed')).toBe('false');
       expect(leftButton.getAttribute('aria-pressed')).toBe('false');
     });
+
+    test('update on format', function () {
+      const { container, quill } = setup();
+      const boldButton = container?.parentNode?.querySelector('button.ql-bold');
+      quill.setSelection(1, 2);
+      expect(boldButton?.classList.contains('ql-active')).toBe(false);
+      quill.format('bold', true, 'user');
+      expect(boldButton?.classList.contains('ql-active')).toBe(true);
+    });
   });
 });
