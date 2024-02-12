@@ -1,9 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import Quill from '../../../src/core/quill';
-import { addControls } from '../../../src/modules/toolbar';
+import Toolbar, { addControls } from '../../../src/modules/toolbar';
 import { normalizeHTML } from '../__helpers__/utils';
 import SnowTheme from '../../../src/themes/snow';
-import Toolbar from '../../../src/modules/toolbar';
 import Clipboard from '../../../src/modules/clipboard';
 import Keyboard from '../../../src/modules/keyboard';
 import History from '../../../src/modules/history';

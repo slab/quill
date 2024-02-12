@@ -1,11 +1,10 @@
-import path from 'path';
 import { BannerPlugin, DefinePlugin } from 'webpack';
 import type { Configuration } from 'webpack';
 import common from './webpack.common';
 import { merge } from 'webpack-merge';
 import 'webpack-dev-server';
 import { readFileSync } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
 
 const pkg = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'));
 
@@ -30,7 +29,7 @@ export default (env: Record<string, unknown>) =>
     plugins: [bannerPack, constantPack],
     devServer: {
       static: {
-        directory: path.resolve(__dirname, './dist'),
+        directory: resolve(__dirname, './dist'),
       },
       hot: false,
       allowedHosts: 'all',
