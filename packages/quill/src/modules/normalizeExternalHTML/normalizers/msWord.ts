@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 const ignoreRegexp = /\bmso-list:[^;]*ignore/i;
 const idRegexp = /\bmso-list:[^;]*\bl(\d+)/i;
 const indentRegexp = /\bmso-list:[^;]*\blevel(\d+)/i;
@@ -30,9 +28,16 @@ const parseListItem = (element: Element, html: string) => {
 // 2. "1" in "level1" means the indent level, starting from 1.
 const normalizeListItem = (doc: Document) => {
   const msoList = Array.from(doc.querySelectorAll('[style*=mso-list]'));
-  const [ignored, others] = _.partition(msoList, (node) =>
-    (node.getAttribute('style') || '').match(ignoreRegexp),
-  );
+  const ignored: Element[] = [];
+  const others: Element[] = [];
+  msoList.forEach((node) => {
+    const shouldIgnore = (node.getAttribute('style') || '').match(ignoreRegexp);
+    if (shouldIgnore) {
+      ignored.push(node);
+    } else {
+      others.push(node);
+    }
+  });
 
   // Each list item contains a marker wrapped with "mso-list: Ignore".
   ignored.forEach((node) => node.parentNode?.removeChild(node));
