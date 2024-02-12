@@ -1,6 +1,7 @@
 # [Unreleased]
 
 - Remove unnecessary lodash usages.
+- Fix toolbar button state not updated in some cases
 
 # 2.0.0-rc.0
 
