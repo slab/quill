@@ -198,7 +198,17 @@ describe('Clipboard', () => {
       return quill.clipboard;
     };
 
-    test('plain text', () => {
+    test('text with adjacent spaces', () => {
+      const delta = createClipboard().convert({ text: 'simple  text' });
+      expect(delta).toEqual(new Delta().insert('simple  text'));
+    });
+
+    test('text with newlines', () => {
+      const delta = createClipboard().convert({ text: 'simple\ntext' });
+      expect(delta).toEqual(new Delta().insert('simple\ntext'));
+    });
+
+    test('only text in html', () => {
       const delta = createClipboard().convert({ html: 'simple plain text' });
       expect(delta).toEqual(new Delta().insert('simple plain text'));
     });
