@@ -108,4 +108,15 @@ import Link from 'quill/formats/link';
 // Or const Link = Quill.import('formats/link');
 ```
 
+### Styles
+
+Quill's npm package also comes with the stylesheets for the core and themes, just like the CDN build.
+Those stylesheets live in the `dist` directory.
+
+You can import them in your JavaScript files if you have a proper bundler setup.
+
+```js
+import "quill/dist/quill.core.css";
+```
+
 Refer to [webpack-example](https://github.com/quilljs/webpack-example) for a sample project that uses Quill in a webpack project.

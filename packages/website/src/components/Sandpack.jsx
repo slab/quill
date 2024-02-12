@@ -3,7 +3,6 @@ import {
   SandpackCodeEditor,
   SandpackFileExplorer,
   SandpackPreview,
-  Sandpack as RawSandpack,
   useSandpack,
 } from '@codesandbox/sandpack-react';
 import { useEffect, useState } from 'react';
