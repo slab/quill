@@ -1,5 +1,7 @@
 # [Unreleased]
 
+- Add narrower BubbleTheme.tooltip type.
+
 # 2.0.0-rc.0
 
 - **Clipboard** Convert newlines between inline elements to a space.
