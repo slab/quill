@@ -106,6 +106,8 @@ class BubbleTooltip extends BaseTooltip {
 }
 
 class BubbleTheme extends BaseTheme {
+  tooltip: BubbleTooltip;
+
   constructor(quill: Quill, options: ThemeOptions) {
     if (
       options.modules.toolbar != null &&
