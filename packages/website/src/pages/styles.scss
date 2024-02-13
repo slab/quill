@@ -85,10 +85,6 @@ button {
   text-align: center;
 }
 
-p {
-  font-size: 1.5rem;
-}
-
 strong {
   font-weight: bold;
 }
@@ -1470,7 +1466,8 @@ body:not(.home) .navbar-link:before {
 
 @media (min-width: 550px) {
   #sidebar-container > ul > li > a {
-    padding-left: 1.4em;
+    border-left: 3px solid transparent;
+    padding-left: 1.15em;
     padding-top: 2px;
   }
   #sidebar-container li.active > a {
