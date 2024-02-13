@@ -236,7 +236,7 @@ describe('Toolbar', () => {
       expect(leftButton.getAttribute('aria-pressed')).toBe('false');
     });
 
-    test('update on format', function () {
+    test('update on format', () => {
       const { container, quill } = setup();
       const boldButton = container?.parentNode?.querySelector('button.ql-bold');
       quill.setSelection(1, 2);
