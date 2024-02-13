@@ -1,31 +1,33 @@
 # [Unreleased]
 
+- Fix toolbar button state not updated in some cases
+- Narrower `BubbleTheme.tooltip` type
+
 # 2.0.0-rc.1
 
-- Remove unnecessary lodash usages.
-- Fix toolbar button state not updated in some cases
+- Remove unnecessary lodash usages
 
 # 2.0.0-rc.0
 
-- **Clipboard** Convert newlines between inline elements to a space.
-- **Clipboard** Avoid generating unsupported formats on paste.
-- **Clipboard** Improve support for pasting from Google Docs and Microsoft Word.
-- **Clipboard** Ignore whitespace between pasted empty paragraphs.
-- **Syntax** Support highlight.js v10 and v11.
+- **Clipboard** Convert newlines between inline elements to a space
+- **Clipboard** Avoid generating unsupported formats on paste
+- **Clipboard** Improve support for pasting from Google Docs and Microsoft Word
+- **Clipboard** Ignore whitespace between pasted empty paragraphs
+- **Syntax** Support highlight.js v10 and v11
 
 # 2.0.0-beta.2
 
-- Fix IME not working correctly in Safari.
-- **Clipboard** Support paste as plain text.
-- Fix `Quill.getText()` not respecting `length` parameter.
-- **History** Fix redo shortcut not working on Linux and Windows.
+- Fix IME not working correctly in Safari
+- **Clipboard** Support paste as plain text
+- Fix `Quill.getText()` not respecting `length` parameter
+- **History** Fix redo shortcut not working on Linux and Windows
 
 # 2.0.0-beta.1
 
-- Fix syntax label from "Javascript" to "JavaScript".
-- Fix typing errors for emitter.
-- Inline SVG images for easier bundler setup.
-- Improve typing for Registry.
+- Fix syntax label from "Javascript" to "JavaScript"
+- Fix typing errors for emitter
+- Inline SVG images for easier bundler setup
+- Improve typing for Registry
 
 # 2.0.0-beta.0
 
