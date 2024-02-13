@@ -7,15 +7,11 @@ import DropdownIcon from '../svg/dropdown.svg';
 import * as styles from './Header.module.scss';
 import { DocSearch } from '@docsearch/react';
 import { useState } from 'react';
+import playground from '../data/playground';
+import docs from '../data/docs';
+import guides from '../data/guides';
 import ActiveLink from './ActiveLink';
 import ClickOutsideHandler from './ClickOutsideHandler';
-
-const shortVersion = (version) => {
-  const parts = version.split('-');
-  const matched = parts[0].match(/(\d+)\.(\d+)\.\d+/);
-  if (!matched) return version;
-  return `${matched[1]}.${matched[2]}`;
-};
 
 const MainNav = ({ ...props }) => {
   return (
@@ -23,21 +19,21 @@ const MainNav = ({ ...props }) => {
       <ActiveLink
         activeClassName={styles.active}
         activePath="/docs"
-        href="/docs/quickstart"
+        href={docs[0].url}
       >
         Documentation
       </ActiveLink>
       <ActiveLink
         activeClassName={styles.active}
         activePath="/guides"
-        href="/guides/why-quill"
+        href={guides[0].url}
       >
         Guides
       </ActiveLink>
       <ActiveLink
         activeClassName={styles.active}
         activePath="/playground"
-        href="/playground"
+        href={playground[0].url}
       >
         Playground
       </ActiveLink>
@@ -62,7 +58,7 @@ const VersionSelector = () => {
           setIsOpen(!isOpen);
         }}
       >
-        v{shortVersion(process.env.version)} <DropdownIcon />
+        v{process.env.version} <DropdownIcon />
       </div>
       <div
         role="menu"
@@ -89,7 +85,7 @@ const VersionSelector = () => {
         <div className={styles.versionLabel}>Previous Versions</div>
         <a
           role="menuitem"
-          href="https://quilljs.com"
+          href="https://v1.quilljs.com"
           className={styles.versionDropdownItem}
           target="_blank"
         >

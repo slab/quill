@@ -1,0 +1,26 @@
+/* Set default font-family */
+#editor {
+  font-family: 'Aref Ruqaa';
+  font-size: 18px;
+  height: 375px;
+}
+
+/* Set dropdown font-families */
+#toolbar .ql-font span[data-label='Aref Ruqaa']::before {
+  font-family: 'Aref Ruqaa';
+}
+#toolbar .ql-font span[data-label='Mirza']::before {
+  font-family: 'Mirza';
+}
+#toolbar .ql-font span[data-label='Roboto']::before {
+  font-family: 'Roboto';
+}
+
+/* Set content font-families */
+.ql-font-mirza {
+  font-family: 'Mirza';
+}
+.ql-font-roboto {
+  font-family: 'Roboto';
+}
+/* We do not set Aref Ruqaa since it is the default font */

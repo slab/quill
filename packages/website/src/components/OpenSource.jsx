@@ -1,19 +1,22 @@
 import GitHub from './GitHub';
 import OpenSourceIcon from '../svg/features/open-source.svg';
+import classNames from 'classnames';
+import styles from './OpenSource.module.scss';
+import Link from './Link';
 
 const OpenSource = () => (
-  <div className="feature row">
+  <div className={classNames('feature row', styles.container)}>
     <div className="six columns details">
       <h2>An Open Source Project</h2>
-      <span className="about">
+      <span className={styles.about}>
         Quill is developed and maintained by{' '}
-        <a href="https://slab.com" target="_blank">
+        <Link href="https://slab.com" target="_blank">
           Slab
-        </a>
+        </Link>
         . It is permissively licensed under BSD. Use it freely in personal or
         commercial projects!
       </span>
-      <div>
+      <div className={styles.github}>
         <GitHub />
       </div>
     </div>

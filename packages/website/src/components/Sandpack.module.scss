@@ -88,26 +88,6 @@ $borderColor: #dadcdc;
   border-top: 1px solid $borderColor;
 }
 
-.button {
-  font-family: 'Sofia Pro', sans-serif;
-  font-weight: bold;
-  border: 0;
-  border-radius: 2px;
-  padding: 8px 12px;
-  transition: all 0.2s;
-  background: var(--color-accent);
-  border: 2px solid transparent;
-
-  &:hover {
-    background: white;
-    border: 2px solid var(--color-accent);
-  }
-
-  &:active {
-    border: 2px solid var(--color-accent-emphasis);
-  }
-}
-
 .standaloneWrapper {
   display: grid;
   grid-template-columns: min-content fit-content(400px) 1fr;

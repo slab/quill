@@ -1,6 +1,6 @@
 :root {
   --color-accent: #f2d123;
-  --color-accent-emphasis: #e1bf15;
+  --color-accent-emphasis: #e2b810;
 
   --color-bg-inset: #f0efea;
   --color-bg-inset-emphasis: #e1ded1;
@@ -11,4 +11,13 @@
   --docsearch-key-gradient: transparent;
 
   --width-readable: 800px;
+}
+
+[data-accent-color='yellow'] {
+  // Override Radix styles
+  --accent-9: var(--color-accent) !important;
+}
+
+.radix-themes {
+  --default-font-size: 18px;
 }

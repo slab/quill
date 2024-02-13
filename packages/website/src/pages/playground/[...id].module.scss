@@ -1,0 +1,21 @@
+.container {
+  margin: 40px auto 20px;
+}
+
+.wrapper {
+  display: flex;
+  border: 1px solid #ccc;
+  height: 500px;
+
+  .editor {
+    flex: 1;
+    border-right: 1px solid #ccc;
+    display: flex;
+    min-width: 0;
+  }
+
+  .preview {
+    flex: 1;
+    display: flex;
+  }
+}

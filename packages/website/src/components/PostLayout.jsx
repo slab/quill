@@ -51,7 +51,7 @@ const PostLayout = ({ title, pageType, filePath, permalink, children }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
-    <Layout>
+    <Layout title={title}>
       <div id="docs-wrapper" className="container">
         <div className="row">
           <div

@@ -31,8 +31,12 @@ html {
 }
 
 body {
-  font-family: 'Sailec Light', sans-serif;
   overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 h1,
@@ -79,19 +83,6 @@ button {
   font-size: 11px;
   outline: none;
   text-align: center;
-}
-
-a {
-  color: #1d1e30;
-  outline: none;
-  text-decoration: none;
-}
-a:hover {
-  color: #1d1e30;
-}
-
-p {
-  font-size: 1.5rem;
 }
 
 strong {
@@ -772,10 +763,6 @@ body.home .arrow .shaft {
   margin-left: 1.8em;
   margin-top: -1.67em;
 }
-#playground-container iframe {
-  overflow: hidden;
-  width: 100%;
-}
 
 #gallery-container {
   display: flex;
@@ -1128,10 +1115,6 @@ body:not(.home) .navbar-link:before {
 #content-container > ol > li {
   list-style: decimal;
 }
-#content-container a {
-  color: #25408f;
-  text-decoration: underline;
-}
 #content-container h2:after {
   border-bottom: 1px solid #d9dce1;
   content: ' ';
@@ -1173,10 +1156,6 @@ body:not(.home) .navbar-link:before {
 
 /*** Playground ***/
 
-#playground-container {
-  margin-bottom: 5.5em;
-  margin-top: 5.5em;
-}
 #playground-container .codepen {
   height: 500px;
 }
@@ -1487,7 +1466,8 @@ body:not(.home) .navbar-link:before {
 
 @media (min-width: 550px) {
   #sidebar-container > ul > li > a {
-    padding-left: 1.4em;
+    border-left: 3px solid transparent;
+    padding-left: 1.15em;
     padding-top: 2px;
   }
   #sidebar-container li.active > a {

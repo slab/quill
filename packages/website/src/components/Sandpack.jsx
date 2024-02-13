@@ -6,7 +6,8 @@ import {
   useSandpack,
 } from '@codesandbox/sandpack-react';
 import { useEffect, useState } from 'react';
-import env from '../../env';
+import { Button } from '@radix-ui/themes';
+import { PlayIcon, Share1Icon } from '@radix-ui/react-icons';
 import * as styles from './Sandpack.module.scss';
 import classNames from 'classnames';
 import {
@@ -14,13 +15,13 @@ import {
   decompressFromEncodedURIComponent,
 } from 'lz-string';
 import { withoutSSR } from './NoSSR';
+import replaceCDN from '../utils/replaceCDN';
 
 const TogglePreviewButton = ({ isPreviewEnabled, setIsPreviewEnabled }) => {
   const { sandpack } = useSandpack();
 
   return (
-    <button
-      className={styles.button}
+    <Button
       onClick={() => {
         if (!isPreviewEnabled) {
           sandpack.runSandpack();
@@ -28,8 +29,14 @@ const TogglePreviewButton = ({ isPreviewEnabled, setIsPreviewEnabled }) => {
         setIsPreviewEnabled(!isPreviewEnabled);
       }}
     >
-      {isPreviewEnabled ? 'Hide Result' : 'Run Code'}
-    </button>
+      {isPreviewEnabled ? (
+        'Hide Result'
+      ) : (
+        <>
+          <PlayIcon /> Run Code
+        </>
+      )}
+    </Button>
   );
 };
 
@@ -37,7 +44,7 @@ const ToggleCodeButton = ({ isCodeEnabled, setIsCodeEnabled }) => {
   const { sandpack } = useSandpack();
 
   return (
-    <button
+    <Button
       className={styles.button}
       onClick={() => {
         if (!isCodeEnabled) {
@@ -47,14 +54,8 @@ const ToggleCodeButton = ({ isCodeEnabled, setIsCodeEnabled }) => {
       }}
     >
       {isCodeEnabled ? 'Hide Code' : 'Show Code'}
-    </button>
+    </Button>
   );
-};
-
-const replaceCDN = (value) => {
-  return value.replace(/\{\{site\.(\w+)\}\}/g, (_, matched) => {
-    return matched === 'cdn' ? process.env.cdn : env[matched];
-  });
 };
 
 const LocationOverride = ({ filenames }) => {
@@ -77,8 +78,7 @@ const LocationOverride = ({ filenames }) => {
       <div
         className={classNames(styles.copied, { [styles.active]: isCopied })}
       ></div>
-      <button
-        className={styles.button}
+      <Button
         onClick={() => {
           const map = {};
           filenames.forEach((name) => {
@@ -91,8 +91,8 @@ const LocationOverride = ({ filenames }) => {
           setIsCopied(true);
         }}
       >
-        Share Your Edits
-      </button>
+        <Share1Icon /> Share Your Edits
+      </Button>
     </div>
   );
 };
