@@ -1,0 +1,28 @@
+.container {
+  margin: 40px auto 20px;
+
+  iframe {
+    overflow: hidden;
+    width: 100%;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+
+  .exampleLabel {
+    font-weight: bold;
+    font-size: 18px;
+    color: #999;
+  }
+
+  .exampleSelector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    font-size: 14px;
+    text-align: left;
+  }
+}
