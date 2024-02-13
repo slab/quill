@@ -29,7 +29,7 @@ const GitHub = ({ dark = false }) => {
         href="https://github.com/quilljs/quill/"
       >
         <OctocatIcon />
-        <span>Star</span>
+        Star
       </a>
       <a
         className={styles.count}
