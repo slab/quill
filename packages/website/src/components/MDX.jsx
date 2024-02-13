@@ -1,5 +1,4 @@
 import { MDXRemote } from 'next-mdx-remote';
-import Link from 'next/link';
 import docs from '../data/docs';
 import { Highlight, themes } from 'prism-react-renderer';
 import api from '../data/api';
@@ -15,6 +14,7 @@ import {
 } from './Heading';
 import Hint from './Hint';
 import SEO from './SEO';
+import Link from './Link';
 
 const components = {
   h1: Heading1,

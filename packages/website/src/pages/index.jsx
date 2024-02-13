@@ -388,12 +388,12 @@ const IndexPage = () => {
                   Experience the same consistent behavior and produced HTML
                   across platforms.
                 </span>
-                <a
+                <Link
                   className="action-link"
                   href="https://github.com/quilljs/quill/#readme"
                 >
                   See the Chart
-                </a>
+                </Link>
               </div>
             </div>
           </div>
