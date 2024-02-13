@@ -6,12 +6,15 @@ import {
   SandpackPreview,
   SandpackProvider,
 } from '@codesandbox/sandpack-react';
-import { withoutSSR } from '../../components/NoSSR';
+import NoSSR, { withoutSSR } from '../../components/NoSSR';
 import { useState } from 'react';
 import replaceCDN from '../../utils/replaceCDN';
 import styles from './[...id].module.scss';
 import PlaygroundLayout from '../../components/PlaygroundLayout';
 import { decompressFromEncodedURIComponent } from 'lz-string';
+import Layout from '../../components/Layout';
+import OpenSource from '../../components/OpenSource';
+import classNames from 'classnames';
 
 export async function getStaticPaths() {
   return {
@@ -62,37 +65,52 @@ function Playground({ pack, permalink, title }) {
   });
 
   return (
-    <SandpackProvider
-      options={{
-        activeFile: files['index.js'] ? 'index.js' : Object.keys(files)[0],
-        externalResources:
-          externalResources && externalResources.map(replaceCDN),
-      }}
-      template="static"
-      files={Object.keys(files).reduce((f, name) => {
-        const fullName = name.startsWith('/') ? name : `/${name}`;
-        return {
-          ...f,
-          [name]: replaceCDN(overrides[fullName] ?? files[name]).trim(),
-        };
-      }, {})}
-    >
-      <PlaygroundLayout
-        permalink={permalink}
-        title={title}
-        files={files}
-        externalResources={externalResources}
-      >
-        <div className={styles.wrapper}>
-          <div className={styles.editor}>
-            <SandpackCodeEditor showTabs wrapContent showRunButton={false} />
-          </div>
-          <div className={styles.preview}>
-            <SandpackPreview showOpenInCodeSandbox={false} />
-          </div>
-        </div>
-      </PlaygroundLayout>
-    </SandpackProvider>
+    <Layout title={title} pageType="playground">
+      <div className={classNames('container', styles.container)}>
+        <h1>Playground</h1>
+        <NoSSR>
+          <SandpackProvider
+            key={permalink}
+            options={{
+              activeFile: files['index.js']
+                ? 'index.js'
+                : Object.keys(files)[0],
+              externalResources:
+                externalResources && externalResources.map(replaceCDN),
+            }}
+            template="static"
+            files={Object.keys(files).reduce((f, name) => {
+              const fullName = name.startsWith('/') ? name : `/${name}`;
+              return {
+                ...f,
+                [name]: replaceCDN(overrides[fullName] ?? files[name]).trim(),
+              };
+            }, {})}
+          >
+            <PlaygroundLayout
+              permalink={permalink}
+              title={title}
+              files={files}
+              externalResources={externalResources}
+            >
+              <div className={styles.wrapper}>
+                <div className={styles.editor}>
+                  <SandpackCodeEditor
+                    showTabs
+                    wrapContent
+                    showRunButton={false}
+                  />
+                </div>
+                <div className={styles.preview}>
+                  <SandpackPreview showOpenInCodeSandbox={false} />
+                </div>
+              </div>
+            </PlaygroundLayout>
+          </SandpackProvider>
+        </NoSSR>
+        <OpenSource />
+      </div>
+    </Layout>
   );
 }
 
