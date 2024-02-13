@@ -374,9 +374,6 @@ const IndexPage = () => {
                   events through a simple API. Works consistently and
                   deterministically with JSON as both input and output.
                 </span>
-                <Link className="action-link" href="/docs/quickstart">
-                  View documentation
-                </Link>
               </div>
             </div>
             <div className="feature columns">
@@ -388,12 +385,6 @@ const IndexPage = () => {
                   Experience the same consistent behavior and produced HTML
                   across platforms.
                 </span>
-                <Link
-                  className="action-link"
-                  href="https://github.com/quilljs/quill/#readme"
-                >
-                  See the Chart
-                </Link>
               </div>
             </div>
           </div>

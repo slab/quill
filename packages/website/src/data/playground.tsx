@@ -11,6 +11,10 @@ const playground = [
     title: 'Custom font and formats',
     url: '/playground/custom-formats',
   },
+  {
+    title: 'Using Quill with React',
+    url: '/playground/react',
+  },
 ];
 
 export default playground;
