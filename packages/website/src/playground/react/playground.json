@@ -1,0 +1,13 @@
+{
+  "template": "react",
+  "externalResources": [
+    "{{site.highlightjs}}/highlight.min.js",
+    "{{site.highlightjs}}/styles/atom-one-dark.min.css",
+    "{{site.katex}}/katex.min.js",
+    "{{site.katex}}/katex.min.css",
+    "{{site.cdn}}/quill.snow.css",
+    "{{site.cdn}}/quill.bubble.css",
+    "{{site.cdn}}/quill.js"
+  ],
+  "activeFile": "App.js"
+}

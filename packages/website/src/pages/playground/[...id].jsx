@@ -45,11 +45,11 @@ export async function getStaticProps({ params }) {
 }
 
 function Playground({ pack, permalink, title }) {
-  const { 'externalResources.json': rawResources, ...files } = pack;
+  const { 'playground.json': raw, ...files } = pack;
 
-  let externalResources = [];
+  let metadata = {};
   try {
-    externalResources = JSON.parse(rawResources);
+    metadata = JSON.parse(raw);
   } catch (err) {}
 
   const [overrides] = useState(() => {
@@ -72,13 +72,14 @@ function Playground({ pack, permalink, title }) {
           <SandpackProvider
             key={permalink}
             options={{
-              activeFile: files['index.js']
-                ? 'index.js'
-                : Object.keys(files)[0],
+              activeFile:
+                metadata.activeFile ||
+                (files['index.js'] ? 'index.js' : Object.keys(files)[0]),
               externalResources:
-                externalResources && externalResources.map(replaceCDN),
+                metadata.externalResources &&
+                metadata.externalResources.map(replaceCDN),
             }}
-            template="static"
+            template={metadata.template}
             files={Object.keys(files).reduce((f, name) => {
               const fullName = name.startsWith('/') ? name : `/${name}`;
               return {
@@ -87,12 +88,7 @@ function Playground({ pack, permalink, title }) {
               };
             }, {})}
           >
-            <PlaygroundLayout
-              permalink={permalink}
-              title={title}
-              files={files}
-              externalResources={externalResources}
-            >
+            <PlaygroundLayout permalink={permalink} title={title} files={files}>
               <div className={styles.wrapper}>
                 <div className={styles.editor}>
                   <SandpackCodeEditor
