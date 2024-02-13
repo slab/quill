@@ -2,6 +2,8 @@ import LogoIcon from '../svg/logo.svg';
 import Link from 'next/link';
 import SEO from './SEO';
 import Header from './Header';
+import playground from '../data/playground';
+import docs from '../data/docs';
 
 const Layout = ({ children, title }) => {
   return (
@@ -16,10 +18,10 @@ const Layout = ({ children, title }) => {
           </div>
           <h1>Your powerful rich text editor.</h1>
           <div className="actions row">
-            <Link href="/docs/quickstart" className="action documentation">
+            <Link href={docs[0].url} className="action documentation">
               Documentation
             </Link>
-            <Link href="/playground" className="action">
+            <Link href={playground[0].url} className="action">
               Playground
             </Link>
           </div>

@@ -6,7 +6,7 @@ To provide a consistent editing experience, you need both consistent data and pr
 
 In this guide, we will use the building blocks provided by Parchment and Quill to replicate the editor on Medium. We will start with the bare bones of Quill, without any themes, extraneous modules, or formats. At this basic level, Quill only understands plain text. But by the end of this guide, links, videos, and even tweets will be understood.
 
-### Groundwork
+## Groundwork
 
 Let's start without even using Quill, with just a textarea and button, hooked up to a dummy event listener. We'll use jQuery for convenience throughout this guide, but neither Quill nor Parchment depends on this. We'll also add some basic styling, with the help of [Google Fonts](https://fonts.google.com/) and [Font Awesome](https://fontawesome.io/). None of this has anything to do with Quill or Parchment, so we'll move through quickly.
 
@@ -60,7 +60,7 @@ document.querySelectorAll('button').forEach((button) => {
   }}
 />
 
-### Adding Quill Core
+## Adding Quill Core
 
 Next, we'll replace the textarea with Quill core, absent of themes, formats and extraneous modules. Open up your developer console to inspect the demo while you type into the editor. You can see the basic building blocks of a Parchment document at work.
 
@@ -94,7 +94,7 @@ Since `<p><span>Text</span></p>` and `<p>Text</p>` represent the same content, t
 
 Because of these constraints, **Quill cannot support arbitrary DOM trees and HTML changes**. But as we will see, the consistency and predicability this structure provides enables us to easily build rich editing experiences.
 
-### Basic Formatting
+## Basic Formatting
 
 We mentioned earlier that an Inline does not contribute formatting. This is the exception, rather than the rule, made for the base Inline class. The base Block blot works the same way for block level elements.
 
@@ -170,7 +170,7 @@ const quill = new Quill('#editor');
 
 Note that if you apply both bold and italic to some text, regardless of what order you do so, Quill wraps the `<strong>` tag outside of the `<em>` tag, in a consistent order.
 
-### Links
+## Links
 
 Links are slightly more complicated, since we need more than a boolean to store the link url. This affects our Link blot in two ways: creation and format retrieval. We will represent the url as a string value, but we could easily do so in other ways, such as an object with a url key, allowing for other key/value pairs to be set and define a link. We will demonstrate this later with [images](#images).
 
@@ -242,7 +242,7 @@ const quill = new Quill('#editor');
   }}
 />
 
-### Blockquote and Headers
+## Blockquote and Headers
 
 Blockquotes are implemented the same way as Bold blots, except we will inherit from Block, the base block level Blot. While Inline blots can be nested, Block blots cannot. Instead of wrapping, Block blots replace one another when applied to the same text range.
 
@@ -330,7 +330,7 @@ const quill = new Quill('#editor');
 
 Try setting some text to H1, and in your console, run `quill.getContents()`. You will see our custom static `formats()` function at work. Make sure to set the context to the correct CodePen iframe to be able to access the `quill` variable in the demo.
 
-### Dividers
+## Dividers
 
 Now let's implement our first leaf Blot. While our previous Blot examples contribute formatting and implement `format()`, leaf Blots contribute content and implement `value()`. Leaf Blots can either be Text or Embed Blots, so our section divider will be an Embed. Once created, Embed Blots' value is immutable, requiring deletion and reinsertion to change the content at that location.
 
@@ -410,7 +410,7 @@ const quill = new Quill('#editor');
   }}
 />
 
-### Images
+## Images
 
 Images can be added with what we learned building the [Link](#links) and [Divider](#divider) blots. We will use an object for the value to show how this is supported. Our button handler to insert images will use a static value, so we are not distracted by tooltip UI code irrelevant to [Parchment](https://github.com/quilljs/parchment/), the focus of this guide.
 
@@ -513,7 +513,7 @@ const quill = new Quill('#editor');
 />
 
 
-### Videos
+## Videos
 
 We will implement videos in a similar way as we did [images](#images). We could use the HTML5 `<video>` tag but we cannot play YouTube videos this way, and since this is likely the more common and relevant use case, we will use an `<iframe>` to support this. We do not have to here, but if you want multiple Blots to use the same tag, you can use `className` in addition to `tagName`, demonstrated in the next [Tweet](#tweet) example.
 
@@ -667,7 +667,7 @@ const quill = new Quill('#editor');
   }}
 />
 
-### Tweets
+## Tweets
 
 Medium supports many embed types, but we will just focus on Tweets for this guide. The Tweet blot is implemented almost exactly the same as [images](#images). We take advantage of the fact that Embed blots do not have to correspond to a void node. It can be any arbitrary node and Quill will treat it like a void node and not traverse its children or descendants. This allows us to use a `<div>` and the native Twitter JavaScript library to do what it pleases within the `<div>` container we specify.
 

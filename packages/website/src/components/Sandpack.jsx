@@ -7,7 +7,7 @@ import {
 } from '@codesandbox/sandpack-react';
 import { useEffect, useState } from 'react';
 import { Button } from '@radix-ui/themes';
-import { PlayIcon } from '@radix-ui/react-icons';
+import { PlayIcon, Share1Icon } from '@radix-ui/react-icons';
 import * as styles from './Sandpack.module.scss';
 import classNames from 'classnames';
 import {
@@ -44,7 +44,7 @@ const ToggleCodeButton = ({ isCodeEnabled, setIsCodeEnabled }) => {
   const { sandpack } = useSandpack();
 
   return (
-    <button
+    <Button
       className={styles.button}
       onClick={() => {
         if (!isCodeEnabled) {
@@ -54,7 +54,7 @@ const ToggleCodeButton = ({ isCodeEnabled, setIsCodeEnabled }) => {
       }}
     >
       {isCodeEnabled ? 'Hide Code' : 'Show Code'}
-    </button>
+    </Button>
   );
 };
 
@@ -78,8 +78,7 @@ const LocationOverride = ({ filenames }) => {
       <div
         className={classNames(styles.copied, { [styles.active]: isCopied })}
       ></div>
-      <button
-        className={styles.button}
+      <Button
         onClick={() => {
           const map = {};
           filenames.forEach((name) => {
@@ -92,8 +91,8 @@ const LocationOverride = ({ filenames }) => {
           setIsCopied(true);
         }}
       >
-        Share Your Edits
-      </button>
+        <Share1Icon /> Share Your Edits
+      </Button>
     </div>
   );
 };
