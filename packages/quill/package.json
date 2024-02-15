@@ -11,6 +11,7 @@
     "parchment": "^3.0.0-alpha.2",
     "quill-delta": "^5.1.0"
   },
+  "sideEffects": false,
   "devDependencies": {
     "@babel/cli": "^7.23.4",
     "@babel/core": "^7.23.3",
