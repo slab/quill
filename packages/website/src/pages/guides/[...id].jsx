@@ -38,10 +38,11 @@ export async function getStaticProps({ params }) {
   };
 }
 
-export default function Guides({ mdxSource, permalink, data }) {
+export default function Guides({ mdxSource, filePath, permalink, data }) {
   return (
     <PostLayout
       pageType="guides"
+      filePath={filePath}
       permalink={permalink}
       {...mdxSource.frontmatter}
     >
