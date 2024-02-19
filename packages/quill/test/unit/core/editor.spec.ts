@@ -1,14 +1,14 @@
 import Delta from 'quill-delta';
 import Editor from '../../../src/core/editor';
 import Block from '../../../src/blots/block';
-import Selection, { Range } from '../../../src/core/selection';
+import { Range } from '../../../src/core/selection';
 import Scroll from '../../../src/blots/scroll';
 import { Registry } from 'parchment';
 import Text from '../../../src/blots/text';
 import Emitter from '../../../src/core/emitter';
 import Break from '../../../src/blots/break';
 import { describe, expect, test } from 'vitest';
-import { createRegistry, createScroll } from '../__helpers__/factory';
+import { createRegistry } from '../__helpers__/factory';
 import List, { ListContainer } from '../../../src/formats/list';
 import Bold from '../../../src/formats/bold';
 import Image from '../../../src/formats/image';
@@ -25,11 +25,15 @@ import { SizeClass } from '../../../src/formats/size';
 import Blockquote from '../../../src/formats/blockquote';
 import IndentClass from '../../../src/formats/indent';
 import { ColorClass } from '../../../src/formats/color';
+import Quill from '../../../src/core';
+import { normalizeHTML } from '../__helpers__/utils';
 
-const createEditor = (html: string | { html: string }) => {
-  const scroll = createScroll(
-    html,
-    createRegistry([
+const createEditor = (html: string) => {
+  const container = document.createElement('div');
+  container.innerHTML = normalizeHTML(html);
+  document.body.appendChild(container);
+  const quill = new Quill(container, {
+    registry: createRegistry([
       ListContainer,
       List,
       IndentClass,
@@ -49,8 +53,8 @@ const createEditor = (html: string | { html: string }) => {
       Blockquote,
       SizeClass,
     ]),
-  );
-  return new Editor(scroll);
+  });
+  return quill.editor;
 };
 
 describe('Editor', () => {
@@ -786,9 +790,9 @@ describe('Editor', () => {
     });
 
     test('code block', () => {
-      const editor = createEditor({
-        html: '<p>0</p><div class="ql-code-block-container"><div class="ql-code-block">1</div><div class="ql-code-block">23</div></div><p><br></p>',
-      });
+      const editor = createEditor(
+        '<p>0</p><div class="ql-code-block-container"><div class="ql-code-block">1</div><div class="ql-code-block">23</div></div><p><br></p>',
+      );
       editor.applyDelta(new Delta().delete(4).retain(1).delete(2));
       expect(editor.scroll.domNode.innerHTML).toEqual('<p>2</p>');
     });
@@ -1134,10 +1138,10 @@ describe('Editor', () => {
 
     test('cursor with preformat', () => {
       const editor = createEditor('<h1><strong><em>0123</em></strong></h1>');
-      const selection = new Selection(editor.scroll, editor.scroll.emitter);
-      selection.setRange(new Range(2));
-      selection.format('underline', true);
-      selection.format('color', 'red');
+      const quill = Quill.find(editor.scroll.domNode.parentElement!) as Quill;
+      quill.selection.setRange(new Range(2));
+      quill.selection.format('underline', true);
+      quill.selection.format('color', 'red');
       expect(editor.getFormat(2)).toEqual({
         bold: true,
         italic: true,
@@ -1226,6 +1230,11 @@ describe('Editor', () => {
     test('entire line', () => {
       const editor = createEditor('<blockquote>Test</blockquote>');
       expect(editor.getHTML(0, 5)).toEqual('<blockquote>Test</blockquote>');
+    });
+
+    test('entire list item', () => {
+      const editor = createEditor('<ul><li>Test</li></ul>');
+      expect(editor.getHTML(0, 5)).toEqual('<ul><li>Test</li></ul>');
     });
 
     test('across lines', () => {
@@ -1352,8 +1361,8 @@ describe('Editor', () => {
     });
 
     test('text within tag', () => {
-      const editor = createEditor('<p><a>a</a></p>');
-      expect(editor.getHTML(0, 1)).toEqual('<a>a</a>');
+      const editor = createEditor('<p><strong>a</strong></p>');
+      expect(editor.getHTML(0, 1)).toEqual('<strong>a</strong>');
     });
 
     test('escape html', () => {

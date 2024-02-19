@@ -199,9 +199,9 @@ class Editor {
     const [line, lineOffset] = this.scroll.line(index);
     if (line) {
       const lineLength = line.length();
-      if (line.length() >= lineOffset + length) {
-        const excludeOuterTag = !(lineOffset === 0 && length === lineLength);
-        return convertHTML(line, lineOffset, length, excludeOuterTag);
+      const isWithinLine = line.length() >= lineOffset + length;
+      if (isWithinLine && !(lineOffset === 0 && length === lineLength)) {
+        return convertHTML(line, lineOffset, length, true);
       }
       return convertHTML(this.scroll, index, length, true);
     }
@@ -364,7 +364,7 @@ function convertHTML(
   blot: Blot,
   index: number,
   length: number,
-  excludeOuterTag = false,
+  isRoot = false,
 ): string {
   if ('html' in blot && typeof blot.html === 'function') {
     return blot.html(index, length);
@@ -395,7 +395,7 @@ function convertHTML(
     blot.children.forEachAt(index, length, (child, offset, childLength) => {
       parts.push(convertHTML(child, offset, childLength));
     });
-    if (excludeOuterTag || blot.statics.blotName === 'list') {
+    if (isRoot || blot.statics.blotName === 'list') {
       return parts.join('');
     }
     const { outerHTML, innerHTML } = blot.domNode as Element;
