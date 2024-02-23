@@ -146,7 +146,7 @@ function update(delta) {
   const contents = quill.getContents();
   let html = \`<h3>contents</h3>\${formatDelta(contents)}\`
   if (delta) {
-    html = \`\${html}<h3>change</h3>\${formatDelta(contents)}\`;
+    html = \`\${html}<h3>change</h3>\${formatDelta(delta)}\`;
   }
   playground.innerHTML = html;
 }
