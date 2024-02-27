@@ -1,5 +1,5 @@
 .ql-toolbar.ql-snow {
-  border: 1px solid var(--ql-border-color);
+  border: 1px solid $borderColor;
   box-sizing: border-box;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   padding: 8px;
@@ -19,17 +19,17 @@
 
   .ql-picker.ql-expanded {
     .ql-picker-label {
-      border-color: var(--ql-border-color);
+      border-color: $borderColor;
     }
     .ql-picker-options {
-      border-color: var(--ql-border-color);
+      border-color: $borderColor;
     }
   }
 
   .ql-color-picker {
     .ql-picker-item.ql-selected,
     .ql-picker-item:hover {
-      border-color: var(--ql-border-color-active);
+      border-color: $borderColorActive;
     }
   }
 }

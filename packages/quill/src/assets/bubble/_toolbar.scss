@@ -16,7 +16,7 @@
 
     .ql-picker-item.ql-selected,
     .ql-picker-item:hover {
-      border-color: var(--ql-active-color);
+      border-color: $activeColor;
     }
   }
 }

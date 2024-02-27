@@ -1,15 +1,14 @@
 $themeName: 'snow';
 $tooltipMargin: 8px;
 
-:root {
-  --ql-active-color: #06c;
-  --ql-border-color: #ccc;
-  --ql-background-color: #fff;
-  --ql-inactive-color: #444;
-  --ql-shadow-color: #ddd;
-  --ql-text-color: #444;
-  --ql-tooltip-background: #fff;
-}
+$activeColor: #06c;
+$borderColor: #ccc;
+$borderColorActive: #000;
+$backgroundColor: #fff;
+$inactiveColor: #444;
+$shadowColor: #ddd;
+$textColor: #444;
+$tooltipBackground: #fff;
 
 @import 'core.scss';
 @import 'base';
@@ -18,10 +17,10 @@ $tooltipMargin: 8px;
 
 .ql-snow {
   a {
-    color: var(--ql-active-color);
+    color: $activeColor;
   }
 }
 
 .ql-container.ql-snow {
-  border: 1px solid var(--ql-border-color);
+  border: 1px solid $borderColor;
 }

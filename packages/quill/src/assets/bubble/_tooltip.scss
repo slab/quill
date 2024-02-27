@@ -1,8 +1,8 @@
 .ql-bubble {
   .ql-tooltip {
-    background-color: var(--ql-background-color);
+    background-color: $backgroundColor;
     border-radius: 25px;
-    color: var(--ql-text-color);
+    color: $textColor;
   }
 
   .ql-tooltip-arrow {
@@ -16,12 +16,12 @@
   }
 
   .ql-tooltip:not(.ql-flip) .ql-tooltip-arrow {
-    border-bottom: $arrowWidth solid var(--ql-background-color);
+    border-bottom: $arrowWidth solid $backgroundColor;
     top: -1 * $arrowWidth;
   }
 
   .ql-tooltip.ql-flip .ql-tooltip-arrow {
-    border-top: $arrowWidth solid var(--ql-background-color);
+    border-top: $arrowWidth solid $backgroundColor;
     bottom: -1 * $arrowWidth;
   }
 
@@ -40,7 +40,7 @@
     input[type='text'] {
       background: transparent;
       border: none;
-      color: var(--ql-text-color);
+      color: $textColor;
       font-size: 13px;
       height: 100%;
       outline: none;
@@ -55,7 +55,7 @@
       right: 20px;
       
       &:before {
-        color: var(--ql-inactive-color);
+        color: $inactiveColor;
         content: '\00D7';
         font-size: 16px;
         font-weight: bold;

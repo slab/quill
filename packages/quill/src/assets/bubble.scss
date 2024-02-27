@@ -1,15 +1,13 @@
 $themeName: 'bubble';
 $arrowWidth: 6px;
 
-:root {
-  --ql-active-color: #fff;
-  --ql-border-color: #777;
-  --ql-border-color-active: #000;
-  --ql-background-color: #444;
-  --ql-inactive-color: #ccc;
-  --ql-shadow-color: #ddd;
-  --ql-text-color: #fff;
-}
+$activeColor: #fff;
+$borderColor: #777;
+$borderColorActive: #000;
+$backgroundColor: #444;
+$inactiveColor: #ccc;
+$shadowColor: #ddd;
+$textColor: #fff;
 
 @import 'core.scss';
 @import 'base';
