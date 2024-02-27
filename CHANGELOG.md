@@ -1,6 +1,7 @@
 # [Unreleased]
 
 - Fix `Quill#getSemanticHTML()` for list items
+- Remove unnecessary Firefox workaround
 
 # 2.0.0-rc.2
 

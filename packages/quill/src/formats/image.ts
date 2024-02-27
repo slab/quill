@@ -31,16 +31,6 @@ class Image extends EmbedBlot {
     return /\.(jpe?g|gif|png)$/.test(url) || /^data:image\/.+;base64/.test(url);
   }
 
-  static register() {
-    if (/Firefox/i.test(navigator.userAgent)) {
-      setTimeout(() => {
-        // Disable image resizing in Firefox
-        // @ts-expect-error
-        document.execCommand('enableObjectResizing', false, false);
-      }, 1);
-    }
-  }
-
   static sanitize(url: string) {
     return sanitize(url, ['http', 'https', 'data']) ? url : '//:0';
   }
