@@ -68,7 +68,7 @@ the most important of which is the improved rendering speed for large content.
 ### All Changes
 
 - Fix UI node interactions with line-level navigation shortcuts [#3898](https://github.com/quilljs/quill/pull/3898)
-- Use `&lt;strike&gt;` instead of `&lt;s&gt;` for Strike format [Commit](https://github.com/quilljs/quill/commit/16427683890374ed5acba96765757c44f5d5f2f5)
+- Use `<strike>` instead of `<s>` for Strike format [Commit](https://github.com/quilljs/quill/commit/16427683890374ed5acba96765757c44f5d5f2f5)
 - **Keyboard**: Backspace will keep the format when previous line is empty [#3013](https://github.com/quilljs/quill/pull/3013)
 - **Keyboard**: Discontinue inline formats on enter [#3428](https://github.com/quilljs/quill/pull/3428)
 - Fix length mismatch when copying code [#3028](https://github.com/quilljs/quill/pull/3028)
