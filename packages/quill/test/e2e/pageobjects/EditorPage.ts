@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import type Composition from '../fixtures/Composition';
+import type Composition from '../fixtures/Composition.js';
 
 interface Op {
   insert?: string | Record<string, unknown>;

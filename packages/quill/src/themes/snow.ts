@@ -1,14 +1,14 @@
 import { merge } from 'lodash-es';
-import Emitter from '../core/emitter';
-import BaseTheme, { BaseTooltip } from './base';
-import LinkBlot from '../formats/link';
-import { Range } from '../core/selection';
-import icons from '../ui/icons';
-import type Quill from '../core';
-import type { Context } from '../modules/keyboard';
-import type Toolbar from '../modules/toolbar';
-import type { ToolbarConfig } from '../modules/toolbar';
-import type { ThemeOptions } from '../core/theme';
+import Emitter from '../core/emitter.js';
+import BaseTheme, { BaseTooltip } from './base.js';
+import LinkBlot from '../formats/link.js';
+import { Range } from '../core/selection.js';
+import icons from '../ui/icons.js';
+import type Quill from '../core.js';
+import type { Context } from '../modules/keyboard.js';
+import type Toolbar from '../modules/toolbar.js';
+import type { ToolbarConfig } from '../modules/toolbar.js';
+import type { ThemeOptions } from '../core/theme.js';
 
 const TOOLBAR_CONFIG: ToolbarConfig = [
   [{ header: ['1', '2', '3', false] }],

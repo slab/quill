@@ -1,12 +1,12 @@
 import type { AttributeMap } from 'quill-delta';
 import Delta from 'quill-delta';
-import TableEmbed from '../../src/modules/tableEmbed';
+import TableEmbed from '../../src/modules/tableEmbed.js';
 import type {
   CellData,
   TableData,
   TableRowColumnOp,
-} from '../../src/modules/tableEmbed';
-import { choose, randomInt } from './__helpers__/utils';
+} from '../../src/modules/tableEmbed.js';
+import { choose, randomInt } from './__helpers__/utils.js';
 import { beforeAll, describe, expect, test } from 'vitest';
 
 const getRandomRowColumnId = () => {

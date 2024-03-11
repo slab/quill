@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import Emitter from '../../../src/core/emitter';
-import Quill from '../../../src/core';
+import Emitter from '../../../src/core/emitter.js';
+import Quill from '../../../src/core.js';
 
 describe('emitter', () => {
   test('emit and on', () => {

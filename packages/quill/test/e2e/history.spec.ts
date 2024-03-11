@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import { test } from './fixtures';
-import { SHORTKEY } from './utils';
+import { test } from './fixtures/index.js';
+import { SHORTKEY } from './utils/index.js';
 
 const undo = (page: Page) => page.keyboard.press(`${SHORTKEY}+z`);
 const redo = (page: Page) => page.keyboard.press(`${SHORTKEY}+Shift+z`);

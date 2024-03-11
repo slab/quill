@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import Quill from '../../../../src/core';
-import Video from '../../../../src/formats/video';
-import { BaseTooltip } from '../../../../src/themes/base';
-import { createRegistry } from '../../__helpers__/factory';
+import Quill from '../../../../src/core.js';
+import Video from '../../../../src/formats/video.js';
+import { BaseTooltip } from '../../../../src/themes/base.js';
+import { createRegistry } from '../../__helpers__/factory.js';
 
 class Tooltip extends BaseTooltip {
   static TEMPLATE = '<input type="text">';

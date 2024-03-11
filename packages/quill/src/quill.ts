@@ -1,47 +1,47 @@
-import Quill from './core';
+import Quill from './core.js';
 
-import { AlignClass, AlignStyle } from './formats/align';
+import { AlignClass, AlignStyle } from './formats/align.js';
 import {
   DirectionAttribute,
   DirectionClass,
   DirectionStyle,
-} from './formats/direction';
-import Indent from './formats/indent';
+} from './formats/direction.js';
+import Indent from './formats/indent.js';
 
-import Blockquote from './formats/blockquote';
-import Header from './formats/header';
-import List from './formats/list';
+import Blockquote from './formats/blockquote.js';
+import Header from './formats/header.js';
+import List from './formats/list.js';
 
-import { BackgroundClass, BackgroundStyle } from './formats/background';
-import { ColorClass, ColorStyle } from './formats/color';
-import { FontClass, FontStyle } from './formats/font';
-import { SizeClass, SizeStyle } from './formats/size';
+import { BackgroundClass, BackgroundStyle } from './formats/background.js';
+import { ColorClass, ColorStyle } from './formats/color.js';
+import { FontClass, FontStyle } from './formats/font.js';
+import { SizeClass, SizeStyle } from './formats/size.js';
 
-import Bold from './formats/bold';
-import Italic from './formats/italic';
-import Link from './formats/link';
-import Script from './formats/script';
-import Strike from './formats/strike';
-import Underline from './formats/underline';
+import Bold from './formats/bold.js';
+import Italic from './formats/italic.js';
+import Link from './formats/link.js';
+import Script from './formats/script.js';
+import Strike from './formats/strike.js';
+import Underline from './formats/underline.js';
 
-import Formula from './formats/formula';
-import Image from './formats/image';
-import Video from './formats/video';
+import Formula from './formats/formula.js';
+import Image from './formats/image.js';
+import Video from './formats/video.js';
 
-import CodeBlock, { Code as InlineCode } from './formats/code';
+import CodeBlock, { Code as InlineCode } from './formats/code.js';
 
-import Syntax from './modules/syntax';
-import Table from './modules/table';
-import Toolbar from './modules/toolbar';
+import Syntax from './modules/syntax.js';
+import Table from './modules/table.js';
+import Toolbar from './modules/toolbar.js';
 
-import Icons from './ui/icons';
-import Picker from './ui/picker';
-import ColorPicker from './ui/color-picker';
-import IconPicker from './ui/icon-picker';
-import Tooltip from './ui/tooltip';
+import Icons from './ui/icons.js';
+import Picker from './ui/picker.js';
+import ColorPicker from './ui/color-picker.js';
+import IconPicker from './ui/icon-picker.js';
+import Tooltip from './ui/tooltip.js';
 
-import BubbleTheme from './themes/bubble';
-import SnowTheme from './themes/snow';
+import BubbleTheme from './themes/bubble.js';
+import SnowTheme from './themes/snow.js';
 
 Quill.register(
   {

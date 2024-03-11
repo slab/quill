@@ -1,13 +1,13 @@
 import Delta from 'quill-delta';
-import Quill from '../core/quill';
-import Module from '../core/module';
+import Quill from '../core/quill.js';
+import Module from '../core/module.js';
 import {
   TableCell,
   TableRow,
   TableBody,
   TableContainer,
   tableId,
-} from '../formats/table';
+} from '../formats/table.js';
 
 class Table extends Module {
   static register() {

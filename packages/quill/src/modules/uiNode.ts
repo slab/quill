@@ -1,6 +1,6 @@
 import { ParentBlot } from 'parchment';
-import Module from '../core/module';
-import Quill from '../core/quill';
+import Module from '../core/module.js';
+import Quill from '../core/quill.js';
 
 const isMac = /Mac/i.test(navigator.platform);
 

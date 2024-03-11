@@ -1,11 +1,11 @@
 import hljs from 'highlight.js';
 import Delta from 'quill-delta';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
-import Quill from '../../../src/core';
-import Bold from '../../../src/formats/bold';
-import Syntax, { CodeBlock, CodeToken } from '../../../src/modules/syntax';
-import { createRegistry } from '../__helpers__/factory';
-import { normalizeHTML, sleep } from '../__helpers__/utils';
+import Quill from '../../../src/core.js';
+import Bold from '../../../src/formats/bold.js';
+import Syntax, { CodeBlock, CodeToken } from '../../../src/modules/syntax.js';
+import { createRegistry } from '../__helpers__/factory.js';
+import { normalizeHTML, sleep } from '../__helpers__/utils.js';
 
 const HIGHLIGHT_INTERVAL = 10;
 

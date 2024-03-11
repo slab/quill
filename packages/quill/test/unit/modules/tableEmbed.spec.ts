@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import { tableHandler } from '../../../src/modules/tableEmbed';
+import { tableHandler } from '../../../src/modules/tableEmbed.js';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 describe('tableHandler', () => {

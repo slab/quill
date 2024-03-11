@@ -1,15 +1,15 @@
 import { Registry } from 'parchment';
 import type { Attributor } from 'parchment';
 
-import Block from '../../../src/blots/block';
-import Break from '../../../src/blots/break';
-import Cursor from '../../../src/blots/cursor';
-import Scroll from '../../../src/blots/scroll';
-import TextBlot from '../../../src/blots/text';
-import ListItem, { ListContainer } from '../../../src/formats/list';
-import Inline from '../../../src/blots/inline';
-import Emitter from '../../../src/core/emitter';
-import { normalizeHTML } from './utils';
+import Block from '../../../src/blots/block.js';
+import Break from '../../../src/blots/break.js';
+import Cursor from '../../../src/blots/cursor.js';
+import Scroll from '../../../src/blots/scroll.js';
+import TextBlot from '../../../src/blots/text.js';
+import ListItem, { ListContainer } from '../../../src/formats/list.js';
+import Inline from '../../../src/blots/inline.js';
+import Emitter from '../../../src/core/emitter.js';
+import { normalizeHTML } from './utils.js';
 
 export const createRegistry = (formats: unknown[] = []) => {
   const registry = new Registry();

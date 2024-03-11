@@ -2,9 +2,9 @@ import { describe, expect, test } from 'vitest';
 import {
   createScroll as baseCreateScroll,
   createRegistry,
-} from '../__helpers__/factory';
-import Header from '../../../src/formats/header';
-import Bold from '../../../src/formats/bold';
+} from '../__helpers__/factory.js';
+import Header from '../../../src/formats/header.js';
+import Bold from '../../../src/formats/bold.js';
 
 const createScroll = (html: string) =>
   baseCreateScroll(html, createRegistry([Header, Bold]));

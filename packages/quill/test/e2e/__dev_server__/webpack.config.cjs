@@ -1,12 +1,13 @@
-import path from 'path';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import common from '../../../webpack.common';
-import { merge } from 'webpack-merge';
-import type { Configuration } from 'webpack';
-import 'webpack-dev-server';
+/*eslint-env node*/
 
-export default (env: Record<string, unknown>) =>
-  merge<Configuration>(common, {
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const common = require('../../../webpack.common.cjs');
+const { merge } = require('webpack-merge');
+require('webpack-dev-server');
+
+module.exports = (env) =>
+  merge(common, {
     plugins: [
       new HtmlWebpackPlugin({
         publicPath: '/',
@@ -18,7 +19,7 @@ export default (env: Record<string, unknown>) =>
       }),
     ],
     devServer: {
-      port: env.port as string,
+      port: env.port,
       server: 'https',
       hot: false,
       liveReload: false,

@@ -1,4 +1,4 @@
-import Picker from './picker';
+import Picker from './picker.js';
 
 class IconPicker extends Picker {
   defaultItem: HTMLElement | null;

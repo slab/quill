@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { test } from './fixtures';
+import { test } from './fixtures/index.js';
 
 test.describe('replace selection', () => {
   test.beforeEach(async ({ editorPage }) => {

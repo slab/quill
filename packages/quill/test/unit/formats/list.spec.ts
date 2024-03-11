@@ -2,13 +2,13 @@ import Delta from 'quill-delta';
 import {
   createScroll as baseCreateScroll,
   createRegistry,
-} from '../__helpers__/factory';
-import Editor from '../../../src/core/editor';
+} from '../__helpers__/factory.js';
+import Editor from '../../../src/core/editor.js';
 import { describe, expect, test } from 'vitest';
-import List, { ListContainer } from '../../../src/formats/list';
-import IndentClass from '../../../src/formats/indent';
-import { AlignClass } from '../../../src/formats/align';
-import Video from '../../../src/formats/video';
+import List, { ListContainer } from '../../../src/formats/list.js';
+import IndentClass from '../../../src/formats/indent.js';
+import { AlignClass } from '../../../src/formats/align.js';
+import Video from '../../../src/formats/video.js';
 
 const createScroll = (html: string) =>
   baseCreateScroll(

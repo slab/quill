@@ -44,7 +44,7 @@ const Editor = forwardRef(
         ref.current = null;
         container.innerHTML = '';
       };
-    }, []);
+    }, [ref]);
 
     return <div ref={containerRef}></div>;
   },

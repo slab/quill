@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { normalizeHTML } from './utils';
+import { normalizeHTML } from './utils.js';
 
 const sortAttributes = (element: HTMLElement) => {
   const attributes = Array.from(element.attributes);

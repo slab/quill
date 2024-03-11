@@ -1,8 +1,8 @@
 import Delta from 'quill-delta';
-import type Quill from '../core/quill';
-import Emitter from '../core/emitter';
-import Module from '../core/module';
-import type { Range } from '../core/selection';
+import type Quill from '../core/quill.js';
+import Emitter from '../core/emitter.js';
+import Module from '../core/module.js';
+import type { Range } from '../core/selection.js';
 
 interface UploaderOptions {
   mimetypes: string[];

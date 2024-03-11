@@ -1,5 +1,5 @@
 import { EmbedBlot } from 'parchment';
-import { sanitize } from './link';
+import { sanitize } from './link.js';
 
 const ATTRIBUTES = ['alt', 'height', 'width'];
 

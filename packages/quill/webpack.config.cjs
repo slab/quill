@@ -1,10 +1,11 @@
-import { BannerPlugin, DefinePlugin } from 'webpack';
-import type { Configuration } from 'webpack';
-import common from './webpack.common';
-import { merge } from 'webpack-merge';
-import 'webpack-dev-server';
-import { readFileSync } from 'fs';
-import { join, resolve } from 'path';
+/*eslint-env node*/
+
+const { BannerPlugin, DefinePlugin } = require('webpack');
+const common = require('./webpack.common.cjs');
+const { merge } = require('webpack-merge');
+require('webpack-dev-server');
+const { readFileSync } = require('fs');
+const { join, resolve } = require('path');
 
 const pkg = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'));
 
@@ -22,8 +23,8 @@ const constantPack = new DefinePlugin({
   QUILL_VERSION: JSON.stringify(pkg.version),
 });
 
-export default (env: Record<string, unknown>) =>
-  merge<Configuration>(common, {
+module.exports = (env) =>
+  merge(common, {
     mode: env.production ? 'production' : 'development',
     devtool: 'source-map',
     plugins: [bannerPack, constantPack],

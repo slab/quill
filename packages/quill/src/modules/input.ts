@@ -1,8 +1,8 @@
 import Delta from 'quill-delta';
-import Module from '../core/module';
-import Quill from '../core/quill';
-import type { Range } from '../core/selection';
-import { deleteRange } from './keyboard';
+import Module from '../core/module.js';
+import Quill from '../core/quill.js';
+import type { Range } from '../core/selection.js';
+import { deleteRange } from './keyboard.js';
 
 const INSERT_TYPES = ['insertText', 'insertReplacementText'];
 

@@ -2,9 +2,9 @@ import { describe, expect, test } from 'vitest';
 import {
   createScroll as baseCreateScroll,
   createRegistry,
-} from '../__helpers__/factory';
-import Video from '../../../src/formats/video';
-import Image from '../../../src/formats/image';
+} from '../__helpers__/factory.js';
+import Video from '../../../src/formats/video.js';
+import Image from '../../../src/formats/image.js';
 
 const createScroll = (html: string) =>
   baseCreateScroll(html, createRegistry([Video, Image]));

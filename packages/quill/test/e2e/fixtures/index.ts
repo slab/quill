@@ -1,6 +1,6 @@
 import { test as base } from '@playwright/test';
-import EditorPage from '../pageobjects/EditorPage';
-import Composition from './Composition';
+import EditorPage from '../pageobjects/EditorPage.js';
+import Composition from './Composition.js';
 
 export const test = base.extend<{
   editorPage: EditorPage;

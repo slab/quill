@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import normalize from '../../../../../src/modules/normalizeExternalHTML/normalizers/msWord';
+import normalize from '../../../../../src/modules/normalizeExternalHTML/normalizers/msWord.js';
 
 describe('Microsoft Word', () => {
   test('keep the list style', () => {

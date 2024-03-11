@@ -1,8 +1,7 @@
 {
   "ts-node": {
     "compilerOptions": {
-      "esModuleInterop": true,
-      "module": "commonjs"
+      "esModuleInterop": true
     }
   },
   "compilerOptions": {
