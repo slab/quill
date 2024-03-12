@@ -1,10 +1,10 @@
-import Block from '../blots/block';
-import Break from '../blots/break';
-import Cursor from '../blots/cursor';
-import Inline from '../blots/inline';
-import TextBlot, { escapeText } from '../blots/text';
-import Container from '../blots/container';
-import Quill from '../core/quill';
+import Block from '../blots/block.js';
+import Break from '../blots/break.js';
+import Cursor from '../blots/cursor.js';
+import Inline from '../blots/inline.js';
+import TextBlot, { escapeText } from '../blots/text.js';
+import Container from '../blots/container.js';
+import Quill from '../core/quill.js';
 
 class CodeBlockContainer extends Container {
   static create(value: string) {

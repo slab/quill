@@ -1,11 +1,11 @@
 import Delta from 'quill-delta';
-import Editor from '../../../src/core/editor';
+import Editor from '../../../src/core/editor.js';
 import { describe, test, expect } from 'vitest';
 import {
   createRegistry,
   createScroll as baseCreateScroll,
-} from '../__helpers__/factory';
-import { AlignClass } from '../../../src/formats/align';
+} from '../__helpers__/factory.js';
+import { AlignClass } from '../../../src/formats/align.js';
 
 const createScroll = (html: string) =>
   baseCreateScroll(html, createRegistry([AlignClass]));

@@ -1,14 +1,14 @@
 import Delta from 'quill-delta';
 import { describe, expect, test, vitest } from 'vitest';
-import Quill from '../../../src/core';
-import { getLastChangeIndex } from '../../../src/modules/history';
-import type { HistoryOptions } from '../../../src/modules/history';
-import { createRegistry, createScroll } from '../__helpers__/factory';
-import { sleep } from '../__helpers__/utils';
-import Bold from '../../../src/formats/bold';
-import Image from '../../../src/formats/image';
-import Link from '../../../src/formats/link';
-import { AlignClass } from '../../../src/formats/align';
+import Quill from '../../../src/core.js';
+import { getLastChangeIndex } from '../../../src/modules/history.js';
+import type { HistoryOptions } from '../../../src/modules/history.js';
+import { createRegistry, createScroll } from '../__helpers__/factory.js';
+import { sleep } from '../__helpers__/utils.js';
+import Bold from '../../../src/formats/bold.js';
+import Image from '../../../src/formats/image.js';
+import Link from '../../../src/formats/link.js';
+import { AlignClass } from '../../../src/formats/align.js';
 
 describe('History', () => {
   const scroll = createScroll(

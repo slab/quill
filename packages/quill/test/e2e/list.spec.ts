@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
-import { test } from './fixtures';
-import { isMac } from './utils';
+import { test } from './fixtures/index.js';
+import { isMac } from './utils/index.js';
 
 const listTypes = ['bullet', 'checked'];
 

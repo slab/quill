@@ -2,12 +2,12 @@ import { cloneDeep, isEqual, merge } from 'lodash-es';
 import { LeafBlot, EmbedBlot, Scope, ParentBlot } from 'parchment';
 import type { Blot } from 'parchment';
 import Delta, { AttributeMap, Op } from 'quill-delta';
-import Block, { BlockEmbed, bubbleFormats } from '../blots/block';
-import Break from '../blots/break';
-import CursorBlot from '../blots/cursor';
-import type Scroll from '../blots/scroll';
-import TextBlot, { escapeText } from '../blots/text';
-import { Range } from './selection';
+import Block, { BlockEmbed, bubbleFormats } from '../blots/block.js';
+import Break from '../blots/break.js';
+import CursorBlot from '../blots/cursor.js';
+import type Scroll from '../blots/scroll.js';
+import TextBlot, { escapeText } from '../blots/text.js';
+import { Range } from './selection.js';
 
 const ASCII = /^[ -~]*$/;
 

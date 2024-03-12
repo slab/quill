@@ -2,10 +2,10 @@ import Delta from 'quill-delta';
 import {
   createScroll as baseCreateScroll,
   createRegistry,
-} from '../__helpers__/factory';
-import Editor from '../../../src/core/editor';
-import Header from '../../../src/formats/header';
-import Italic from '../../../src/formats/italic';
+} from '../__helpers__/factory.js';
+import Editor from '../../../src/core/editor.js';
+import Header from '../../../src/formats/header.js';
+import Italic from '../../../src/formats/italic.js';
 import { describe, expect, test } from 'vitest';
 
 const createScroll = (html: string) =>

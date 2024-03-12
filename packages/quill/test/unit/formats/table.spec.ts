@@ -1,17 +1,17 @@
 import Delta from 'quill-delta';
-import Editor from '../../../src/core/editor';
+import Editor from '../../../src/core/editor.js';
 import {
   createScroll as baseCreateScroll,
   createRegistry,
-} from '../__helpers__/factory';
+} from '../__helpers__/factory.js';
 import { describe, expect, test } from 'vitest';
 import {
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
-} from '../../../src/formats/table';
-import Header from '../../../src/formats/header';
+} from '../../../src/formats/table.js';
+import Header from '../../../src/formats/header.js';
 
 const createScroll = (html: string) =>
   baseCreateScroll(

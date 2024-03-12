@@ -1,9 +1,9 @@
-import Editor from '../../../src/core/editor';
-import Script from '../../../src/formats/script';
+import Editor from '../../../src/core/editor.js';
+import Script from '../../../src/formats/script.js';
 import {
   createScroll as baseCreateScroll,
   createRegistry,
-} from '../__helpers__/factory';
+} from '../__helpers__/factory.js';
 import { describe, expect, test } from 'vitest';
 
 const createScroll = (html: string) =>

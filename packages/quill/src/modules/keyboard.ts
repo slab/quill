@@ -2,11 +2,11 @@ import { cloneDeep, isEqual } from 'lodash-es';
 import Delta, { AttributeMap } from 'quill-delta';
 import { EmbedBlot, Scope, TextBlot } from 'parchment';
 import type { Blot, BlockBlot } from 'parchment';
-import Quill from '../core/quill';
-import logger from '../core/logger';
-import Module from '../core/module';
-import type { BlockEmbed } from '../blots/block';
-import type { Range } from '../core/selection';
+import Quill from '../core/quill.js';
+import logger from '../core/logger.js';
+import Module from '../core/module.js';
+import type { BlockEmbed } from '../blots/block.js';
+import type { Range } from '../core/selection.js';
 
 const debug = logger('quill:keyboard');
 

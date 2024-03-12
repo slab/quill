@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import normalize from '../../../../../src/modules/normalizeExternalHTML/normalizers/googleDocs';
+import normalize from '../../../../../src/modules/normalizeExternalHTML/normalizers/googleDocs.js';
 
 describe('Google Docs', () => {
   test('remove unnecessary b tags', () => {

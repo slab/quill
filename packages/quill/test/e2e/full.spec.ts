@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
-import { getSelectionInTextNode, SHORTKEY } from './utils';
-import { test, CHAPTER, P1, P2 } from './fixtures';
+import { getSelectionInTextNode, SHORTKEY } from './utils/index.js';
+import { test, CHAPTER, P1, P2 } from './fixtures/index.js';
 
 test('compose an epic', async ({ page, editorPage }) => {
   await editorPage.open();

@@ -1,18 +1,18 @@
 import { merge } from 'lodash-es';
-import type Quill from '../core/quill';
-import Emitter from '../core/emitter';
-import Theme from '../core/theme';
-import type { ThemeOptions } from '../core/theme';
-import ColorPicker from '../ui/color-picker';
-import IconPicker from '../ui/icon-picker';
-import Picker from '../ui/picker';
-import Tooltip from '../ui/tooltip';
-import type { Range } from '../core/selection';
-import type Clipboard from '../modules/clipboard';
-import type History from '../modules/history';
-import type Keyboard from '../modules/keyboard';
-import type Uploader from '../modules/uploader';
-import type Selection from '../core/selection';
+import type Quill from '../core/quill.js';
+import Emitter from '../core/emitter.js';
+import Theme from '../core/theme.js';
+import type { ThemeOptions } from '../core/theme.js';
+import ColorPicker from '../ui/color-picker.js';
+import IconPicker from '../ui/icon-picker.js';
+import Picker from '../ui/picker.js';
+import Tooltip from '../ui/tooltip.js';
+import type { Range } from '../core/selection.js';
+import type Clipboard from '../modules/clipboard.js';
+import type History from '../modules/history.js';
+import type Keyboard from '../modules/keyboard.js';
+import type Uploader from '../modules/uploader.js';
+import type Selection from '../core/selection.js';
 
 const ALIGNS = [false, 'center', 'right', 'justify'];
 

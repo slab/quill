@@ -2,7 +2,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:prettier/recommended",
-    "plugin:import/recommended"
+    "plugin:import/recommended",
+    "plugin:require-extensions/recommended"
   ],
   "env": {
     "browser": true,
@@ -27,7 +28,7 @@
         "plugin:import/typescript"
       ],
       "excludedFiles": "*.d.ts",
-      "plugins": ["@typescript-eslint"],
+      "plugins": ["@typescript-eslint", "require-extensions"],
       "rules": {
         "@typescript-eslint/consistent-type-imports": "error",
         "@typescript-eslint/ban-ts-comment": "off",

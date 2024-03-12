@@ -1,11 +1,11 @@
 import { ContainerBlot, LeafBlot, Scope, ScrollBlot } from 'parchment';
 import type { Blot, Parent, EmbedBlot, ParentBlot, Registry } from 'parchment';
 import Delta, { AttributeMap, Op } from 'quill-delta';
-import Emitter from '../core/emitter';
-import type { EmitterSource } from '../core/emitter';
-import Block, { BlockEmbed, bubbleFormats } from './block';
-import Break from './break';
-import Container from './container';
+import Emitter from '../core/emitter.js';
+import type { EmitterSource } from '../core/emitter.js';
+import Block, { BlockEmbed, bubbleFormats } from './block.js';
+import Break from './break.js';
+import Container from './container.js';
 
 type RenderBlock =
   | {

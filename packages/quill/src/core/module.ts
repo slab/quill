@@ -1,4 +1,4 @@
-import type Quill from './quill';
+import type Quill from './quill.js';
 
 abstract class Module<T extends {} = {}> {
   static DEFAULTS = {};

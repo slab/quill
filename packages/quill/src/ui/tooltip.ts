@@ -1,5 +1,5 @@
-import type Quill from '../core';
-import type { Bounds } from '../core/selection';
+import type Quill from '../core.js';
+import type { Bounds } from '../core/selection.js';
 
 const isScrollable = (el: Element) => {
   const { overflowY } = getComputedStyle(el, null);

@@ -1,17 +1,17 @@
-import Selection, { Range } from '../../../src/core/selection';
-import Cursor from '../../../src/blots/cursor';
-import Emitter from '../../../src/core/emitter';
+import Selection, { Range } from '../../../src/core/selection.js';
+import Cursor from '../../../src/blots/cursor.js';
+import Emitter from '../../../src/core/emitter.js';
 import { expect, describe, test } from 'vitest';
-import { createRegistry, createScroll } from '../__helpers__/factory';
-import Bold from '../../../src/formats/bold';
-import Underline from '../../../src/formats/underline';
-import Image from '../../../src/formats/image';
-import Link from '../../../src/formats/link';
-import Italic from '../../../src/formats/italic';
-import Strike from '../../../src/formats/strike';
-import { ColorStyle } from '../../../src/formats/color';
-import { BackgroundStyle } from '../../../src/formats/background';
-import { SizeClass } from '../../../src/formats/size';
+import { createRegistry, createScroll } from '../__helpers__/factory.js';
+import Bold from '../../../src/formats/bold.js';
+import Underline from '../../../src/formats/underline.js';
+import Image from '../../../src/formats/image.js';
+import Link from '../../../src/formats/link.js';
+import Italic from '../../../src/formats/italic.js';
+import Strike from '../../../src/formats/strike.js';
+import { ColorStyle } from '../../../src/formats/color.js';
+import { BackgroundStyle } from '../../../src/formats/background.js';
+import { SizeClass } from '../../../src/formats/size.js';
 
 const createSelection = (html: string, container = document.body) => {
   const scroll = createScroll(

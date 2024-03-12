@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import { createRegistry, createScroll } from '../__helpers__/factory';
-import Bold from '../../../src/formats/bold';
-import Italic from '../../../src/formats/italic';
+import { createRegistry, createScroll } from '../__helpers__/factory.js';
+import Bold from '../../../src/formats/bold.js';
+import Italic from '../../../src/formats/italic.js';
 
 describe('Inline', () => {
   test('format order', () => {

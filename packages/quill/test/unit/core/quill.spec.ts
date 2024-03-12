@@ -1,14 +1,14 @@
-import '../../../src/quill';
+import '../../../src/quill.js';
 import Delta from 'quill-delta';
 import { beforeEach, describe, expect, test, vitest } from 'vitest';
 import type { MockedFunction } from 'vitest';
-import Emitter from '../../../src/core/emitter';
-import Theme from '../../../src/core/theme';
-import Toolbar from '../../../src/modules/toolbar';
-import Quill, { expandConfig, overload } from '../../../src/core/quill';
-import { Range } from '../../../src/core/selection';
-import Snow from '../../../src/themes/snow';
-import { normalizeHTML } from '../__helpers__/utils';
+import Emitter from '../../../src/core/emitter.js';
+import Theme from '../../../src/core/theme.js';
+import Toolbar from '../../../src/modules/toolbar.js';
+import Quill, { expandConfig, overload } from '../../../src/core/quill.js';
+import { Range } from '../../../src/core/selection.js';
+import Snow from '../../../src/themes/snow.js';
+import { normalizeHTML } from '../__helpers__/utils.js';
 
 const createContainer = (html: string | { html: string } = '') => {
   const container = document.createElement('div');

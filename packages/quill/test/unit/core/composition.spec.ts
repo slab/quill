@@ -1,9 +1,9 @@
-import Emitter from '../../../src/core/emitter';
-import Composition from '../../../src/core/composition';
-import Scroll from '../../../src/blots/scroll';
+import Emitter from '../../../src/core/emitter.js';
+import Composition from '../../../src/core/composition.js';
+import Scroll from '../../../src/blots/scroll.js';
 import { describe, expect, test, vitest } from 'vitest';
-import { createRegistry } from '../__helpers__/factory';
-import Quill from '../../../src/core';
+import { createRegistry } from '../__helpers__/factory.js';
+import Quill from '../../../src/core.js';
 
 describe('Composition', () => {
   test('triggers events on compositionstart', async () => {

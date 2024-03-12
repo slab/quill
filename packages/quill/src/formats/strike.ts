@@ -1,4 +1,4 @@
-import Bold from './bold';
+import Bold from './bold.js';
 
 class Strike extends Bold {
   static blotName = 'strike';

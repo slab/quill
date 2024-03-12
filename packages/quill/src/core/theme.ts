@@ -1,9 +1,9 @@
-import type Quill from '../core';
-import type Clipboard from '../modules/clipboard';
-import type History from '../modules/history';
-import type Keyboard from '../modules/keyboard';
-import type { ToolbarProps } from '../modules/toolbar';
-import type Uploader from '../modules/uploader';
+import type Quill from '../core.js';
+import type Clipboard from '../modules/clipboard.js';
+import type History from '../modules/history.js';
+import type Keyboard from '../modules/keyboard.js';
+import type { ToolbarProps } from '../modules/toolbar.js';
+import type Uploader from '../modules/uploader.js';
 
 export interface ThemeOptions {
   modules: Record<string, unknown> & {

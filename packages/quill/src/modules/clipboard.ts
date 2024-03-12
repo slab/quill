@@ -8,21 +8,21 @@ import {
   StyleAttributor,
 } from 'parchment';
 import Delta from 'quill-delta';
-import { BlockEmbed } from '../blots/block';
-import type { EmitterSource } from '../core/emitter';
-import logger from '../core/logger';
-import Module from '../core/module';
-import Quill from '../core/quill';
-import type { Range } from '../core/selection';
-import { AlignAttribute, AlignStyle } from '../formats/align';
-import { BackgroundStyle } from '../formats/background';
-import CodeBlock from '../formats/code';
-import { ColorStyle } from '../formats/color';
-import { DirectionAttribute, DirectionStyle } from '../formats/direction';
-import { FontStyle } from '../formats/font';
-import { SizeStyle } from '../formats/size';
-import { deleteRange } from './keyboard';
-import normalizeExternalHTML from './normalizeExternalHTML';
+import { BlockEmbed } from '../blots/block.js';
+import type { EmitterSource } from '../core/emitter.js';
+import logger from '../core/logger.js';
+import Module from '../core/module.js';
+import Quill from '../core/quill.js';
+import type { Range } from '../core/selection.js';
+import { AlignAttribute, AlignStyle } from '../formats/align.js';
+import { BackgroundStyle } from '../formats/background.js';
+import CodeBlock from '../formats/code.js';
+import { ColorStyle } from '../formats/color.js';
+import { DirectionAttribute, DirectionStyle } from '../formats/direction.js';
+import { FontStyle } from '../formats/font.js';
+import { SizeStyle } from '../formats/size.js';
+import { deleteRange } from './keyboard.js';
+import normalizeExternalHTML from './normalizeExternalHTML/index.js';
 
 const debug = logger('quill:clipboard');
 

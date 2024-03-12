@@ -1,5 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import Keyboard, { SHORTKEY, normalize } from '../../../src/modules/keyboard';
+import Keyboard, {
+  SHORTKEY,
+  normalize,
+} from '../../../src/modules/keyboard.js';
 
 const assert = <T>(value: T | null | undefined): T => {
   if (value == null) {

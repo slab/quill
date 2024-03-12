@@ -1,6 +1,7 @@
-import { resolve } from 'path';
-import type { Configuration } from 'webpack';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+/*eslint-env node*/
+
+const { resolve } = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const tsRules = {
   test: /\.ts$/,
@@ -27,7 +28,7 @@ const stylRules = {
   use: [MiniCssExtractPlugin.loader, 'css-loader', 'stylus-loader'],
 };
 
-export default {
+module.exports = {
   entry: {
     quill: './src/quill.ts',
     'quill.core': './src/core.ts',
@@ -47,6 +48,9 @@ export default {
   },
   resolve: {
     extensions: ['.js', '.styl', '.ts'],
+    extensionAlias: {
+      '.js': ['.ts', '.js'],
+    },
   },
   module: {
     rules: [tsRules, stylRules, svgRules],
@@ -56,4 +60,4 @@ export default {
       filename: '[name]',
     }),
   ],
-} satisfies Configuration;
+};

@@ -1,4 +1,4 @@
-import Block from '../blots/block';
+import Block from '../blots/block.js';
 
 class Header extends Block {
   static blotName = 'header';

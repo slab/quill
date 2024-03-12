@@ -1,31 +1,31 @@
 import Delta from 'quill-delta';
 import { describe, expect, test, vitest } from 'vitest';
-import Quill from '../../../src/core';
-import { Range } from '../../../src/core/selection';
-import Bold from '../../../src/formats/bold';
-import Header from '../../../src/formats/header';
-import Image from '../../../src/formats/image';
-import IndentClass from '../../../src/formats/indent';
-import Italic from '../../../src/formats/italic';
-import Link from '../../../src/formats/link';
-import List, { ListContainer } from '../../../src/formats/list';
+import Quill from '../../../src/core.js';
+import { Range } from '../../../src/core/selection.js';
+import Bold from '../../../src/formats/bold.js';
+import Header from '../../../src/formats/header.js';
+import Image from '../../../src/formats/image.js';
+import IndentClass from '../../../src/formats/indent.js';
+import Italic from '../../../src/formats/italic.js';
+import Link from '../../../src/formats/link.js';
+import List, { ListContainer } from '../../../src/formats/list.js';
 import {
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
-} from '../../../src/formats/table';
-import Video from '../../../src/formats/video';
-import { createRegistry } from '../__helpers__/factory';
-import { sleep } from '../__helpers__/utils';
+} from '../../../src/formats/table.js';
+import Video from '../../../src/formats/video.js';
+import { createRegistry } from '../__helpers__/factory.js';
+import { sleep } from '../__helpers__/utils.js';
 import type { RegistryDefinition } from 'parchment';
 import {
   DirectionAttribute,
   DirectionClass,
   DirectionStyle,
-} from '../../../src/formats/direction';
-import CodeBlock from '../../../src/formats/code';
-import { ColorClass, ColorStyle } from '../../../src/formats/color';
+} from '../../../src/formats/direction.js';
+import CodeBlock from '../../../src/formats/code.js';
+import { ColorClass, ColorStyle } from '../../../src/formats/color.js';
 
 describe('Clipboard', () => {
   describe('events', () => {

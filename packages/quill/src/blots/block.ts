@@ -7,9 +7,9 @@ import {
 } from 'parchment';
 import type { Blot, Parent } from 'parchment';
 import Delta from 'quill-delta';
-import Break from './break';
-import Inline from './inline';
-import TextBlot from './text';
+import Break from './break.js';
+import Inline from './inline.js';
+import TextBlot from './text.js';
 
 const NEWLINE_LENGTH = 1;
 
