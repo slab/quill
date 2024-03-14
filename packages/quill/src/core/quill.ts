@@ -789,6 +789,7 @@ function expandConfig(
   const config = { ...quillDefaults, ...themeDefaults, ...options };
 
   return {
+    ...config,
     container,
     theme,
     modules: Object.entries(modules).reduce(
@@ -811,9 +812,6 @@ function expandConfig(
       {},
     ),
     bounds: resolveSelector(config.bounds),
-    registry: config.registry,
-    placeholder: config.placeholder,
-    readOnly: config.readOnly,
   };
 }
 
