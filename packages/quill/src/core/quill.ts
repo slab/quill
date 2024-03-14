@@ -1,4 +1,4 @@
-import { cloneDeep, merge } from 'lodash-es';
+import { merge } from 'lodash-es';
 import * as Parchment from 'parchment';
 import type { Op } from 'quill-delta';
 import Delta from 'quill-delta';
@@ -34,7 +34,6 @@ interface Options {
   debug?: DebugLevel | boolean;
   registry?: Parchment.Registry;
   readOnly?: boolean;
-  container?: HTMLElement | string;
   placeholder?: string;
   bounds?: HTMLElement | string | null;
   modules?: Record<string, unknown>;
@@ -46,17 +45,23 @@ interface ExpandedOptions extends Omit<Options, 'theme'> {
   container: HTMLElement;
   modules: Record<string, unknown>;
   bounds?: HTMLElement | null;
+  readOnly: boolean;
 }
 
 class Quill {
-  static DEFAULTS: Partial<Options> = {
+  static DEFAULTS = {
     bounds: null,
-    modules: {},
+    modules: {
+      clipboard: true,
+      keyboard: true,
+      history: true,
+      uploader: true,
+    },
     placeholder: '',
     readOnly: false,
     registry: globalRegistry,
     theme: 'default',
-  };
+  } as const satisfies Partial<Options>;
   static events = Emitter.events;
   static sources = Emitter.sources;
   static version = typeof QUILL_VERSION === 'undefined' ? 'dev' : QUILL_VERSION;
@@ -727,94 +732,89 @@ class Quill {
   }
 }
 
-function expandConfig(
-  container: HTMLElement | string,
-  userConfig: Options,
-): ExpandedOptions {
-  // @ts-expect-error -- TODO fix this later
-  let expandedConfig: ExpandedOptions = merge(
-    {
-      container,
-      modules: {
-        clipboard: true,
-        keyboard: true,
-        history: true,
-        uploader: true,
-      },
-    },
-    userConfig,
-  );
+function resolveSelector(selector: string | HTMLElement | null | undefined) {
+  return typeof selector === 'string'
+    ? document.querySelector<HTMLElement>(selector)
+    : selector;
+}
 
-  // @ts-expect-error -- TODO fix this later
-  if (!expandedConfig.theme || expandedConfig.theme === Quill.DEFAULTS.theme) {
-    expandedConfig.theme = Theme;
-  } else {
-    expandedConfig.theme = Quill.import(`themes/${expandedConfig.theme}`);
-    if (expandedConfig.theme == null) {
-      throw new Error(
-        `Invalid theme ${expandedConfig.theme}. Did you register it?`,
-      );
-    }
-  }
-  // @ts-expect-error -- TODO fix this later
-  const themeConfig = cloneDeep(expandedConfig.theme.DEFAULTS);
-  [themeConfig, expandedConfig].forEach((config) => {
-    config.modules = config.modules || {};
-    Object.keys(config.modules).forEach((module) => {
-      if (config.modules[module] === true) {
-        config.modules[module] = {};
-      }
-    });
-  });
-  const moduleNames = Object.keys(themeConfig.modules).concat(
-    Object.keys(expandedConfig.modules),
+function expandModuleConfig(config: Record<string, unknown> | undefined) {
+  return Object.entries(config ?? {}).reduce(
+    (expanded, [key, value]) => ({
+      ...expanded,
+      [key]: value === true ? {} : value,
+    }),
+    {},
   );
-  const moduleConfig = moduleNames.reduce((config, name) => {
-    const moduleClass = Quill.import(`modules/${name}`);
-    if (moduleClass == null) {
-      debug.error(
-        `Cannot load ${name} module. Are you sure you registered it?`,
-      );
-    } else {
-      // @ts-expect-error
-      config[name] = moduleClass.DEFAULTS || {};
-    }
-    return config;
-  }, {});
+}
+
+function expandConfig(
+  containerOrSelector: HTMLElement | string,
+  options: Options,
+): ExpandedOptions {
+  const container = resolveSelector(containerOrSelector);
+  if (!container) {
+    throw new Error('Invalid Quill container');
+  }
+
+  const shouldUseDefaultTheme =
+    !options.theme || options.theme === Quill.DEFAULTS.theme;
+  const theme = shouldUseDefaultTheme
+    ? Theme
+    : Quill.import(`themes/${options.theme}`);
+  if (!theme) {
+    throw new Error(`Invalid theme ${options.theme}. Did you register it?`);
+  }
+
+  const { modules: quillModuleDefaults, ...quillDefaults } = Quill.DEFAULTS;
+  const { modules: themeModuleDefaults, ...themeDefaults } = theme.DEFAULTS;
+
+  const modules: ExpandedOptions['modules'] = merge(
+    {},
+    expandModuleConfig(quillModuleDefaults),
+    expandModuleConfig(themeModuleDefaults),
+    expandModuleConfig(options.modules),
+  );
   // Special case toolbar shorthand
   if (
-    expandedConfig.modules != null &&
-    expandedConfig.modules.toolbar &&
-    expandedConfig.modules.toolbar.constructor !== Object
+    modules != null &&
+    modules.toolbar &&
+    modules.toolbar.constructor !== Object
   ) {
-    expandedConfig.modules.toolbar = {
-      container: expandedConfig.modules.toolbar,
+    modules.toolbar = {
+      container: modules.toolbar,
     };
   }
-  expandedConfig = merge(
-    {},
-    Quill.DEFAULTS,
-    { modules: moduleConfig },
-    themeConfig,
-    expandedConfig,
-  );
-  (['bounds', 'container'] as const).forEach((key) => {
-    const selector = expandedConfig[key];
-    if (typeof selector === 'string') {
-      // @ts-expect-error Handle null case
-      expandedConfig[key] = document.querySelector(selector) as HTMLElement;
-    }
-  });
-  expandedConfig.modules = Object.keys(expandedConfig.modules).reduce(
-    (config: Record<string, unknown>, name) => {
-      if (expandedConfig.modules[name]) {
-        config[name] = expandedConfig.modules[name];
-      }
-      return config;
-    },
-    {},
-  );
-  return expandedConfig;
+
+  const config = { ...quillDefaults, ...themeDefaults, ...options };
+
+  return {
+    container,
+    theme,
+    modules: Object.entries(modules).reduce(
+      (modulesWithDefaults, [name, value]) => {
+        if (!value) return modulesWithDefaults;
+
+        const moduleClass = Quill.import(`modules/${name}`);
+        if (moduleClass == null) {
+          debug.error(
+            `Cannot load ${name} module. Are you sure you registered it?`,
+          );
+          return modulesWithDefaults;
+        }
+        return {
+          ...modulesWithDefaults,
+          // @ts-expect-error
+          [name]: merge({}, moduleClass.DEFAULTS || {}, value),
+        };
+      },
+      {},
+    ),
+    bounds: resolveSelector(config.bounds),
+    registry: config.registry,
+    placeholder: config.placeholder,
+    readOnly: config.readOnly,
+  };
 }
 
 // Handle selection preservation and TEXT_CHANGE emission

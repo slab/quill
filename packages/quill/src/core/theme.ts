@@ -53,6 +53,7 @@ class Theme {
 
 export interface ThemeConstructor {
   new (quill: Quill, options: unknown): Theme;
+  DEFAULTS: ThemeOptions;
 }
 
 export default Theme;
