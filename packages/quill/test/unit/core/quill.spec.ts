@@ -1,11 +1,16 @@
 import '../../../src/quill.js';
 import Delta from 'quill-delta';
+import { Registry } from 'parchment';
 import { beforeEach, describe, expect, test, vitest } from 'vitest';
 import type { MockedFunction } from 'vitest';
 import Emitter from '../../../src/core/emitter.js';
 import Theme from '../../../src/core/theme.js';
 import Toolbar from '../../../src/modules/toolbar.js';
-import Quill, { expandConfig, overload } from '../../../src/core/quill.js';
+import Quill, {
+  expandConfig,
+  globalRegistry,
+  overload,
+} from '../../../src/core/quill.js';
 import { Range } from '../../../src/core/selection.js';
 import Snow from '../../../src/themes/snow.js';
 import { normalizeHTML } from '../__helpers__/utils.js';
@@ -778,6 +783,74 @@ describe('Quill', () => {
         // @ts-expect-error
         Toolbar.DEFAULTS.handlers.clean,
       );
+    });
+
+    test('registry defaults to globalRegistry', () => {
+      const config = expandConfig(`#${testContainerId}`, {});
+      expect(config.registry).toBe(globalRegistry);
+    });
+
+    describe('formats', () => {
+      test('null value allows all formats', () => {
+        const config = expandConfig(`#${testContainerId}`, {
+          formats: null,
+        });
+
+        expect(config.registry.query('cursor')).toBeTruthy();
+        expect(config.registry.query('bold')).toBeTruthy();
+      });
+
+      test('always allows core formats', () => {
+        const config = expandConfig(`#${testContainerId}`, {
+          formats: ['bold'],
+        });
+
+        expect(config.registry.query('cursor')).toBeTruthy();
+        expect(config.registry.query('break')).toBeTruthy();
+      });
+
+      test('limits allowed formats', () => {
+        const config = expandConfig(`#${testContainerId}`, {
+          formats: ['bold'],
+        });
+
+        expect(config.registry.query('italic')).toBeFalsy();
+        expect(config.registry.query('bold')).toBeTruthy();
+      });
+
+      test('ignores unknown formats', () => {
+        const name = 'my-unregistered-format';
+        const config = expandConfig(`#${testContainerId}`, {
+          formats: [name],
+        });
+
+        expect(config.registry.query(name)).toBeFalsy();
+      });
+
+      test('registers list container when there is a list', () => {
+        expect(
+          expandConfig(`#${testContainerId}`, {
+            formats: ['bold'],
+          }).registry.query('list-container'),
+        ).toBeFalsy();
+
+        expect(
+          expandConfig(`#${testContainerId}`, {
+            formats: ['list'],
+          }).registry.query('list-container'),
+        ).toBeTruthy();
+      });
+
+      test('provides both registry and formats', () => {
+        const registry = new Registry();
+        const config = expandConfig(`#${testContainerId}`, {
+          registry,
+          formats: ['bold'],
+        });
+
+        expect(config.registry).toBe(registry);
+        expect(config.registry.query('bold')).toBeFalsy();
+      });
     });
   });
 

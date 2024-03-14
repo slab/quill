@@ -3,6 +3,7 @@
 - Fix `Quill#getSemanticHTML()` for list items
 - Remove unnecessary Firefox workaround
 - **Clipboard** Fix redundant newlines when pasting from external sources
+- Add `formats` option for specifying allowed formats
 
 # 2.0.0-rc.2
 

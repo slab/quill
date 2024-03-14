@@ -23,6 +23,7 @@ import Theme from './theme.js';
 import type { ThemeConstructor } from './theme.js';
 import scrollRectIntoView from './utils/scrollRectIntoView.js';
 import type { Rect } from './utils/scrollRectIntoView.js';
+import createRegistryWithFormats from './utils/createRegistryWithFormats.js';
 
 const debug = logger('quill');
 
@@ -37,9 +38,10 @@ interface Options {
   placeholder?: string;
   bounds?: HTMLElement | string | null;
   modules?: Record<string, unknown>;
+  formats?: string[] | null;
 }
 
-interface ExpandedOptions extends Omit<Options, 'theme'> {
+interface ExpandedOptions extends Omit<Options, 'theme' | 'formats'> {
   theme: ThemeConstructor;
   registry: Parchment.Registry;
   container: HTMLElement;
@@ -785,8 +787,26 @@ function expandConfig(
 
   const config = { ...quillDefaults, ...themeDefaults, ...options };
 
+  let registry = options.registry;
+  if (registry) {
+    if (options.formats) {
+      debug.warn('Ignoring "formats" option because "registry" is specified');
+    }
+  } else {
+    registry = options.formats
+      ? createRegistryWithFormats(
+          options.formats,
+          config.registry,
+          (errorMessage) => {
+            debug.error(errorMessage);
+          },
+        )
+      : config.registry;
+  }
+
   return {
     ...config,
+    registry,
     container,
     theme,
     modules: Object.entries(modules).reduce(

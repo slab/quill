@@ -104,3 +104,41 @@ quill.setContents(
 ### theme
 
 Name of theme to use. The builtin options are `"bubble"` or `"snow"`. An invalid or falsy value will load a default minimal theme. Note the theme's specific stylesheet still needs to be included manually. See [Themes](/docs/themes/) for more information.
+
+### formats
+
+Default: `null`
+
+A list of format names to whitelist. If not given, all formats are allowed.
+For advance usages, see [Registries](/docs/registries/).
+
+<Sandpack
+  defaultShowPreview
+  activeFile="index.js"
+  files={{
+    'index.html': `
+<!-- Include stylesheet -->
+<link href="{{site.cdn}}/quill.snow.css" rel="stylesheet" />
+<div id="editor">
+</div>
+<!-- Include the Quill library -->
+<script src="{{site.cdn}}/quill.js"></script>
+<script src="/index.js"></script>`,
+    "/index.js": `
+const Parchment = Quill.import('parchment');
+
+const quill = new Quill('#editor', {
+  formats: ['italic'],
+});
+
+const Delta = Quill.import('delta');
+quill.setContents(
+  new Delta()
+    .insert('Only ')
+    .insert('italic', { italic: true })
+    .insert(' is allowed. ')
+    .insert('Bold', { bold: true })
+    .insert(' is not.')
+);
+`}}
+/>
