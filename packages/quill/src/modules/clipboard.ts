@@ -529,7 +529,10 @@ function matchList(node: Node, delta: Delta, scroll: ScrollBlot) {
 
 function matchNewline(node: Node, delta: Delta, scroll: ScrollBlot) {
   if (!deltaEndsWith(delta, '\n')) {
-    if (isLine(node, scroll)) {
+    if (
+      isLine(node, scroll) &&
+      (node.childNodes.length > 0 || node instanceof HTMLParagraphElement)
+    ) {
       return delta.insert('\n');
     }
     if (delta.length() > 0 && node.nextSibling) {
