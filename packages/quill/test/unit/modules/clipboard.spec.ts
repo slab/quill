@@ -563,5 +563,11 @@ describe('Clipboard', () => {
           .insert('\n'),
       );
     });
+
+    test('ignore empty elements except paragraphs', () => {
+      const html = '<div>hello<div></div>my<p></p>world</div>';
+      const delta = createClipboard().convert({ html });
+      expect(delta).toEqual(new Delta().insert('hello\nmy\n\nworld'));
+    });
   });
 });
