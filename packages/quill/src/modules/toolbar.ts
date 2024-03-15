@@ -111,9 +111,7 @@ class Toolbar extends Module<ToolbarProps> {
       }
       this.quill.focus();
       const [range] = this.quill.selection.getRange();
-      // @ts-expect-error Fix me later
       if (this.handlers[format] != null) {
-        // @ts-expect-error Fix me later
         this.handlers[format].call(this, value);
       } else if (
         // @ts-expect-error
@@ -127,12 +125,10 @@ class Toolbar extends Module<ToolbarProps> {
             .retain(range.index)
             // @ts-expect-error Fix me later
             .delete(range.length)
-            // @ts-expect-error Fix me later
             .insert({ [format]: value }),
           Quill.sources.USER,
         );
       } else {
-        // @ts-expect-error Fix me later
         this.quill.format(format, value, Quill.sources.USER);
       }
       this.update(range);
