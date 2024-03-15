@@ -274,7 +274,6 @@ class Quill {
     return modify.call(
       this,
       () => {
-        // @ts-expect-error
         return this.editor.deleteText(index, length);
       },
       source,
@@ -410,7 +409,6 @@ class Quill {
     return modify.call(
       this,
       () => {
-        // @ts-expect-error
         return this.editor.formatText(index, length, formats);
       },
       source,
@@ -597,7 +595,6 @@ class Quill {
     event: (typeof Emitter)['events']['SELECTION_CHANGE'],
     handler: (range: Range, oldRange: Range, source: EmitterSource) => void,
   ): Emitter;
-  // @ts-expect-error
   on(
     event: (typeof Emitter)['events']['EDITOR_CHANGE'],
     handler: (
