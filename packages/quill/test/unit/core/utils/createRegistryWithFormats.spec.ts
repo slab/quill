@@ -2,23 +2,22 @@ import '../../../../src/quill.js';
 import { describe, expect, test, vitest } from 'vitest';
 import createRegistryWithFormats from '../../../../src/core/utils/createRegistryWithFormats.js';
 import { globalRegistry } from '../../../../src/core/quill.js';
+import logger from '../../../../src/core/logger.js';
 import { Registry } from 'parchment';
 import Inline from '../../../../src/blots/inline.js';
 import Container from '../../../../src/blots/container.js';
 
+const debug = logger('test');
+
 describe('createRegistryWithFormats', () => {
   test('register core formats', () => {
-    const registry = createRegistryWithFormats([], globalRegistry, () => {});
+    const registry = createRegistryWithFormats([], globalRegistry, debug);
     expect(registry.query('cursor')).toBeTruthy();
     expect(registry.query('bold')).toBeFalsy();
   });
 
   test('register specified formats', () => {
-    const registry = createRegistryWithFormats(
-      ['bold'],
-      globalRegistry,
-      () => {},
-    );
+    const registry = createRegistryWithFormats(['bold'], globalRegistry, debug);
     expect(registry.query('cursor')).toBeTruthy();
     expect(registry.query('bold')).toBeTruthy();
   });
@@ -39,7 +38,7 @@ describe('createRegistryWithFormats', () => {
     const registry = createRegistryWithFormats(
       ['my-child'],
       sourceRegistry,
-      () => {},
+      debug,
     );
 
     expect(registry.query('my-child')).toBeTruthy();
@@ -56,25 +55,25 @@ describe('createRegistryWithFormats', () => {
 
     sourceRegistry.register(InfiniteBlot);
 
-    const logError = vitest.fn();
+    const logError = vitest.spyOn(debug, 'error');
     const registry = createRegistryWithFormats(
       ['infinite-blot'],
       sourceRegistry,
-      logError,
+      debug,
     );
 
     expect(registry.query('infinite-blot')).toBeTruthy();
     expect(logError).toHaveBeenCalledWith(
-      expect.stringMatching('Maximum iterations reached'),
+      expect.stringMatching('Cycle detected'),
     );
   });
 
   test('report missing formats', () => {
-    const logError = vitest.fn();
+    const logError = vitest.spyOn(debug, 'error');
     const registry = createRegistryWithFormats(
       ['my-unknown'],
       globalRegistry,
-      logError,
+      debug,
     );
     expect(registry.query('my-unknown')).toBeFalsy();
     expect(logError).toHaveBeenCalledWith(expect.stringMatching('my-unknown'));

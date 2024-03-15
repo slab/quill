@@ -794,13 +794,7 @@ function expandConfig(
     }
   } else {
     registry = options.formats
-      ? createRegistryWithFormats(
-          options.formats,
-          config.registry,
-          (errorMessage) => {
-            debug.error(errorMessage);
-          },
-        )
+      ? createRegistryWithFormats(options.formats, config.registry, debug)
       : config.registry;
   }
 

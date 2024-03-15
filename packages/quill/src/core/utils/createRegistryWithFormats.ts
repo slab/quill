@@ -6,7 +6,7 @@ const CORE_FORMATS = ['block', 'break', 'cursor', 'inline', 'scroll', 'text'];
 const createRegistryWithFormats = (
   formats: string[],
   sourceRegistry: Registry,
-  logError: (errorMessage: string) => void,
+  debug: { error: (errorMessage: string) => void },
 ) => {
   const registry = new Registry();
   CORE_FORMATS.forEach((name) => {
@@ -17,7 +17,7 @@ const createRegistryWithFormats = (
   formats.forEach((name) => {
     let format = sourceRegistry.query(name);
     if (!format) {
-      logError(
+      debug.error(
         `Cannot register "${name}" specified in "formats" config. Are you sure it was registered?`,
       );
     }
@@ -28,7 +28,9 @@ const createRegistryWithFormats = (
 
       iterations += 1;
       if (iterations > MAX_REGISTER_ITERATIONS) {
-        logError(`Maximum iterations reached when registering "${name}"`);
+        debug.error(
+          `Cycle detected in registering blot requiredContainer: "${name}"`,
+        );
         break;
       }
     }
