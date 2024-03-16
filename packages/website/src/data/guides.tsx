@@ -20,10 +20,6 @@ const items = [
     url: '/guides/designing-the-delta-format',
   },
   {
-    title: 'Comparison with Other Rich Text Editors',
-    url: '/guides/comparison-with-other-rich-text-editors',
-  },
-  {
     title: 'Upgrading to 2.0',
     url: '/guides/upgrading-to-2-0',
   },
