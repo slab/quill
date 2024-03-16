@@ -9,6 +9,12 @@ const tsRules = {
   use: ['babel-loader'],
 };
 
+const sourceMapRules = {
+  test: /\.js$/,
+  enforce: 'pre',
+  use: ['source-map-loader'],
+};
+
 const svgRules = {
   test: /\.svg$/,
   include: [resolve(__dirname, 'src/assets/icons')],
@@ -53,7 +59,7 @@ module.exports = {
     },
   },
   module: {
-    rules: [tsRules, stylRules, svgRules],
+    rules: [tsRules, stylRules, svgRules, sourceMapRules],
   },
   plugins: [
     new MiniCssExtractPlugin({

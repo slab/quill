@@ -42,6 +42,7 @@
     "jsdom": "^22.1.0",
     "mini-css-extract-plugin": "^2.7.6",
     "prettier": "^3.0.3",
+    "source-map-loader": "^5.0.0",
     "style-loader": "^3.3.3",
     "stylus": "^0.62.0",
     "stylus-loader": "^7.1.3",
