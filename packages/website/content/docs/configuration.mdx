@@ -54,6 +54,49 @@ Default: `warn`
 
 Shortcut for [debug](/docs/api/#debug). Note `debug` is a static method and will affect other instances of Quill editors on the page. Only warning and error messages are enabled by default.
 
+### formats
+
+Default: `null`
+
+A list of formats that are recognized and can exist within the editor contents.
+
+By default, all formats that are defined in the Quill library are allowed.
+To restrict formatting to a smaller list, pass in an array of the format names to support.
+
+You can create brand new formats or more fully customize the content using [Registries](/docs/registries/).
+Specifying a `registry` option will ignore this `formats` option.
+
+<Sandpack
+  defaultShowPreview
+  activeFile="index.js"
+  files={{
+    'index.html': `
+<!-- Include stylesheet -->
+<link href="{{site.cdn}}/quill.snow.css" rel="stylesheet" />
+<div id="editor">
+</div>
+<!-- Include the Quill library -->
+<script src="{{site.cdn}}/quill.js"></script>
+<script src="/index.js"></script>`,
+    "/index.js": `
+const Parchment = Quill.import('parchment');
+
+const quill = new Quill('#editor', {
+  formats: ['italic'],
+});
+
+const Delta = Quill.import('delta');
+quill.setContents(
+  new Delta()
+    .insert('Only ')
+    .insert('italic', { italic: true })
+    .insert(' is allowed. ')
+    .insert('Bold', { bold: true })
+    .insert(' is not.')
+);
+`}}
+/>
+
 ### placeholder
 
 Default: None
@@ -100,6 +143,11 @@ quill.setContents(
 `}}
 />
 
+### registry
+
+Default: `null`
+
+By default all formats defined by Quill are supported in the editor contents through a shared registry between editor instances. Use `formats` to restrict formatting for simple use cases and `registry` for greater customization. Specifying this `registry` option will ignore the `formatting` option. Learn more about [Registries](/docs/registries/).
 
 ### theme
 
