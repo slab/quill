@@ -1,5 +1,7 @@
 # [Unreleased]
 
+- Include source maps for Parchment
+
 # 2.0.0-rc.3
 
 - Fix `Quill#getSemanticHTML()` for list items
