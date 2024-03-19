@@ -22,7 +22,11 @@ interface Stack {
 }
 
 class History extends Module<HistoryOptions> {
-  static DEFAULTS: HistoryOptions;
+  static DEFAULTS: HistoryOptions = {
+    delay: 1000,
+    maxStack: 100,
+    userOnly: false,
+  };
 
   lastRecorded = 0;
   ignoreChange = false;
@@ -153,11 +157,6 @@ class History extends Module<HistoryOptions> {
     }
   }
 }
-History.DEFAULTS = {
-  delay: 1000,
-  maxStack: 100,
-  userOnly: false,
-};
 
 function transformStack(stack: StackItem[], delta: Delta) {
   let remoteDelta = delta;
