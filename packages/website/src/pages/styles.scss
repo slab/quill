@@ -1120,6 +1120,9 @@ body:not(.home) .navbar-link:before {
   content: ' ';
   display: block;
 }
+#content-container li p {
+  margin-bottom: 0;
+}
 #content-container h1,
 #content-container h2,
 #content-container h3,

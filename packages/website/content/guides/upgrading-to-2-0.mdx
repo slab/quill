@@ -19,7 +19,6 @@ The Quill repository has been rewritten in TypeScript, providing an official Typ
     This ended up being more confusing than helpful as we will no longer make use of this.
 
 - `registry` - added to allow multiple editors with different formats to coexist on the same page. [Learn more](/docs/registries).
-- `formats` *removed* - `registry` is now strictly more powerful and safer.
 
 - `scrollingContainer` *removed*
 
@@ -48,6 +47,13 @@ The Quill repository has been rewritten in TypeScript, providing an official Typ
 - Static `register` method added to allow dependent chains of registration.
 - Static `formats` method now passes in `scroll`.
 - Blot constructor now requires `scroll` to be passed in.
+- Attributors are exported as top-level classes.
+
+    Instead of accessing class attributor via `Parchment.Attributor.Class`, you now use it at `Parchment.ClassAttributor`.
+    Similarly, `Parchment.Attributor.Style` is now `Parchment.StyleAttributor`, and `Parchment.Attributor.Attribute` is now `Parchment.Attributor`.
+- Exports are using full names.
+
+    Instead of `Parchment.Scroll`, you now use `Parchment.ScrollBlot`. The similar change applies to `Parchment.Embed`, `Parchment.Text`, `Parchment.Block`, `Parchment.Inline`, and more.
 
 ## Delta
 
