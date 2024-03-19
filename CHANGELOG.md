@@ -1,6 +1,7 @@
 # [Unreleased]
 
 - Include source maps for Parchment
+- **Clipboard** Support pasting links copied from iOS share sheets
 
 # 2.0.0-rc.3
 

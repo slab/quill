@@ -72,7 +72,9 @@ interface ClipboardOptions {
 }
 
 class Clipboard extends Module<ClipboardOptions> {
-  static DEFAULTS: ClipboardOptions;
+  static DEFAULTS: ClipboardOptions = {
+    matchers: [],
+  };
 
   matchers: [Selector, Matcher][];
 
@@ -84,8 +86,7 @@ class Clipboard extends Module<ClipboardOptions> {
     this.quill.root.addEventListener('cut', (e) => this.onCaptureCopy(e, true));
     this.quill.root.addEventListener('paste', this.onCapturePaste.bind(this));
     this.matchers = [];
-    // @ts-expect-error Fix me later
-    CLIPBOARD_CONFIG.concat(this.options.matchers).forEach(
+    CLIPBOARD_CONFIG.concat(this.options.matchers ?? []).forEach(
       ([selector, matcher]) => {
         this.addMatcher(selector, matcher);
       },
@@ -180,13 +181,32 @@ class Clipboard extends Module<ClipboardOptions> {
     }
   }
 
+  /*
+   * https://www.iana.org/assignments/media-types/text/uri-list
+   */
+  private normalizeURIList(urlList: string) {
+    return (
+      urlList
+        .split(/\r?\n/)
+        // Ignore all comments
+        .filter((url) => url[0] !== '#')
+        .join('\n')
+    );
+  }
+
   onCapturePaste(e: ClipboardEvent) {
     if (e.defaultPrevented || !this.quill.isEnabled()) return;
     e.preventDefault();
     const range = this.quill.getSelection(true);
     if (range == null) return;
     const html = e.clipboardData?.getData('text/html');
-    const text = e.clipboardData?.getData('text/plain');
+    let text = e.clipboardData?.getData('text/plain');
+    if (!html && !text) {
+      const urlList = e.clipboardData?.getData('text/uri-list');
+      if (urlList) {
+        text = this.normalizeURIList(urlList);
+      }
+    }
     const files = Array.from(e.clipboardData?.files || []);
     if (!html && files.length > 0) {
       this.quill.uploader.upload(range, files);
@@ -256,9 +276,6 @@ class Clipboard extends Module<ClipboardOptions> {
     return [elementMatchers, textMatchers];
   }
 }
-Clipboard.DEFAULTS = {
-  matchers: [],
-};
 
 function applyFormat(
   delta: Delta,
@@ -271,11 +288,11 @@ function applyFormat(
   }
 
   return delta.reduce((newDelta, op) => {
+    if (!op.insert) return newDelta;
     if (op.attributes && op.attributes[format]) {
       return newDelta.push(op);
     }
     const formats = value ? { [format]: value } : {};
-    // @ts-expect-error Fix me later
     return newDelta.insert(op.insert, { ...formats, ...op.attributes });
   }, new Delta());
 }
@@ -513,10 +530,10 @@ function matchIndent(node: Node, delta: Delta, scroll: ScrollBlot) {
   }
   if (indent <= 0) return delta;
   return delta.reduce((composed, op) => {
+    if (!op.insert) return composed;
     if (op.attributes && typeof op.attributes.indent === 'number') {
       return composed.push(op);
     }
-    // @ts-expect-error Fix me later
     return composed.insert(op.insert, { indent, ...(op.attributes || {}) });
   }, new Delta());
 }

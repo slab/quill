@@ -63,7 +63,7 @@ class Quill {
     readOnly: false,
     registry: globalRegistry,
     theme: 'default',
-  } as const satisfies Partial<Options>;
+  } satisfies Partial<Options>;
   static events = Emitter.events;
   static sources = Emitter.sources;
   static version = typeof QUILL_VERSION === 'undefined' ? 'dev' : QUILL_VERSION;
