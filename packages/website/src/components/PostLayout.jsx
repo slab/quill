@@ -85,26 +85,6 @@ const PostLayout = ({ title, pageType, filePath, permalink, children }) => {
               <h1 id={slug(title)}>{title}</h1>
               {children}
             </article>
-            <div className="row" id="pagination-container">
-              {prev && (
-                <a className="prev" href={prev.url}>
-                  <span className="label">{prev.title}</span>
-                  <span className="arrow">
-                    <span className="tip"></span>
-                    <span className="shaft"></span>
-                  </span>
-                </a>
-              )}
-              {next && (
-                <a className="next" href={next.url}>
-                  <span className="label">{next.title}</span>
-                  <span className="arrow">
-                    <span className="tip"></span>
-                    <span className="shaft"></span>
-                  </span>
-                </a>
-              )}
-            </div>
             <div className={styles.editOnGitHub}>
               <a
                 className={styles.editLink}

@@ -166,41 +166,6 @@ svg .feat-3 {
   text-align: center;
 }
 
-.prev,
-.next,
-.arrow {
-  display: inline-block;
-  height: 1em;
-  line-height: 1em;
-}
-.prev,
-.prev .label,
-.prev .arrow {
-  float: left;
-}
-.next,
-.next .label,
-.next .arrow {
-  float: right;
-}
-.prev .label,
-.next .label {
-  font-size: 1.25rem;
-  display: inline-block;
-  height: 2em;
-  line-height: 2em;
-}
-.arrow {
-  padding: 0.33em 0.67em;
-}
-.prev:hover .arrow {
-  padding-left: 0.77em;
-  padding-right: 0.57em;
-}
-.next:hover .arrow {
-  padding-left: 0.57em;
-  padding-right: 0.77em;
-}
 .arrow .shaft {
   background-color: #000;
   border-bottom: 3px solid #fff;
@@ -1140,21 +1105,6 @@ body:not(.home) .navbar-link:before {
 
 #content-container .ql-editor p {
   font-size: 1em;
-}
-
-#pagination-container {
-  font-size: 2.5rem;
-  max-width: var(--width-readable);
-}
-#pagination-container .prev:after {
-  content: 'Previous';
-}
-#pagination-container .next:before {
-  content: 'Next';
-}
-#pagination-container .next:before,
-#pagination-container .prev:after {
-  font-family: 'Sofia Pro', sans-serif;
 }
 
 /*** Playground ***/
