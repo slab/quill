@@ -790,10 +790,26 @@ describe('Quill', () => {
       expect(config.registry).toBe(globalRegistry);
     });
 
+    test('registry with undefined values', () => {
+      const config = expandConfig(`#${testContainerId}`, {
+        registry: undefined,
+      });
+      expect(config.registry).toBe(globalRegistry);
+    });
+
     describe('formats', () => {
       test('null value allows all formats', () => {
         const config = expandConfig(`#${testContainerId}`, {
           formats: null,
+        });
+
+        expect(config.registry.query('cursor')).toBeTruthy();
+        expect(config.registry.query('bold')).toBeTruthy();
+      });
+
+      test('undefined value allows all formats', () => {
+        const config = expandConfig(`#${testContainerId}`, {
+          formats: undefined,
         });
 
         expect(config.registry.query('cursor')).toBeTruthy();
