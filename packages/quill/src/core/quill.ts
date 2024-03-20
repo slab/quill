@@ -747,6 +747,12 @@ function expandModuleConfig(config: Record<string, unknown> | undefined) {
   );
 }
 
+function omitUndefinedValuesFromOptions(obj: Options) {
+  return Object.fromEntries(
+    Object.entries(obj).filter((entry) => entry[1] !== undefined),
+  );
+}
+
 function expandConfig(
   containerOrSelector: HTMLElement | string,
   options: Options,
@@ -785,7 +791,11 @@ function expandConfig(
     };
   }
 
-  const config = { ...quillDefaults, ...themeDefaults, ...options };
+  const config = {
+    ...quillDefaults,
+    ...omitUndefinedValuesFromOptions(themeDefaults),
+    ...omitUndefinedValuesFromOptions(options),
+  };
 
   let registry = options.registry;
   if (registry) {

@@ -2,6 +2,7 @@
 
 - Include source maps for Parchment
 - **Clipboard** Support pasting links copied from iOS share sheets
+- Fix config parsing where undefined values were kept
 
 # 2.0.0-rc.3
 
