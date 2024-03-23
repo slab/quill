@@ -1,4 +1,5 @@
 import Quill from './core.js';
+import type { DebugLevel, ExpandedQuillOptions, QuillOptions } from './core.js';
 
 import { AlignClass, AlignStyle } from './formats/align.js';
 import {
@@ -107,5 +108,7 @@ Quill.register(
   },
   true,
 );
+
+export type { DebugLevel, ExpandedQuillOptions, QuillOptions };
 
 export default Quill;

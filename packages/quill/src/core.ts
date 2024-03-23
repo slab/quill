@@ -1,4 +1,9 @@
 import Quill from './core/quill.js';
+import type {
+  DebugLevel,
+  ExpandedQuillOptions,
+  QuillOptions,
+} from './core/quill.js';
 
 import Block, { BlockEmbed } from './blots/block.js';
 import Break from './blots/break.js';
@@ -18,6 +23,7 @@ import Input from './modules/input.js';
 import UINode from './modules/uiNode.js';
 
 export { Delta, Op, OpIterator, AttributeMap };
+export type { DebugLevel, ExpandedQuillOptions, QuillOptions };
 
 Quill.register({
   'blots/block': Block,
