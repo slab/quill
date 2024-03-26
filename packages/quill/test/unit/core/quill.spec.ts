@@ -120,20 +120,36 @@ describe('Quill', () => {
       );
     });
 
-    test('formatText()', () => {
-      const { quill, oldDelta } = setup();
-      // @ts-expect-error
-      quill.formatText(3, 2, 'bold', true);
-      const change = new Delta().retain(3).retain(2, { bold: true });
-      expect(quill.root.innerHTML).toMatchInlineSnapshot(
-        '"<p>012<strong>3<em>4</em></strong><em>5</em>67</p>"',
-      );
-      expect(quill.emitter.emit).toHaveBeenCalledWith(
-        Emitter.events.TEXT_CHANGE,
-        change,
-        oldDelta,
-        Emitter.sources.API,
-      );
+    describe('formatText()', () => {
+      test('single format', () => {
+        const { quill, oldDelta } = setup();
+        quill.formatText(3, 2, 'bold', true);
+        const change = new Delta().retain(3).retain(2, { bold: true });
+        expect(quill.root.innerHTML).toMatchInlineSnapshot(
+          '"<p>012<strong>3<em>4</em></strong><em>5</em>67</p>"',
+        );
+        expect(quill.emitter.emit).toHaveBeenCalledWith(
+          Emitter.events.TEXT_CHANGE,
+          change,
+          oldDelta,
+          Emitter.sources.API,
+        );
+      });
+
+      test('format object', () => {
+        const { quill, oldDelta } = setup();
+        quill.formatText(3, 2, { bold: true });
+        const change = new Delta().retain(3).retain(2, { bold: true });
+        expect(quill.root.innerHTML).toMatchInlineSnapshot(
+          '"<p>012<strong>3<em>4</em></strong><em>5</em>67</p>"',
+        );
+        expect(quill.emitter.emit).toHaveBeenCalledWith(
+          Emitter.events.TEXT_CHANGE,
+          change,
+          oldDelta,
+          Emitter.sources.API,
+        );
+      });
     });
 
     test('insertEmbed()', () => {
@@ -155,7 +171,6 @@ describe('Quill', () => {
 
     test('insertText()', () => {
       const { quill, oldDelta } = setup();
-      // @ts-expect-error
       quill.insertText(5, '|', 'bold', true);
       const change = new Delta()
         .retain(5)
@@ -205,7 +220,6 @@ describe('Quill', () => {
 
     test('removeFormat()', () => {
       const { quill, oldDelta } = setup();
-      // @ts-expect-error
       quill.removeFormat(5, 1);
       const change = new Delta().retain(5).retain(1, { italic: null });
       expect(quill.root.innerHTML).toMatchInlineSnapshot(
@@ -261,7 +275,6 @@ describe('Quill', () => {
 
     test('api text insert', () => {
       const { quill, oldDelta } = setup();
-      // @ts-expect-error
       quill.insertText(2, '!');
       const delta = new Delta().retain(2).insert('!');
       expect(quill.emitter.emit).toHaveBeenCalledWith(

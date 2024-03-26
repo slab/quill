@@ -88,7 +88,6 @@ describe('History', () => {
     test('limits undo stack size', () => {
       const { quill } = setup({ delay: 0, maxStack: 2 });
       ['A', 'B', 'C'].forEach((text) => {
-        // @ts-expect-error
         quill.insertText(0, text);
       });
       expect(quill.history.stack.undo.length).toEqual(2);
@@ -96,7 +95,6 @@ describe('History', () => {
 
     test('emits selection changes', () => {
       const { quill } = setup({ delay: 0 });
-      // @ts-expect-error
       quill.insertText(0, 'foo');
       const change = vitest.fn();
       quill.on('selection-change', change);
