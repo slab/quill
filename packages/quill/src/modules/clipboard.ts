@@ -386,8 +386,8 @@ function isBetweenInlineElements(node: Text | Element, scroll: ScrollBlot) {
 const preNodes = new WeakMap<Node, boolean>();
 function isPre(node: Node | null): node is HTMLPreElement {
   if (node == null) return false;
-  if (!preNodes.has(node) && isElement(node)) {
-    if (node.tagName === 'PRE') {
+  if (!preNodes.has(node)) {
+    if (isElement(node) && node.tagName === 'PRE') {
       preNodes.set(node, true);
     } else {
       preNodes.set(node, isPre(node.parentNode));
