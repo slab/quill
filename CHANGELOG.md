@@ -1,5 +1,7 @@
 # [Unreleased]
 
+- **Clipboard** Add support for Quill v1 list attributes
+
 # 2.0.0-rc.4
 
 - Include source maps for Parchment
