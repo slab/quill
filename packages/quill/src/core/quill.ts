@@ -412,7 +412,13 @@ class Quill {
     length: number,
     name: string,
     value: unknown,
-    source: EmitterSource,
+    source?: EmitterSource,
+  ): Delta;
+  formatText(
+    index: number,
+    length: number,
+    formats: Record<string, unknown>,
+    source?: EmitterSource,
   ): Delta;
   formatText(
     index: number | { index: number; length: number },
@@ -568,24 +574,24 @@ class Quill {
     );
   }
 
-  insertText(index: number, text: string, source: EmitterSource): Delta;
+  insertText(index: number, text: string, source?: EmitterSource): Delta;
   insertText(
     index: number,
     text: string,
     formats: Record<string, unknown>,
-    source: EmitterSource,
+    source?: EmitterSource,
   ): Delta;
   insertText(
     index: number,
     text: string,
     name: string,
     value: unknown,
-    source: EmitterSource,
+    source?: EmitterSource,
   ): Delta;
   insertText(
     index: number,
     text: string,
-    name: string | Record<string, unknown> | EmitterSource,
+    name?: string | Record<string, unknown> | EmitterSource,
     value?: unknown,
     source?: EmitterSource,
   ): Delta {
@@ -647,8 +653,8 @@ class Quill {
     return this.emitter.once(...args);
   }
 
-  removeFormat(...args: Parameters<typeof overload>) {
-    const [index, length, , source] = overload(...args);
+  removeFormat(index: number, length: number, source?: EmitterSource) {
+    [index, length, , source] = overload(index, length, source);
     return modify.call(
       this,
       () => {
@@ -1027,6 +1033,7 @@ function shiftRange(
   return new Range(start, end - start);
 }
 
-export type { DebugLevel };
+export type { DebugLevel, EmitterSource };
+export { Parchment, Range };
 
 export { globalRegistry, expandConfig, overload, Quill as default };
