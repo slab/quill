@@ -28,22 +28,19 @@ const debug = logger('quill:clipboard');
 
 type TextSelector = Node['TEXT_NODE'];
 type ElementSelector = string | Node['ELEMENT_NODE'];
-type NodeSelector = string;
 type Selector = TextSelector | ElementSelector;
 
-type NodeMatcher = (node: Node, delta: Delta, scroll: ScrollBlot) => Delta;
 type TextMatcher = (node: Text, delta: Delta, scroll: ScrollBlot) => Delta;
 type ElementMatcher = (
   node: Element,
   delta: Delta,
   scroll: ScrollBlot,
 ) => Delta;
-type Matcher = TextMatcher | ElementMatcher | NodeMatcher;
+type Matcher = TextMatcher | ElementMatcher;
 
 type MatcherConfig =
   | [TextSelector, TextMatcher]
-  | [ElementSelector, ElementMatcher]
-  | [NodeSelector, NodeMatcher];
+  | [ElementSelector, ElementMatcher];
 
 const CLIPBOARD_CONFIG: MatcherConfig[] = [
   [Node.TEXT_NODE, matchText],
@@ -144,17 +141,17 @@ class Clipboard extends Module<ClipboardOptions> {
     const doc = new DOMParser().parseFromString(html, 'text/html');
     this.normalizeHTML(doc);
     const container = doc.body;
-    const nodeMatches = new WeakMap<Node, NodeMatcher[]>();
+    const queryMatches = new WeakMap<Element, ElementMatcher[]>();
     const [elementMatchers, textMatchers] = this.prepareMatching(
       container,
-      nodeMatches,
+      queryMatches,
     );
     return traverse(
       this.quill.scroll,
       container,
       elementMatchers,
       textMatchers,
-      nodeMatches,
+      queryMatches,
     );
   }
 
@@ -267,7 +264,7 @@ class Clipboard extends Module<ClipboardOptions> {
 
   prepareMatching(
     container: Element,
-    nodeMatches: WeakMap<Node, NodeMatcher[]>,
+    queryMatches: WeakMap<Element, ElementMatcher[]>,
   ): [elementMatchers: ElementMatcher[], textMatchers: TextMatcher[]] {
     const elementMatchers: ElementMatcher[] = [];
     const textMatchers: TextMatcher[] = [];
@@ -282,11 +279,11 @@ class Clipboard extends Module<ClipboardOptions> {
           break;
         default:
           Array.from(container.querySelectorAll(selector)).forEach((node) => {
-            if (nodeMatches.has(node)) {
-              const matches = nodeMatches.get(node);
+            if (queryMatches.has(node)) {
+              const matches = queryMatches.get(node);
               matches?.push(matcher);
             } else {
-              nodeMatches.set(node, [matcher]);
+              queryMatches.set(node, [matcher]);
             }
           });
           break;
@@ -409,7 +406,7 @@ function traverse(
   node: ChildNode,
   elementMatchers: ElementMatcher[],
   textMatchers: TextMatcher[],
-  nodeMatches: WeakMap<Node, NodeMatcher[]>,
+  queryMatches: WeakMap<Element, ElementMatcher[]>,
 ): Delta {
   // Post-order
   if (isText(node)) {
@@ -424,13 +421,13 @@ function traverse(
         childNode,
         elementMatchers,
         textMatchers,
-        nodeMatches,
+        queryMatches,
       );
       if (isElement(childNode)) {
         childrenDelta = elementMatchers.reduce((reducedDelta, matcher) => {
           return matcher(childNode, reducedDelta, scroll);
         }, childrenDelta);
-        childrenDelta = (nodeMatches.get(childNode) || []).reduce(
+        childrenDelta = (queryMatches.get(childNode) || []).reduce(
           (reducedDelta, matcher) => {
             return matcher(childNode, reducedDelta, scroll);
           },
