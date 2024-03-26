@@ -229,7 +229,6 @@ describe('Syntax', () => {
 
       test('modification', async () => {
         const quill = createQuill();
-        // @ts-expect-error
         quill.formatText(2, 3, 'bold', true);
         await sleep(HIGHLIGHT_INTERVAL + 1);
         expect(quill.root).toEqualHTML(`
@@ -252,7 +251,6 @@ describe('Syntax', () => {
 
       test('removal', async () => {
         const quill = createQuill();
-        // @ts-expect-error
         quill.formatText(2, 3, 'bold', true);
         await sleep(HIGHLIGHT_INTERVAL + 1);
         quill.formatLine(0, 15, 'code-block', false);
@@ -270,7 +268,6 @@ describe('Syntax', () => {
       test('addition', async () => {
         const quill = createQuill();
         quill.setText('var test = 1;\n');
-        // @ts-expect-error
         quill.formatText(2, 3, 'bold', true);
         quill.formatLine(0, 1, 'code-block', 'javascript');
         await sleep(HIGHLIGHT_INTERVAL + 1);
