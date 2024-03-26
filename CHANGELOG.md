@@ -1,5 +1,7 @@
 # [Unreleased]
 
+- Fix overload declarations for `quill.formatText()` and other methods
+
 # 2.0.0-rc.4
 
 - Include source maps for Parchment
