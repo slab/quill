@@ -154,7 +154,7 @@ Inserts text into the editor, optionally with a specified format or multiple [fo
 insertText(index: number, text: string, source: string = 'api'): Delta
 insertText(index: number, text: string, format: string, value: any,
            source: string = 'api'): Delta
-insertText(index: number, text: string, formats: { [String]: any },
+insertText(index: number, text: string, formats: { [name: string]: any },
            source: string = 'api'): Delta
 ```
 
@@ -265,7 +265,7 @@ Formats all lines in given range, returning a [Delta](/docs/delta/) representing
 formatLine(index: number, length: number, source: string = 'api'): Delta
 formatLine(index: number, length: number, format: string, value: any,
            source: string = 'api'): Delta
-formatLine(index: number, length: number, formats: { [String]: any },
+formatLine(index: number, length: number, formats: { [name: string]: any },
            source: string = 'api'): Delta
 ```
 
@@ -288,7 +288,7 @@ Formats text in the editor, returning a [Delta](/docs/delta/) representing the c
 formatText(index: number, length: number, source: string = 'api'): Delta
 formatText(index: number, length: number, format: string, value: any,
            source: string = 'api'): Delta
-formatText(index: number, length: number, formats: { [String]: any },
+formatText(index: number, length: number, formats: { [name: string]: any },
            source: string = 'api'): Delta
 ```
 
@@ -314,8 +314,8 @@ Retrieves common formatting of the text in the given range. For a format to be r
 **Methods**
 
 ```typescript
-getFormat(range: Range = current): { [String]: any }
-getFormat(index: number, length: number = 0): { [String]: any }
+getFormat(range: Range = current): Record<string, unknown>
+getFormat(index: number, length: number = 0): Record<string, unknown>
 ```
 
 **Examples**
@@ -528,7 +528,7 @@ Checks if editor has focus. Note focus on toolbar, tooltips, does not count as t
 **Methods**
 
 ```typescript
-hasFocus(): Boolean
+hasFocus(): boolean
 ```
 
 **Examples**
@@ -798,7 +798,7 @@ Returns the leaf [Blot](https://github.com/quilljs/parchment) at the specified i
 **Methods**
 
 ```typescript
-getLeaf(index: number): Blot
+getLeaf(index: number): [LeafBlot | null, number]
 ```
 
 **Examples**
@@ -819,7 +819,7 @@ Returns the line [Blot](https://github.com/quilljs/parchment) at the specified i
 **Methods**
 
 ```typescript
-getLine(index: number): [Blot, Number]
+getLine(index: number): [Block | BlockEmbed | null, number]
 ```
 
 **Examples**
@@ -839,8 +839,8 @@ Returns the lines contained within the specified location.
 **Methods**
 
 ```typescript
-getLines(index: number = 0, length: number = remaining): Blot[]
-getLines(range: Range): Blot[]
+getLines(index: number = 0, length: number = remaining): (Block | BlockEmbed)[]
+getLines(range: Range): (Block | BlockEmbed)[]
 ```
 
 **Examples**
@@ -863,7 +863,7 @@ Static method enabling logging messages at a given level: `'error'`, `'warn'`, `
 **Methods**
 
 ```typescript
-Quill.debug(level: string | Boolean)
+Quill.debug(level: string | boolean)
 ```
 
 **Examples**
@@ -905,9 +905,9 @@ Registers a module, theme, or format(s), making them available to be added to an
 **Methods**
 
 ```typescript
-Quill.register(format: Attributor | BlotDefinintion, supressWarning: Boolean = false)
-Quill.register(path: string, def: any, supressWarning: Boolean = false)
-Quill.register(defs: { [String]: any }, supressWarning: Boolean = false)
+Quill.register(format: Attributor | BlotDefinintion, supressWarning: boolean = false)
+Quill.register(path: string, def: any, supressWarning: boolean = false)
+Quill.register(defs: { [path: string]: any }, supressWarning: boolean = false)
 ```
 
 **Examples**
