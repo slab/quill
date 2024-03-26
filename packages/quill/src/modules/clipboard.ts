@@ -539,8 +539,14 @@ function matchIndent(node: Node, delta: Delta, scroll: ScrollBlot) {
 }
 
 function matchList(node: Node, delta: Delta, scroll: ScrollBlot) {
-  // @ts-expect-error
-  const list = node.tagName === 'OL' ? 'ordered' : 'bullet';
+  const element = node as Element;
+  let list = element.tagName === 'OL' ? 'ordered' : 'bullet';
+
+  const checkedAttr = element.getAttribute('data-checked');
+  if (checkedAttr) {
+    list = checkedAttr === 'true' ? 'checked' : 'unchecked';
+  }
+
   return applyFormat(delta, 'list', list, scroll);
 }
 
