@@ -1,5 +1,6 @@
 import Quill, { Parchment, Range } from './core/quill.js';
 import type {
+  Bounds,
   DebugLevel,
   EmitterSource,
   ExpandedQuillOptions,
@@ -24,7 +25,13 @@ import Input from './modules/input.js';
 import UINode from './modules/uiNode.js';
 
 export { Delta, Op, OpIterator, AttributeMap, Parchment, Range };
-export type { DebugLevel, EmitterSource, ExpandedQuillOptions, QuillOptions };
+export type {
+  Bounds,
+  DebugLevel,
+  EmitterSource,
+  ExpandedQuillOptions,
+  QuillOptions,
+};
 
 Quill.register({
   'blots/block': Block,

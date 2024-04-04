@@ -1033,7 +1033,7 @@ function shiftRange(
   return new Range(start, end - start);
 }
 
-export type { DebugLevel, EmitterSource };
+export type { Bounds, DebugLevel, EmitterSource };
 export { Parchment, Range };
 
 export { globalRegistry, expandConfig, overload, Quill as default };

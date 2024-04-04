@@ -2,6 +2,7 @@
 
 - **Clipboard** Add support for Quill v1 list attributes
 - Fix overload declarations for `quill.formatText()` and other methods
+- Expose Bounds type for getBounds()
 
 # 2.0.0-rc.4
 
