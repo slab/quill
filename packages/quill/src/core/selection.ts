@@ -28,7 +28,7 @@ export interface Bounds {
   width: number;
 }
 
-class Range {
+export class Range {
   constructor(
     public index: number,
     public length = 0,
@@ -484,4 +484,4 @@ function contains(parent: Node, descendant: Node) {
   return parent.contains(descendant);
 }
 
-export { Range, Selection as default };
+export default Selection;
