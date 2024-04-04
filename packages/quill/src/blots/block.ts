@@ -90,7 +90,6 @@ class Block extends BlockBlot {
   }
 
   moveChildren(target: Parent, ref?: Blot | null) {
-    // @ts-expect-error Parchment types are wrong
     super.moveChildren(target, ref);
     this.cache = {};
   }
@@ -116,7 +115,6 @@ class Block extends BlockBlot {
         this.parent.insertBefore(clone, this);
         return this;
       }
-      // @ts-expect-error Fix me later
       this.parent.insertBefore(clone, this.next);
       return clone;
     }
@@ -172,11 +170,9 @@ class BlockEmbed extends EmbedBlot {
     });
     const ref = this.split(index);
     blocks.forEach((block) => {
-      // @ts-expect-error Fix me later
       this.parent.insertBefore(block, ref);
     });
     if (text) {
-      // @ts-expect-error Fix me later
       this.parent.insertBefore(this.scroll.create('text', text), ref);
     }
   }
