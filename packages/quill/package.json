@@ -9,7 +9,7 @@
   "dependencies": {
     "eventemitter3": "^5.0.1",
     "lodash-es": "^4.17.21",
-    "parchment": "3.0.0-rc.0",
+    "parchment": "3.0.0-rc.1",
     "quill-delta": "^5.1.0"
   },
   "devDependencies": {

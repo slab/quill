@@ -124,7 +124,7 @@ class Scroll extends ScrollBlot {
     this.optimize();
   }
 
-  insertBefore(blot: Blot, ref?: Blot) {
+  insertBefore(blot: Blot, ref?: Blot | null) {
     if (blot.statics.scope === Scope.INLINE_BLOT) {
       const wrapper = this.scroll.create(
         this.statics.defaultChild.blotName,

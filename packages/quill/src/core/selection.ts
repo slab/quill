@@ -162,7 +162,6 @@ class Selection {
       // TODO Give blot ability to not split
       if (blot instanceof LeafBlot) {
         const after = blot.split(nativeRange.start.offset);
-        // @ts-expect-error Fix me later
         blot.parent.insertBefore(this.cursor, after);
       } else {
         // @ts-expect-error TODO: nativeRange.start.node doesn't seem to match function signature

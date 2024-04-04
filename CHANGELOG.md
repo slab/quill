@@ -4,6 +4,7 @@
 - Fix overload declarations for `quill.formatText()` and other methods
 - Expose Bounds type for getBounds()
 - Expose Range type
+- Allow ref for insertBefore to be null
 
 # 2.0.0-rc.4
 
