@@ -115,7 +115,7 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
   }
 
   highlight(
-    highlight: (text: string, language: string) => Delta,
+    highlight: (text: string, language: string, oldDelta: Delta | null) => Delta,
     forced = false,
   ) {
     if (this.children.head == null) return;
@@ -130,7 +130,7 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
           // @ts-expect-error
           return delta.concat(blockDelta(child, false));
         }, new Delta());
-        const delta = highlight(text, language);
+        const delta = highlight(text, language, oldDelta);
         oldDelta.diff(delta).reduce((index, { retain, attributes }) => {
           // Should be all retains
           if (!retain) return index;
@@ -288,9 +288,29 @@ class Syntax extends Module<SyntaxOptions> {
     }
   }
 
-  highlightBlot(text: string, language = 'plain') {
+  highlightBlot(text: string, language = 'plain', oldDelta: Delta | null = null) {
     language = this.languages[language] ? language : 'plain';
     if (language === 'plain') {
+      if (oldDelta) {
+        // If old delta includes highlights from a different language, go through each op and change 
+        // that highlight to plain instead of creating new ops. Otherwise, diff may include inserts
+        // and some syntax highlights will not be removed
+        return oldDelta.ops.reduce((delta, op) => {
+          // Deep cloning all attributes not important here because the only thing that matters is
+          // the diff between old and new delta
+          const newOp = { ...op }
+          if (op.attributes) {
+            newOp.attributes = { ...op.attributes }
+            if (newOp.attributes[SyntaxCodeBlock.blotName]) {
+              newOp.attributes[SyntaxCodeBlock.blotName] = 'plain'
+            }
+            if (newOp.attributes[CodeToken.blotName]) {
+              newOp.attributes[CodeToken.blotName] = null
+            }
+          }
+          return delta.push(newOp)
+        }, new Delta());
+      }
       return escapeText(text)
         .split('\n')
         .reduce((delta, line, i) => {
