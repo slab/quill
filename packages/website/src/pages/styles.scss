@@ -378,22 +378,6 @@ footer .logo path {
   fill: #fff;
 }
 
-footer .users.row {
-  background-image: url(/assets/images/footer.png);
-  background-position-y: 45px;
-  background-repeat: no-repeat;
-  color: #494c59;
-  height: 120px;
-  margin: 4.5em auto 0;
-  width: 450px;
-}
-
-footer .users.row h3 {
-  font-size: 1rem;
-  letter-spacing: 0.2rem;
-  text-transform: uppercase;
-}
-
 /*** Home ***/
 
 header.home {
@@ -1304,10 +1288,6 @@ body:not(.home) .navbar-link:before {
   footer h1 {
     font-size: 2.5rem;
     padding: 0 1.3em;
-  }
-  footer .users.row {
-    margin-top: 2.5em;
-    width: 270px;
   }
 }
 @media (max-width: 550px) {

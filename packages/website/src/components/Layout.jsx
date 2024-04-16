@@ -25,9 +25,6 @@ const Layout = ({ children, title }) => {
               Playground
             </Link>
           </div>
-          <div className="users row">
-            <h3>Trusted By</h3>
-          </div>
         </div>
       </footer>
     </>
