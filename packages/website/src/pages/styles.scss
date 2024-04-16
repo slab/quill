@@ -446,74 +446,30 @@ body.home .arrow .shaft {
   border: none;
   height: 1.33em;
 }
-#users-container ul {
+#logo-container {
   list-style: none;
+  margin: 4em 0;
   text-transform: uppercase;
 }
-#users-container li {
+#logo-container li {
   display: inline-block;
   height: 100%;
   line-height: 100%;
-  margin: 0 1em;
+  margin: 0 1.4em;
   vertical-align: middle;
 }
-#users-container li:first-child {
+#logo-container li:first-child {
   font-size: 1.08rem;
 }
-#users-container li:not(:first-child) {
-  width: 10em;
+#logo-container li:not(:first-child) {
+  width: 3em;
 }
-#users-container a {
-  background-image: url('/assets/images/users.png');
-  background-size: 100%;
+#logo-container a {
   display: block;
-  height: 100px;
-  width: 150px;
 }
-#users-container .user-asana {
-  background-position: 0 0;
-}
-#users-container .user-front {
-  background-position: 0 -100%;
-}
-#users-container .user-voxmedia {
-  background-position: 0 -200%;
-}
-#users-container .user-gusto {
-  background-position: 0 -300%;
-}
-#users-container .user-linkedin {
-  background-position: 0 -400%;
-}
-#users-container .user-intuit {
-  background-position: 0 -500%;
-}
-#users-container .user-lever {
-  background-position: 0 -600%;
-}
-#users-container .user-buffer {
-  background-position: 0 -700%;
-}
-#users-container .user-microsoft {
-  background-position: 0 -800%;
-}
-#users-container .user-airtable {
-  background-position: 0 -900%;
-}
-#users-container .user-reedsy {
-  background-position: 0 -1000%;
-}
-#users-container .user-salesforce {
-  background-position: 0 -1100%;
-}
-#users-container .user-slab {
-  background-position: 0 -1200%;
-}
-#users-container .user-slack {
-  background-position: 0 -1300%;
-}
-#users-container .user-grammarly {
-  background-position: 0 -1400%;
+#logo-container svg {
+  max-height: 3em;
+  max-width: 3em;
 }
 
 #laptop-container {
@@ -1244,18 +1200,23 @@ body:not(.home) .navbar-link:before {
   #users-container h2 {
     font-size: 3rem;
   }
-  #users-container li:not(:first-child) {
-    width: 6em;
+  #logo-container {
+    margin: 2em 0;
   }
-  #users-container ul {
+  #logo-container li:first-child {
+    display: block;
+    margin-bottom: 15px;
+  }
+  #logo-container li:not(:first-child) {
+    margin: 0 1em;
+    width: 2em;
+  }
+  #logo-container ul {
     margin-bottom: 0;
   }
-  #users-container ul li:first-child {
-    display: block;
-  }
-  #users-container a {
-    height: 50px;
-    width: 75px;
+  #logo-container svg {
+    max-height: 2em;
+    max-width: 2em;
   }
   #demo-container {
     padding-left: 0;

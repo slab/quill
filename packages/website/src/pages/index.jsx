@@ -9,29 +9,54 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import NoSSR, { withoutSSR } from '../components/NoSSR';
 
+import LinkedInLogo from '../svg/users/linkedin.svg';
+import MicrosoftLogo from '../svg/users/microsoft.svg';
+import SalesforceLogo from '../svg/users/salesforce.svg';
+import ZoomLogo from '../svg/users/zoom.svg';
+import AirtableLogo from '../svg/users/airtable.svg';
+import FigmaLogo from '../svg/users/figma.svg';
+import MiroLogo from '../svg/users/miro.svg';
+import SlackLogo from '../svg/users/slack.svg';
+import CalendlyLogo from '../svg/users/calendly.svg';
+import FrontLogo from '../svg/users/front.svg';
+import GrammarlyLogo from '../svg/users/grammarly.svg';
+import VoxMediaLogo from '../svg/users/vox-media.svg';
+import ApolloLogo from '../svg/users/apollo.svg';
+import GemLogo from '../svg/users/gem.svg';
+import ModeLogo from '../svg/users/mode.svg';
+import TypeformLogo from '../svg/users/typeform.svg';
+import SlabLogo from '../svg/users/slab.svg';
+
+
 const fonts = ['sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'];
 const userBuckets = [
-  {
-    Intuit: 'https://www.intuit.com/',
-    LinkedIn: 'https://www.linkedin.com/',
-    Microsoft: 'https://www.microsoft.com/',
-    Salesforce: 'https://www.salesforce.com/',
-    Slack: 'https://slack.com/',
-  },
-  {
-    Asana: 'https://asana.com/',
-    Airtable: 'https://airtable.com/',
-    Grammarly: 'https://www.grammarly.com/',
-    Gusto: 'https://www.gusto.com/',
-    'Vox Media': 'https://www.voxmedia.com/',
-  },
-  {
-    Buffer: 'https://buffer.com/',
-    Front: 'https://frontapp.com/',
-    Lever: 'https://www.lever.co/',
-    Reedsy: 'https://reedsy.com/',
-    Slab: 'https://slab.com/',
-  },
+  [
+    ['LinkedIn', 'https://www.linkedin.com/', LinkedInLogo],
+    ['Microsoft', 'https://www.microsoft.com/', MicrosoftLogo],
+    ['Salesforce', 'https://www.salesforce.com/', SalesforceLogo],
+    ['Zoom', 'https://zoom.us/', ZoomLogo],
+  ],
+  [
+    ['Airtable', 'https://airtable.com/', AirtableLogo],
+    ['Figma', 'https://www.figma.com/', FigmaLogo],
+    ['Miro', 'https://miro.com/', MiroLogo],
+    ['Slack', 'https://slack.com/', SlackLogo],
+  ],
+  [
+    ['Calendly', 'https://calendly.com/', CalendlyLogo],
+    ['Front', 'https://frontapp.com/', FrontLogo],
+    ['Grammarly', 'https://www.grammarly.com/', GrammarlyLogo],
+    ['Vox Media', 'https://www.voxmedia.com/', VoxMediaLogo],
+  ],
+  [
+    ['Apollo', 'https://www.apollo.io/', ApolloLogo],
+    ['Gem', 'https://www.gem.com/', GemLogo],
+    ['Mode', 'https://mode.com/', ModeLogo],
+    ['Typeform', 'https://www.typeform.com/', TypeformLogo],
+  ],
+  [
+    ['Slab', 'https://slab.com/', SlabLogo],
+  ],
 ];
 
 const Content = () => {
@@ -76,25 +101,22 @@ const Content = () => {
 const Users = withoutSSR(() => {
   const [selectedUsers] = useState(() =>
     userBuckets.map((bucket) => {
-      const keys = Object.keys(bucket);
-      const name = keys[Math.floor(Math.random() * keys.length)];
-      return {
-        // @ts-expect-error
-        href: bucket[name],
-        title: name,
-        className: 'user-' + name.toLowerCase().replace(/\s/g, ''),
-      };
+      const index = Math.floor(Math.random() * bucket.length);
+      return bucket[index];
     }),
   );
 
   return (
-    <>
-      {selectedUsers.map((user) => (
-        <li key={user.title}>
-          <a {...user} target="_blank" />
+    <ul id="logo-container">
+      <li>Trusted by:</li>
+      {selectedUsers.map(([name, url, Logo]) => (
+        <li key={name}>
+          <a title={name} href={url} target="_blank">
+            <Logo />
+          </a>
         </li>
       ))}
-    </>
+    </ul>
   );
 });
 
@@ -193,10 +215,7 @@ const IndexPage = () => {
               </button>
             </h2>
             <h1>Your powerful rich text editor.</h1>
-            <ul>
-              <li>Trusted by:</li>
-              <Users />
-            </ul>
+            <Users />
           </div>
 
           <div id="laptop-container">
