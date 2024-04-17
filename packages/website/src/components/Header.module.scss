@@ -160,6 +160,11 @@ $linkBorderRadius: 8px;
       sans-serif;
     line-height: 1;
   }
+
+  :global(.DocSearch-Button-Key--pressed) {
+    box-shadow: none;
+    transform: none;
+  }
 }
 
 .versionWrapper {
