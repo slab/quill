@@ -218,7 +218,7 @@ const IndexPage = () => {
             <Users />
           </div>
 
-          <div id="laptop-container">
+          <div id="laptop-container" onClick={() => setIsDemoActive(true)}>
             <div id="camera-container">
               {[0, 1, 2].map((index) => (
                 <div
@@ -247,7 +247,6 @@ const IndexPage = () => {
                           },
                           theme: 'bubble',
                         }}
-                        onSelectionChange={() => setIsDemoActive(true)}
                         onLoad={handleEditorLoad(0)}
                       >
                         <Content />
@@ -309,7 +308,6 @@ const IndexPage = () => {
                           },
                           theme: 'snow',
                         }}
-                        onSelectionChange={() => setIsDemoActive(true)}
                         onLoad={handleEditorLoad(1)}
                       >
                         <Content />
@@ -347,7 +345,6 @@ const IndexPage = () => {
                           },
                           theme: 'snow',
                         }}
-                        onSelectionChange={() => setIsDemoActive(true)}
                         onLoad={handleEditorLoad(2)}
                       >
                         <Content />

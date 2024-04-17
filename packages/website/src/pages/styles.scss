@@ -455,7 +455,7 @@ body.home .arrow .shaft {
   position: relative;
 }
 #above-container > .container {
-  height: 785px;
+  height: 840px;
 }
 
 #users-container {
@@ -511,7 +511,7 @@ body.home .arrow .shaft {
 #laptop-container {
   background-color: #000;
   border: 4px solid #707070;
-  bottom: -200px;
+  bottom: -145px;
   border-bottom: 0px;
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
@@ -522,7 +522,7 @@ body.home .arrow .shaft {
   width: 100%;
 }
 #above-container:not(.demo-active) #laptop-container:hover {
-  bottom: -190px;
+  bottom: -135px;
 }
 #above-container:not(.demo-active) .ql-editor {
   overflow-y: hidden;
@@ -644,10 +644,6 @@ body.home .arrow .shaft {
   padding: 5% 8% 25px;
 }
 
-#above-container.demo-active #users-container {
-  transition: top 500ms ease-in-out 0s;
-  top: -50px;
-}
 #above-container.demo-active #users-container h1 {
   display: none;
 }
