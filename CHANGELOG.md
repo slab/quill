@@ -1,5 +1,7 @@
 # [Unreleased]
 
+# 2.0.0
+
 # 2.0.0-rc.5
 
 - **Clipboard** Add support for Quill v1 list attributes
