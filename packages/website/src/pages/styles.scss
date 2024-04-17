@@ -532,6 +532,7 @@ body.home .arrow .shaft {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   left: 50%;
+  line-height: 26px;
   margin-left: -90px;
   position: absolute;
   text-align: center;
@@ -1179,7 +1180,7 @@ body:not(.home) .navbar-link:before {
     font-size: 4rem;
   }
   #laptop-container {
-    padding: 0px 22px;
+    padding: 22px 22px 0 22px;
   }
   #snow-wrapper .toolbar {
     padding: 2.25%;
@@ -1218,10 +1219,7 @@ body:not(.home) .navbar-link:before {
     padding-top: 0;
   }
   #above-container > .container {
-    height: 575px;
-  }
-  #above-container.demo-active #users-container {
-    top: -25px;
+    height: 600px;
   }
   #users-container {
     padding-top: 2em;
@@ -1293,10 +1291,26 @@ body:not(.home) .navbar-link:before {
   }
 
   #above-container:not(.demo-active) #laptop-container:hover {
-    bottom: -130px;
+    bottom: -105px;
   }
   #laptop-container {
-    bottom: -135px;
+    bottom: -110px;
+  }
+  #camera-container {
+    height: 20px;
+    line-height: 16px;
+    margin-left: -60px;
+    width: 120px;
+
+    .camera {
+      height: 20px;
+      width: 20px;
+
+      .dot {
+        height: 6px;
+        width: 6px;
+      }
+    }
   }
   #detail-container .action {
     margin-top: 3em;
