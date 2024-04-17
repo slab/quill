@@ -5,7 +5,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 const ActiveLink = ({
   children,
   activeClassName,
-  className,
+  className = '',
   activePath,
   ...props
 }) => {
