@@ -784,50 +784,55 @@ function expandConfig(
   if (!container) {
     throw new Error('Invalid Quill container');
   }
+  
+  const userOptions={...options};
 
   const shouldUseDefaultTheme =
-    !options.theme || options.theme === Quill.DEFAULTS.theme;
+    !userOptions.theme || userOptions.theme === Quill.DEFAULTS.theme;
   const theme = shouldUseDefaultTheme
     ? Theme
-    : Quill.import(`themes/${options.theme}`);
+    : Quill.import(`themes/${userOptions.theme}`);
   if (!theme) {
-    throw new Error(`Invalid theme ${options.theme}. Did you register it?`);
+    throw new Error(`Invalid theme ${userOptions.theme}. Did you register it?`);
   }
 
   const { modules: quillModuleDefaults, ...quillDefaults } = Quill.DEFAULTS;
   const { modules: themeModuleDefaults, ...themeDefaults } = theme.DEFAULTS;
 
+  // Special case toolbar shorthand
+  
+  if (
+    userOptions.modules != null &&
+    userOptions.modules.toolbar &&
+    userOptions.modules.toolbar.constructor !== Object
+  ) {
+    userOptions.modules.toolbar = {
+      container: userOptions.modules.toolbar
+    };
+  }
+
   const modules: ExpandedQuillOptions['modules'] = merge(
     {},
     expandModuleConfig(quillModuleDefaults),
     expandModuleConfig(themeModuleDefaults),
-    expandModuleConfig(options.modules),
+    expandModuleConfig(userOptions.modules),
   );
-  // Special case toolbar shorthand
-  if (
-    modules != null &&
-    modules.toolbar &&
-    modules.toolbar.constructor !== Object
-  ) {
-    modules.toolbar = {
-      container: modules.toolbar,
-    };
-  }
+
 
   const config = {
     ...quillDefaults,
     ...omitUndefinedValuesFromOptions(themeDefaults),
-    ...omitUndefinedValuesFromOptions(options),
+    ...omitUndefinedValuesFromOptions(userOptions),
   };
 
-  let registry = options.registry;
+  let registry = userOptions.registry;
   if (registry) {
-    if (options.formats) {
+    if (userOptions.formats) {
       debug.warn('Ignoring "formats" option because "registry" is specified');
     }
   } else {
-    registry = options.formats
-      ? createRegistryWithFormats(options.formats, config.registry, debug)
+    registry = userOptions.formats
+      ? createRegistryWithFormats(userOptions.formats, config.registry, debug)
       : config.registry;
   }
 
