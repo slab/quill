@@ -166,28 +166,80 @@ svg .feat-3 {
   text-align: center;
 }
 
-.arrow .shaft {
-  background-color: #000;
-  border-bottom: 3px solid #fff;
-  border-top: 3px solid #fff;
+
+.arrow {
+  padding: 0.33em 0.67em;
+  .shaft {
+    background-color: #000;
+    border-bottom: 3px solid #fff;
+    border-top: 3px solid #fff;
+    float: left;
+    height: 0.33em;
+    width: 0.66em;
+  }
+  .tip {
+    display: inline-block;
+    border-bottom: 0.17em solid transparent;
+    border-top: 0.17em solid transparent;
+  }
+}
+
+.prev, .next, .arrow {
   display: inline-block;
+  height: 1em;
+  line-height: 1em;
+}
+
+.prev {
   float: left;
-  height: 0.33em;
-  width: 0.66em;
+
+  &:hover .arrow {
+    padding-left: 0.77em;
+    padding-right: 0.57em;
+  }
+
+  .label {
+    float: left;
+  }
+
+  .arrow {
+    float: left;
+  }
+  .tip {
+    float: left;
+    border-right: 0.33em solid #000;
+  }
 }
-.arrow .tip {
-  display: inline-block;
-  border-bottom: 0.17em solid transparent;
-  border-top: 0.17em solid transparent;
-}
-.prev .tip {
-  float: left;
-  border-right: 0.33em solid #000;
-}
-.next .tip {
+.next, .next .label, .next .arrow {
   float: right;
-  border-left: 0.33em solid #000;
+
+  &:hover .arrow {
+    padding-left: 0.57em;
+    padding-right: 0.77em;
+  }
+
+  .label {
+    float: right;
+  }
+
+  .arrow {
+    float: right;
+  }
+
+  .tip {
+    float: right;
+    border-left: 0.33em solid #000;
+  }
 }
+.prev, .next {
+  .label {
+    font-size: 1.25rem;
+    display: inline-block;
+    height: 2em;
+    line-height: 2em;
+  }
+}
+
 .row > hr {
   width: 90%;
 }
