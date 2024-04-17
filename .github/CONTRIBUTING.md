@@ -5,8 +5,7 @@ The best way to contribute is to help others in the Quill community. This includ
 - Reporting new [bugs](https://github.com/quilljs/quill/labels/bug) or adding details to existing ones
 - Reproducing [unconfirmed bugs](https://github.com/quilljs/quill/labels/needs%20reproduction)
 - Quick typo fix or documentation improvement [Pull Requests](#pull-requests)
-- Participating in [discussions](https://github.com/quilljs/quill/labels/discussion)
-- Answering questions on [StackOverflow](http://stackoverflow.com/questions/tagged/quill)
+- Participating in [discussions](https://github.com/quilljs/quill/discussions)
 
 After becoming familiar with Quill and the codebase, likely through using Quill yourself and making some of the above contributions, you may choose to take on a bigger commitment by:
 
@@ -15,9 +14,12 @@ After becoming familiar with Quill and the codebase, likely through using Quill 
 - Publishing guides, tutorials, and examples
 - Supporting Quill in other ecosystems (Angular, React, etc)
 
+Note that if you are going to be making significant contributions, you should first open
+a [discussion](https://github.com/quilljs/quill/discussions) to ensure your work aligns with the project's goals and direction.
+
 ## Questions
 
-If you have a question, it is best to ask on StackOverflow and tag with [quill](http://stackoverflow.com/questions/tagged/quill). This tag is monitored by Quill maintainers and community members.
+If you have a question, it is best to ask on [Discussions](https://github.com/quilljs/quill/discussions) under the Q&A category.
 
 ## Bug Reports
 
