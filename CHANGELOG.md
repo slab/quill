@@ -2,6 +2,36 @@
 
 # 2.0.0
 
+We are thrilled to announce the release of Quill 2.0! Please check out the [announcement post](https://slab.com/blog/announcing-quill-2-0/).
+
+### Major Improvements
+
+- Quill is now a valid ESM package for better ecosystem (e.g. bundlers) and tree-shaking support
+- Nested Quill support [#3590](https://github.com/quilljs/quill/pull/3590)
+- Improved IME and spell corrector support [#3807](https://github.com/quilljs/quill/pull/3807)
+- Semantic cleanups for TEXT_CHANGE event [#3778](https://github.com/quilljs/quill/pull/3778)
+- **History**: Record selection in history module [#3823](https://github.com/quilljs/quill/pull/3823)
+- Auto detect scrolling container [#3840](https://github.com/quilljs/quill/pull/3840)
+- **Clipboard**: Improve support for pasting from Google Docs and Microsoft Word
+
+### Performance Improvements
+
+Quill 2.0 includes many performance optimizations, the most important of which is the improved rendering speed for large content.
+
+- Improve inserting performance [#3815](https://github.com/quilljs/quill/pull/3815)
+- Avoid fetching selections when possible [#3538](https://github.com/quilljs/quill/pull/3538)
+- No need to setContents when container is empty [#3539](https://github.com/quilljs/quill/pull/3539)
+
+### Code Modernization
+
+- Migrated to TypeScript
+- Provided official TypeScript declarations
+- Migrated to Vitest for unit testing
+- Migrated to Playwright for E2E testing
+- Migrated website to Gatsby
+
+For all commits, please see the [2.0.0 release page](https://github.com/quilljs/quill/releases/tag/v2.0.0).
+
 # 2.0.0-rc.5
 
 - **Clipboard** Add support for Quill v1 list attributes
