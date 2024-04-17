@@ -220,27 +220,16 @@ const IndexPage = () => {
 
           <div id="laptop-container">
             <div id="camera-container">
-              <span
-                className={classNames('camera', { active: activeIndex === 0 })}
-                onClick={() => {
-                  setActiveIndex(0);
-                  setIsDemoActive(true);
-                }}
-              ></span>
-              <span
-                className={classNames('camera', { active: activeIndex === 1 })}
-                onClick={() => {
-                  setActiveIndex(1);
-                  setIsDemoActive(true);
-                }}
-              ></span>
-              <span
-                className={classNames('camera', { active: activeIndex === 2 })}
-                onClick={() => {
-                  setActiveIndex(2);
-                  setIsDemoActive(true);
-                }}
-              ></span>
+              {[0, 1, 2].map((index) => (
+                <div
+                  key={index}
+                  className={classNames('camera', { active: activeIndex === index })}
+                  onClick={() => {
+                    setActiveIndex(index);
+                    setIsDemoActive(true);
+                  }}
+                ><div className='dot' /></div>
+              ))}
             </div>
             <NoSSR>
               <div id="demo-container">
