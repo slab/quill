@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import docsItems from '../data/docs';
-import OctocatIcon from '../svg/octocat.svg';
 import Link from 'next/link';
 import slug from '../utils/slug';
 import Layout from '../components/Layout';
@@ -75,21 +74,20 @@ const PostLayout = ({ title, pageType, filePath, permalink, children }) => {
                 <span>Documentation</span>
                 <span>{title}</span>
               </div>
+              <div className={styles.editOnGitHub}>
+                <a
+                  href={process.env.github + filePath}
+                  target="_blank"
+                  title="Edit on GitHub"
+                >
+                  Edit page on GitHub ↗
+                </a>
+              </div>
             </div>
             <article id="content-container" className={styles.content}>
               <h1 id={slug(title)}>{title}</h1>
               {children}
             </article>
-            <div className={styles.editOnGitHub}>
-              <a
-                className={styles.editLink}
-                href={process.env.github + filePath}
-                target="_blank"
-                title="Edit on GitHub"
-              >
-                Edit this page on GitHub
-              </a>
-            </div>
           </div>
         </div>
 
