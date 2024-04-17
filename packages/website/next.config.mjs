@@ -9,6 +9,48 @@ export default withMDX()({
   },
   env: env,
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+  redirects: () => [
+    {
+      source: '/guides/upgrading-to-2-0',
+      destination: '/docs/upgrading-to-2-0',
+      permanent: true,
+    },
+    {
+      source: '/guides/why-quill',
+      destination: '/docs/why-quill',
+      permanent: true,
+    },
+    {
+      source: '/guides/how-to-customize-quill',
+      destination: '/docs/customization',
+      permanent: true,
+    },
+    {
+      source: '/guides/building-a-custom-module',
+      destination: '/docs/guides/building-a-custom-module',
+      permanent: true,
+    },
+    {
+      source: '/guides/cloning-medium-with-parchment',
+      destination: '/docs/guides/cloning-medium-with-parchment',
+      permanent: true,
+    },
+    {
+      source: '/guides/designing-the-delta-format',
+      destination: '/docs/guides/designing-the-delta-format',
+      permanent: true,
+    },
+    {
+      source: '/docs/registries',
+      destination: '/docs/customization/registries',
+      permanent: true,
+    },
+    {
+      source: '/docs/themes',
+      destination: '/docs/customization/themes',
+      permanent: true,
+    },
+  ],
   webpack(config) {
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((rule) =>

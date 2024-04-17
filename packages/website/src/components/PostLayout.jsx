@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import docsItems from '../data/docs';
-import guideItems from '../data/guides';
 import OctocatIcon from '../svg/octocat.svg';
 import Link from 'next/link';
 import slug from '../utils/slug';
@@ -43,11 +42,7 @@ const SidebarItem = ({ item }) => {
 };
 
 const PostLayout = ({ title, pageType, filePath, permalink, children }) => {
-  const category = pageType === 'guides' ? 'Guides' : 'Documentation';
-
-  const items = pageType === 'guides' ? guideItems : docsItems;
-  const { prev, next } = getPagination(permalink, items);
-
+  const { prev, next } = getPagination(permalink, docsItems);
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
@@ -69,7 +64,7 @@ const PostLayout = ({ title, pageType, filePath, permalink, children }) => {
               Document Navigation
             </button>
             <ul className="sidebar-list">
-              {items.map((item) => (
+              {docsItems.map((item) => (
                 <SidebarItem key={item.url} item={item} />
               ))}
             </ul>
@@ -77,7 +72,7 @@ const PostLayout = ({ title, pageType, filePath, permalink, children }) => {
           <div id="docs-container" className="nine columns">
             <div className={classNames('row', styles.breadcrumbRow)}>
               <div className={styles.breadcrumb}>
-                <span>{category}</span>
+                <span>Documentation</span>
                 <span>{title}</span>
               </div>
             </div>

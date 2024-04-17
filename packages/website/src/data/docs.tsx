@@ -4,8 +4,16 @@ const items = [
     url: '/docs/quickstart',
   },
   {
+    title: 'Why Quill',
+    url: '/docs/why-quill',
+  },
+  {
     title: 'Installation',
     url: '/docs/installation',
+  },
+  {
+    title: 'Upgrading to 2.0',
+    url: '/docs/upgrading-to-2-0',
   },
   {
     title: 'Configuration',
@@ -80,12 +88,36 @@ const items = [
     ],
   },
   {
-    title: 'Registries',
-    url: '/docs/registries',
+    title: 'Customization',
+    url: '/docs/customization',
+    children: [
+      {
+        title: 'Themes',
+        url: '/docs/customization/themes',
+      },
+      {
+        title: 'Registries',
+        url: '/docs/customization/registries',
+      },
+    ],
   },
   {
-    title: 'Themes',
-    url: '/docs/themes',
+    title: 'Guides',
+    url: '/docs/guides/designing-the-delta-format',
+    children: [
+      {
+        title: 'Designing the Delta Format',
+        url: '/docs/guides/designing-the-delta-format',
+      },
+      {
+        title: 'Building a Custom Module',
+        url: '/docs/guides/building-a-custom-module',
+      },
+      {
+        title: 'Cloning Medium with Parchment',
+        url: '/docs/guides/cloning-medium-with-parchment',
+      },
+    ],
   },
 ];
 

@@ -15,18 +15,33 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const filePath = join('content', 'docs', `${params.id.join('/')}.mdx`);
+  const basePath = join('content', 'docs', `${params.id.join('/')}`);
+  const filePath = `${basePath}.mdx`;
   const markdown = await readFile(join(process.cwd(), filePath), 'utf8');
+  let data = {};
+  try {
+    const path = params.id.join('/');
+    if (path === 'guides/cloning-medium-with-parchment') {
+      data = await import(`../../../content/docs/${path}`);
+    }
+  } catch {}
   const mdxSource = await serialize(
     markdown.replace(/\{\{site\.(\w+)\}\}/g, (...args) => {
       return env[args[1]];
     }),
     { parseFrontmatter: true },
   );
-  return { props: { mdxSource, filePath, permalink: `/docs/${params.id}` } };
+  return {
+    props: {
+      mdxSource,
+      filePath,
+      permalink: `/docs/${params.id}`,
+      data: JSON.parse(JSON.stringify(data)),
+    },
+  };
 }
 
-export default function Doc({ mdxSource, filePath, permalink }) {
+export default function Doc({ mdxSource, filePath, permalink, data }) {
   return (
     <PostLayout
       pageType="docs"
@@ -34,7 +49,7 @@ export default function Doc({ mdxSource, filePath, permalink }) {
       permalink={permalink}
       {...mdxSource.frontmatter}
     >
-      <MDX mdxSource={mdxSource} />
+      <MDX mdxSource={mdxSource} data={data} />
     </PostLayout>
   );
 }

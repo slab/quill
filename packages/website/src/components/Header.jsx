@@ -9,7 +9,6 @@ import { DocSearch } from '@docsearch/react';
 import { useState } from 'react';
 import playground from '../data/playground';
 import docs from '../data/docs';
-import guides from '../data/guides';
 import ActiveLink from './ActiveLink';
 import ClickOutsideHandler from './ClickOutsideHandler';
 
@@ -22,13 +21,6 @@ const MainNav = ({ ...props }) => {
         href={docs[0].url}
       >
         Documentation
-      </ActiveLink>
-      <ActiveLink
-        activeClassName={styles.active}
-        activePath="/guides"
-        href={guides[0].url}
-      >
-        Guides
       </ActiveLink>
       <ActiveLink
         activeClassName={styles.active}
