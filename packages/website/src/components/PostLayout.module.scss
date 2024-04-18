@@ -1,12 +1,16 @@
 .breadcrumbRow {
-  display: flex;
   align-items: center;
+  display: flex;
+  margin-bottom: 32px;
+  justify-content: space-between;
+
+  &:after {
+    content: none;
+  }
 
   .breadcrumb {
     font-size: 1.25rem;
     display: flex;
-    align-items: center;
-    margin-bottom: 32px;
 
     span:not(:last-child) {
       &::after {
@@ -22,23 +26,10 @@
     margin-right: 4px;
   }
 
-  .editLink {
-    margin-left: auto;
-    font-family: 'Sofia Pro', sans-serif;
+  .editOnGitHub {
     font-size: 1.08rem;
-    font-weight: bold;
-    height: 2.5em;
-    letter-spacing: 0.1rem;
-    line-height: 2.5em;
-    text-decoration: underline;
+    max-width: var(--width-readable);
     text-transform: uppercase;
-  }
-
-  .editLink svg {
-    float: right;
-    height: 2.5em;
-    margin-left: 1em;
-    width: 2.5em;
   }
 }
 
@@ -54,12 +45,4 @@
       background: transparent;
     }
   }
-}
-
-.editOnGitHub {
-  margin-top: 60px;
-  padding-top: 20px;
-  border-top: 1px solid #ccc;
-  font-size: 14px;
-  max-width: var(--width-readable);
 }

@@ -1,18 +1,16 @@
 ---
-title: How to Customize Quill
+title: Customization
 ---
 
 Quill was designed with customization and extension in mind. This is achieved by implementing a small editor core exposed by a granular, well defined [API](/docs/api). The core is augmented by [modules](/docs/modules), using the same [APIs](/docs/api) you have access to.
 
 In general, common customizations are handled in [configurations](#configurations/), user interfaces by [Themes](#themes) and CSS, functionality by [modules](#modules), and editor contents by [Parchment](#content-and-formatting).
 
-
 ### Configurations
 
 Quill favors Code over Configuration&trade;, but for very common needs, especially where the equivalent code would be lengthy or complex, Quill provides [configuration](/docs/configuration/) options. This would be a good first place to look to determine if you even need to implement any custom functionality.
 
 Two of the most powerful options is `modules` and `theme`. You can drastically change or expand what Quill can and does do by simply adding or removing individual [modules](/docs/modules/) or using a different [theme](/docs/themes/).
-
 
 ### Themes
 
@@ -21,11 +19,10 @@ Quill officially supports a standard toolbar theme [Snow](/docs/themes/#snow) an
 If you would like to drastically change UI interactions, you can omit the `theme` configuration option, which will give you an unstyled Quill editor. You do still need to include a minimal stylesheet that, for example, makes sure spaces render in all browsers and ordered lists are appropriately numbered.
 
 ```html
-<link rel="stylesheet" href="{{site.cdn}}/quill.core.css">
+<link rel="stylesheet" href="{{site.cdn}}/quill.core.css" />
 ```
 
 From there you can implement and attach your own UI elements like custom dropdowns or tooltips. The last section of [Cloning Medium with Parchment](/guides/cloning-medium-with-parchment/#final-polish) provides an example of this in action.
-
 
 ### Modules
 
@@ -44,7 +41,7 @@ const quill = new Quill('#editor', {
   },
   theme: 'snow'
 });
-`
+`,
   }}
 />
 
@@ -53,7 +50,6 @@ A few modules&mdash;[Clipboard](/docs/modules/clipboard/), [Keyboard](/docs/modu
 Nevertheless, staying true to Quill modular design, you can still drastically change the way undo and redo&mdash;or any other core functionality&mdash;works by implementing your own undo manager to replace the History module. As long as you implement the same API interface, Quill will happily use your replacement module. This is most easily done by inheriting from the existing module, and overwriting the methods you want to change. Take a look at the [modules](/docs/modules/) documentation for a very simple example of overwriting the core [Clipboard](/docs/modules/clipboard/) module.
 
 Finally, you may want to add functionality not provided by existing modules. In this case, it may be convenient to organize this as a Quill module, which the [Building A Custom Module](/guides/building-a-custom-module/) guide covers. Of course, it is certainly valid to just keep this logic separate from Quill, in your application code instead.
-
 
 ### Content and Formatting
 
@@ -72,9 +68,9 @@ Quill.register(SizeStyle, true);
 // Initialize as you would normally
 const quill = new Quill('#editor', {
   modules: {
-    toolbar: true
+    toolbar: true,
   },
-  theme: 'snow'
+  theme: 'snow',
 });
 ```
 
@@ -85,7 +81,11 @@ In addition to choosing the particular Attributor, you can also customize existi
 ```js
 const FontAttributor = Quill.import('attributors/class/font');
 FontAttributor.whitelist = [
-  'sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'
+  'sofia',
+  'slabo',
+  'roboto',
+  'inconsolata',
+  'ubuntu',
 ];
 Quill.register(FontAttributor, true);
 ```
@@ -93,11 +93,11 @@ Quill.register(FontAttributor, true);
 Note you still need to add styling for these classes into your CSS files.
 
 ```html
-<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
 <style>
-.ql-font-roboto {
-  font-family: 'Roboto', sans-serif;
-}
+  .ql-font-roboto {
+    font-family: 'Roboto', sans-serif;
+  }
 </style>
 ```
 
@@ -127,7 +127,7 @@ quill.setContents(
     .insert('\\n')
 );
 `
-  }}
+}}
 />
 
 #### Extending Blots
@@ -152,9 +152,9 @@ Quill.register(PlainListItem, true);
 // Initialize as you would normally
 const quill = new Quill('#editor', {
   modules: {
-    toolbar: true
+    toolbar: true,
   },
-  theme: 'snow'
+  theme: 'snow',
 });
 ```
 
