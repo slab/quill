@@ -114,17 +114,17 @@ Quill.register(Bold, true);
 
 // Initialize as you would normally
 const quill = new Quill('#editor', {
-modules: {
-toolbar: true
-},
-theme: 'snow'
+  modules: {
+    toolbar: true
+  },
+  theme: 'snow'
 });
 
 const Delta = Quill.import('delta');
 quill.setContents(
-new Delta()
-.insert('Rendered with <b>!', { bold: true })
-.insert('\\n')
+  new Delta()
+    .insert('Rendered with <b>!', { bold: true })
+    .insert('\\n')
 );
 `
 }}
