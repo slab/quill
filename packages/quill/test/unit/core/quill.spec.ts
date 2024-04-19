@@ -764,6 +764,22 @@ describe('Quill', () => {
       });
     });
 
+    test('toolbar container shorthand with theme options', () => {
+      const config = expandConfig(`#${testContainerId}`, {
+        modules: {
+          toolbar: document.querySelector(`#${testContainerId}`),
+        },
+        theme: 'snow',
+      });
+      for (const [format, handler] of Object.entries(
+        Snow.DEFAULTS.modules.toolbar!.handlers ?? {},
+      )) {
+        console.log('===format', format);
+        // @ts-expect-error
+        expect(config.modules.toolbar.handlers[format]).toBe(handler);
+      }
+    });
+
     test('toolbar format array', () => {
       const config = expandConfig(`#${testContainerId}`, {
         modules: {

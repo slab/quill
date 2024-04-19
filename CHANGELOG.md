@@ -1,5 +1,7 @@
 # [Unreleased]
 
+- Prevent overriding of theme's default toolbar settings mistakenly [#4120](https://github.com/quilljs/quill/pull/4120)
+
 # 2.0.0
 
 We are thrilled to announce the release of Quill 2.0! Please check out the [announcement post](https://slab.com/blog/announcing-quill-2-0/).
