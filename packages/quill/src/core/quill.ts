@@ -766,7 +766,7 @@ function expandModuleConfig(config: Record<string, unknown> | undefined) {
       ...expanded,
       [key]: value === true ? {} : value,
     }),
-    {},
+    {} as Record<string, unknown>,
   );
 }
 
@@ -784,30 +784,29 @@ function expandConfig(
   if (!container) {
     throw new Error('Invalid Quill container');
   }
-  
-  const userOptions={...options};
 
   const shouldUseDefaultTheme =
-    !userOptions.theme || userOptions.theme === Quill.DEFAULTS.theme;
+    !options.theme || options.theme === Quill.DEFAULTS.theme;
   const theme = shouldUseDefaultTheme
     ? Theme
-    : Quill.import(`themes/${userOptions.theme}`);
+    : Quill.import(`themes/${options.theme}`);
   if (!theme) {
-    throw new Error(`Invalid theme ${userOptions.theme}. Did you register it?`);
+    throw new Error(`Invalid theme ${options.theme}. Did you register it?`);
   }
 
   const { modules: quillModuleDefaults, ...quillDefaults } = Quill.DEFAULTS;
   const { modules: themeModuleDefaults, ...themeDefaults } = theme.DEFAULTS;
 
+  let userModuleOptions = expandModuleConfig(options.modules);
   // Special case toolbar shorthand
-  
   if (
-    userOptions.modules != null &&
-    userOptions.modules.toolbar &&
-    userOptions.modules.toolbar.constructor !== Object
+    userModuleOptions != null &&
+    userModuleOptions.toolbar &&
+    userModuleOptions.toolbar.constructor !== Object
   ) {
-    userOptions.modules.toolbar = {
-      container: userOptions.modules.toolbar
+    userModuleOptions = {
+      ...userModuleOptions,
+      toolbar: { container: userModuleOptions.toolbar },
     };
   }
 
@@ -815,24 +814,23 @@ function expandConfig(
     {},
     expandModuleConfig(quillModuleDefaults),
     expandModuleConfig(themeModuleDefaults),
-    expandModuleConfig(userOptions.modules),
+    userModuleOptions,
   );
-
 
   const config = {
     ...quillDefaults,
     ...omitUndefinedValuesFromOptions(themeDefaults),
-    ...omitUndefinedValuesFromOptions(userOptions),
+    ...omitUndefinedValuesFromOptions(options),
   };
 
-  let registry = userOptions.registry;
+  let registry = options.registry;
   if (registry) {
-    if (userOptions.formats) {
+    if (options.formats) {
       debug.warn('Ignoring "formats" option because "registry" is specified');
     }
   } else {
-    registry = userOptions.formats
-      ? createRegistryWithFormats(userOptions.formats, config.registry, debug)
+    registry = options.formats
+      ? createRegistryWithFormats(options.formats, config.registry, debug)
       : config.registry;
   }
 
