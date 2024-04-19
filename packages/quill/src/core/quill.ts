@@ -30,6 +30,19 @@ const debug = logger('quill');
 const globalRegistry = new Parchment.Registry();
 Parchment.ParentBlot.uiClass = 'ql-ui';
 
+type ClassToConstructor<T> = { new (...args: any[]): T & object };
+
+type RegistryTarget = Parchment.RegistryDefinition | Module | boolean;
+
+interface RegistryRecord {
+  [key: `blots/${string}`]: Parchment.BlotConstructor;
+  [key: `formats/${string}`]: Parchment.RegistryDefinition;
+  [key: `attributors/${string}`]: Parchment.Attributor;
+  [key: `modules/${string}`]: ClassToConstructor<Module>;
+  [key: `themes/${string}`]: ClassToConstructor<Theme>;
+  [key: string]: any;
+}
+
 /**
  * Options for initializing a Quill instance
  */
@@ -121,28 +134,21 @@ class Quill {
     return this.imports[name];
   }
 
+  static register(record: RegistryRecord, overwrite?: boolean): void;
   static register(
-    path:
-      | string
-      | Parchment.BlotConstructor
-      | Parchment.Attributor
-      | Record<string, unknown>,
-    target?: Parchment.BlotConstructor | Parchment.Attributor | boolean,
-    overwrite = false,
-  ) {
-    if (typeof path !== 'string') {
-      const name = 'attrName' in path ? path.attrName : path.blotName;
-      if (typeof name === 'string') {
-        // register(Blot | Attributor, overwrite)
-        // @ts-expect-error
-        this.register(`formats/${name}`, path, target);
-      } else {
-        Object.keys(path).forEach((key) => {
-          // @ts-expect-error
-          this.register(key, path[key], target);
-        });
-      }
-    } else {
+    target: Exclude<RegistryTarget, boolean | Module>,
+    overwrite?: boolean,
+  ): void;
+  static register(
+    path: string,
+    target: RegistryTarget,
+    overwrite?: boolean,
+  ): void;
+  static register(...args: any[]): void {
+    const path = typeof args[0] === 'string' ? args[0] : '';
+    const target = path ? args[1] : args[0];
+    const overwrite = (path ? args[2] : args[1]) ?? false;
+    if (path) {
       if (this.imports[path] != null && !overwrite) {
         debug.warn(`Overwriting ${path} with`, target);
       }
@@ -151,16 +157,23 @@ class Quill {
         (path.startsWith('blots/') || path.startsWith('formats/')) &&
         target &&
         typeof target !== 'boolean' &&
-        // @ts-expect-error
         target.blotName !== 'abstract'
       ) {
         globalRegistry.register(target);
       }
-      // @ts-expect-error
       if (typeof target.register === 'function') {
-        // @ts-expect-error
         target.register(globalRegistry);
       }
+      return;
+    }
+    const name: string | undefined = target['attrName'] ?? target['blotName'];
+    if (typeof name === 'string') {
+      // register(Blot | Attributor, overwrite)
+      this.register(`formats/${name}`, target, overwrite);
+    } else {
+      Object.keys(target).forEach((key) => {
+        this.register(key, target[key], overwrite);
+      });
     }
   }
 
