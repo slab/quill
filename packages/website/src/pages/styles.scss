@@ -458,6 +458,23 @@ body.home .arrow .shaft {
   height: 840px;
 }
 
+#announcement-container {
+  font-family: 'Sofia Pro', sans-serif;
+  margin-top: 25px;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  z-index: 1;
+
+  a {
+    background-color: #f2d123;
+    border-radius: 8px;
+    display: inline-block;
+    font-size: 80%;
+    padding: 2px 10px;
+  }
+}
+
 #users-container {
   font-size: 1.25rem;
   left: 0;
@@ -645,6 +662,9 @@ body.home .arrow .shaft {
   padding: 5% 8% 25px;
 }
 
+#above-container.demo-active #announcement-container {
+  display: none;
+}
 #above-container.demo-active #users-container h1 {
   display: none;
 }
@@ -1220,6 +1240,9 @@ body:not(.home) .navbar-link:before {
   }
   #above-container > .container {
     height: 600px;
+  }
+  #announcement-container {
+    display: none;
   }
   #users-container {
     padding-top: 2em;
