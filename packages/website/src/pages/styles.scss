@@ -267,21 +267,6 @@ header .action {
   padding: 1em;
 }
 
-.announcement {
-  background-color: #337ab7;
-  color: #fff;
-  display: block;
-  font-size: 18px;
-  padding: 10px;
-  text-align: center;
-}
-.announcement:active,
-.announcement:hover,
-.announcement:visited {
-  color: #fff;
-  text-decoration: none;
-}
-
 .new-blog::after {
   background-color: #f2d123;
   border-radius: 6px;
@@ -1224,9 +1209,6 @@ body:not(.home) .navbar-link:before {
   html {
     font-size: 10px;
   }
-  .announcement {
-    display: none;
-  }
   .navbar-open,
   .navbar-close {
     top: 4em;
@@ -1499,10 +1481,6 @@ body:not(.home) .navbar-link:before {
   .action-link:hover:before {
     transform: scaleX(1);
     visibility: visible;
-  }
-  .announcement + header .navbar-open,
-  .announcement + header .navbar-close {
-    top: 12em;
   }
   #sidebar-container .search-item {
     display: block;

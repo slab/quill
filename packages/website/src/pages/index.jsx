@@ -27,7 +27,6 @@ import ModeLogo from '../svg/users/mode.svg';
 import TypeformLogo from '../svg/users/typeform.svg';
 import SlabLogo from '../svg/users/slab.svg';
 
-
 const fonts = ['sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'];
 const userBuckets = [
   [
@@ -54,9 +53,7 @@ const userBuckets = [
     ['Mode', 'https://mode.com/', ModeLogo],
     ['Typeform', 'https://www.typeform.com/', TypeformLogo],
   ],
-  [
-    ['Slab', 'https://slab.com/', SlabLogo],
-  ],
+  [['Slab', 'https://slab.com/', SlabLogo]],
 ];
 
 const Content = () => {
@@ -233,12 +230,16 @@ const IndexPage = () => {
               {[0, 1, 2].map((index) => (
                 <div
                   key={index}
-                  className={classNames('camera', { active: activeIndex === index })}
+                  className={classNames('camera', {
+                    active: activeIndex === index,
+                  })}
                   onClick={() => {
                     setActiveIndex(index);
                     setIsDemoActive(true);
                   }}
-                ><div className='dot' /></div>
+                >
+                  <div className="dot" />
+                </div>
               ))}
             </div>
             <NoSSR>
