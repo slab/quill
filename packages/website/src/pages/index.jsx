@@ -108,7 +108,7 @@ const Users = withoutSSR(() => {
 
   return (
     <ul id="logo-container">
-      <li>Trusted by:</li>
+      <li>Used In</li>
       {selectedUsers.map(([name, url, Logo]) => (
         <li key={name}>
           <a title={name} href={url} target="_blank">
