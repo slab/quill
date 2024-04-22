@@ -766,7 +766,7 @@ function expandModuleConfig(config: Record<string, unknown> | undefined) {
       ...expanded,
       [key]: value === true ? {} : value,
     }),
-    {},
+    {} as Record<string, unknown>,
   );
 }
 
@@ -797,22 +797,25 @@ function expandConfig(
   const { modules: quillModuleDefaults, ...quillDefaults } = Quill.DEFAULTS;
   const { modules: themeModuleDefaults, ...themeDefaults } = theme.DEFAULTS;
 
+  let userModuleOptions = expandModuleConfig(options.modules);
+  // Special case toolbar shorthand
+  if (
+    userModuleOptions != null &&
+    userModuleOptions.toolbar &&
+    userModuleOptions.toolbar.constructor !== Object
+  ) {
+    userModuleOptions = {
+      ...userModuleOptions,
+      toolbar: { container: userModuleOptions.toolbar },
+    };
+  }
+
   const modules: ExpandedQuillOptions['modules'] = merge(
     {},
     expandModuleConfig(quillModuleDefaults),
     expandModuleConfig(themeModuleDefaults),
-    expandModuleConfig(options.modules),
+    userModuleOptions,
   );
-  // Special case toolbar shorthand
-  if (
-    modules != null &&
-    modules.toolbar &&
-    modules.toolbar.constructor !== Object
-  ) {
-    modules.toolbar = {
-      container: modules.toolbar,
-    };
-  }
 
   const config = {
     ...quillDefaults,
