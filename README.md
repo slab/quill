@@ -14,15 +14,9 @@
   <a title="Interactive Playground" href="https://quilljs.com/playground/"><strong>Interactive Playground</strong></a>
 </p>
 <p align="center">
-  <a href="https://github.com/quilljs/quill/actions" title="Build Status">
-    <img src="https://github.com/quilljs/quill/actions/workflows/main.yml/badge.svg" alt="Build Status">
-  </a>
-  <a href="https://npmjs.com/package/quill" title="Version">
-    <img src="https://img.shields.io/npm/v/quill.svg" alt="Version">
-  </a>
-  <a href="https://npmjs.com/package/quill" title="Downloads">
-    <img src="https://img.shields.io/npm/dm/quill.svg" alt="Downloads">
-  </a>
+  <a href="https://github.com/quilljs/quill/actions" title="Build Status"><img src="https://github.com/quilljs/quill/actions/workflows/main.yml/badge.svg" alt="Build Status"></a>
+  <a href="https://npmjs.com/package/quill" title="Version"><img src="https://img.shields.io/npm/v/quill.svg" alt="Version"></a>
+  <a href="https://npmjs.com/package/quill" title="Downloads"><img src="https://img.shields.io/npm/dm/quill.svg" alt="Downloads"></a>
 </p>
 
 <hr/>
