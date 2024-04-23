@@ -635,7 +635,7 @@ body.home .arrow .shaft {
 }
 #snow-wrapper .toolbar {
   border: none;
-  padding: 4.5% 13%;
+  padding: 4.5% 16%;
 }
 #snow-wrapper .editor {
   border: none;
@@ -1188,7 +1188,7 @@ body:not(.home) .navbar-link:before {
     padding: 22px 22px 0 22px;
   }
   #snow-wrapper .toolbar {
-    padding: 2.25%;
+    padding: 2.5% 8% 5%;
   }
   #snow-wrapper .ql-editor {
     padding: 0 10%;
@@ -1272,11 +1272,7 @@ body:not(.home) .navbar-link:before {
     padding-right: 0;
   }
   #demo-container .ql-editor {
-    font-size: 1rem;
-    padding: 10px;
-  }
-  #demo-container .ql-editor {
-    font-size: 1rem;
+    font-size: 1em;
     padding: 20px;
   }
   .demo-active #bubble-wrapper,
