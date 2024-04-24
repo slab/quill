@@ -334,7 +334,7 @@ class Quill {
     name: string,
     value: unknown,
     source: EmitterSource = Emitter.sources.API,
-  ) {
+  ): Delta {
     return modify.call(
       this,
       () => {
@@ -557,7 +557,7 @@ class Quill {
     embed: string,
     value: unknown,
     source: EmitterSource = Quill.sources.API,
-  ) {
+  ): Delta {
     return modify.call(
       this,
       () => {
@@ -647,7 +647,7 @@ class Quill {
     return this.emitter.once(...args);
   }
 
-  removeFormat(index: number, length: number, source?: EmitterSource) {
+  removeFormat(index: number, length: number, source?: EmitterSource): Delta {
     [index, length, , source] = overload(index, length, source);
     return modify.call(
       this,
@@ -688,7 +688,7 @@ class Quill {
   setContents(
     delta: Delta | Op[],
     source: EmitterSource = Emitter.sources.API,
-  ) {
+  ): Delta {
     return modify.call(
       this,
       () => {
@@ -741,7 +741,7 @@ class Quill {
   updateContents(
     delta: Delta | Op[],
     source: EmitterSource = Emitter.sources.API,
-  ) {
+  ): Delta {
     return modify.call(
       this,
       () => {
