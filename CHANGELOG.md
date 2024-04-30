@@ -2,6 +2,7 @@
 
 - Prevent overriding of theme's default toolbar settings mistakenly [#4120](https://github.com/quilljs/quill/pull/4120)
 - Improve typings for methods that return a Delta [#4136](https://github.com/quilljs/quill/pull/4136)
+- Fix toolbar icons for h3-h6 [#4131](https://github.com/quilljs/quill/pull/4131)
 
 # 2.0.0
 
