@@ -1,6 +1,6 @@
 {
   "name": "quill-monorepo",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Quill development environment",
   "private": true,
   "author": "Jason Chen <jhchen7@gmail.com>",
