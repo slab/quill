@@ -151,6 +151,9 @@ if (
   exitWithError("Version mismatch between package.json and dist/package.json");
 }
 
+const readme = fs.readFileSync("README.md", "utf-8");
+fs.writeFileSync(path.join(distFolder, "README.md"), readme);
+
 exec(`npm publish --tag ${distTag}${dryRun ? " --dry-run" : ""}`, {
   cwd: distFolder,
 });
