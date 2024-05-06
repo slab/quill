@@ -32,7 +32,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 ```html
 <!-- Include Quill stylesheet -->
 <link
-  href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css"
+  href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css"
   rel="stylesheet"
 />
 
@@ -50,7 +50,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 </div>
 
 <!-- Include the Quill library -->
-<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
 
 <!-- Initialize Quill editor -->
 <script>
@@ -72,24 +72,24 @@ npm install quill
 
 ```html
 <!-- Main Quill library -->
-<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
 
 <!-- Theme included stylesheets -->
 <link
-  href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css"
+  href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css"
   rel="stylesheet"
 />
 <link
-  href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.bubble.css"
+  href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.bubble.css"
   rel="stylesheet"
 />
 
 <!-- Core build with no theme, formatting, non-essential modules -->
 <link
-  href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.core.css"
+  href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.core.css"
   rel="stylesheet"
 />
-<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.core.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.core.js"></script>
 ```
 
 ## Community
