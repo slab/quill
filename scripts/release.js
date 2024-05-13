@@ -87,37 +87,8 @@ console.log(
 );
 
 /*
- * Update version in CHANGELOG.md
- */
-console.log("Updating CHANGELOG.md and bumping versions");
-const changelog = fs.readFileSync("CHANGELOG.md", "utf8");
-const UNRELEASED_PLACEHOLDER = "# [Unreleased]";
-
-const index = changelog.indexOf(UNRELEASED_PLACEHOLDER);
-if (index === -1) {
-  exitWithError(`Could not find "${UNRELEASED_PLACEHOLDER}" in CHANGELOG.md`);
-}
-let nextVersionIndex = changelog.indexOf("\n# ", index);
-if (nextVersionIndex === -1) {
-  nextVersionIndex = changelog.length - 1;
-}
-
-const releaseNots = changelog
-  .substring(index + UNRELEASED_PLACEHOLDER.length, nextVersionIndex)
-  .trim();
-
-fs.writeFileSync(
-  "CHANGELOG.md",
-  changelog.replace(
-    UNRELEASED_PLACEHOLDER,
-    `${UNRELEASED_PLACEHOLDER}\n\n# ${version}`
-  )
-);
-
-/*
  * Bump npm versions
  */
-exec("git add CHANGELOG.md");
 exec(`npm version ${version} --workspaces --force`);
 exec("git add **/package.json");
 exec(`npm version ${version} --include-workspace-root --force`);
@@ -164,19 +135,12 @@ exec(`npm publish --tag ${distTag}${dryRun ? " --dry-run" : ""}`, {
 if (distTag === "experimental") {
   console.log("Skipping GitHub release for experimental version");
 } else {
-  const filename = `release-note-${version}-${(Math.random() * 1000) | 0}.txt`;
-  fs.writeFileSync(filename, releaseNots);
-  try {
-    const prereleaseFlag = distTag === "latest" ? "--latest" : " --prerelease";
-    const releaseCommand = `gh release create v${version} ${prereleaseFlag} -t "Version ${version}" --notes-file "${filename}"`;
-    if (dryRun) {
-      console.log(`Skipping: "${releaseCommand}" in dry-run mode`);
-      console.log(`Release note:\n${releaseNots}`);
-    } else {
-      exec(releaseCommand);
-    }
-  } finally {
-    fs.unlinkSync(filename);
+  const prereleaseFlag = distTag === "latest" ? "--latest" : " --prerelease";
+  const releaseCommand = `gh release create v${version} ${prereleaseFlag} -t "Version ${version}" --generate-notes`;
+  if (dryRun) {
+    console.log(`Skipping: "${releaseCommand}" in dry-run mode`);
+  } else {
+    exec(releaseCommand);
   }
 }
 
