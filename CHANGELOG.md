@@ -4,10 +4,10 @@
 
 ## What's Changed
 ### Bug Fixes 🛠
-* Fix typing errors for Quill.register by @hzgotb in https://github.com/quilljs/quill/pull/4127
-* Fix event source when deleting a link with shortcuts by @luin in https://github.com/quilljs/quill/pull/4200
-* Avoid side effects for Enter/Backspace when composing in Safari by @luin in https://github.com/quilljs/quill/pull/4201
-* Ignore pasting images when image format is disallowed by @luin in https://github.com/quilljs/quill/pull/4202
+* Fix typing errors for Quill.register by [@hzgotb](https://github.com/hzgotb) in https://github.com/quilljs/quill/pull/4127
+* Fix event source when deleting a link with shortcuts by [@luin](https://github.com/luin) in https://github.com/quilljs/quill/pull/4200
+* Avoid side effects for Enter/Backspace when composing in Safari by [@luin](https://github.com/luin) in https://github.com/quilljs/quill/pull/4201
+* Ignore pasting images when image format is disallowed by [@luin](https://github.com/luin) in https://github.com/quilljs/quill/pull/4202
 
 [All changes](https://github.com/quilljs/quill/releases/tag/v2.0.2)
 
