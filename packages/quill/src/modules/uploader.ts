@@ -55,12 +55,14 @@ class Uploader extends Module<UploaderOptions> {
 Uploader.DEFAULTS = {
   mimetypes: ['image/png', 'image/jpeg'],
   handler(range: Range, files: File[]) {
-    const promises = files.map((file) => {
+    if (!this.quill.scroll.query('image')) {
+      return;
+    }
+    const promises = files.map<Promise<string>>((file) => {
       return new Promise((resolve) => {
         const reader = new FileReader();
-        reader.onload = (e) => {
-          // @ts-expect-error Fix me later
-          resolve(e.target.result);
+        reader.onload = () => {
+          resolve(reader.result as string);
         };
         reader.readAsDataURL(file);
       });
