@@ -115,7 +115,7 @@ Quill.register(
   true,
 );
 
-export { default as Module } from './core/module.js';
+export { Module } from './core.js';
 export type {
   Bounds,
   DebugLevel,

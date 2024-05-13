@@ -80,7 +80,6 @@ class SyntaxCodeBlock extends CodeBlock {
     }
   }
 
-  // TODO maybe something wrong
   replaceWith(name: string | Blot, value?: any) {
     this.formatAt(0, this.length(), CodeToken.blotName, false);
     return super.replaceWith(name, value);

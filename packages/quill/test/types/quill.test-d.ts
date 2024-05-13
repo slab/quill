@@ -3,6 +3,37 @@ import Quill from '../../src/quill.js';
 import type { EmitterSource, Parchment, Range } from '../../src/quill.js';
 import Delta from 'quill-delta';
 import type { default as Block, BlockEmbed } from '../../src/blots/block.js';
+import SnowTheme from '../../src/themes/snow.js';
+import { LeafBlot } from 'parchment';
+
+{
+  const Counter = (quill: Quill, options: { unit: string }) => {
+    console.log(quill, options);
+  };
+  Quill.register('modules/counter', Counter);
+  Quill.register('themes/snow', SnowTheme);
+  Quill.register('themes/snow', SnowTheme, true);
+
+  class MyBlot extends LeafBlot {}
+
+  Quill.register(MyBlot);
+  Quill.register(MyBlot, true);
+  // @ts-expect-error
+  Quill.register(SnowTheme);
+  Quill.register({
+    'modules/counter': Counter,
+    'themes/snow': SnowTheme,
+    'formats/my-blot': MyBlot,
+  });
+  Quill.register(
+    {
+      'modules/counter': Counter,
+      'themes/snow': SnowTheme,
+      'formats/my-blot': MyBlot,
+    },
+    true,
+  );
+}
 
 const quill = new Quill('#editor');
 
