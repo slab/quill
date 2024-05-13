@@ -2,7 +2,7 @@ name: Generate Changelog
 
 on:
   release:
-    types: [published]
+    types: [published, created]
 
 jobs:
   changelog:
@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
-
+      - uses: fregante/setup-git-user@v2
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
