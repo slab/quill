@@ -4,7 +4,7 @@ import BaseTheme, { BaseTooltip } from './base.js';
 import LinkBlot from '../formats/link.js';
 import { Range } from '../core/selection.js';
 import icons from '../ui/icons.js';
-import type Quill from '../core.js';
+import Quill from '../core/quill.js';
 import type { Context } from '../modules/keyboard.js';
 import type Toolbar from '../modules/toolbar.js';
 import type { ToolbarConfig } from '../modules/toolbar.js';
@@ -136,15 +136,16 @@ SnowTheme.DEFAULTS = merge({}, BaseTheme.DEFAULTS, {
             ) {
               preview = `mailto:${preview}`;
             }
+            // @ts-expect-error
             const { tooltip } = this.quill.theme;
             tooltip.edit('link', preview);
           } else {
-            this.quill.format('link', false);
+            this.quill.format('link', false, Quill.sources.USER);
           }
         },
       },
     },
   },
-});
+} satisfies ThemeOptions);
 
 export default SnowTheme;
