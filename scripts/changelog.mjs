@@ -29,7 +29,7 @@ if (currentChangeLog.includes(`# ${release.tagName}`)) {
 
 await configGit();
 
-const filteredReleaseNote = (note) => {
+const normalizeReleaseNote = (note) => {
   const ignoreSections = [
     "## new contributors",
     "## all changes",
@@ -41,7 +41,12 @@ const filteredReleaseNote = (note) => {
       note = note.slice(0, index).replace(/#\s*$/, "");
     }
   });
-  return note.trim();
+
+  return note
+    .replace(/by @([-\w]+)/g, (_, username) => {
+      return `by [@${username}](https://github.com/${username})`;
+    })
+    .trim();
 };
 
 const formatDate = (date) => {
@@ -53,7 +58,7 @@ const { body } = JSON.parse(
   (await $`gh release view ${release.tagName} --json=body`).stdout
 );
 
-const note = `# ${release.tagName} (${formatDate(new Date(release.publishedAt))})\n\n${filteredReleaseNote(body)}\n\n[All changes](https://github.com/quilljs/quill/releases/tag/${release.tagName})\n`;
+const note = `# ${release.tagName} (${formatDate(new Date(release.publishedAt))})\n\n${normalizeReleaseNote(body)}\n\n[All changes](https://github.com/quilljs/quill/releases/tag/${release.tagName})\n`;
 
 await writeFile(changeLogFilePath, `${note}\n${currentChangeLog}`);
 
