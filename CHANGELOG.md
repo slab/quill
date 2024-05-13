@@ -1,3 +1,16 @@
+# v2.0.2 (2024-05-13)
+
+<!-- Release notes generated using configuration in .github/release.yml at v2.0.2 -->
+
+## What's Changed
+### Bug Fixes 🛠
+* Fix typing errors for Quill.register by @hzgotb in https://github.com/quilljs/quill/pull/4127
+* Fix event source when deleting a link with shortcuts by @luin in https://github.com/quilljs/quill/pull/4200
+* Avoid side effects for Enter/Backspace when composing in Safari by @luin in https://github.com/quilljs/quill/pull/4201
+* Ignore pasting images when image format is disallowed by @luin in https://github.com/quilljs/quill/pull/4202
+
+[All changes](https://github.com/quilljs/quill/releases/tag/v2.0.2)
+
 # v2.0.1 (2024-05-01)
 
 ## Bug Fixes
