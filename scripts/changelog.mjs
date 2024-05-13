@@ -6,6 +6,7 @@ import { $ } from "execa";
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import configGit from "./utils/configGit.mjs";
 
 const changelogFilename = "CHANGELOG.md";
 
@@ -25,6 +26,8 @@ const release = JSON.parse(stdout).find((release) => release.isLatest);
 if (currentChangeLog.includes(`# ${release.tagName}`)) {
   process.exit(0);
 }
+
+await configGit();
 
 const filteredReleaseNote = (note) => {
   const ignoreSections = [
