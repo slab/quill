@@ -7,7 +7,7 @@ import type { Range } from '../core/selection.js';
 
 const debug = logger('quill:toolbar');
 
-type Handler = (value: any) => void;
+type Handler = (this: Toolbar, value: any) => void;
 
 export type ToolbarConfig = Array<
   string[] | Array<string | Record<string, unknown>>
@@ -262,7 +262,7 @@ Toolbar.DEFAULTS = {
           }
         });
       } else {
-        this.quill.removeFormat(range, Quill.sources.USER);
+        this.quill.removeFormat(range.index, range.length, Quill.sources.USER);
       }
     },
     direction(value) {
@@ -276,7 +276,9 @@ Toolbar.DEFAULTS = {
     },
     indent(value) {
       const range = this.quill.getSelection();
+      // @ts-expect-error
       const formats = this.quill.getFormat(range);
+      // @ts-expect-error
       const indent = parseInt(formats.indent || 0, 10);
       if (value === '+1' || value === '-1') {
         let modifier = value === '+1' ? 1 : -1;
@@ -292,6 +294,7 @@ Toolbar.DEFAULTS = {
     },
     list(value) {
       const range = this.quill.getSelection();
+      // @ts-expect-error
       const formats = this.quill.getFormat(range);
       if (value === 'check') {
         if (formats.list === 'checked' || formats.list === 'unchecked') {

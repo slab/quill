@@ -4,7 +4,7 @@ abstract class Module<T extends {} = {}> {
   static DEFAULTS = {};
 
   constructor(
-    protected quill: Quill,
+    public quill: Quill,
     protected options: Partial<T> = {},
   ) {}
 }
