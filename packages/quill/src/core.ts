@@ -24,6 +24,7 @@ import Delta, { Op, OpIterator, AttributeMap } from 'quill-delta';
 import Input from './modules/input.js';
 import UINode from './modules/uiNode.js';
 
+export { default as Module } from './core/module.js';
 export { Delta, Op, OpIterator, AttributeMap, Parchment, Range };
 export type {
   Bounds,

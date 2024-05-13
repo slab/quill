@@ -122,27 +122,41 @@ class Quill {
   }
 
   static register(
-    path:
-      | string
-      | Parchment.BlotConstructor
-      | Parchment.Attributor
-      | Record<string, unknown>,
-    target?: Parchment.BlotConstructor | Parchment.Attributor | boolean,
-    overwrite = false,
-  ) {
-    if (typeof path !== 'string') {
-      const name = 'attrName' in path ? path.attrName : path.blotName;
+    targets: Record<
+      string,
+      | Parchment.RegistryDefinition
+      | Record<string, unknown> // any objects
+      | Theme
+      | Module
+      | Function // ES5 constructors
+    >,
+    overwrite?: boolean,
+  ): void;
+  static register(
+    target: Parchment.RegistryDefinition,
+    overwrite?: boolean,
+  ): void;
+  static register(path: string, target: any, overwrite?: boolean): void;
+  static register(...args: any[]): void {
+    if (typeof args[0] !== 'string') {
+      const target = args[0];
+      const overwrite = !!args[1];
+
+      const name = 'attrName' in target ? target.attrName : target.blotName;
       if (typeof name === 'string') {
+        // Shortcut for formats:
         // register(Blot | Attributor, overwrite)
-        // @ts-expect-error
-        this.register(`formats/${name}`, path, target);
+        this.register(`formats/${name}`, target, overwrite);
       } else {
-        Object.keys(path).forEach((key) => {
-          // @ts-expect-error
-          this.register(key, path[key], target);
+        Object.keys(target).forEach((key) => {
+          this.register(key, target[key], overwrite);
         });
       }
     } else {
+      const path = args[0];
+      const target = args[1];
+      const overwrite = !!args[2];
+
       if (this.imports[path] != null && !overwrite) {
         debug.warn(`Overwriting ${path} with`, target);
       }
@@ -151,14 +165,11 @@ class Quill {
         (path.startsWith('blots/') || path.startsWith('formats/')) &&
         target &&
         typeof target !== 'boolean' &&
-        // @ts-expect-error
         target.blotName !== 'abstract'
       ) {
         globalRegistry.register(target);
       }
-      // @ts-expect-error
       if (typeof target.register === 'function') {
-        // @ts-expect-error
         target.register(globalRegistry);
       }
     }
