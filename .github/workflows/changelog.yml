@@ -10,7 +10,8 @@ jobs:
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
-      - uses: fregante/setup-git-user@v2
+      - run: git config --global user.email "17000285+quill-bot@users.noreply.github.com"
+      - run: git config --global user.name "quill-bot"
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
