@@ -32,7 +32,7 @@ class Image extends EmbedBlot {
   }
 
   static sanitize(url: string) {
-    return sanitize(url, ['http', 'https', 'data']) ? url : '//:0';
+    return sanitize(url, ['http', 'https', 'data', 'blob']) ? url : '//:0';
   }
 
   static value(domNode: Element) {
