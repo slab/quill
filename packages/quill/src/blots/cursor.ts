@@ -1,7 +1,6 @@
 import { EmbedBlot, Scope } from 'parchment';
 import type { Parent, ScrollBlot } from 'parchment';
 import type Selection from '../core/selection.js';
-import TextBlot from './text.js';
 import type { EmbedContextRange } from './embed.js';
 
 class Cursor extends EmbedBlot {
@@ -79,81 +78,6 @@ class Cursor extends EmbedBlot {
   }
 
   restore(): EmbedContextRange | null {
-    return;
-    if (this.selection.composing || this.parent == null) return null;
-    const range = this.selection.getNativeRange();
-    // Browser may push down styles/nodes inside the cursor blot.
-    // https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#push-down-values
-    while (
-      this.domNode.lastChild != null &&
-      this.domNode.lastChild !== this.textNode
-    ) {
-      // @ts-expect-error Fix me later
-      this.domNode.parentNode.insertBefore(
-        this.domNode.lastChild,
-        this.domNode,
-      );
-    }
-
-    const prevTextBlot = this.prev instanceof TextBlot ? this.prev : null;
-    const prevTextLength = prevTextBlot ? prevTextBlot.length() : 0;
-    const nextTextBlot = this.next instanceof TextBlot ? this.next : null;
-    // @ts-expect-error TODO: make TextBlot.text public
-    const nextText = nextTextBlot ? nextTextBlot.text : '';
-    const { textNode } = this;
-    // take text from inside this blot and reset it
-    const newText = textNode.data.split(Cursor.CONTENTS).join('');
-    textNode.data = Cursor.CONTENTS;
-
-    // proactively merge TextBlots around cursor so that optimization
-    // doesn't lose the cursor.  the reason we are here in cursor.restore
-    // could be that the user clicked in prevTextBlot or nextTextBlot, or
-    // the user typed something.
-    let mergedTextBlot;
-    if (prevTextBlot) {
-      mergedTextBlot = prevTextBlot;
-      if (newText || nextTextBlot) {
-        prevTextBlot.insertAt(prevTextBlot.length(), newText + nextText);
-        if (nextTextBlot) {
-          nextTextBlot.remove();
-        }
-      }
-    } else if (nextTextBlot) {
-      mergedTextBlot = nextTextBlot;
-      nextTextBlot.insertAt(0, newText);
-    } else {
-      const newTextNode = document.createTextNode(newText);
-      mergedTextBlot = this.scroll.create(newTextNode);
-      this.parent.insertBefore(mergedTextBlot, this);
-    }
-
-    this.remove();
-    if (range) {
-      // calculate selection to restore
-      const remapOffset = (node: Node, offset: number) => {
-        if (prevTextBlot && node === prevTextBlot.domNode) {
-          return offset;
-        }
-        if (node === textNode) {
-          return prevTextLength + offset - 1;
-        }
-        if (nextTextBlot && node === nextTextBlot.domNode) {
-          return prevTextLength + newText.length + offset;
-        }
-        return null;
-      };
-
-      const start = remapOffset(range.start.node, range.start.offset);
-      const end = remapOffset(range.end.node, range.end.offset);
-      if (start !== null && end !== null) {
-        return {
-          startNode: mergedTextBlot.domNode,
-          startOffset: start,
-          endNode: mergedTextBlot.domNode,
-          endOffset: end,
-        };
-      }
-    }
     return null;
   }
 

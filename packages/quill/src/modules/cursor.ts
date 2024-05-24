@@ -1,12 +1,17 @@
-import Delta from 'quill-delta';
+import { isEqual } from 'lodash-es';
 import Module from '../core/module.js';
 import Quill from '../core/quill.js';
-import CursorBlot from '../blots/cursor.js';
 import type { Range } from '../core/selection.js';
-import { deleteRange } from './keyboard.js';
-import Embed from '../blots/embed.js';
 
-const INSERT_TYPES = ['insertText', 'insertReplacementText'];
+const INSERT_TYPES = new Set([
+  'insertText',
+  'insertFromPaste',
+  'insertFromPasteAsQuotation',
+  'insertFromDrop',
+  'insertTranspose',
+  'insertReplacementText',
+  'insertFromYank',
+]);
 
 class Cursor extends Module {
   constructor(quill: Quill, options: Record<string, never>) {
@@ -17,19 +22,17 @@ class Cursor extends Module {
     });
 
     quill.emitter.on(Quill.events.COMPOSITION_END, () => {
-      this.quill.update(Quill.sources.USER);
+      this.handleCompositionEnd();
+    });
 
-      const selection = document.getSelection();
-      if (selection == null || selection.rangeCount <= 0) return null;
-      const node = selection.getRangeAt(0).startContainer;
-      const blot = quill.scroll.find(node, true);
-      if (blot instanceof CursorBlot) {
-        this.restoreCursor(blot, blot.resetText());
-      }
+    quill.on(Quill.events.SELECTION_CHANGE, (range) => {
+      this.handleSelectionChange(range);
     });
   }
 
-  private restoreCursor(cursor: CursorBlot, text: string) {
+  private restoreCursor(text: string) {
+    const { cursor } = this.quill.selection;
+    this.quill.update(Quill.sources.USER);
     const offset = cursor.offset(this.quill.scroll);
     const formats = this.quill.getFormat(offset);
     this.quill.insertText(offset, text, formats, Quill.sources.USER);
@@ -38,50 +41,53 @@ class Cursor extends Module {
     this.quill.setSelection(offset + text.length, 0, Quill.sources.SILENT);
   }
 
-  private restoreEmbed(embed: Embed, side: 'left' | 'right', text: string) {
-    const offset = embed.offset(this.quill.scroll) + (side === 'left' ? 0 : 1);
-    const formats = this.quill.getFormat(offset);
-    this.quill.insertText(offset, text, formats, Quill.sources.USER);
-    this.quill.update(Quill.sources.SILENT);
-    this.quill.setSelection(offset + text.length, 0, Quill.sources.SILENT);
+  private handleBeforeInput(event: InputEvent) {
+    if (
+      this.quill.composition.isComposing ||
+      event.defaultPrevented ||
+      !this.quill.selection.cursor.parent ||
+      !event.cancelable
+    ) {
+      return;
+    }
+
+    if (INSERT_TYPES.has(event.inputType)) {
+      const text = getPlainTextFromInputEvent(event);
+      if (text) {
+        const staticRange = event.getTargetRanges
+          ? event.getTargetRanges()[0]
+          : null;
+
+        if (
+          staticRange?.startContainer === this.quill.selection.cursor.textNode
+        ) {
+          this.restoreCursor(text);
+          event.preventDefault();
+          return;
+        }
+      }
+    }
+
+    this.restoreCursor('');
   }
 
-  private handleBeforeInput(event: InputEvent) {
-    if (this.quill.composition.isComposing || event.defaultPrevented) {
-      return;
+  private handleCompositionEnd() {
+    const selection = document.getSelection();
+    if (selection == null || selection.rangeCount <= 0) return null;
+    const range = selection.getRangeAt(0);
+
+    if (range.startContainer === this.quill.selection.cursor.textNode) {
+      this.restoreCursor(this.quill.selection.cursor.resetText());
     }
+  }
 
-    if (event.inputType !== 'insertText') {
-      return;
-    }
-
-    const staticRange = event.getTargetRanges
-      ? event.getTargetRanges()[0]
-      : null;
-    if (!staticRange || !staticRange.collapsed) {
-      return;
-    }
-
-    const text = getPlainTextFromInputEvent(event);
-    if (text == null) {
-      return;
-    }
-
-    const blot = this.quill.scroll.find(staticRange.startContainer, true);
-    console.log(blot);
-
-    this.quill.update(Quill.sources.USER);
-
-    if (blot instanceof CursorBlot) {
-      this.restoreCursor(blot, text);
-      event.preventDefault();
-    } else if (blot instanceof Embed) {
-      this.restoreEmbed(
-        blot,
-        blot.leftGuard === staticRange.startContainer ? 'left' : 'right',
-        text,
-      );
-      event.preventDefault();
+  private handleSelectionChange(range: Range) {
+    if (this.quill.selection.cursor.parent) {
+      this.quill.selection.cursor.remove();
+      const newRange = this.quill.getSelection();
+      if (!isEqual(newRange, range)) {
+        this.quill.setSelection(range, Quill.sources.SILENT);
+      }
     }
   }
 }

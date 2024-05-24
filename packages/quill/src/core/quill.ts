@@ -228,7 +228,7 @@ class Quill {
     this.history = this.theme.addModule('history');
     this.uploader = this.theme.addModule('uploader');
     this.theme.addModule('input');
-    // this.theme.addModule('cursor');
+    this.theme.addModule('cursor');
     this.theme.addModule('uiNode');
     this.theme.init();
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type) => {

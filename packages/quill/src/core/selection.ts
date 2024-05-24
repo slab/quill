@@ -71,6 +71,7 @@ class Selection {
       const native = this.getNativeRange();
       if (native == null) return;
       if (native.start.node === this.cursor.textNode) return; // cursor.restore() will handle
+      console.log('===TODO', native.start.node === this.cursor.textNode);
       this.emitter.once(
         Emitter.events.SCROLL_UPDATE,
         (source, mutations: MutationRecord[]) => {
@@ -116,18 +117,6 @@ class Selection {
     });
     this.emitter.on(Emitter.events.COMPOSITION_END, () => {
       this.composing = false;
-      if (this.cursor.parent) {
-        const range = this.cursor.restore();
-        if (!range) return;
-        setTimeout(() => {
-          this.setNativeRange(
-            range.startNode,
-            range.startOffset,
-            range.endNode,
-            range.endOffset,
-          );
-        }, 1);
-      }
     });
   }
 
@@ -443,22 +432,6 @@ class Selection {
       this.savedRange = this.lastRange;
     }
     if (!isEqual(oldRange, this.lastRange)) {
-      if (
-        !this.composing &&
-        nativeRange != null &&
-        nativeRange.native.collapsed &&
-        nativeRange.start.node !== this.cursor.textNode
-      ) {
-        const range = this.cursor.restore();
-        if (range) {
-          this.setNativeRange(
-            range.startNode,
-            range.startOffset,
-            range.endNode,
-            range.endOffset,
-          );
-        }
-      }
       const args = [
         Emitter.events.SELECTION_CHANGE,
         cloneDeep(this.lastRange),
