@@ -72,7 +72,14 @@ class Cursor extends EmbedBlot {
     this.parent = null;
   }
 
+  resetText() {
+    const newText = this.textNode.data.split(Cursor.CONTENTS).join('');
+    this.textNode.data = Cursor.CONTENTS;
+    return newText;
+  }
+
   restore(): EmbedContextRange | null {
+    return;
     if (this.selection.composing || this.parent == null) return null;
     const range = this.selection.getNativeRange();
     // Browser may push down styles/nodes inside the cursor blot.

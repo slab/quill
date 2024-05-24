@@ -37,6 +37,7 @@ class Embed extends EmbedBlot {
   }
 
   restore(node: Text): EmbedContextRange | null {
+    return;
     let range: EmbedContextRange | null = null;
     let textNode: Text;
     const text = node.data.split(GUARD_TEXT).join('');

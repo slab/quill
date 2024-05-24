@@ -22,6 +22,7 @@ import Keyboard from './modules/keyboard.js';
 import Uploader from './modules/uploader.js';
 import Delta, { Op, OpIterator, AttributeMap } from 'quill-delta';
 import Input from './modules/input.js';
+import CursorModule from './modules/cursor.js';
 import UINode from './modules/uiNode.js';
 
 export { default as Module } from './core/module.js';
@@ -50,6 +51,7 @@ Quill.register({
   'modules/keyboard': Keyboard,
   'modules/uploader': Uploader,
   'modules/input': Input,
+  'modules/cursor': CursorModule,
   'modules/uiNode': UINode,
 });
 
