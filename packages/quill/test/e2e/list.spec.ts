@@ -102,7 +102,7 @@ test.describe('list', () => {
         });
       });
 
-      // https://github.com/quilljs/quill/issues/3837
+      // https://github.com/slab/quill/issues/3837
       test('typing at beginning with IME', async ({
         editorPage,
         composition,

@@ -10,11 +10,11 @@ const GitHub = ({ dark = false }) => {
 
   useEffect(() => {
     fetch(
-      'https://api.github.com/search/repositories?q=quill+user:quilljs+repo:quill&sort=stars&order=desc',
+      'https://api.github.com/search/repositories?q=quill+user:slab+repo:quill&sort=stars&order=desc',
     )
       .then((response) => response.json())
       .then((data) => {
-        if (data.items && data.items[0].full_name === 'quilljs/quill') {
+        if (data.items && data.items[0].full_name === 'slab/quill') {
           setCount(data.items[0].stargazers_count.toLocaleString());
         }
       });
@@ -26,7 +26,7 @@ const GitHub = ({ dark = false }) => {
         className={styles.action}
         target="_blank"
         title="Star Quill on GitHub"
-        href="https://github.com/quilljs/quill/"
+        href="https://github.com/slab/quill/"
       >
         <OctocatIcon />
         Star
@@ -35,7 +35,7 @@ const GitHub = ({ dark = false }) => {
         className={styles.count}
         target="_blank"
         title="Quill Stargazers"
-        href="https://github.com/quilljs/quill/stargazers"
+        href="https://github.com/slab/quill/stargazers"
       >
         {count}
       </a>

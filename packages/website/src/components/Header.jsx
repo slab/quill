@@ -60,7 +60,7 @@ const VersionSelector = () => {
       >
         <a
           role="menuitem"
-          href={`https://github.com/quilljs/quill/releases/tag/v${process.env.version}`}
+          href={`https://github.com/slab/quill/releases/tag/v${process.env.version}`}
           className={styles.versionDropdownItem}
           target="_blank"
         >
@@ -68,7 +68,7 @@ const VersionSelector = () => {
         </a>
         <a
           role="menuitem"
-          href={`https://github.com/quilljs/quill/blob/v${process.env.version}/.github/CONTRIBUTING.md`}
+          href={`https://github.com/slab/quill/blob/v${process.env.version}/.github/CONTRIBUTING.md`}
           className={styles.versionDropdownItem}
           target="_blank"
         >
@@ -103,7 +103,7 @@ const Header = () => {
         <MainNav className={styles.mainNav} />
         <nav className={styles.secondaryNav}>
           <a
-            href="https://github.com/quilljs/quill"
+            href="https://github.com/slab/quill"
             target="_blank"
             title="Edit on GitHub"
           >
