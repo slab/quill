@@ -160,6 +160,7 @@ class Cursor extends EmbedBlot {
     ) {
       const range = this.restore();
       if (range) context.range = range;
+      console.log('===!match', context);
     }
   }
 

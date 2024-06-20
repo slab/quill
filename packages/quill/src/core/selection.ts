@@ -117,16 +117,13 @@ class Selection {
     this.emitter.on(Emitter.events.COMPOSITION_END, () => {
       this.composing = false;
       if (this.cursor.parent) {
-        const range = this.cursor.restore();
-        if (!range) return;
-        setTimeout(() => {
-          this.setNativeRange(
-            range.startNode,
-            range.startOffset,
-            range.endNode,
-            range.endOffset,
-          );
-        }, 1);
+        this.cursor.restore();
+        const [range] = this.getRange();
+        if (range) {
+          this.emitter.once(Emitter.events.SCROLL_OPTIMIZE, () => {
+            this.setRange(range);
+          });
+        }
       }
     });
   }
@@ -444,20 +441,16 @@ class Selection {
     }
     if (!isEqual(oldRange, this.lastRange)) {
       if (
+        this.cursor.parent &&
         !this.composing &&
         nativeRange != null &&
         nativeRange.native.collapsed &&
         nativeRange.start.node !== this.cursor.textNode
       ) {
-        const range = this.cursor.restore();
-        if (range) {
-          this.setNativeRange(
-            range.startNode,
-            range.startOffset,
-            range.endNode,
-            range.endOffset,
-          );
-        }
+        this.cursor.restore();
+        this.emitter.once(Emitter.events.SCROLL_OPTIMIZE, () => {
+          this.setRange(lastRange);
+        });
       }
       const args = [
         Emitter.events.SELECTION_CHANGE,
