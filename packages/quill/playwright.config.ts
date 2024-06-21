@@ -21,7 +21,15 @@ export default defineConfig({
     ignoreHTTPSErrors: true,
   },
   projects: [
-    { name: 'Chrome', use: { ...devices['Desktop Chrome'] } },
+    {
+      name: 'Chrome',
+      use: {
+        ...devices['Desktop Chrome'],
+        contextOptions: {
+          permissions: ['clipboard-read', 'clipboard-write'],
+        },
+      },
+    },
     { name: 'Firefox', use: { ...devices['Desktop Firefox'] } },
     { name: 'Safari', use: { ...devices['Desktop Safari'] } },
   ],
