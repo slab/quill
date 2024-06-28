@@ -338,10 +338,10 @@ function convertListHTML(
   const [{ child, offset, length, indent, type }, ...rest] = items;
   const [tag, attribute] = getListType(type);
   // CLASSNAME FIX
-  const className = 
+  const className =
     (<HTMLLIElement>child.domNode).className != ''
       ? ` class="${(<HTMLLIElement>child.domNode).className}"`
-      : "";
+      : '';
   if (indent > lastIndent) {
     types.push(type);
     if (indent === lastIndent + 1) {
