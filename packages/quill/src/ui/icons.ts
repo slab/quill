@@ -29,6 +29,10 @@ import subscriptIcon from '../assets/icons/subscript.svg';
 import superscriptIcon from '../assets/icons/superscript.svg';
 import strikeIcon from '../assets/icons/strike.svg';
 import tableIcon from '../assets/icons/table.svg';
+import tableInsertRowIcon from '../assets/icons/table-insert-rows.svg';
+import tableInsertColumnIcon from '../assets/icons/table-insert-columns.svg';
+import tableDeleteRowsIcon from '../assets/icons/table-delete-rows.svg';
+import tableDeleteColumnsIcon from '../assets/icons/table-delete-columns.svg';
 import underlineIcon from '../assets/icons/underline.svg';
 import videoIcon from '../assets/icons/video.svg';
 
@@ -77,6 +81,10 @@ export default {
   },
   strike: strikeIcon,
   table: tableIcon,
+  "table-insert-row": tableInsertRowIcon,
+  "table-insert-column": tableInsertColumnIcon,
+  "table-delete-row": tableDeleteRowsIcon,
+  "table-delete-column": tableDeleteColumnsIcon,
   underline: underlineIcon,
   video: videoIcon,
 };
