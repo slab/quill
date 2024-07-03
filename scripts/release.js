@@ -31,7 +31,7 @@ if (!process.env.CI) {
 exec('echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc');
 
 async function main() {
-  await configGit();
+  // await configGit();
 
   /*
    * Check that the git working directory is clean
