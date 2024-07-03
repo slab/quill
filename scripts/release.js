@@ -5,6 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
 const { parseArgs } = require("node:util");
+const configGit  = require("./utils/configGit.mjs")
 
 const args = parseArgs({
   options: {
@@ -31,7 +32,7 @@ if (!process.env.CI) {
 exec('echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc');
 
 async function main() {
-  // await configGit();
+  await configGit();
 
   /*
    * Check that the git working directory is clean
