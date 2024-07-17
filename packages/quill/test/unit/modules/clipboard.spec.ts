@@ -361,6 +361,22 @@ describe('Clipboard', () => {
       );
     });
 
+    test('white-space', () => {
+      const html = '<span style="white-space:pre">0  1</span>';
+      expect(createClipboard().convert({ html })).toEqual(
+        new Delta().insert('0  1'),
+      );
+    });
+
+    test('white-space with nested levels', () => {
+      const html = `
+        <div style="white-space:pre"><span>0  1</span><span style="white-space:normal">0  1</span><span style="white-space:inherit">0  1</span></div>
+      `;
+      expect(createClipboard().convert({ html })).toEqual(
+        new Delta().insert('0  10 10  1'),
+      );
+    });
+
     test('nested list', () => {
       const delta = createClipboard().convert({
         html: '<ol><li>One</li><li class="ql-indent-1">Alpha</li></ol>',

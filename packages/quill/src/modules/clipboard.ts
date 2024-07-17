@@ -364,18 +364,48 @@ function isBetweenInlineElements(node: HTMLElement, scroll: ScrollBlot) {
   );
 }
 
-const preNodes = new WeakMap();
-function isPre(node: Node | null) {
-  if (node == null) return false;
-  if (!preNodes.has(node)) {
-    // @ts-expect-error
+enum WhiteSpaceStyle {
+  Collapsed,
+  Preserved,
+  Inherited,
+}
+const getWhiteSpaceStyle = (node: Node) => {
+  if (node instanceof HTMLElement) {
+    const { whiteSpace } = node.style;
+    if (
+      whiteSpace === 'pre' ||
+      whiteSpace === 'pre-wrap' ||
+      whiteSpace === 'break-spaces'
+    ) {
+      return WhiteSpaceStyle.Preserved;
+    }
+    if (whiteSpace && whiteSpace !== 'inherit') {
+      return WhiteSpaceStyle.Collapsed;
+    }
     if (node.tagName === 'PRE') {
-      preNodes.set(node, true);
-    } else {
-      preNodes.set(node, isPre(node.parentNode));
+      return WhiteSpaceStyle.Preserved;
     }
   }
-  return preNodes.get(node);
+  return WhiteSpaceStyle.Inherited;
+};
+
+const whiteSpacePreservationMap = new WeakMap();
+function getShouldPreserveWhiteSpaces(node: Node | null) {
+  if (node == null) return false;
+
+  if (!whiteSpacePreservationMap.has(node)) {
+    let shouldPreserve = false;
+
+    const style = getWhiteSpaceStyle(node);
+    if (style === WhiteSpaceStyle.Preserved) {
+      shouldPreserve = true;
+    } else if (style === WhiteSpaceStyle.Inherited) {
+      shouldPreserve = getShouldPreserveWhiteSpaces(node.parentNode);
+    }
+
+    whiteSpacePreservationMap.set(node, shouldPreserve);
+  }
+  return whiteSpacePreservationMap.get(node);
 }
 
 function traverse(
@@ -631,7 +661,7 @@ function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
   if (node.parentElement?.tagName === 'O:P') {
     return delta.insert(text.trim());
   }
-  if (!isPre(node)) {
+  if (!getShouldPreserveWhiteSpaces(node)) {
     if (
       text.trim().length === 0 &&
       text.includes('\n') &&
