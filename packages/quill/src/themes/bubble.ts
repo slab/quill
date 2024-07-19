@@ -4,7 +4,7 @@ import BaseTheme, { BaseTooltip } from './base.js';
 import { Range } from '../core/selection.js';
 import type { Bounds } from '../core/selection.js';
 import icons from '../ui/icons.js';
-import type Quill from '../core.js';
+import Quill from '../core/quill.js';
 import type { ThemeOptions } from '../core/theme.js';
 import type Toolbar from '../modules/toolbar.js';
 import type { ToolbarConfig } from '../modules/toolbar.js';
@@ -135,14 +135,15 @@ BubbleTheme.DEFAULTS = merge({}, BaseTheme.DEFAULTS, {
       handlers: {
         link(value: string) {
           if (!value) {
-            this.quill.format('link', false);
+            this.quill.format('link', false, Quill.sources.USER);
           } else {
+            // @ts-expect-error
             this.quill.theme.tooltip.edit();
           }
         },
       },
     },
   },
-});
+} satisfies ThemeOptions);
 
 export { BubbleTooltip, BubbleTheme as default };

@@ -2,28 +2,28 @@
 
 The best way to contribute is to help others in the Quill community. This includes:
 
-- Reporting new [bugs](https://github.com/quilljs/quill/labels/bug) or adding details to existing ones
-- Reproducing [unconfirmed bugs](https://github.com/quilljs/quill/labels/needs%20reproduction)
+- Reporting new [bugs](https://github.com/slab/quill/labels/bug) or adding details to existing ones
+- Reproducing [unconfirmed bugs](https://github.com/slab/quill/labels/needs%20reproduction)
 - Quick typo fix or documentation improvement [Pull Requests](#pull-requests)
-- Participating in [discussions](https://github.com/quilljs/quill/discussions)
+- Participating in [discussions](https://github.com/slab/quill/discussions)
 
 After becoming familiar with Quill and the codebase, likely through using Quill yourself and making some of the above contributions, you may choose to take on a bigger commitment by:
 
-- Helping fix [bugs](https://github.com/quilljs/quill/labels/bug)
-- Implementing new [features](https://github.com/quilljs/quill/labels/feature)
+- Helping fix [bugs](https://github.com/slab/quill/labels/bug)
+- Implementing new [features](https://github.com/slab/quill/labels/feature)
 - Publishing guides, tutorials, and examples
 - Supporting Quill in other ecosystems (Angular, React, etc)
 
 Note that if you are going to be making significant contributions, you should first open
-a [discussion](https://github.com/quilljs/quill/discussions) to ensure your work aligns with the project's goals and direction.
+a [discussion](https://github.com/slab/quill/discussions) to ensure your work aligns with the project's goals and direction.
 
 ## Questions
 
-If you have a question, it is best to ask on [Discussions](https://github.com/quilljs/quill/discussions) under the Q&A category.
+If you have a question, it is best to ask on [Discussions](https://github.com/slab/quill/discussions) under the Q&A category.
 
 ## Bug Reports
 
-Search through [Github Issues](https://github.com/quilljs/quill/issues) to see if the bug has already been reported. If so, please comment with any additional information.
+Search through [Github Issues](https://github.com/slab/quill/issues) to see if the bug has already been reported. If so, please comment with any additional information.
 
 New bug reports must include:
 
@@ -37,7 +37,7 @@ Lacking reports it may be autoclosed with a link to these instructions.
 
 ## Feature Requests
 
-Search through [Github Issues](https://github.com/quilljs/quill/labels/feature) to see if someone has already suggested the feature. If so, please provide support with a [reaction](https://github.com/blog/2119-add-reactions-to-pull-requests-issues-and-comments) and add your own use case.
+Search through [Github Issues](https://github.com/slab/quill/labels/feature) to see if someone has already suggested the feature. If so, please provide support with a [reaction](https://github.com/blog/2119-add-reactions-to-pull-requests-issues-and-comments) and add your own use case.
 
 To open a new feature request, please include:
 
@@ -52,7 +52,7 @@ The more complete and compelling the request, the more likely it will ultimately
 
 ## Pull Requests
 
-Please check to make sure your plans fall within Quill's scope. This often means opening up a [discussion](https://github.com/quilljs/quill/labels/discussion).
+Please check to make sure your plans fall within Quill's scope. This often means opening up a [discussion](https://github.com/slab/quill/labels/discussion).
 
 Non-code Pull Requests such as typo fixes or documentation improvements are highly encouraged and are often accepted immediately.
 
@@ -60,7 +60,7 @@ Pull Requests modifying public facing interfaces or APIs, including backwards co
 
 Pull requests must:
 
-1. Be forked off the [main](https://github.com/quilljs/quill/tree/main) branch.
+1. Be forked off the [main](https://github.com/slab/quill/tree/main) branch.
 2. Pass the linter and conform to existing coding styles.
 3. Commits are [squashed](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History#Squashing-Commits) to minimally coherent units of changes.
 4. Are accompanied by tests covering the new feature or demonstrating the bug for fixes.
@@ -68,4 +68,4 @@ Pull requests must:
 6. Introduce only changes that further the PR's singular purpose (ex. do not tweak an unrelated config along with adding your feature).
 7. Not break any existing unit or end to end tests.
 
-**Important:** By issuing a Pull Request you agree to allow the project owners to license your work under the terms of the [License](https://github.com/quilljs/quill/blob/master/LICENSE).
+**Important:** By issuing a Pull Request you agree to allow the project owners to license your work under the terms of the [License](https://github.com/slab/quill/blob/master/LICENSE).

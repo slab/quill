@@ -1,7 +1,7 @@
 import '../../../src/quill.js';
 import Delta from 'quill-delta';
-import { Registry } from 'parchment';
-import { beforeEach, describe, expect, test, vitest } from 'vitest';
+import { LeafBlot, Registry } from 'parchment';
+import { afterEach, beforeEach, describe, expect, test, vitest } from 'vitest';
 import type { MockedFunction } from 'vitest';
 import Emitter from '../../../src/core/emitter.js';
 import Theme from '../../../src/core/theme.js';
@@ -26,6 +26,47 @@ describe('Quill', () => {
   test('imports', () => {
     Object.keys(Quill.imports).forEach((path) => {
       expect(Quill.import(path)).toBeTruthy();
+    });
+  });
+
+  describe('register', () => {
+    const imports = { ...Quill.imports };
+    afterEach(() => {
+      Quill.imports = imports;
+    });
+
+    test('register(path, target)', () => {
+      class Counter {}
+      Quill.register('modules/counter', Counter);
+
+      expect(Quill.imports).toHaveProperty('modules/counter', Counter);
+      expect(Quill.import('modules/counter')).toEqual(Counter);
+    });
+
+    test('register(formats)', () => {
+      class MyCounterBlot extends LeafBlot {
+        static blotName = 'my-counter';
+        static className = 'ql-my-counter';
+      }
+      Quill.register(MyCounterBlot);
+
+      expect(Quill.imports).toHaveProperty('formats/my-counter', MyCounterBlot);
+      expect(Quill.import('formats/my-counter')).toEqual(MyCounterBlot);
+    });
+
+    test('register(targets)', () => {
+      class ABlot extends LeafBlot {
+        static blotName = 'a-blot';
+        static className = 'ql-a-blot';
+      }
+      class AModule {}
+      Quill.register({
+        'formats/a-blot': ABlot,
+        'modules/a-module': AModule,
+      });
+
+      expect(Quill.import('formats/a-blot')).toEqual(ABlot);
+      expect(Quill.import('modules/a-module')).toEqual(AModule);
     });
   });
 

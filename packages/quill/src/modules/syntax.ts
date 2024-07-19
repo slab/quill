@@ -80,7 +80,7 @@ class SyntaxCodeBlock extends CodeBlock {
     }
   }
 
-  replaceWith(name: string, value: unknown) {
+  replaceWith(name: string | Blot, value?: any) {
     this.formatAt(0, this.length(), CodeToken.blotName, false);
     return super.replaceWith(name, value);
   }
@@ -180,7 +180,7 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
     }
   }
 }
-// @ts-expect-error
+
 SyntaxCodeBlockContainer.allowedChildren = [SyntaxCodeBlock];
 SyntaxCodeBlock.requiredContainer = SyntaxCodeBlockContainer;
 SyntaxCodeBlock.allowedChildren = [CodeToken, CursorBlot, TextBlot, BreakBlot];
@@ -206,7 +206,6 @@ class Syntax extends Module<SyntaxOptions> {
 
   static register() {
     Quill.register(CodeToken, true);
-    // @ts-expect-error
     Quill.register(SyntaxCodeBlock, true);
     Quill.register(SyntaxCodeBlockContainer, true);
   }

@@ -1,0 +1,22 @@
+name: Generate Changelog
+
+on:
+  release:
+    types: [published, created]
+  workflow_dispatch: {}
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+      - run: node ./scripts/changelog.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

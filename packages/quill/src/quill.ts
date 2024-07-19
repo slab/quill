@@ -1,4 +1,4 @@
-import Quill, { Parchment, Range } from './core.js';
+import Quill from './core.js';
 import type {
   Bounds,
   DebugLevel,
@@ -115,6 +115,15 @@ Quill.register(
   true,
 );
 
+export {
+  AttributeMap,
+  Delta,
+  Module,
+  Op,
+  OpIterator,
+  Parchment,
+  Range,
+} from './core.js';
 export type {
   Bounds,
   DebugLevel,
@@ -122,6 +131,5 @@ export type {
   ExpandedQuillOptions,
   QuillOptions,
 };
-export { Parchment, Range };
 
 export default Quill;

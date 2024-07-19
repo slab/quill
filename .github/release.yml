@@ -1,0 +1,17 @@
+changelog:
+  exclude:
+    authors:
+      - quill-bot
+  categories:
+    - title: Bug Fixes 🛠
+      labels:
+        - change:bugfix
+    - title: New Features 🎉
+      labels:
+        - change:feature
+    - title: Documentation 📚
+      labels:
+        - change:documentation
+    - title: Other Changes
+      labels:
+        - "*"
