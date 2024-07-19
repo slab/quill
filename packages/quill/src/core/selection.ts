@@ -133,10 +133,10 @@ class Selection {
   }
 
   handleDragging() {
-    this.emitter.listenDOM('mousedown', document.body, () => {
+    this.emitter.listenDOM('mousedown', this.root.ownerDocument.body, () => {
       this.mouseDown = true;
     });
-    this.emitter.listenDOM('mouseup', document.body, () => {
+    this.emitter.listenDOM('mouseup', this.root.ownerDocument.body, () => {
       this.mouseDown = false;
       this.update(Emitter.sources.USER);
     });
@@ -240,7 +240,7 @@ class Selection {
   }
 
   getNativeRange(): NormalizedRange | null {
-    const selection = document.getSelection();
+    const selection = this.root.ownerDocument.getSelection();
     if (selection == null || selection.rangeCount <= 0) return null;
     const nativeRange = selection.getRangeAt(0);
     if (nativeRange == null) return null;
@@ -263,10 +263,10 @@ class Selection {
   }
 
   hasFocus(): boolean {
+    const doc = this.root.ownerDocument ?? document;
     return (
-      document.activeElement === this.root ||
-      (document.activeElement != null &&
-        contains(this.root, document.activeElement))
+      doc.activeElement === this.root ||
+      (doc.activeElement != null && contains(this.root, doc.activeElement))
     );
   }
 
@@ -373,7 +373,7 @@ class Selection {
     ) {
       return;
     }
-    const selection = document.getSelection();
+    const selection = this.root.ownerDocument.getSelection();
     if (selection == null) return;
     if (startNode != null) {
       if (!this.hasFocus()) this.root.focus({ preventScroll: true });

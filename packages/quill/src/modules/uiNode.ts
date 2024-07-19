@@ -94,13 +94,17 @@ class UINode extends Module {
       }
     };
 
-    document.addEventListener('selectionchange', listener, {
-      once: true,
-    });
+    this.quill.root.ownerDocument.addEventListener(
+      'selectionchange',
+      listener,
+      {
+        once: true,
+      },
+    );
   }
 
   private handleSelectionChange() {
-    const selection = document.getSelection();
+    const selection = this.quill.container.ownerDocument.getSelection();
     if (!selection) return;
     const range = selection.getRangeAt(0);
     if (range.collapsed !== true || range.startOffset !== 0) return;
