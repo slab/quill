@@ -4,6 +4,7 @@ import Quill from '../core/quill.js';
 import logger from '../core/logger.js';
 import Module from '../core/module.js';
 import type { Range } from '../core/selection.js';
+import { isHTMLElement } from '../core/utils/crossRealmIsElement.js';
 
 const debug = logger('quill:toolbar');
 
@@ -40,7 +41,7 @@ class Toolbar extends Module<ToolbarProps> {
     } else {
       this.container = this.options.container;
     }
-    if (!(this.container instanceof HTMLElement)) {
+    if (!isHTMLElement(this.container)) {
       debug.error('Container required for toolbar', this.options);
       return;
     }

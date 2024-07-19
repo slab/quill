@@ -8,6 +8,7 @@ import CursorBlot from '../blots/cursor.js';
 import type Scroll from '../blots/scroll.js';
 import TextBlot, { escapeText } from '../blots/text.js';
 import { Range } from './selection.js';
+import { isElement } from './utils/crossRealmIsElement.js';
 
 const ASCII = /^[ -~]*$/;
 
@@ -406,7 +407,7 @@ function convertHTML(
     }
     return `${start}>${parts.join('')}<${end}`;
   }
-  return blot.domNode instanceof Element ? blot.domNode.outerHTML : '';
+  return isElement(blot.domNode) ? blot.domNode.outerHTML : '';
 }
 
 function combineFormats(

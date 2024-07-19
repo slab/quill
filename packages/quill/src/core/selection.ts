@@ -5,6 +5,7 @@ import type { EmitterSource } from './emitter.js';
 import logger from './logger.js';
 import type Cursor from '../blots/cursor.js';
 import type Scroll from '../blots/scroll.js';
+import { isElement } from './utils/crossRealmIsElement.js';
 
 const debug = logger('quill:selection');
 
@@ -224,7 +225,7 @@ class Selection {
       }
       rect = range.getBoundingClientRect();
     } else {
-      if (!(leaf.domNode instanceof Element)) return null;
+      if (!isElement(leaf.domNode)) return null;
       rect = leaf.domNode.getBoundingClientRect();
       if (offset > 0) side = 'right';
     }
@@ -385,14 +386,14 @@ class Selection {
         endNode !== native.endContainer ||
         endOffset !== native.endOffset
       ) {
-        if (startNode instanceof Element && startNode.tagName === 'BR') {
+        if (isElement(startNode) && startNode.tagName === 'BR') {
           // @ts-expect-error Fix me later
           startOffset = Array.from(startNode.parentNode.childNodes).indexOf(
             startNode,
           );
           startNode = startNode.parentNode;
         }
-        if (endNode instanceof Element && endNode.tagName === 'BR') {
+        if (isElement(endNode) && endNode.tagName === 'BR') {
           // @ts-expect-error Fix me later
           endOffset = Array.from(endNode.parentNode.childNodes).indexOf(
             endNode,

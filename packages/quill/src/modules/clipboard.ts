@@ -23,6 +23,7 @@ import { FontStyle } from '../formats/font.js';
 import { SizeStyle } from '../formats/size.js';
 import { deleteRange } from './keyboard.js';
 import normalizeExternalHTML from './normalizeExternalHTML/index.js';
+import { isElement, isHTMLElement } from '../core/utils/crossRealmIsElement.js';
 
 const debug = logger('quill:clipboard');
 
@@ -312,7 +313,7 @@ function deltaEndsWith(delta: Delta, text: string) {
 }
 
 function isLine(node: Node, scroll: ScrollBlot) {
-  if (!(node instanceof Element)) return false;
+  if (!isElement(node)) return false;
   const match = scroll.query(node);
   // @ts-expect-error
   if (match && match.prototype instanceof EmbedBlot) return false;
@@ -554,7 +555,8 @@ function matchNewline(node: Node, delta: Delta, scroll: ScrollBlot) {
   if (!deltaEndsWith(delta, '\n')) {
     if (
       isLine(node, scroll) &&
-      (node.childNodes.length > 0 || node instanceof HTMLParagraphElement)
+      (node.childNodes.length > 0 ||
+        (isHTMLElement(node) && node.tagName === 'P'))
     ) {
       return delta.insert('\n');
     }
@@ -649,8 +651,7 @@ function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
       (node.previousSibling == null &&
         node.parentElement != null &&
         isLine(node.parentElement, scroll)) ||
-      (node.previousSibling instanceof Element &&
-        isLine(node.previousSibling, scroll))
+      (isElement(node.previousSibling) && isLine(node.previousSibling, scroll))
     ) {
       text = text.replace(/^\s+/, replacer.bind(replacer, false));
     }
@@ -658,7 +659,7 @@ function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
       (node.nextSibling == null &&
         node.parentElement != null &&
         isLine(node.parentElement, scroll)) ||
-      (node.nextSibling instanceof Element && isLine(node.nextSibling, scroll))
+      (isElement(node.nextSibling) && isLine(node.nextSibling, scroll))
     ) {
       text = text.replace(/\s+$/, replacer.bind(replacer, false));
     }

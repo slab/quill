@@ -1,5 +1,6 @@
 import { expect } from 'vitest';
 import { normalizeHTML } from './utils.js';
+import { isHTMLElement } from '../../../src/core/utils/crossRealmIsElement.js';
 
 const sortAttributes = (element: HTMLElement) => {
   const attributes = Array.from(element.attributes);
@@ -16,7 +17,7 @@ const sortAttributes = (element: HTMLElement) => {
   }
 
   element.childNodes.forEach((child) => {
-    if (child instanceof HTMLElement) {
+    if (isHTMLElement(child)) {
       sortAttributes(child);
     }
   });
