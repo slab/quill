@@ -20,4 +20,5 @@ jobs:
             change:feature
             change:documentation
             change:chore
+            change:refactor
           add_comment: false
