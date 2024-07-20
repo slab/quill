@@ -360,6 +360,10 @@ function convertListHTML(
   return `</li></${endTag}>${convertListHTML(items, lastIndent - 1, types)}`;
 }
 
+const SPACE_EXCLUDE_NBSP = '[^\\S\\u00a0]';
+const COLLAPSIBLE_SPACES_REGEX = new RegExp(
+  `^${SPACE_EXCLUDE_NBSP}|${SPACE_EXCLUDE_NBSP}{2,}|${SPACE_EXCLUDE_NBSP}$`,
+);
 function convertHTML(
   blot: Blot,
   index: number,
@@ -370,7 +374,18 @@ function convertHTML(
     return blot.html(index, length);
   }
   if (blot instanceof TextBlot) {
-    return escapeText(blot.value().slice(index, index + length));
+    const escapedText = escapeText(blot.value().slice(index, index + length));
+
+    if (!COLLAPSIBLE_SPACES_REGEX.test(escapedText)) {
+      return escapedText;
+    }
+
+    const { parentElement } = blot.domNode;
+    const style =
+      parentElement?.ownerDocument.defaultView?.getComputedStyle(parentElement);
+    return style?.whiteSpace
+      ? `<span style="white-space:${style.whiteSpace}">${escapedText}</span>`
+      : escapedText;
   }
   if (blot instanceof ParentBlot) {
     // TODO fix API
