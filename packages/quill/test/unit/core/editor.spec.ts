@@ -28,9 +28,11 @@ import { ColorClass } from '../../../src/formats/color.js';
 import Quill from '../../../src/core.js';
 import { normalizeHTML } from '../__helpers__/utils.js';
 
-const createEditor = (html: string) => {
+const createEditor = (htmlOrContents: string | Delta) => {
   const container = document.createElement('div');
-  container.innerHTML = normalizeHTML(html);
+  if (typeof htmlOrContents === 'string') {
+    container.innerHTML = normalizeHTML(htmlOrContents);
+  }
   document.body.appendChild(container);
   const quill = new Quill(container, {
     registry: createRegistry([
@@ -54,7 +56,15 @@ const createEditor = (html: string) => {
       SizeClass,
     ]),
   });
+  if (typeof htmlOrContents !== 'string') {
+    quill.setContents(htmlOrContents);
+  }
   return quill.editor;
+};
+
+const applyWhiteSpace = (editor: Editor, whiteSpace: string) => {
+  editor.scroll.domNode.style.whiteSpace = whiteSpace;
+  return editor;
 };
 
 describe('Editor', () => {
@@ -1243,6 +1253,57 @@ describe('Editor', () => {
       );
       expect(editor.getHTML(1, 14)).toEqual(
         '<h1 class="ql-align-center">eader</h1><p>Text</p><blockquote>Quo</blockquote>',
+      );
+    });
+
+    test('collapsible spaces', () => {
+      expect(
+        applyWhiteSpace(
+          createEditor('<p><strong>123 </strong>123<em> 123</em></p>'),
+          'pre-wrap',
+        ).getHTML(0, 11),
+      ).toEqual(
+        '<strong><span style="white-space:pre-wrap">123 </span></strong>123<em><span style="white-space:pre-wrap"> 123</span></em>',
+      );
+
+      expect(
+        applyWhiteSpace(
+          createEditor(new Delta().insert('1   2\n')),
+          'pre-wrap',
+        ).getHTML(0, 5),
+      ).toEqual('<span style="white-space:pre-wrap">1   2</span>');
+
+      expect(
+        applyWhiteSpace(
+          createEditor(
+            new Delta().insert('  123', { bold: true }).insert('\n'),
+          ),
+          'pre-wrap',
+        ).getHTML(0, 5),
+      ).toEqual(
+        '<strong><span style="white-space:pre-wrap">  123</span></strong>',
+      );
+    });
+
+    test('&nbsp;', () => {
+      expect(
+        applyWhiteSpace(
+          createEditor(
+            new Delta().insert('\u00a0 123', { bold: true }).insert('\n'),
+          ),
+          'pre-wrap',
+        ).getHTML(0, 5),
+      ).toEqual('<strong>\u00a0 123</strong>');
+
+      expect(
+        applyWhiteSpace(
+          createEditor(
+            new Delta().insert('\u00a0  123', { bold: true }).insert('\n'),
+          ),
+          'pre-wrap',
+        ).getHTML(0, 6),
+      ).toEqual(
+        '<strong><span style="white-space:pre-wrap">\u00a0  123</span></strong>',
       );
     });
 
