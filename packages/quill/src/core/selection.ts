@@ -43,6 +43,7 @@ class Selection {
   mouseDown: boolean;
 
   root: HTMLElement;
+  rootDocument: Document;
   cursor: Cursor;
   savedRange: Range;
   lastRange: Range | null;
@@ -54,6 +55,7 @@ class Selection {
     this.composing = false;
     this.mouseDown = false;
     this.root = this.scroll.domNode;
+    this.rootDocument = this.root.ownerDocument;
     // @ts-expect-error
     this.cursor = this.scroll.create('cursor', this);
     // savedRange is last non-null range
@@ -133,10 +135,10 @@ class Selection {
   }
 
   handleDragging() {
-    this.emitter.listenDOM('mousedown', this.root.ownerDocument.body, () => {
+    this.emitter.listenDOM('mousedown', this.rootDocument.body, () => {
       this.mouseDown = true;
     });
-    this.emitter.listenDOM('mouseup', this.root.ownerDocument.body, () => {
+    this.emitter.listenDOM('mouseup', this.rootDocument.body, () => {
       this.mouseDown = false;
       this.update(Emitter.sources.USER);
     });
@@ -240,7 +242,7 @@ class Selection {
   }
 
   getNativeRange(): NormalizedRange | null {
-    const selection = this.root.ownerDocument.getSelection();
+    const selection = this.rootDocument.getSelection();
     if (selection == null || selection.rangeCount <= 0) return null;
     const nativeRange = selection.getRangeAt(0);
     if (nativeRange == null) return null;
@@ -263,7 +265,7 @@ class Selection {
   }
 
   hasFocus(): boolean {
-    const doc = this.root.ownerDocument ?? document;
+    const doc = this.rootDocument;
     return (
       doc.activeElement === this.root ||
       (doc.activeElement != null && contains(this.root, doc.activeElement))
@@ -373,7 +375,7 @@ class Selection {
     ) {
       return;
     }
-    const selection = this.root.ownerDocument.getSelection();
+    const selection = this.rootDocument.getSelection();
     if (selection == null) return;
     if (startNode != null) {
       if (!this.hasFocus()) this.root.focus({ preventScroll: true });

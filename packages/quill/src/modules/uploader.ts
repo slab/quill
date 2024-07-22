@@ -17,7 +17,7 @@ class Uploader extends Module<UploaderOptions> {
     quill.root.addEventListener('drop', (e) => {
       e.preventDefault();
       let native: ReturnType<typeof document.createRange> | null = null;
-      const doc = quill.root.ownerDocument;
+      const doc = quill.rootDocument;
       if (doc.caretRangeFromPoint) {
         native = doc.caretRangeFromPoint(e.clientX, e.clientY);
         // @ts-expect-error

@@ -66,7 +66,7 @@ class BaseTheme extends Theme {
 
   constructor(quill: Quill, options: ThemeOptions) {
     super(quill, options);
-    const doc = quill.root.ownerDocument ?? document;
+    const doc = quill.rootDocument ?? document;
     const listener = (e: MouseEvent) => {
       if (!doc.body.contains(quill.root)) {
         doc.body.removeEventListener('click', listener);

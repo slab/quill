@@ -28,7 +28,7 @@ class BubbleTooltip extends BaseTooltip {
     this.quill.on(
       Emitter.events.EDITOR_CHANGE,
       (type, range, oldRange, source) => {
-        const doc = quill.root.ownerDocument ?? document;
+        const doc = quill.rootDocument;
         if (type !== Emitter.events.SELECTION_CHANGE) return;
         if (
           range != null &&
