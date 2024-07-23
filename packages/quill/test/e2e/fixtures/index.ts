@@ -1,6 +1,8 @@
 import { test as base } from '@playwright/test';
 import EditorPage from '../pageobjects/EditorPage.js';
 import Composition from './Composition.js';
+import Locker from './utils/Locker.js';
+import Clipboard from './Clipboard.js';
 
 export const test = base.extend<{
   editorPage: EditorPage;
@@ -18,6 +20,15 @@ export const test = base.extend<{
 
     use(new Composition(page, browserName));
   },
+  clipboard: [
+    async ({ page }, use) => {
+      const locker = new Locker('clipboard');
+      await locker.lock();
+      await use(new Clipboard(page));
+      await locker.release();
+    },
+    { timeout: 30000 },
+  ],
 });
 
 export const CHAPTER = 'Chapter 1. Loomings.';
