@@ -5,17 +5,6 @@ import logger from './logger.js';
 const debug = logger('quill:events');
 const EVENTS = ['selectionchange', 'mousedown', 'mouseup', 'click'];
 
-EVENTS.forEach((eventName) => {
-  document.addEventListener(eventName, (...args) => {
-    Array.from(document.querySelectorAll('.ql-container')).forEach((node) => {
-      const quill = instances.get(node);
-      if (quill && quill.emitter) {
-        quill.emitter.handleDOM(...args);
-      }
-    });
-  });
-});
-
 class Emitter extends EventEmitter<string> {
   static events = {
     EDITOR_CHANGE: 'editor-change',
@@ -38,6 +27,24 @@ class Emitter extends EventEmitter<string> {
     SILENT: 'silent',
     USER: 'user',
   } as const;
+
+  private static registeredDocuments = new WeakMap<Document, boolean>();
+
+  static registerEventsOnDocument(doc: Document) {
+    if (Emitter.registeredDocuments.get(doc)) return;
+    Emitter.registeredDocuments.set(doc, true);
+
+    EVENTS.forEach((eventName) => {
+      doc.addEventListener(eventName, (...args) => {
+        Array.from(doc.querySelectorAll('.ql-container')).forEach((node) => {
+          const quill = instances.get(node);
+          if (quill && quill.emitter) {
+            quill.emitter.handleDOM(...args);
+          }
+        });
+      });
+    });
+  }
 
   protected domListeners: Record<string, { node: Node; handler: Function }[]>;
 
@@ -62,6 +69,7 @@ class Emitter extends EventEmitter<string> {
   }
 
   listenDOM(eventName: string, node: Node, handler: EventListener) {
+    Emitter.registerEventsOnDocument(node.ownerDocument ?? document);
     if (!this.domListeners[eventName]) {
       this.domListeners[eventName] = [];
     }
