@@ -1287,10 +1287,10 @@ describe('Editor', () => {
           <li>e</li>
           <li>Two
             <ul>
-              <li>Alpha
+              <li class="ql-indent-1">Alpha
                 <ol>
-                  <li>I</li>
-                  <li>II</li>
+                  <li class="ql-indent-2">I</li>
+                  <li class="ql-indent-2">II</li>
                 </ol>
               </li>
             </ul>
@@ -1318,10 +1318,10 @@ describe('Editor', () => {
           <li data-list="checked">e</li>
           <li data-list="checked">Two
             <ul>
-              <li data-list="unchecked">Alpha
+              <li class="ql-indent-1" data-list="unchecked">Alpha
                 <ul>
-                  <li data-list="checked">I</li>
-                  <li data-list="checked">II</li>
+                  <li class="ql-indent-2" data-list="checked">I</li>
+                  <li class="ql-indent-2" data-list="checked">II</li>
                 </ul>
               </li>
             </ul>
@@ -1343,16 +1343,17 @@ describe('Editor', () => {
         </ol>
         `,
       );
+      console.log(editor.getHTML(12, 12));
       expect(editor.getHTML(12, 12)).toEqualHTML(`
         <ol>
-          <li>
+          <li class="ql-indent-2">
             <ol>
-              <li>
+              <li class="ql-indent-2">
                 <ol>
-                  <li>II</li>
+                  <li class="ql-indent-2">II</li>
                 </ol>
               </li>
-              <li>BBBB</li>
+              <li class="ql-indent-1">BBBB</li>
             </ol>
           </li>
           <li>2222</li>
