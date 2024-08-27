@@ -624,6 +624,9 @@ function matchTable(
   return delta;
 }
 
+const NBSP = '\u00a0';
+const SPACE_EXCLUDE_NBSP = `[^\\S${NBSP}]`;
+
 function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
   // @ts-expect-error
   let text = node.data;
@@ -639,12 +642,8 @@ function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
     ) {
       return delta;
     }
-    const replacer = (collapse: unknown, match: string) => {
-      const replaced = match.replace(/[^\u00a0]/g, ''); // \u00a0 is nbsp;
-      return replaced.length < 1 && collapse ? ' ' : replaced;
-    };
     text = text.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
-    text = text.replace(/\s\s+/g, replacer.bind(replacer, true)); // collapse whitespace
+    text = text.replace(new RegExp(`${SPACE_EXCLUDE_NBSP}{2,}`, 'g'), ' '); // collapse whitespace
     if (
       (node.previousSibling == null &&
         node.parentElement != null &&
@@ -652,7 +651,7 @@ function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
       (node.previousSibling instanceof Element &&
         isLine(node.previousSibling, scroll))
     ) {
-      text = text.replace(/^\s+/, replacer.bind(replacer, false));
+      text = text.replace(new RegExp(`^${SPACE_EXCLUDE_NBSP}+`), '');
     }
     if (
       (node.nextSibling == null &&
@@ -660,8 +659,9 @@ function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
         isLine(node.parentElement, scroll)) ||
       (node.nextSibling instanceof Element && isLine(node.nextSibling, scroll))
     ) {
-      text = text.replace(/\s+$/, replacer.bind(replacer, false));
+      text = text.replace(new RegExp(`${SPACE_EXCLUDE_NBSP}+$`), '');
     }
+    text = text.replaceAll(NBSP, ' ');
   }
   return delta.insert(text);
 }
