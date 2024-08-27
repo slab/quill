@@ -7,7 +7,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "allowSyntheticDefaultImports": true,
-    "target": "ES2020",
+    "target": "ES2021",
     "sourceMap": true,
     "resolveJsonModule": true,
     "declaration": false,

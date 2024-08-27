@@ -629,7 +629,7 @@ const SPACE_EXCLUDE_NBSP = `[^\\S${NBSP}]`;
 
 function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
   // @ts-expect-error
-  let text = node.data;
+  let text = node.data as string;
   // Word represents empty line with <o:p>&nbsp;</o:p>
   if (node.parentElement?.tagName === 'O:P') {
     return delta.insert(text.trim());
