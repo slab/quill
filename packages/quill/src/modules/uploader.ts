@@ -3,6 +3,7 @@ import type Quill from '../core/quill.js';
 import Emitter from '../core/emitter.js';
 import Module from '../core/module.js';
 import type { Range } from '../core/selection.js';
+import { getSubscriber } from '../core/subscriber.js';
 
 interface UploaderOptions {
   mimetypes: string[];
@@ -14,7 +15,8 @@ class Uploader extends Module<UploaderOptions> {
 
   constructor(quill: Quill, options: Partial<UploaderOptions>) {
     super(quill, options);
-    quill.root.addEventListener('drop', (e) => {
+    const subscriber = getSubscriber(this.quill.root);
+    subscriber.on(this, this.quill.root, 'drop', (e) => {
       e.preventDefault();
       let native: ReturnType<typeof document.createRange> | null = null;
       if (document.caretRangeFromPoint) {

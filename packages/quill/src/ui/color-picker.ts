@@ -1,8 +1,13 @@
+import { Subscriber } from '../core/subscriber.js';
 import Picker from './picker.js';
 
 class ColorPicker extends Picker {
-  constructor(select: HTMLSelectElement, label: string) {
-    super(select);
+  constructor(
+    select: HTMLSelectElement,
+    subscriber: Subscriber,
+    label: string,
+  ) {
+    super(select, subscriber);
     this.label.innerHTML = label;
     this.container.classList.add('ql-color-picker');
     Array.from(this.container.querySelectorAll('.ql-picker-item'))

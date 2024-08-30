@@ -14,6 +14,7 @@ import logger from '../core/logger.js';
 import Module from '../core/module.js';
 import Quill from '../core/quill.js';
 import type { Range } from '../core/selection.js';
+import { getSubscriber } from '../core/subscriber.js';
 import { AlignAttribute, AlignStyle } from '../formats/align.js';
 import { BackgroundStyle } from '../formats/background.js';
 import CodeBlock from '../formats/code.js';
@@ -80,11 +81,11 @@ class Clipboard extends Module<ClipboardOptions> {
 
   constructor(quill: Quill, options: Partial<ClipboardOptions>) {
     super(quill, options);
-    this.quill.root.addEventListener('copy', (e) =>
-      this.onCaptureCopy(e, false),
-    );
-    this.quill.root.addEventListener('cut', (e) => this.onCaptureCopy(e, true));
-    this.quill.root.addEventListener('paste', this.onCapturePaste.bind(this));
+    const { root } = this.quill;
+    const subscriber = getSubscriber(root);
+    subscriber.on(this, root, 'copy', (e) => this.onCaptureCopy(e, false));
+    subscriber.on(this, root, 'cut', (e) => this.onCaptureCopy(e, true));
+    subscriber.on(this, root, 'paste', this.onCapturePaste.bind(this));
     this.matchers = [];
     CLIPBOARD_CONFIG.concat(this.options.matchers ?? []).forEach(
       ([selector, matcher]) => {

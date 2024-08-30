@@ -1,0 +1,83 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Quill > construction > event listeners tracking 1`] = `
+[
+  {
+    "event": "dragstart",
+    "handler": [Function],
+    "options": undefined,
+    "source": "Scroll",
+    "target": "HTMLDivElement",
+  },
+  {
+    "event": "compositionstart",
+    "handler": [Function],
+    "options": undefined,
+    "source": "Composition",
+    "target": "HTMLDivElement",
+  },
+  {
+    "event": "compositionend",
+    "handler": [Function],
+    "options": undefined,
+    "source": "Composition",
+    "target": "HTMLDivElement",
+  },
+  {
+    "event": "keydown",
+    "handler": [Function],
+    "options": undefined,
+    "source": "Keyboard",
+    "target": "HTMLDivElement",
+  },
+  {
+    "event": "copy",
+    "handler": [Function],
+    "options": undefined,
+    "source": "Clipboard",
+    "target": "HTMLDivElement",
+  },
+  {
+    "event": "cut",
+    "handler": [Function],
+    "options": undefined,
+    "source": "Clipboard",
+    "target": "HTMLDivElement",
+  },
+  {
+    "event": "paste",
+    "handler": [Function],
+    "options": undefined,
+    "source": "Clipboard",
+    "target": "HTMLDivElement",
+  },
+  {
+    "event": "beforeinput",
+    "handler": [Function],
+    "options": undefined,
+    "source": "History",
+    "target": "HTMLDivElement",
+  },
+  {
+    "event": "drop",
+    "handler": [Function],
+    "options": undefined,
+    "source": "Uploader",
+    "target": "HTMLDivElement",
+  },
+  {
+    "event": "beforeinput",
+    "handler": [Function],
+    "options": undefined,
+    "source": "Input",
+    "target": "HTMLDivElement",
+  },
+  {
+    "event": "keydown",
+    "handler": [Function],
+    "options": undefined,
+    "source": "UINode",
+    "target": "HTMLDivElement",
+  },
+]
+`;

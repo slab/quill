@@ -18,6 +18,7 @@ import type { DebugLevel } from './logger.js';
 import Module from './module.js';
 import Selection, { Range } from './selection.js';
 import type { Bounds } from './selection.js';
+import { createSubscriber, getSubscriber } from './subscriber.js';
 import Composition from './composition.js';
 import Theme from './theme.js';
 import type { ThemeConstructor } from './theme.js';
@@ -193,22 +194,45 @@ class Quill {
   options: ExpandedQuillOptions;
 
   constructor(container: HTMLElement | string, options: QuillOptions = {}) {
+    this.setup(container, options);
+  }
+
+  configure(options: QuillOptions = {}) {
+    this.setup(this.container, options);
+  }
+
+  detach(): boolean {
+    if (!this.root) {
+      return false;
+    }
+
+    const subscriber = getSubscriber(this.root);
+    subscriber.removeAllListeners();
+    this.emitter.removeAllListeners();
+    this.emitter.ignoreDOM();
+    this.scroll.detach();
+    return true;
+  }
+
+  private setup(container: HTMLElement | string, options: QuillOptions) {
     this.options = expandConfig(container, options);
-    this.container = this.options.container;
-    if (this.container == null) {
-      debug.error('Invalid Quill container', container);
-      return;
+    Quill.debug(this.options.debug ?? false);
+    let html = '';
+    if (!this.detach()) {
+      this.container = this.options.container;
+      if (this.container == null) {
+        debug.error('Invalid Quill container', container);
+        return;
+      }
+      html = this.container.innerHTML.trim();
+      this.container.classList.add('ql-container');
+      this.container.innerHTML = '';
+      instances.set(this.container, this);
+      this.root = this.addContainer('ql-editor');
+      this.root.classList.add('ql-blank');
+      createSubscriber(this.root);
+      this.emitter = new Emitter();
     }
-    if (this.options.debug) {
-      Quill.debug(this.options.debug);
-    }
-    const html = this.container.innerHTML.trim();
-    this.container.classList.add('ql-container');
-    this.container.innerHTML = '';
-    instances.set(this.container, this);
-    this.root = this.addContainer('ql-editor');
-    this.root.classList.add('ql-blank');
-    this.emitter = new Emitter();
     const scrollBlotName = Parchment.ScrollBlot.blotName;
     const ScrollBlot = this.options.registry.query(scrollBlotName);
     if (!ScrollBlot || !('blotName' in ScrollBlot)) {
@@ -272,9 +296,13 @@ class Quill {
     this.history.clear();
     if (this.options.placeholder) {
       this.root.setAttribute('data-placeholder', this.options.placeholder);
+    } else {
+      this.root.removeAttribute('data-placeholder');
     }
     if (this.options.readOnly) {
       this.disable();
+    } else {
+      this.enable();
     }
     this.allowReadOnlyEdits = false;
   }

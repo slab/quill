@@ -27,6 +27,7 @@ import IndentClass from '../../../src/formats/indent.js';
 import { ColorClass } from '../../../src/formats/color.js';
 import Quill from '../../../src/core.js';
 import { normalizeHTML } from '../__helpers__/utils.js';
+import { createSubscriber } from '../../../src/core/subscriber.js';
 
 const createEditor = (htmlOrContents: string | Delta) => {
   const container = document.createElement('div');
@@ -885,8 +886,10 @@ describe('Editor', () => {
 
       const registry = new Registry();
       registry.register(MyBlot, Block, Break, Text);
+      const container = document.createElement('div');
+      createSubscriber(container);
       const editor = new Editor(
-        new Scroll(registry, document.createElement('div'), {
+        new Scroll(registry, container, {
           emitter: new Emitter(),
         }),
       );

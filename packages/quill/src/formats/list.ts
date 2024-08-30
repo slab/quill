@@ -1,7 +1,8 @@
 import Block from '../blots/block.js';
 import Container from '../blots/container.js';
-import type Scroll from '../blots/scroll.js';
+import Scroll from '../blots/scroll.js';
 import Quill from '../core/quill.js';
+import { getSubscriber, Subscriber } from '../core/subscriber.js';
 
 class ListContainer extends Container {}
 ListContainer.blotName = 'list-container';
@@ -22,8 +23,11 @@ class ListItem extends Block {
     Quill.register(ListContainer);
   }
 
+  subscriber: Subscriber;
+
   constructor(scroll: Scroll, domNode: HTMLElement) {
     super(scroll, domNode);
+    this.subscriber = getSubscriber(this.scroll.domNode);
     const ui = domNode.ownerDocument.createElement('span');
     const listEventHandler = (e: Event) => {
       if (!scroll.isEnabled()) return;
@@ -36,9 +40,14 @@ class ListItem extends Block {
         e.preventDefault();
       }
     };
-    ui.addEventListener('mousedown', listEventHandler);
-    ui.addEventListener('touchstart', listEventHandler);
+    this.subscriber.on(this, ui, 'mousedown', listEventHandler);
+    this.subscriber.on(this, ui, 'touchstart', listEventHandler);
     this.attachUI(ui);
+  }
+
+  detach() {
+    super.detach();
+    this.subscriber.removeSourceListeners(this);
   }
 
   format(name: string, value: string) {

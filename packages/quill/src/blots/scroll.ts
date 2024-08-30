@@ -3,6 +3,7 @@ import type { Blot, Parent, EmbedBlot, ParentBlot, Registry } from 'parchment';
 import Delta, { AttributeMap, Op } from 'quill-delta';
 import Emitter from '../core/emitter.js';
 import type { EmitterSource } from '../core/emitter.js';
+import { getSubscriber, Subscriber } from '../core/subscriber.js';
 import Block, { BlockEmbed, bubbleFormats } from './block.js';
 import Break from './break.js';
 import Container from './container.js';
@@ -35,6 +36,7 @@ class Scroll extends ScrollBlot {
   static defaultChild = Block;
   static allowedChildren = [Block, BlockEmbed, Container];
 
+  subscriber: Subscriber;
   emitter: Emitter;
   batch: false | MutationRecord[];
 
@@ -44,11 +46,18 @@ class Scroll extends ScrollBlot {
     { emitter }: { emitter: Emitter },
   ) {
     super(registry, domNode);
+    this.subscriber = getSubscriber(this.domNode);
     this.emitter = emitter;
     this.batch = false;
     this.optimize();
     this.enable();
-    this.domNode.addEventListener('dragstart', (e) => this.handleDragStart(e));
+    const { subscriber } = this;
+    subscriber.on(this, domNode, 'dragstart', (e) => this.handleDragStart(e));
+  }
+
+  detach() {
+    super.detach();
+    this.subscriber.removeSourceListeners(this);
   }
 
   batchStart() {

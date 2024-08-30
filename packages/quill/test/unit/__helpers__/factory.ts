@@ -10,6 +10,7 @@ import ListItem, { ListContainer } from '../../../src/formats/list.js';
 import Inline from '../../../src/blots/inline.js';
 import Emitter from '../../../src/core/emitter.js';
 import { normalizeHTML } from './utils.js';
+import { createSubscriber } from '../../../src/core/subscriber.js';
 
 export const createRegistry = (formats: unknown[] = []) => {
   const registry = new Registry();
@@ -37,8 +38,7 @@ export const createScroll = (
   const emitter = new Emitter();
   const root = container.appendChild(document.createElement('div'));
   root.innerHTML = normalizeHTML(html);
-  const scroll = new Scroll(registry, root, {
-    emitter,
-  });
+  createSubscriber(root);
+  const scroll = new Scroll(registry, root, { emitter });
   return scroll;
 };

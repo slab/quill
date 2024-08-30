@@ -8,12 +8,17 @@ import { createRegistry } from '../__helpers__/factory.js';
 import { normalizeHTML, sleep } from '../__helpers__/utils.js';
 import Underline from '../../../src/formats/underline.js';
 import Strike from '../../../src/formats/strike.js';
+import {
+  createSubscriber,
+  getSubscriber,
+} from '../../../src/core/subscriber.js';
 
 const createScroll = (html: string) => {
   const emitter = new Emitter();
   const registry = createRegistry([Underline, Strike]);
   const container = document.body.appendChild(document.createElement('div'));
   container.innerHTML = normalizeHTML(html);
+  createSubscriber(container);
   return new Scroll(registry, container, { emitter });
 };
 
@@ -57,6 +62,14 @@ describe('Scroll', () => {
     vitest.spyOn(dragstart, 'preventDefault');
     scroll.domNode.dispatchEvent(dragstart);
     expect(dragstart.preventDefault).toHaveBeenCalled();
+  });
+
+  test('remove event listeners on detach', () => {
+    const scroll = createScroll('<p>Hello World!</p>');
+    const subscriber = getSubscriber(scroll.domNode);
+    vitest.spyOn(subscriber, 'removeSourceListeners');
+    scroll.detach();
+    expect(subscriber.removeSourceListeners).toHaveBeenCalledWith(scroll);
   });
 
   describe('leaf()', () => {
