@@ -10,6 +10,7 @@ import CursorBlot from '../blots/cursor.js';
 import TextBlot, { escapeText } from '../blots/text.js';
 import CodeBlock, { CodeBlockContainer } from '../formats/code.js';
 import { traverse } from './clipboard.js';
+import createTrustedHtml from '../core/utils/createTrustedHtml.js';
 
 const TokenAttributor = new ClassAttributor('code-token', 'hljs', {
   scope: Scope.INLINE,
@@ -191,7 +192,7 @@ interface SyntaxOptions {
   hljs: any;
 }
 
-const highlight = (lib: any, language: string, text: string) => {
+const highlight = (lib: any, language: string, text: string): string => {
   if (typeof lib.versionString === 'string') {
     const majorVersion = lib.versionString.split('.')[0];
     if (parseInt(majorVersion, 10) >= 11) {
@@ -301,7 +302,9 @@ class Syntax extends Module<SyntaxOptions> {
     }
     const container = this.quill.root.ownerDocument.createElement('div');
     container.classList.add(CodeBlock.className);
-    container.innerHTML = highlight(this.options.hljs, language, text);
+    container.innerHTML = createTrustedHtml(
+      highlight(this.options.hljs, language, text),
+    );
     return traverse(
       this.quill.scroll,
       container,

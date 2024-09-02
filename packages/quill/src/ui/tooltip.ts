@@ -1,5 +1,6 @@
 import type Quill from '../core.js';
 import type { Bounds } from '../core/selection.js';
+import createTrustedHtml from '../core/utils/createTrustedHtml.js';
 
 const isScrollable = (el: Element) => {
   const { overflowY } = getComputedStyle(el, null);
@@ -16,7 +17,7 @@ class Tooltip {
     this.boundsContainer = boundsContainer || document.body;
     this.root = quill.addContainer('ql-tooltip');
     // @ts-expect-error
-    this.root.innerHTML = this.constructor.TEMPLATE;
+    this.root.innerHTML = createTrustedHtml(this.constructor.TEMPLATE);
     if (isScrollable(this.quill.root)) {
       this.quill.root.addEventListener('scroll', () => {
         this.root.style.marginTop = `${-1 * this.quill.root.scrollTop}px`;

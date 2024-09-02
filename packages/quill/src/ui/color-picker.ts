@@ -1,9 +1,10 @@
 import Picker from './picker.js';
+import createTrustedHtml from '../core/utils/createTrustedHtml.js';
 
 class ColorPicker extends Picker {
   constructor(select: HTMLSelectElement, label: string) {
     super(select);
-    this.label.innerHTML = label;
+    this.label.innerHTML = createTrustedHtml(label);
     this.container.classList.add('ql-color-picker');
     Array.from(this.container.querySelectorAll('.ql-picker-item'))
       .slice(0, 7)
