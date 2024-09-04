@@ -8,8 +8,7 @@ import Quill from '../../../src/core.js';
 describe('Composition', () => {
   test('triggers events on compositionstart', async () => {
     const emitter = new Emitter();
-    const container = document.createElement('div');
-    const scroll = new Scroll(createRegistry(), container, {
+    const scroll = new Scroll(createRegistry(), document.createElement('div'), {
       emitter,
     });
     new Composition(scroll, emitter);

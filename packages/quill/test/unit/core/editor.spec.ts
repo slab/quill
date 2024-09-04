@@ -885,9 +885,8 @@ describe('Editor', () => {
 
       const registry = new Registry();
       registry.register(MyBlot, Block, Break, Text);
-      const container = document.createElement('div');
       const editor = new Editor(
-        new Scroll(registry, container, {
+        new Scroll(registry, document.createElement('div'), {
           emitter: new Emitter(),
         }),
       );
