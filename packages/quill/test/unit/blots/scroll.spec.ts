@@ -8,7 +8,7 @@ import { createRegistry } from '../__helpers__/factory.js';
 import { normalizeHTML, sleep } from '../__helpers__/utils.js';
 import Underline from '../../../src/formats/underline.js';
 import Strike from '../../../src/formats/strike.js';
-import { getSubscriber } from '../../../src/core/subscriber.js';
+import { findOrCreateSubscriber } from '../../../src/core/subscriber.js';
 
 const createScroll = (html: string) => {
   const emitter = new Emitter();
@@ -62,7 +62,7 @@ describe('Scroll', () => {
 
   test('remove event listeners on detach', () => {
     const scroll = createScroll('<p>Hello World!</p>');
-    const subscriber = getSubscriber(scroll.domNode);
+    const subscriber = findOrCreateSubscriber(scroll.domNode);
     vitest.spyOn(subscriber, 'removeSourceListeners');
     scroll.detach();
     expect(subscriber.removeSourceListeners).toHaveBeenCalledWith(scroll);

@@ -4,7 +4,7 @@ import Module from '../core/module.js';
 import Quill from '../core/quill.js';
 import type Scroll from '../blots/scroll.js';
 import type { Range } from '../core/selection.js';
-import { getSubscriber } from '../core/subscriber.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
 
 export interface HistoryOptions {
   userOnly: boolean;
@@ -72,7 +72,7 @@ class History extends Module<HistoryOptions> {
       );
     }
 
-    const subscriber = getSubscriber(this.quill.root);
+    const subscriber = findOrCreateSubscriber(this.quill.root);
     subscriber.on(this, this.quill.root, 'beforeinput', (event) => {
       if (event.inputType === 'historyUndo') {
         this.undo();

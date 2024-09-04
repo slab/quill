@@ -7,7 +7,7 @@ import logger from '../core/logger.js';
 import Module from '../core/module.js';
 import type { BlockEmbed } from '../blots/block.js';
 import type { Range } from '../core/selection.js';
-import { getSubscriber } from '../core/subscriber.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
 
 const debug = logger('quill:keyboard');
 
@@ -172,7 +172,7 @@ class Keyboard extends Module<KeyboardOptions> {
   }
 
   listen() {
-    const subscriber = getSubscriber(this.quill.root);
+    const subscriber = findOrCreateSubscriber(this.quill.root);
     subscriber.on(this, this.quill.root, 'keydown', (evt) => {
       if (evt.defaultPrevented || evt.isComposing) return;
 

@@ -1,8 +1,9 @@
 import Block from '../blots/block.js';
 import Container from '../blots/container.js';
-import Scroll from '../blots/scroll.js';
+import type Scroll from '../blots/scroll.js';
 import Quill from '../core/quill.js';
-import { getSubscriber, Subscriber } from '../core/subscriber.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
+import type { Subscriber } from '../core/subscriber.js';
 
 class ListContainer extends Container {}
 ListContainer.blotName = 'list-container';
@@ -27,7 +28,7 @@ class ListItem extends Block {
 
   constructor(scroll: Scroll, domNode: HTMLElement) {
     super(scroll, domNode);
-    this.subscriber = getSubscriber(this.scroll.domNode);
+    this.subscriber = findOrCreateSubscriber(this.scroll.domNode);
     const ui = domNode.ownerDocument.createElement('span');
     const listEventHandler = (e: Event) => {
       if (!scroll.isEnabled()) return;

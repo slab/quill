@@ -2,7 +2,7 @@ import Delta from 'quill-delta';
 import Module from '../core/module.js';
 import Quill from '../core/quill.js';
 import type { Range } from '../core/selection.js';
-import { getSubscriber } from '../core/subscriber.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
 import { deleteRange } from './keyboard.js';
 
 const INSERT_TYPES = ['insertText', 'insertReplacementText'];
@@ -11,7 +11,7 @@ class Input extends Module {
   constructor(quill: Quill, options: Record<string, never>) {
     super(quill, options);
 
-    const subscriber = getSubscriber(this.quill.root);
+    const subscriber = findOrCreateSubscriber(this.quill.root);
     subscriber.on(this, this.quill.root, 'beforeinput', (event) => {
       this.handleBeforeInput(event);
     });

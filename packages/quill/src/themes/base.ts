@@ -1,7 +1,7 @@
 import { merge } from 'lodash-es';
 import type Quill from '../core/quill.js';
 import Emitter from '../core/emitter.js';
-import { getSubscriber } from '../core/subscriber.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
 import Theme from '../core/theme.js';
 import type { ThemeOptions } from '../core/theme.js';
 import ColorPicker from '../ui/color-picker.js';
@@ -142,7 +142,7 @@ class BaseTheme extends Theme {
     selects: NodeListOf<HTMLSelectElement>,
     icons: Record<string, string | Record<string, string>>,
   ) {
-    const subscriber = getSubscriber(this.quill.root);
+    const subscriber = findOrCreateSubscriber(this.quill.root);
     this.pickers = Array.from(selects).map((select) => {
       if (select.classList.contains('ql-align')) {
         if (select.querySelector('option') == null) {
@@ -234,7 +234,7 @@ class BaseTooltip extends Tooltip {
   }
 
   listen() {
-    const subscriber = getSubscriber(this.quill.root);
+    const subscriber = findOrCreateSubscriber(this.quill.root);
     // @ts-expect-error Fix me later
     subscriber.on(this, this.textbox, 'keydown', (event) => {
       if (event.key === 'Enter') {

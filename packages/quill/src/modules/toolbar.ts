@@ -4,7 +4,7 @@ import Quill from '../core/quill.js';
 import logger from '../core/logger.js';
 import Module from '../core/module.js';
 import type { Range } from '../core/selection.js';
-import { getSubscriber } from '../core/subscriber.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
 
 const debug = logger('quill:toolbar');
 
@@ -89,7 +89,7 @@ class Toolbar extends Module<ToolbarProps> {
       return;
     }
     const eventName = input.tagName === 'SELECT' ? 'change' : 'click';
-    const subscriber = getSubscriber(this.quill.root);
+    const subscriber = findOrCreateSubscriber(this.quill.root);
     subscriber.on(this, input, eventName, (e) => {
       let value;
       if (input.tagName === 'SELECT') {

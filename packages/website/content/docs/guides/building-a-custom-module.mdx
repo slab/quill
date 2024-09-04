@@ -203,6 +203,45 @@ const quill = new Quill('#editor', {
   }}
 />
 
+### Detaching
+
+If a module subscribes to event listeners or other event sources, then it must also take care of their disposal. Failing to do so might result in memory leaks and unpredictable behavior when a Quill instance gets [detached](/docs/api/#detach) or [reconfigured](/docs/api/#configure).
+
+Subscriptions to DOM event listeners should be made through a `Subscriber` attached to the root element of the Quill instance. To register an `onClick` handler to the `click` event of an `element`, instead of calling:
+
+```
+element.addEventListener('click', (e) => this.onClick(e));
+```
+
+Do this instead:
+
+```
+import { findOrCreateSubscriber } from 'quill';
+
+const subscriber = findOrCreateSubscriber(quill.root);
+subscriber.on(this, element, 'click', (e) => this.handleClick(e));
+```
+
+The subscriber keeps track of all subscriptions, and is used by Quill to perform the required cleanup.
+
+If other subscriptions are made (e.g. to a local `EventEmitter`, or to another observable source), then the module must provide a `detach()` method where those subscriptions are disposed:
+
+```
+class MyModule extends Module {
+  emitter = new Emitter();
+
+  constructor() {
+    super();
+    this.emitter.on('event1', () => doSomething());
+    this.emitter.on('event2', () => doSomethingElse());
+  }
+
+  detach() {
+    this.emitter.removeAllListeners();
+  }
+}
+```
+
 ### Wrapping It All Up
 
 Now let's polish off the module in ES6 and fix a few pesky bugs. That's all there is to it!

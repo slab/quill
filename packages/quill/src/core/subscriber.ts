@@ -28,7 +28,7 @@ const subscribers = new WeakMap<object, Subscriber>();
  * Gets the Subscriber instance bound to the given object.
  * Creates a new one if the binding does not exist yet.
  */
-export function getSubscriber(object: Source): Subscriber {
+export function findOrCreateSubscriber(object: Source): Subscriber {
   let subscriber = subscribers.get(object);
   if (!subscriber) {
     debug.info(`Creating new Subscriber for ${object.constructor.name}`);

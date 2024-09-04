@@ -1,7 +1,8 @@
 import { ParentBlot } from 'parchment';
 import Module from '../core/module.js';
 import Quill from '../core/quill.js';
-import { getSubscriber, Subscriber } from '../core/subscriber.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
+import type { Subscriber } from '../core/subscriber.js';
 
 const isMac = /Mac/i.test(navigator.platform);
 
@@ -35,7 +36,7 @@ class UINode extends Module {
 
   constructor(quill: Quill, options: Record<string, never>) {
     super(quill, options);
-    this.subscriber = getSubscriber(this.quill.root);
+    this.subscriber = findOrCreateSubscriber(this.quill.root);
     this.handleArrowKeys();
     this.handleNavigationShortcuts();
   }

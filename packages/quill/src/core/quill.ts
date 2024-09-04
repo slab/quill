@@ -18,7 +18,7 @@ import type { DebugLevel } from './logger.js';
 import Module from './module.js';
 import Selection, { Range } from './selection.js';
 import type { Bounds } from './selection.js';
-import { getSubscriber } from './subscriber.js';
+import { findOrCreateSubscriber } from './subscriber.js';
 import Composition from './composition.js';
 import Theme from './theme.js';
 import type { ThemeConstructor } from './theme.js';
@@ -206,11 +206,12 @@ class Quill {
       return false;
     }
 
-    const subscriber = getSubscriber(this.root);
+    const subscriber = findOrCreateSubscriber(this.root);
     subscriber.removeAllListeners();
     this.emitter.removeAllListeners();
     this.emitter.ignoreDOM();
     this.scroll.detach();
+    this.theme.detach();
     return true;
   }
 
@@ -234,6 +235,7 @@ class Quill {
     }
     const scrollBlotName = Parchment.ScrollBlot.blotName;
     const ScrollBlot = this.options.registry.query(scrollBlotName);
+    console.log(ScrollBlot);
     if (!ScrollBlot || !('blotName' in ScrollBlot)) {
       throw new Error(
         `Cannot initialize Quill without "${scrollBlotName}" blot`,

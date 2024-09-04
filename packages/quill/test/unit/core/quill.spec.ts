@@ -14,7 +14,8 @@ import Quill, {
 import { Range } from '../../../src/core/selection.js';
 import Snow from '../../../src/themes/snow.js';
 import { normalizeHTML } from '../__helpers__/utils.js';
-import { getSubscriber } from '../../../src/core/subscriber.js';
+import { findOrCreateSubscriber } from '../../../src/core/subscriber.js';
+import { Module } from '../../../src/quill.js';
 
 const createContainer = (html: string | { html: string } = '') => {
   const container = document.createElement('div');
@@ -109,7 +110,7 @@ describe('Quill', () => {
     test('event listeners tracking', () => {
       const container = createContainer();
       const quill = new Quill(container);
-      const subscriber = getSubscriber(quill.root);
+      const subscriber = findOrCreateSubscriber(quill.root);
       const subscriptions = subscriber
         .getSubscriptions()
         .map((subscription) => ({
@@ -170,12 +171,17 @@ describe('Quill', () => {
     test('detach()', () => {
       const { quill } = setup();
       vitest.spyOn(quill.scroll, 'detach');
+      vitest.spyOn(quill.theme, 'detach');
+      vitest.spyOn(Module.prototype, 'detach');
       quill.detach();
-      const subscriber = getSubscriber(quill.root);
+      const subscriber = findOrCreateSubscriber(quill.root);
       expect(subscriber.getSubscriptions().length).toEqual(0);
       expect(quill.emitter.eventNames()).toEqual([]);
       expect(quill.emitter.getDomListeners()).toEqual({});
       expect(quill.scroll.detach).toHaveBeenCalled();
+      expect(quill.theme.detach).toHaveBeenCalled();
+      const nModules = Object.entries(quill.theme.modules).length;
+      expect(Module.prototype.detach).toHaveBeenCalledTimes(nModules);
     });
 
     test('format()', () => {

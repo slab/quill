@@ -3,7 +3,7 @@ import Emitter from '../core/emitter.js';
 import BaseTheme, { BaseTooltip } from './base.js';
 import LinkBlot from '../formats/link.js';
 import { Range } from '../core/selection.js';
-import { getSubscriber } from '../core/subscriber.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
 import icons from '../ui/icons.js';
 import Quill from '../core/quill.js';
 import type { Context } from '../modules/keyboard.js';
@@ -30,7 +30,7 @@ class SnowTooltip extends BaseTooltip {
 
   listen() {
     super.listen();
-    const subscriber = getSubscriber(this.quill.root);
+    const subscriber = findOrCreateSubscriber(this.quill.root);
     const actionNode = this.root.querySelector('a.ql-action');
     // @ts-expect-error Fix me later
     subscriber.on(this, actionNode, 'click', (event) => {

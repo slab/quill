@@ -4,7 +4,7 @@ import type { Blot, ScrollBlot } from 'parchment';
 import Inline from '../blots/inline.js';
 import Quill from '../core/quill.js';
 import Module from '../core/module.js';
-import { getSubscriber } from '../core/subscriber.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
 import { blockDelta } from '../blots/block.js';
 import BreakBlot from '../blots/break.js';
 import CursorBlot from '../blots/cursor.js';
@@ -244,7 +244,7 @@ class Syntax extends Module<SyntaxOptions> {
         option.setAttribute('value', key);
         select.appendChild(option);
       });
-      const subscriber = getSubscriber(this.quill.root);
+      const subscriber = findOrCreateSubscriber(this.quill.root);
       subscriber.on(this, select, 'change', () => {
         blot.format(SyntaxCodeBlock.blotName, select.value);
         this.quill.root.focus(); // Prevent scrolling

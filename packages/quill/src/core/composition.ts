@@ -1,7 +1,7 @@
 import Embed from '../blots/embed.js';
 import type Scroll from '../blots/scroll.js';
 import Emitter from './emitter.js';
-import { getSubscriber } from './subscriber.js';
+import { findOrCreateSubscriber } from './subscriber.js';
 
 class Composition {
   isComposing = false;
@@ -14,7 +14,7 @@ class Composition {
   }
 
   private setupListeners() {
-    const subscriber = getSubscriber(this.scroll.domNode);
+    const subscriber = findOrCreateSubscriber(this.scroll.domNode);
     subscriber.on(this, this.scroll.domNode, 'compositionstart', (event) => {
       if (!this.isComposing) {
         this.handleCompositionStart(event);

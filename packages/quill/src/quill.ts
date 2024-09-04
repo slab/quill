@@ -118,6 +118,7 @@ Quill.register(
 export {
   AttributeMap,
   Delta,
+  findOrCreateSubscriber,
   Module,
   Op,
   OpIterator,

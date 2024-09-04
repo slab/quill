@@ -9,8 +9,7 @@ import List, { ListContainer } from '../../../src/formats/list.js';
 import IndentClass from '../../../src/formats/indent.js';
 import { AlignClass } from '../../../src/formats/align.js';
 import Video from '../../../src/formats/video.js';
-import { getSubscriber } from '../../../src/core/subscriber.js';
-import ListItem from '../../../src/formats/list.js';
+import { findOrCreateSubscriber } from '../../../src/core/subscriber.js';
 
 const createScroll = (html: string) =>
   baseCreateScroll(
@@ -395,8 +394,8 @@ describe('List', () => {
 
   test('remove event listeners on detach', () => {
     const scroll = createScroll('<p>Hello World!</p>');
-    const listItem = new ListItem(scroll, scroll.domNode);
-    const subscriber = getSubscriber(scroll.domNode);
+    const listItem = new List(scroll, scroll.domNode);
+    const subscriber = findOrCreateSubscriber(scroll.domNode);
     vitest.spyOn(subscriber, 'removeSourceListeners');
     listItem.detach();
     expect(subscriber.removeSourceListeners).toHaveBeenCalledWith(listItem);
