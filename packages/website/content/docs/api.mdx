@@ -7,7 +7,7 @@ title: API
     <nav key={title}>
       <h4 anchor="off">{title}</h4>
       <ul>
-        {hashes.map((hash) => (
+        {hashes.map(hash => (
           <li key={hash}>
             <a href={`#${hash.toLowerCase()}`}>
               {hash.replace('-experimental', '')}
@@ -75,10 +75,10 @@ quill.deleteText(6, 4);
 const quill = new Quill('#editor', { theme: 'snow' });
 
 document.querySelector('#deleteButton').addEventListener('click', () => {
-quill.deleteText(5, 7);
+  quill.deleteText(5, 7);
 });
-`
-}}
+    `
+  }}
 />
 
 ### detach
@@ -257,12 +257,11 @@ updateContents(delta: Delta, source: string = 'api'): Delta
 
 ```typescript
 // Assuming editor currently contains [{ insert: 'Hello World!' }]
-quill.updateContents(
-  new Delta()
-    .retain(6) // Keep 'Hello '
-    .delete(5) // 'World' is deleted
-    .insert('Quill')
-    .retain(1, { bold: true }), // Apply bold to exclamation mark
+quill.updateContents(new Delta()
+  .retain(6)                  // Keep 'Hello '
+  .delete(5)                  // 'World' is deleted
+  .insert('Quill')
+  .retain(1, { bold: true })  // Apply bold to exclamation mark
 );
 // Editor should now be [
 //  { insert: 'Hello Quill' },
@@ -271,9 +270,8 @@ quill.updateContents(
 ```
 
 <Hint>
-  This method updates the contents from the beginning, not from the current
-  selection. Use `Delta#retain(length: number)` to skip the contents you wish to
-  leave unchanged.
+This method updates the contents from the beginning, not from the current selection.
+Use `Delta#retain(length: number)` to skip the contents you wish to leave unchanged.
 </Hint>
 
 ## Formatting
@@ -314,8 +312,8 @@ formatLine(index: number, length: number, formats: { [name: string]: any },
 ```typescript
 quill.setText('Hello\nWorld!\n');
 
-quill.formatLine(1, 2, 'align', 'right'); // right aligns the first line
-quill.formatLine(4, 4, 'align', 'center'); // center aligns both lines
+quill.formatLine(1, 2, 'align', 'right');   // right aligns the first line
+quill.formatLine(4, 4, 'align', 'center');  // center aligns both lines
 ```
 
 ### formatText
@@ -337,15 +335,14 @@ formatText(index: number, length: number, formats: { [name: string]: any },
 ```typescript
 quill.setText('Hello\nWorld!\n');
 
-quill.formatText(0, 5, 'bold', true); // bolds 'hello'
+quill.formatText(0, 5, 'bold', true);      // bolds 'hello'
 
-quill.formatText(0, 5, {
-  // unbolds 'hello' and set its color to blue
-  bold: false,
-  color: 'rgb(0, 0, 255)',
+quill.formatText(0, 5, {                   // unbolds 'hello' and set its color to blue
+  'bold': false,
+  'color': 'rgb(0, 0, 255)'
 });
 
-quill.formatText(5, 1, 'align', 'right'); // right aligns the 'hello' line
+quill.formatText(5, 1, 'align', 'right');  // right aligns the 'hello' line
 ```
 
 ### getFormat
@@ -365,22 +362,22 @@ getFormat(index: number, length: number = 0): Record<string, unknown>
 quill.setText('Hello World!');
 quill.formatText(0, 2, 'bold', true);
 quill.formatText(1, 2, 'italic', true);
-quill.getFormat(0, 2); // { bold: true }
-quill.getFormat(1, 1); // { bold: true, italic: true }
+quill.getFormat(0, 2);   // { bold: true }
+quill.getFormat(1, 1);   // { bold: true, italic: true }
 
 quill.formatText(0, 2, 'color', 'red');
 quill.formatText(2, 1, 'color', 'blue');
-quill.getFormat(0, 3); // { color: ['red', 'blue'] }
+quill.getFormat(0, 3);   // { color: ['red', 'blue'] }
 
 quill.setSelection(3);
-quill.getFormat(); // { italic: true, color: 'blue' }
+quill.getFormat();       // { italic: true, color: 'blue' }
 
 quill.format('strike', true);
-quill.getFormat(); // { italic: true, color: 'blue', strike: true }
+quill.getFormat();       // { italic: true, color: 'blue', strike: true }
 
 quill.formatLine(0, 1, 'align', 'right');
-quill.getFormat(); // { italic: true, color: 'blue', strike: true,
-//   align: 'right' }
+quill.getFormat();       // { italic: true, color: 'blue', strike: true,
+                         //   align: 'right' }
 ```
 
 ### removeFormat
@@ -480,14 +477,14 @@ setSelection(range: { index: number, length: number },
 quill.setSelection(0, 5);
 ```
 
+
 ### scrollSelectionIntoView
 
 Scroll the current selection into the visible area.
 If the selection is already visible, no scrolling will occur.
 
 <Hint>
-  Quill calls this method automatically when [setSelection](#setselection) is
-  called, unless the source is `"silent"`.
+Quill calls this method automatically when [setSelection](#setselection) is called, unless the source is `"silent"`.
 </Hint>
 
 **Methods**
@@ -501,6 +498,7 @@ scrollSelectionIntoView();
 ```typescript
 quill.scrollSelectionIntoView();
 ```
+
 
 ## Editor
 
@@ -538,7 +536,7 @@ enable(enabled: boolean = true);
 
 ```typescript
 quill.enable();
-quill.enable(false); // Disables user input
+quill.enable(false);   // Disables user input
 ```
 
 ### focus
@@ -632,14 +630,14 @@ quill.setText(text);
 
 const target = 'line 50';
 const bounds = quill.selection.getBounds(
-text.indexOf(target),
-target.length
+  text.indexOf(target),
+  target.length
 );
 if (bounds) {
-quill.scrollRectIntoView(bounds);
+  quill.scrollRectIntoView(bounds);
 }
-`
-}}
+    `
+  }}
 />
 
 ## Events
@@ -934,11 +932,8 @@ const Link = Quill.import('formats/link');
 ```
 
 <Hint>
-  Don't confuse this with the
-  [`import`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
-  keyword for ECMAScript modules. `Quill.import()` doesn't load scripts over the
-  network, it just returns the corresponding module from the Quill library
-  without causing any side-effects.
+Don't confuse this with the [`import`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import) keyword for ECMAScript modules.
+`Quill.import()` doesn't load scripts over the network, it just returns the corresponding module from the Quill library without causing any side-effects.
 </Hint>
 
 ### register
