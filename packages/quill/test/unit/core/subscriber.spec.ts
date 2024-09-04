@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test, vitest } from 'vitest';
-import { createSubscriber, getSubscriber } from '../../../src/core/subscriber';
+import logger from '../../../src/core/logger.js';
+import { getSubscriber } from '../../../src/core/subscriber.js';
 
 describe('Subscriber', () => {
   class Test {}
@@ -9,23 +10,31 @@ describe('Subscriber', () => {
     object = new Test();
   });
 
-  describe('registration', () => {
+  describe('getSubscriber()', () => {
     test('maps a Subscriber to an object', () => {
-      const subscriber = createSubscriber(object);
-      expect(subscriber).toBeTruthy();
+      const subscriber = getSubscriber(object);
       expect(getSubscriber(object)).toBe(subscriber);
+      expect(getSubscriber(new Test())).not.toBe(subscriber);
     });
 
-    test('throws an error if no Subscriber is bound to an object', () => {
-      expect(() => getSubscriber(object)).toThrow(
-        'Subscriber not found for object Test',
+    test('logs the creation of a new Subscriber instance', () => {
+      logger.level('info');
+      vitest.spyOn(console, 'info');
+      getSubscriber(object);
+      expect(console.info).toHaveBeenCalledWith(
+        'quill:subscriber',
+        'Creating new Subscriber for Test',
       );
+      getSubscriber(object);
+      expect(console.info).toHaveBeenCalledTimes(1);
+      getSubscriber(new Test());
+      expect(console.info).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('on()', () => {
     test('calls addEventListener on the target', () => {
-      const subscriber = createSubscriber(object);
+      const subscriber = getSubscriber(object);
       const source = new Test();
       const target = document.createElement('div');
       const event = 'keydown';
@@ -41,7 +50,7 @@ describe('Subscriber', () => {
     });
 
     test('keeps track of the subscription', () => {
-      const subscriber = createSubscriber(object);
+      const subscriber = getSubscriber(object);
       const source = new Test();
       const target = document.createElement('div');
       const event = 'keydown';
@@ -56,7 +65,7 @@ describe('Subscriber', () => {
 
   describe('off()', () => {
     test('calls removeEventListener on the target', () => {
-      const subscriber = createSubscriber(object);
+      const subscriber = getSubscriber(object);
       const target = document.createElement('div');
       const event = 'keydown';
       const handler = () => {};
@@ -71,7 +80,7 @@ describe('Subscriber', () => {
     });
 
     test('forgets the subscription', () => {
-      const subscriber = createSubscriber(object);
+      const subscriber = getSubscriber(object);
       const source = new Test();
       const target = document.createElement('div');
       const event = 'keydown';
@@ -85,7 +94,7 @@ describe('Subscriber', () => {
 
   describe('removeSourceListeners()', () => {
     test('removes all listeners related to a source', () => {
-      const subscriber = createSubscriber(object);
+      const subscriber = getSubscriber(object);
       const source1 = new Test();
       const source2 = new Test();
       const target1 = document.createElement('div');
@@ -110,7 +119,7 @@ describe('Subscriber', () => {
 
   describe('removeAllListeners()', () => {
     test('removes all listeners', () => {
-      const subscriber = createSubscriber(object);
+      const subscriber = getSubscriber(object);
       const source1 = new Test();
       const source2 = new Test();
       const target1 = document.createElement('div');

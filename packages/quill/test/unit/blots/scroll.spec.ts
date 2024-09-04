@@ -8,17 +8,13 @@ import { createRegistry } from '../__helpers__/factory.js';
 import { normalizeHTML, sleep } from '../__helpers__/utils.js';
 import Underline from '../../../src/formats/underline.js';
 import Strike from '../../../src/formats/strike.js';
-import {
-  createSubscriber,
-  getSubscriber,
-} from '../../../src/core/subscriber.js';
+import { getSubscriber } from '../../../src/core/subscriber.js';
 
 const createScroll = (html: string) => {
   const emitter = new Emitter();
   const registry = createRegistry([Underline, Strike]);
   const container = document.body.appendChild(document.createElement('div'));
   container.innerHTML = normalizeHTML(html);
-  createSubscriber(container);
   return new Scroll(registry, container, { emitter });
 };
 

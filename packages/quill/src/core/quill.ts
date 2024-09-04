@@ -18,7 +18,7 @@ import type { DebugLevel } from './logger.js';
 import Module from './module.js';
 import Selection, { Range } from './selection.js';
 import type { Bounds } from './selection.js';
-import { createSubscriber, getSubscriber } from './subscriber.js';
+import { getSubscriber } from './subscriber.js';
 import Composition from './composition.js';
 import Theme from './theme.js';
 import type { ThemeConstructor } from './theme.js';
@@ -230,7 +230,6 @@ class Quill {
       instances.set(this.container, this);
       this.root = this.addContainer('ql-editor');
       this.root.classList.add('ql-blank');
-      createSubscriber(this.root);
       this.emitter = new Emitter();
     }
     const scrollBlotName = Parchment.ScrollBlot.blotName;

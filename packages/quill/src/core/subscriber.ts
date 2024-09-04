@@ -1,3 +1,7 @@
+import logger from './logger.js';
+
+const debug = logger('quill:subscriber');
+
 /**
  * Any object with a named constructor can request an event subscription.
  */
@@ -21,24 +25,15 @@ interface Subscription {
 const subscribers = new WeakMap<object, Subscriber>();
 
 /**
- * Creates a Subscriber instance, and binds it to an object.
- */
-export function createSubscriber(object: Source): Subscriber {
-  const subscriber = new Subscriber();
-  subscribers.set(object, subscriber);
-  return subscriber;
-}
-
-/**
  * Gets the Subscriber instance bound to the given object.
- * Throws an error if the binding does not exist.
+ * Creates a new one if the binding does not exist yet.
  */
 export function getSubscriber(object: Source): Subscriber {
-  const subscriber = subscribers.get(object);
+  let subscriber = subscribers.get(object);
   if (!subscriber) {
-    throw new Error(
-      `Subscriber not found for object ${object.constructor.name}`,
-    );
+    debug.info(`Creating new Subscriber for ${object.constructor.name}`);
+    subscriber = new Subscriber();
+    subscribers.set(object, subscriber);
   }
   return subscriber;
 }

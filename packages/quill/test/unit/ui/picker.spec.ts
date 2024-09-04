@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import Picker from '../../../src/ui/picker.js';
-import { createSubscriber } from '../../../src/core/subscriber.js';
+import { getSubscriber } from '../../../src/core/subscriber.js';
 
 describe('Picker', () => {
   const setup = () => {
@@ -9,7 +9,7 @@ describe('Picker', () => {
       '<select><option selected>0</option><option value="1">1</option></select>';
     const pickerSelectorInstance = new Picker(
       container.firstChild as HTMLSelectElement,
-      createSubscriber(container),
+      getSubscriber(container),
     );
     const pickerSelector = container.querySelector('.ql-picker') as HTMLElement;
     return { container, pickerSelectorInstance, pickerSelector };
