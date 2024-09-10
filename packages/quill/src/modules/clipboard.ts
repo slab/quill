@@ -23,6 +23,7 @@ import { FontStyle } from '../formats/font.js';
 import { SizeStyle } from '../formats/size.js';
 import { deleteRange } from './keyboard.js';
 import normalizeExternalHTML from './normalizeExternalHTML/index.js';
+import createTrustedHtml from "../core/utils/createTrustedHtml";
 
 const debug = logger('quill:clipboard');
 
@@ -125,7 +126,10 @@ class Clipboard extends Module<ClipboardOptions> {
   }
 
   protected convertHTML(html: string) {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const doc = new DOMParser().parseFromString(
+      createTrustedHtml(html),
+      'text/html',
+    );
     this.normalizeHTML(doc);
     const container = doc.body;
     const nodeMatches = new WeakMap();
