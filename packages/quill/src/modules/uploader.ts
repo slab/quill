@@ -74,6 +74,13 @@ class Uploader extends Module<UploaderOptions> {
               coverFile,
             );
             handlerFlag[index] = nodeLength;
+            const uploadsFinish = handlerFlag.every((f) => f > 0);
+            if (uploadsFinish) {
+              this.quill.setSelection(
+                range.index + handlerFlag.reduce((v, s) => v + s),
+                Emitter.sources.SILENT,
+              );
+            }
           });
         }
         return;
