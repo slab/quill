@@ -74,7 +74,7 @@ class Video extends BlockEmbed {
   }
 
   html() {
-    console.log('html', this.value());
+    console.log('html1', this.value());
     console.log('html', this.domNode);
     console.log('html', Video.create(this.value().video));
     return Video.create(this.value().video).outerHTML;
