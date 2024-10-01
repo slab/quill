@@ -1,22 +1,40 @@
 import { BlockEmbed } from '../blots/block.js';
 import Link from './link.js';
 
-const ATTRIBUTES = ['height', 'width'];
+const ATTRIBUTES = [
+  'title',
+  'sandbox',
+  'referrerpolicy',
+  'name',
+  'src',
+  'srcdoc',
+  'width',
+  'height',
+  'frameborder',
+  'allowfullscreen',
+  'allow',
+  'loading',
+  'allowpaymentrequest',
+];
 
 class Video extends BlockEmbed {
   static blotName = 'video';
   static className = 'ql-video';
   static tagName = 'IFRAME';
 
-  static create(value: string) {
-    const node = super.create(value) as Element;
-    node.setAttribute('frameborder', '0');
-    node.setAttribute('allowfullscreen', 'true');
-    node.setAttribute('src', this.sanitize(value));
+  static create(value: any) {
+    console.log('formats', value);
+    const node = document.createElement('iframe');
+    ATTRIBUTES.forEach((attr) => {
+      if (value[attr]) {
+        node.setAttribute(attr, value[attr]);
+      }
+    });
     return node;
   }
 
   static formats(domNode: Element) {
+    console.log('formats', domNode);
     return ATTRIBUTES.reduce(
       (formats: Record<string, string | null>, attribute) => {
         if (domNode.hasAttribute(attribute)) {
@@ -33,12 +51,17 @@ class Video extends BlockEmbed {
   }
 
   static value(domNode: Element) {
-    return domNode.getAttribute('src');
+    console.log('value', domNode);
+    return ATTRIBUTES.reduce((acc: any, attr) => {
+      acc[attr] = domNode.getAttribute(attr);
+      return acc;
+    }, {});
   }
 
   domNode: HTMLVideoElement;
 
   format(name: string, value: string) {
+    console.log('format', name, value);
     if (ATTRIBUTES.indexOf(name) > -1) {
       if (value) {
         this.domNode.setAttribute(name, value);
@@ -51,8 +74,10 @@ class Video extends BlockEmbed {
   }
 
   html() {
-    const { video } = this.value();
-    return `<a href="${video}">${video}</a>`;
+    console.log('html', this.value());
+    console.log('html', this.domNode);
+    console.log('html', Video.create(this.value().video));
+    return Video.create(this.value().video).outerHTML;
   }
 }
 
