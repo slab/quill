@@ -23,7 +23,6 @@ class Video extends BlockEmbed {
   static tagName = 'IFRAME';
 
   static create(value: any) {
-    console.log('formats', value);
     const node = document.createElement('iframe');
     ATTRIBUTES.forEach((attr) => {
       if (value[attr]) {
@@ -34,7 +33,6 @@ class Video extends BlockEmbed {
   }
 
   static formats(domNode: Element) {
-    console.log('formats', domNode);
     return ATTRIBUTES.reduce(
       (formats: Record<string, string | null>, attribute) => {
         if (domNode.hasAttribute(attribute)) {
@@ -51,7 +49,6 @@ class Video extends BlockEmbed {
   }
 
   static value(domNode: Element) {
-    console.log('value', domNode);
     return ATTRIBUTES.reduce((acc: any, attr) => {
       acc[attr] = domNode.getAttribute(attr);
       return acc;
@@ -61,7 +58,6 @@ class Video extends BlockEmbed {
   domNode: HTMLVideoElement;
 
   format(name: string, value: string) {
-    console.log('format', name, value);
     if (ATTRIBUTES.indexOf(name) > -1) {
       if (value) {
         this.domNode.setAttribute(name, value);
@@ -74,9 +70,6 @@ class Video extends BlockEmbed {
   }
 
   html() {
-    console.log('html1', this.value());
-    console.log('html', this.domNode);
-    console.log('html', Video.create(this.value().video));
     return Video.create(this.value().video).outerHTML;
   }
 }
