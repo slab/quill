@@ -1,6 +1,6 @@
-import Block from '../blots/block.js';
+import Embed from '../blots/embed.js';
 
-class ScriptTag extends Block {
+class ScriptTag extends Embed {
   static blotName = 'script';
   static tagName = 'SCRIPT';
 }
