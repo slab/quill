@@ -2,7 +2,14 @@ import { ClassAttributor, Scope, StyleAttributor } from 'parchment';
 
 const config = {
   scope: Scope.INLINE,
-  whitelist: ['serif', 'monospace'],
+  whitelist: [
+    'arial',
+    'comic-sans',
+    'courier-new',
+    'georgia',
+    'helvetica',
+    'lucida',
+  ],
 };
 
 const FontClass = new ClassAttributor('font', 'ql-font', config);

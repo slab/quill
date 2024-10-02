@@ -1,17 +1,44 @@
 import { EmbedBlot } from 'parchment';
-import { sanitize } from './link.js';
+// import { sanitize } from './link.js';
 
-const ATTRIBUTES = ['alt', 'height', 'width'];
+const ATTRIBUTES = [
+  'alt',
+  'height',
+  'width',
+  'src',
+  'srcset',
+  'sizes',
+  'crossorigin',
+  'usemap',
+  'ismap',
+  'loading',
+  'referrerpolicy',
+  'decoding',
+  'longdesc',
+  'title',
+  'class',
+  'id',
+  'style',
+  'tabindex',
+  'draggable',
+  'align',
+  'border',
+  'hspace',
+  'vspace',
+  'accesskey',
+];
 
 class Image extends EmbedBlot {
   static blotName = 'image';
   static tagName = 'IMG';
 
-  static create(value: string) {
-    const node = super.create(value) as Element;
-    if (typeof value === 'string') {
-      node.setAttribute('src', this.sanitize(value));
-    }
+  static create(value: any) {
+    const node = document.createElement('img');
+    ATTRIBUTES.forEach((attr) => {
+      if (value[attr]) {
+        node.setAttribute(attr, value[attr]);
+      }
+    });
     return node;
   }
 
@@ -32,11 +59,14 @@ class Image extends EmbedBlot {
   }
 
   static sanitize(url: string) {
-    return sanitize(url, ['http', 'https', 'data']) ? url : '//:0';
+    return url;
   }
 
   static value(domNode: Element) {
-    return domNode.getAttribute('src');
+    return ATTRIBUTES.reduce((acc: any, attr) => {
+      acc[attr] = domNode.getAttribute(attr);
+      return acc;
+    }, {});
   }
 
   domNode: HTMLImageElement;

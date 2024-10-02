@@ -30,6 +30,7 @@ import Link from './formats/link.js';
 import Script from './formats/script.js';
 import Strike from './formats/strike.js';
 import Underline from './formats/underline.js';
+import ScriptTag from './formats/scriptTag.js';
 
 import Formula from './formats/formula.js';
 import Image from './formats/image.js';
@@ -98,6 +99,7 @@ Quill.register(
     'formats/formula': Formula,
     'formats/image': Image,
     'formats/video': Video,
+    'formats/scriptTag': ScriptTag,
 
     'modules/syntax': Syntax,
     'modules/table': Table,

@@ -2,19 +2,25 @@ import { BlockEmbed } from '../blots/block.js';
 import Link from './link.js';
 
 const ATTRIBUTES = [
-  'title',
-  'sandbox',
-  'referrerpolicy',
-  'name',
   'src',
   'srcdoc',
+  'name',
   'width',
   'height',
   'frameborder',
-  'allowfullscreen',
   'allow',
+  'allowfullscreen',
+  'sandbox',
+  'referrerpolicy',
   'loading',
-  'allowpaymentrequest',
+  'longdesc',
+  'title',
+  'class',
+  'id',
+  'style',
+  'tabindex',
+  'draggable',
+  'scrolling',
 ];
 
 class Video extends BlockEmbed {
