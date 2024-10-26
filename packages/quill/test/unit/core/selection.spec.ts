@@ -12,6 +12,18 @@ import Strike from '../../../src/formats/strike.js';
 import { ColorStyle } from '../../../src/formats/color.js';
 import { BackgroundStyle } from '../../../src/formats/background.js';
 import { SizeClass } from '../../../src/formats/size.js';
+import Embed from '../../../src/blots/embed';
+import Scroll from '../../../src/blots/scroll';
+
+class TestEmbed extends Embed {
+  static blotName = 'TestEmbed';
+  static tagName = 'span';
+  static className = 'test-embed-blot';
+
+  constructor(scroll: Scroll, node: Node) {
+    super(scroll, node);
+  }
+}
 
 const createSelection = (html: string, container = document.body) => {
   const scroll = createScroll(
@@ -26,6 +38,7 @@ const createSelection = (html: string, container = document.body) => {
       ColorStyle,
       BackgroundStyle,
       SizeClass,
+      TestEmbed
     ]),
     container,
   );
@@ -225,6 +238,51 @@ describe('Selection', () => {
       textarea.select();
       const [range] = selection.getRange();
       expect(range).toEqual(null);
+    });
+
+    test('between inner sides of embed guards', () => {
+      const selection = createSelection(
+        `<p><span class="test-embed-blot"></span></p>`,
+      );
+      const leftGuard = selection.root.querySelector('.test-embed-blot')?.firstChild as Node;
+      const rightGuard = selection.root.querySelector('.test-embed-blot')?.lastChild as Node;
+      selection.setNativeRange(
+        leftGuard,
+        1,
+        rightGuard,
+        0,
+      );
+      const [range] = selection.getRange();
+      expect(range?.index).toEqual(0);
+      expect(range?.length).toEqual(1);
+    });
+
+    test('on inner side of embed end guard', () => {
+      const selection = createSelection(
+        `<p><span class="test-embed-blot"></span></p>`,
+      );
+      const rightGuard = selection.root.querySelector('.test-embed-blot')?.lastChild as Node;
+      selection.setNativeRange(
+        rightGuard,
+        0
+      );
+      const [range] = selection.getRange();
+      expect(range?.index).toEqual(1);
+      expect(range?.length).toEqual(0);
+    });
+
+    test('on inner side of embed start guard', () => {
+      const selection = createSelection(
+        `<p><span class="test-embed-blot"></span></p>`,
+      );
+      const leftGuard = selection.root.querySelector('.test-embed-blot')?.firstChild as Node;
+      selection.setNativeRange(
+        leftGuard,
+        1
+      );
+      const [range] = selection.getRange();
+      expect(range?.index).toEqual(0);
+      expect(range?.length).toEqual(0);
     });
   });
 
