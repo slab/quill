@@ -172,24 +172,16 @@ class Keyboard extends Module<KeyboardOptions> {
 
   listen() {
     this.quill.root.addEventListener('keydown', (evt) => {
-      if (evt.defaultPrevented || evt.isComposing) return;
+      if (evt.defaultPrevented) return;
 
-      // evt.isComposing is false when pressing Enter/Backspace when composing in Safari
-      // https://bugs.webkit.org/show_bug.cgi?id=165004
-      const isComposing =
-        evt.keyCode === 229 && (evt.key === 'Enter' || evt.key === 'Backspace');
+      const isComposing = evt.which || evt.keyCode;
       if (isComposing) return;
 
-      const bindings = (this.bindings[evt.key] || []).concat(
-        this.bindings[evt.which] || [],
-      );
-      const matches = bindings.filter((binding) =>
-        Keyboard.match(evt, binding),
-      );
-      if (matches.length === 0) return;
-      // @ts-expect-error
-      const blot = Quill.find(evt.target, true);
-      if (blot && blot.scroll !== this.quill.scroll) return;
+      const bindings = (this.bindings[isComposing] || []).filter((binding) => {
+        return Keyboard.match(evt, binding);
+      });
+
+      if (bindings.length === 0) return;
       const range = this.quill.getSelection();
       if (range == null || !this.quill.hasFocus()) return;
       const [line, offset] = this.quill.getLine(range.index);
@@ -215,7 +207,7 @@ class Keyboard extends Module<KeyboardOptions> {
         suffix: suffixText,
         event: evt,
       };
-      const prevented = matches.some((binding) => {
+      const prevented = bindings.some((binding) => {
         if (
           binding.collapsed != null &&
           binding.collapsed !== curContext.collapsed
@@ -229,12 +221,10 @@ class Keyboard extends Module<KeyboardOptions> {
           return false;
         }
         if (Array.isArray(binding.format)) {
-          // any format is present
           if (binding.format.every((name) => curContext.format[name] == null)) {
             return false;
           }
         } else if (typeof binding.format === 'object') {
-          // all formats must match
           if (
             !Object.keys(binding.format).every((name) => {
               // @ts-expect-error Fix me later
@@ -332,6 +322,9 @@ class Keyboard extends Module<KeyboardOptions> {
   }
 
   handleEnter(range: Range, context: Context) {
+    if (range.length > 0) {
+      this.quill.scroll.deleteAt(range.index, range.length); // So we do not trigger text-change
+    }
     const lineFormats = Object.keys(context.format).reduce(
       (formats: Record<string, unknown>, format) => {
         if (
@@ -344,13 +337,15 @@ class Keyboard extends Module<KeyboardOptions> {
       },
       {},
     );
-    const delta = new Delta()
-      .retain(range.index)
-      .delete(range.length)
-      .insert('\n', lineFormats);
-    this.quill.updateContents(delta, Quill.sources.USER);
+    this.quill.insertText(range.index, '\n', lineFormats, Quill.sources.USER);
     this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
     this.quill.focus();
+    Object.keys(context.format).forEach((name) => {
+      if (lineFormats[name] != null) return;
+      if (Array.isArray(context.format[name])) return;
+      if (name === 'code' || name === 'link') return;
+      this.quill.format(name, context.format[name], Quill.sources.USER);
+    });
   }
 }
 
