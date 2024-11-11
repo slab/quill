@@ -176,7 +176,7 @@ class Keyboard extends Module<KeyboardOptions> {
 
       const isComposing = evt.which || evt.keyCode;
       if (isComposing) return;
-
+      console.log('iscomposing :>> ', isComposing);
       const bindings = (this.bindings[isComposing] || []).filter((binding) => {
         return Keyboard.match(evt, binding);
       });
