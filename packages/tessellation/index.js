@@ -26,7 +26,7 @@ const quill = new Quill('#toolbar', {
           container: toolbarOptions,
         },
       },
-      placeholder: 'Compose an epic...',
+      placeholder: 'Compose an epics...',
       theme: 'snow', // or 'bubble'
 });
 
