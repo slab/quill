@@ -8,6 +8,7 @@
   "config": {
     "ports": {
       "webpack": "9080",
+      "tessellation": "9200",
       "website": "9000"
     }
   },
@@ -29,6 +30,7 @@
     "start": "[ -z \"$npm_package_config_ports_webpack\" ] && webpack-dev-server || webpack-dev-server --port $npm_package_config_ports_webpack",
     "start:quill": "npm start -w quill",
     "start:website": "NEXT_PUBLIC_LOCAL_QUILL=true npm start -w website",
+    "build:tessellation" : "npm run build -w quill && npx webpack --config webpack.config.js",
     "lint": "npm run lint -ws"
   },
   "keywords": [

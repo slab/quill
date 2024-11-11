@@ -7,50 +7,65 @@ export default withMDX()({
   images: {
     unoptimized: true,
   },
-  env: env,
+  env: {
+    ...env,
+    WEBSITE: process.env.WEBSITE, // Add the WEBSITE environment variable
+  },
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
-  redirects: () => [
-    {
-      source: '/guides/upgrading-to-2-0',
-      destination: '/docs/upgrading-to-2-0',
-      permanent: true,
-    },
-    {
-      source: '/guides/why-quill',
-      destination: '/docs/why-quill',
-      permanent: true,
-    },
-    {
-      source: '/guides/how-to-customize-quill',
-      destination: '/docs/customization',
-      permanent: true,
-    },
-    {
-      source: '/guides/building-a-custom-module',
-      destination: '/docs/guides/building-a-custom-module',
-      permanent: true,
-    },
-    {
-      source: '/guides/cloning-medium-with-parchment',
-      destination: '/docs/guides/cloning-medium-with-parchment',
-      permanent: true,
-    },
-    {
-      source: '/guides/designing-the-delta-format',
-      destination: '/docs/guides/designing-the-delta-format',
-      permanent: true,
-    },
-    {
-      source: '/docs/registries',
-      destination: '/docs/customization/registries',
-      permanent: true,
-    },
-    {
-      source: '/docs/themes',
-      destination: '/docs/customization/themes',
-      permanent: true,
-    },
-  ],
+  redirects: () => {
+    const redirects = [
+      {
+        source: '/guides/upgrading-to-2-0',
+        destination: '/docs/upgrading-to-2-0',
+        permanent: true,
+      },
+      {
+        source: '/guides/why-quill',
+        destination: '/docs/why-quill',
+        permanent: true,
+      },
+      {
+        source: '/guides/how-to-customize-quill',
+        destination: '/docs/customization',
+        permanent: true,
+      },
+      {
+        source: '/guides/building-a-custom-module',
+        destination: '/docs/guides/building-a-custom-module',
+        permanent: true,
+      },
+      {
+        source: '/guides/cloning-medium-with-parchment',
+        destination: '/docs/guides/cloning-medium-with-parchment',
+        permanent: true,
+      },
+      {
+        source: '/guides/designing-the-delta-format',
+        destination: '/docs/guides/designing-the-delta-format',
+        permanent: true,
+      },
+      {
+        source: '/docs/registries',
+        destination: '/docs/customization/registries',
+        permanent: true,
+      },
+      {
+        source: '/docs/themes',
+        destination: '/docs/customization/themes',
+        permanent: true,
+      },
+    ];
+
+    // Add any redirects specific to a website based on the environment variable
+    if (process.env.WEBSITE === 'site1') {
+      redirects.push({
+        source: '/index.html',
+        destination: 'snow',
+        permanent: true,
+      });
+    }
+    return redirects;
+  },
   webpack(config) {
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((rule) =>
@@ -84,6 +99,11 @@ export default withMDX()({
 
     // Modify the file loader rule to ignore *.svg, since we have it handled now.
     fileLoaderRule.exclude = /\.svg$/i;
+
+    // Condition to include only specific page folders based on the WEBSITE environment variable
+    if (process.env.WEBSITE) {
+      config.resolve.alias['@pages'] = `./src/playground/${process.env.WEBSITE}`;
+    }
 
     return config;
   },
