@@ -31,44 +31,36 @@ const quill = new Quill('#toolbar', {
 });
 
 
-// Unicode-safe delete function for complex scripts
+// Function to delete one grapheme (Unicode-safe) on backspace
 function deleteLastGrapheme(quill) {
   // Get the current selection
   let range = quill.getSelection();
-  if (!range || range.index === 0) return; // No selection or at the start
+  if (!range || range.index === 0) return; // No selection or at the beginning
 
-  // Calculate the index for safe deletion
+  // Get text before the cursor
   const deleteEndIndex = range.index;
-  const deleteStartIndex = deleteEndIndex - 1;
-
-  // Get text up to the cursor position
   let textBeforeCursor = quill.getText(0, deleteEndIndex);
 
-  // Use Intl.Segmenter to segment text before cursor position into graphemes
+  // Use Intl.Segmenter to segment text into graphemes
   const segmenter = new Intl.Segmenter('ja', { granularity: 'grapheme' });
   const graphemes = Array.from(segmenter.segment(textBeforeCursor), s => s.segment);
 
-  // If we have graphemes to delete
   if (graphemes.length > 0) {
-    // Calculate the length of the last grapheme (important for complex characters)
+    // Calculate the length of the last grapheme
     const lastGrapheme = graphemes[graphemes.length - 1];
     const graphemeLength = lastGrapheme.length;
 
-    // Delete the last grapheme based on its length
+    // Delete the last grapheme
     quill.deleteText(deleteEndIndex - graphemeLength, graphemeLength);
-
-    // Move the cursor back by the grapheme length
-    quill.setSelection(deleteEndIndex - graphemeLength);
   }
 }
 
-// Custom key binding for Backspace
+// Custom binding for the Backspace key
 quill.keyboard.addBinding({
-  key: 8  // Backspace key (ASCII code for backspace)
+  key: 8  // Backspace key code
 }, function(range, context) {
   if (range && range.index > 0) {
-    // Prevent default backspace behavior
-    deleteLastGrapheme(quill);
-    return false;  // Prevent Quill’s default handling
+    deleteLastGrapheme(quill); // Use custom delete function
+    return false;  // Prevent Quill's default backspace handling
   }
 });
