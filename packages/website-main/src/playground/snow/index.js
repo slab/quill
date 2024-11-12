@@ -1,3 +1,4 @@
+
 const toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'], // toggled buttons
   ['blockquote', 'code-block'],
@@ -34,7 +35,7 @@ const quill = new Quill('#editor', {
                tableUI: true,
       toolbar: '#toolbar'
   },
-  placeholder: `${placeHolderLanguage}`,
+   placeholder: `${placeHolderLanguage}`,
   theme: 'snow', // or 'bubble'
 });
 
@@ -60,30 +61,12 @@ const selection =() => {
      return window.getSelection();
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    const fontSelect = document.getElementById("fontSelect");
-    
-    console.log('fontSelect :>> ', fontSelect);
-  
-    if (fontSelect) {
-      // Listen for clicks on the main dropdown
-      fontSelect.addEventListener("click", function(event) {
-        window.webkit.messageHandlers.callbackHandler.postMessage(`Toolbar_Visible`);
-                    if(isTabToEdit) {
-                        document.getElementById('toolbar').style.display = 'block';
-                    }
-                   
-                    toolbar.scrollIntoView();
-                    setTimeout(() => {
-                        if(document.getElementById('toolbar').style.display != 'none') {
-                            document.getElementById('editor').style.height = `${editorHeight + Number(belowContentHeight) - Number(keyboardHeight)}px`;
-                        }
-                        quill.focus();
-                        toolbar.scrollIntoView();
-                    }, 100)
-      });
-    }
-  });
+function handleSelectChange(event){   
+    console.log('event :>> ', event);
+    const selectElement = document.getElementById("fontSelect");
+    console.log('selectElement :>> ', selectElement);
+
+}
 // quill.on('selection-change', function (range) {
 //     if (range) {
 //         if (range.start == range.end) {

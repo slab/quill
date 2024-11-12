@@ -2,75 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quill Editor Example</title>
     <link href="./quill.core.css" rel="stylesheet" />
     <link href="./quill.snow.css" rel="stylesheet" />
   </head>
   <style>
-    .ql-container {
-      box-sizing: border-box;
-      font-family: Helvetica, Arial, sans-serif;
-      /* font-size: 13px; */
-      font-size: 12px;
-      height: 100%;
-      margin: 0px;
-      position: relative;
-    }
-
-    .ql-editor .ql-size-small {
-      /* font-size: 0.75em; */
-      font-size: 10px;
-    }
-
-    .ql-editor .ql-size-large {
-      /* font-size: 1.5em; */
-      font-size: 14px;
-    }
-
-    .ql-editor .ql-size-huge {
-      /* font-size: 2.5em; */
-      font-size: 16px;
-    }
-
-    .ql-snow .ql-picker.ql-size .ql-picker-label::before,
-    .ql-snow .ql-picker.ql-size .ql-picker-item::before {
-      /* content: 'Normal'; */
-      content: '12px';
-    }
-
-    .ql-snow .ql-picker.ql-size .ql-picker-label[data-value='small']::before,
-    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value='small']::before {
-      /* content: 'Small'; */
-      content: '10px';
-    }
-
-    .ql-snow .ql-picker.ql-size .ql-picker-label[data-value='large']::before,
-    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value='large']::before {
-      /* content: 'Large'; */
-      content: '14px';
-    }
-
-    .ql-snow .ql-picker.ql-size .ql-picker-label[data-value='huge']::before,
-    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value='huge']::before {
-      /* content: 'Huge'; */
-      content: '16px';
-    }
-
-    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value='small']::before {
-      font-size: 10px;
-    }
-
-    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value='large']::before {
-      /* font-size: 18px; */
-      font-size: 14px;
-    }
-
-    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value='huge']::before {
-      /* font-size: 32px; */
-      font-size: 16px;
-    }
-
     .ql-editor.ql-blank:focus::before {
       content: '';
     }
@@ -168,11 +105,8 @@
         <p><span id="firstElement" class><span></p>
           </div>
         </div>
-        <script defer src="./jquery-s.1.4.min.js"></script>
-        
         <script type="module" src="./quill.js"></script>
-        <!-- <script src="quill.min.js"></script>
-        <script src="quill-table.min.js"></script> -->
-        <script type="module" src="./index1.js"></script>
+
+        <script type="module" src="./index.js"></script>
       </body>
     </html>
