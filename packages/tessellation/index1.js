@@ -40,7 +40,7 @@ const quill = new Quill('#editor', {
 });
 
 
-const table = snow.getModule('table');
+const table = quill.getModule('table');
 
 document.querySelector('#insert-table').addEventListener('click', function () {
     table.insertTable(3, 3);
@@ -50,7 +50,7 @@ document.querySelector('#insert-table').addEventListener('click', function () {
 const toolbar = document.getElementById("toolbar");
 const toolbarWrapper = document.getElementById("toolbarWrapper");
 
-snow.on('text-change', function (delta, source) {
+quill.on('text-change', function (delta, source) {
     sendContentToNativeApp()
 })
 
@@ -60,7 +60,7 @@ const selection =() => {
     if (window.getSelection)
      return window.getSelection();
 }
-snow.on('selection-change', function (range) {
+quill.on('selection-change', function (range) {
     if (range) {
         if (range.start == range.end) {
             window.webkit.messageHandlers.callbackHandler.postMessage(`Toolbar_Visible`);
@@ -75,7 +75,7 @@ snow.on('selection-change', function (range) {
                 if(document.getElementById('toolbar').style.display != 'none') {
                     document.getElementById('editor').style.height = `${editorHeight + Number(belowContentHeight) - Number(keyboardHeight)}px`;
                 }
-                snow.focus();
+                quill.focus();
                 toolbar.scrollIntoView();
             }, 100)
             
@@ -101,7 +101,7 @@ snow.on('selection-change', function (range) {
 })
 
 // Return the HTML content of the editor
-function getQuillHtml() { return snow.root.innerHTML; }
+function getQuillHtml() { return quill.root.innerHTML; }
 
 // Send editor text to native app
 function sendContentToNativeApp() {
@@ -148,14 +148,14 @@ $("#btnscrollToBottom").click(function () {
 });
 
 $("#MakeUIWorkForEdit").click(function () {
-    snow.root.scrollTop = 0;
+    quill.root.scrollTop = 0;
 });
 
 function scrollToCursor() {
-    var range = snow.getSelection();
+    var range = quill.getSelection();
     if (range) {
-        var bounds = snow.getBounds(range.index, range.length);
-        snow.root.scrollTop = bounds.top;
+        var bounds = quill.getBounds(range.index, range.length);
+        quill.root.scrollTop = bounds.top;
     }
 }
 
@@ -164,13 +164,13 @@ $("#ScrollToCursorPosition").click(function () {
 });
 
 function getTextOfRichTextEditorSave() {
-    snow.root.blur();
-    snow.enable(false);
-    return snow.root.innerHTML;
+    quill.root.blur();
+    quill.enable(false);
+    return quill.root.innerHTML;
 }
 
 function disabledRichTextContainer() {
-    snow.enable(false);
+    quill.enable(false);
     isTabToEdit = false;
 
     document.getElementById('toolbar').style.display = 'none';
@@ -181,7 +181,7 @@ function disabledRichTextContainer() {
 
 function enabledRichTextContainer() {
     isPlanNote = false;
-    snow.enable(true);
+    quill.enable(true);
     document.getElementById('toolbar').style.display = 'none';
     isTabToEdit = true;
     document.querySelector('#editor-container .ql-container.ql-snow').style.height = '95%';
@@ -189,10 +189,10 @@ function enabledRichTextContainer() {
 
 function getTextOfRichTextEditorEdit() {
     //window.webkit.messageHandlers.callbackHandler.postMessage('Start edit');
-    snow.enable(true);
-    const root = snow.root;
-    const selectionPosition = Math.round(root.scrollTop / (root.scrollHeight - root.clientHeight) * snow.getLength());
-    snow.setSelection(selectionPosition || 0);
+    quill.enable(true);
+    const root = quill.root;
+    const selectionPosition = Math.round(root.scrollTop / (root.scrollHeight - root.clientHeight) * quill.getLength());
+    quill.setSelection(selectionPosition || 0);
     document.getElementById('toolbar').style.display = 'block';
 
     
@@ -200,15 +200,15 @@ function getTextOfRichTextEditorEdit() {
         if(document.getElementById('toolbar').style.display != 'none') {
             document.getElementById('editor').style.height = `${editorHeight + Number(belowContentHeight) - Number(keyboardHeight)}px`;
         }
-        snow.focus();
+        quill.focus();
         toolbar.scrollIntoView();
     }, 100)
 }
        
  async function setkeyboardScroll() {
-     const range = snow.getSelection();
-     await snow.blur();
-     await snow.setSelection(range.index, range.length);
+     const range = quill.getSelection();
+     await quill.blur();
+     await quill.setSelection(range.index, range.length);
      await toolbar.scrollIntoView();
  }
 
@@ -235,5 +235,5 @@ function getTextOfRichTextEditorEdit() {
 // END: set default font family
 
 function changeThePlaceHolder(newPlaceholder) {
-    snow.root.setAttribute('data-placeholder', `${newPlaceholder}`);
+    quill.root.setAttribute('data-placeholder', `${newPlaceholder}`);
 }
