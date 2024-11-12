@@ -439,9 +439,9 @@ function getListType(type: string | undefined) {
   const tag = type === 'ordered' ? 'ol' : 'ul';
   switch (type) {
     case 'checked':
-      return [tag, ' data-list="checked"'];
+      return [tag, ' class="ql-list-item ql-list-item-checked"'];
     case 'unchecked':
-      return [tag, ' data-list="unchecked"'];
+      return [tag, ' class="ql-list-item ql-list-item-unchecked"'];
     default:
       return [tag, ''];
   }
