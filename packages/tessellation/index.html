@@ -100,70 +100,76 @@
   <body>
 
     <div id="toolbarWrapper">
-    <div id="toolbar">
+      <div id="toolbar">
         <span class="ql-formats">
-                       <select class="ql-font" id="fontSelect">
-                           <option value="Helvetica">Helvetica</option>
-                           <option value="Times-New-Roman">Times New Roman</option>
-                           <option value="Apple-Chancery">Apple Chancery</option>
-                           <option value="Papyrus">Papyrus</option>
-                           <option value="Rockwell">Rockwell</option>
-                           <option value="Optima">Optima</option>
-                           <option value="Georgia">Georgia</option>
-                       </select>
-                   </span>
-           <span class="ql-format-seperator"></span>
-           <span class="ql-formats">
-               <select class="ql-size" id="sizeSelect">
-                                   <option value="10px">10px</option>
-                                   <option value="11px">11px</option>
-                                   <option value="12px">12px</option>
-                                   <option value="14px">14px</option>
-                                   <option value="16px">16px</option>
-                                   <option value="18px">18px</option>
-                                   <option value="20px">20px</option>
-                                   <option value="24px">24px</option>
-                                   <option value="28px">28px</option>
-                                   <option value="36px" id="fontSize36">36px</option>
-                             </select>
-               <button id="insert-table">
-                           <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-                           <svg width="auto" height="auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                           <path d="M4 12L20 12M12 4L12 20M6.2 20H17.8C18.9201 20 19.4802 20 19.908 19.782C20.2843 19.5903 20.5903 19.2843 20.782 18.908C21 18.4802 21 17.9201 21 16.8V7.2C21 6.0799 21 5.51984 20.782 5.09202C20.5903 4.71569 20.2843 4.40973 19.908 4.21799C19.4802 4 18.9201 4 17.8 4H6.2C5.0799 4 4.51984 4 4.09202 4.21799C3.71569 4.40973 3.40973 4.71569 3.21799 5.09202C3 5.51984 3 6.07989 3 7.2V16.8C3 17.9201 3 18.4802 3.21799 18.908C3.40973 19.2843 3.71569 19.5903 4.09202 19.782C4.51984 20 5.07989 20 6.2 20Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                           </svg>
-                       </button>
-           </span>
-           <span class="ql-formats">
-               <button class="ql-bold"></button>
-               <button class="ql-italic"></button>
-               <button class="ql-underline"></button>
-               <button class="ql-strike"></button>
-           </span>
-           <span class="ql-format-seperator" style="margin-left:-4px;"></span>
-           <span class="ql-formats">
-               <select class="ql-color"></select>
-               <select class="ql-background"></select>
-           </span>
-           <span class="ql-format-seperator"></span>
-           <span class="ql-formats">
-               <button class="ql-list" value="ordered"></button>
-               <button class="ql-list" value="bullet"></button>
-               <select class="ql-align">
-                   <option label="left" selected></option>
-                   <option label="center" value="center"></option>
-                   <option label="right" value="right"></option>
-                   <option label="justify" value="justify"></option>
-               </select>
-           </span>
-       </div>
-</div>
-    <div id="editor-container">
-      <div id="editor">
-        <p><span id="firstElement" class=""><span></p>
+          <button class="ql-bold"></button>
+          <button class="ql-italic"></button>
+          <button class="ql-underline"></button>
+          <button class="ql-strike"></button>
+        </span>
+        <span class="ql-format-seperator"></span>
+        <span class="ql-formats">
+          <button class="ql-list" value="ordered"></button>
+          <button class="ql-list" value="bullet"></button>
+          <select class="ql-align">
+            <option label="left" selected></option>
+            <option label="center" value="center"></option>
+            <option label="right" value="right"></option>
+            <option label="justify" value="justify"></option>
+          </select>
+        </span>
+        <span class="ql-format-seperator" style="margin-left:-4px;"></span>
+        <span class="ql-formats">
+          <select class="ql-color"></select>
+          <select class="ql-background"></select>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-font" id="fontSelect">
+            <option value="Helvetica">Helvetica</option>
+            <option value="Times-New-Roman">Times New Roman</option>
+            <option value="Apple-Chancery">Apple Chancery</option>
+            <option value="Papyrus">Papyrus</option>
+            <option value="Rockwell">Rockwell</option>
+            <option value="Optima">Optima</option>
+            <option value="Georgia">Georgia</option>
+          </select>
+        </span>
+        <span class="ql-format-seperator"></span>
+        <span class="ql-formats">
+          <select class="ql-size" id="sizeSelect">
+            <option value="10px">10px</option>
+            <option value="11px">11px</option>
+            <option value="12px">12px</option>
+            <option value="14px">14px</option>
+            <option value="16px">16px</option>
+            <option value="18px">18px</option>
+            <option value="20px">20px</option>
+            <option value="24px">24px</option>
+            <option value="28px">28px</option>
+            <option value="36px" id="fontSize36">36px</option>
+          </select>
+          <button id="insert-table">
+            <?xml version="1.0"
+            encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+            <svg width="auto" height="auto" viewBox="0 0 24 24" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M4 12L20 12M12 4L12 20M6.2 20H17.8C18.9201 20 19.4802 20 19.908 19.782C20.2843 19.5903 20.5903 19.2843 20.782 18.908C21 18.4802 21 17.9201 21 16.8V7.2C21 6.0799 21 5.51984 20.782 5.09202C20.5903 4.71569 20.2843 4.40973 19.908 4.21799C19.4802 4 18.9201 4 17.8 4H6.2C5.0799 4 4.51984 4 4.09202 4.21799C3.71569 4.40973 3.40973 4.71569 3.21799 5.09202C3 5.51984 3 6.07989 3 7.2V16.8C3 17.9201 3 18.4802 3.21799 18.908C3.40973 19.2843 3.71569 19.5903 4.09202 19.782C4.51984 20 5.07989 20 6.2 20Z"
+                stroke="#000000" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+        </span>
+
       </div>
     </div>
-    <script type="module" src="./quill.js"></script>
+    <div id="editor-container">
+      <div id="editor">
+        <p><span id="firstElement" class><span></p>
+          </div>
+        </div>
+        <script type="module" src="./quill.js"></script>
 
-    <script type="module" src="./index1.js"></script>
-  </body>
-</html>
+        <script type="module" src="./index1.js"></script>
+      </body>
+    </html>

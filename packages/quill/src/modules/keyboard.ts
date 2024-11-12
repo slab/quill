@@ -177,9 +177,9 @@ class Keyboard extends Module<KeyboardOptions> {
       const isComposing = evt.which || evt.keyCode;
       if (isComposing) return;
       console.log('iscomposing :>> ', isComposing);
-      const bindings = (this.bindings[isComposing] || []).filter((binding) =>
-        Keyboard.match(evt, binding),
-      );
+      const bindings = (this.bindings[isComposing] || []).filter((binding) => {
+        return Keyboard.match(evt, binding);
+      });
 
       if (bindings.length === 0) return;
       const range = this.quill.getSelection();

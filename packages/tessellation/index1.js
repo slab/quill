@@ -1,22 +1,22 @@
 import Quill from '../quill/dist';  // Import Quill
 import '../quill/dist/dist/quill.snow.css';  // Optional: Import the default Quill theme CSS
-// const toolbarOptions = [
-//   ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-//   ['blockquote', 'code-block'],
-//   ['link', 'image', 'video', 'formula'],
+const toolbarOptions = [
+  ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+  ['blockquote', 'code-block'],
+  ['link', 'image', 'video', 'formula'],
 
-//   [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
-//   [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
-//   [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
-//   [{ direction: 'rtl' }], // text direction
+  [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+  [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+  [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+  [{ direction: 'rtl' }], // text direction
 
-//   [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
+  [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
 
-//   [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-//   [{ font: [] }],
-//   [{ align: [] }],
-//   ['clean'], // remove formatting button
-// ];
+  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+  [{ font: [] }],
+  [{ align: [] }],
+  ['clean'], // remove formatting button
+];
 var  placeHolderLanguage = 'Enter note content here';
 var  keyboardHeight = 0;
 var isTabToEdit = null;
@@ -35,7 +35,7 @@ const quill = new Quill('#editor', {
   modules: {
                    table: true,
                tableUI: true,
-      toolbar:'#toolbar'
+      toolbar: '#toolbar'
   },
   placeholder: 'Compose an epic...',
   theme: 'snow', // or 'bubble'
@@ -50,11 +50,11 @@ document.querySelector('#insert-table').addEventListener('click', function () {
 
 // Called each time when text changes in the editor
 const toolbar = document.getElementById("toolbar");
-const toolbarWrapper = document.getElementById("toolbarWrapper");
+// const toolbarWrapper = document.getElementById("toolbarWrapper");
 
-quill.on('text-change', function (delta, source) {
-    sendContentToNativeApp()
-})
+// quill.on('text-change', function (delta, source) {
+//     sendContentToNativeApp()
+// })
 
 // Called when user begin editing
 let editorHeight = document.getElementById('editor').offsetHeight;
@@ -62,45 +62,41 @@ const selection =() => {
     if (window.getSelection)
      return window.getSelection();
 }
-quill.on('selection-change', function (range) {
-    if (range) {
-        if (range.start == range.end) {
-            window.webkit.messageHandlers.callbackHandler.postMessage(`Toolbar_Visible`);
+// quill.on('selection-change', function (range) {
+//     if (range) {
+//         if (range.start == range.end) {
+//             window.webkit.messageHandlers.callbackHandler.postMessage(`Toolbar_Visible`);
             
-            if(isTabToEdit) {
-                document.getElementById('toolbar').style.display = 'block';
-            }
+//             if(isTabToEdit) {
+//                 document.getElementById('toolbar').style.display = 'block';
+//             }
            
-           //document.getElementById('editor').style.height = '36%';
-            toolbar.scrollIntoView();
-            setTimeout(() => {
-                if(document.getElementById('toolbar').style.display != 'none') {
-                    document.getElementById('editor').style.height = `${editorHeight + Number(belowContentHeight) - Number(keyboardHeight)}px`;
-                }
-                quill.focus();
-                toolbar.scrollIntoView();
-            }, 100)
+//             toolbar.scrollIntoView();
+//             setTimeout(() => {
+//                 if(document.getElementById('toolbar').style.display != 'none') {
+//                     document.getElementById('editor').style.height = `${editorHeight + Number(belowContentHeight) - Number(keyboardHeight)}px`;
+//                 }
+//                 quill.focus();
+//                 toolbar.scrollIntoView();
+//             }, 100)
             
-           // if(Boolean(selection().toString())) {
-           //     setTimeout(() => {
-           //         toolbar.scrollIntoView();
-           //         snow.focus();
-                    //snow.setSelection(range.index, range.length);
-           //     }, 0)
-           // } else {
-           //     setTimeout(() => {
-           //         toolbar.scrollIntoView();
-           //         snow.focus();
-                    //snow.setSelection(range.index, range.length);
-           //     }, 150)
-           // }
+//            // if(Boolean(selection().toString())) {
+//            //     setTimeout(() => {
+//            //         toolbar.scrollIntoView();
+//            //         snow.focus();
+//                     //snow.setSelection(range.index, range.length);
+//            //     }, 0)
+//            // } else {
+//            //     setTimeout(() => {
+//            //         toolbar.scrollIntoView();
+//            //         snow.focus();
+//                     //snow.setSelection(range.index, range.length);
+//            //     }, 150)
+//            // }
             
-        }
-    } else {
-        document.getElementById('editor').style='';
-        toolbar.scrollIntoView();
-    }
-})
+//         }
+//     }
+// })
 
 // Return the HTML content of the editor
 function getQuillHtml() { return quill.root.innerHTML; }
