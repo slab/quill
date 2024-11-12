@@ -34,7 +34,7 @@ describe('List', () => {
     expect(editor.scroll.domNode).toEqualHTML(`
       <p>0123</p>
       <ol>
-        <li data-list="ordered">5678</li>
+        <li class="ql-list-item ql-list-item-ordered">5678</li>
       </ol>
       <p>0123</p>
     `);
@@ -63,8 +63,8 @@ describe('List', () => {
     );
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li data-list="checked">0123</li>
-        <li data-list="unchecked">5678</li>
+        <li class="ql-list-item ql-list-item-checked">0123</li>
+        <li class="ql-list-item ql-list-item-unchecked">5678</li>
       </ol>
       <p>0123</p>
     `);
@@ -75,7 +75,7 @@ describe('List', () => {
       createScroll(
         `
       <p>0123</p>
-      <ol><li data-list="ordered">5678</li></ol>
+      <ol><li class="ql-list-item ql-list-item-ordered">5678</li></ol>
       <p>0123</p>
     `,
       ),
@@ -94,7 +94,7 @@ describe('List', () => {
       createScroll(
         `
       <p>0123</p>
-      <ol><li data-list="ordered">5678</li></ol>
+      <ol><li class="ql-list-item ql-list-item-ordered">5678</li></ol>
       <p>0123</p>
     `,
       ),
@@ -109,7 +109,7 @@ describe('List', () => {
     expect(editor.scroll.domNode).toEqualHTML(`
       <p>0123</p>
       <ol>
-        <li data-list="bullet">5678</li>
+        <li class="ql-list-item ql-list-item-bullet">5678</li>
       </ol>
       <p>0123</p>
     `);
@@ -120,7 +120,7 @@ describe('List', () => {
       createScroll(
         `
       <ol>
-        <li data-list="checked">0123</li>
+        <li class="ql-list-item ql-list-item-checked">0123</li>
       </ol>
     `,
       ),
@@ -131,7 +131,7 @@ describe('List', () => {
     );
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li data-list="bullet">0123</li>
+        <li class="ql-list-item ql-list-item-bullet">0123</li>
       </ol>
     `);
   });
@@ -139,7 +139,7 @@ describe('List', () => {
   test('replace with attributes', () => {
     const editor = new Editor(
       createScroll(
-        '<ol><li data-list="ordered" class="ql-align-center">0123</li></ol>',
+        '<ol><li class="ql-list-item ql-list-item-ordered ql-align-center">0123</li></ol>',
       ),
     );
     editor.formatText(4, 1, { list: 'bullet' });
@@ -150,7 +150,7 @@ describe('List', () => {
     );
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li class="ql-align-center" data-list="bullet">0123</li>
+        <li class="ql-list-item ql-align-center ql-list-item-bullet">0123</li>
       </ol>
     `);
   });
@@ -159,9 +159,9 @@ describe('List', () => {
     const editor = new Editor(
       createScroll(
         `
-      <ol><li data-list="ordered">0123</li></ol>
+      <ol><li class="ql-list-item ql-list-item-ordered">0123</li></ol>
       <p>5678</p>
-      <ol><li data-list="ordered">0123</li></ol>
+      <ol><li class="ql-list-item ql-list-item-ordered">0123</li></ol>
     `,
       ),
     );
@@ -177,9 +177,9 @@ describe('List', () => {
     );
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li data-list="ordered">0123</li>
-        <li data-list="ordered">5678</li>
-        <li data-list="ordered">0123</li>
+        <li class="ql-list-item ql-list-item-ordered">0123</li>
+        <li class="ql-list-item ql-list-item-ordered">5678</li>
+        <li class="ql-list-item ql-list-item-ordered">0123</li>
       </ol>
     `);
   });
@@ -188,9 +188,9 @@ describe('List', () => {
     const editor = new Editor(
       createScroll(
         `
-      <ol><li data-list="ordered">0123</li></ol>
+      <ol><li class="ql-list-item ql-list-item-ordered">0123</li></ol>
       <p>5678</p>
-      <ol><li data-list="ordered">0123</li></ol>`,
+      <ol><li class="ql-list-item ql-list-item-ordered">0123</li></ol>`,
       ),
     );
     editor.deleteText(5, 5);
@@ -203,8 +203,8 @@ describe('List', () => {
     );
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li data-list="ordered">0123</li>
-        <li data-list="ordered">0123</li>
+        <li class="ql-list-item ql-list-item-ordered">0123</li>
+        <li class="ql-list-item ql-list-item-ordered">0123</li>
       </ol>
     `);
   });
@@ -213,9 +213,9 @@ describe('List', () => {
     const editor = new Editor(
       createScroll(
         `
-      <ol><li data-list="checked">0123</li></ol>
+      <ol><li class="ql-list-item ql-list-item-checked">0123</li></ol>
       <p>5678</p>
-      <ol><li data-list="checked">0123</li></ol>
+      <ol><li class="ql-list-item ql-list-item-checked">0123</li></ol>
     `,
       ),
     );
@@ -231,27 +231,29 @@ describe('List', () => {
     );
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li data-list="checked">0123</li>
-        <li data-list="checked">5678</li>
-        <li data-list="checked">0123</li>
+        <li class="ql-list-item ql-list-item-checked">0123</li>
+        <li class="ql-list-item ql-list-item-checked">5678</li>
+        <li class="ql-list-item ql-list-item-checked">0123</li>
       </ol>
     `);
   });
 
   test('empty line interop', () => {
     const editor = new Editor(
-      createScroll('<ol><li data-list="ordered"><br></li></ol>'),
+      createScroll(
+        '<ol><li class="ql-list-item ql-list-item-ordered"><br></li></ol>',
+      ),
     );
     editor.insertText(0, 'Test');
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li data-list="ordered">Test</li>
+        <li class="ql-list-item ql-list-item-ordered">Test</li>
       </ol>
     `);
     editor.deleteText(0, 4);
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li data-list="ordered"><br /></li>
+        <li class="ql-list-item ql-list-item-ordered"><br /></li>
       </ol>
     `);
   });
@@ -261,17 +263,17 @@ describe('List', () => {
       createScroll(
         `
       <ol>
-        <li data-list="ordered">0123</li>
-        <li data-list="ordered">5678</li>
-        <li data-list="ordered">0123</li>
+        <li class="ql-list-item ql-list-item-ordered">0123</li>
+        <li class="ql-list-item ql-list-item-ordered">5678</li>
+        <li class="ql-list-item ql-list-item-ordered">0123</li>
       </ol>`,
       ),
     );
     editor.deleteText(2, 5);
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li data-list="ordered">0178</li>
-        <li data-list="ordered">0123</li>
+        <li class="ql-list-item ql-list-item-ordered">0178</li>
+        <li class="ql-list-item ql-list-item-ordered">0123</li>
       </ol>
     `);
   });
@@ -280,7 +282,7 @@ describe('List', () => {
     const editor = new Editor(
       createScroll(
         `
-      <ol><li data-list="ordered">0123</li></ol>
+      <ol><li class="ql-list-item ql-list-item-ordered">0123</li></ol>
       <p>5678</p>`,
       ),
     );
@@ -290,12 +292,14 @@ describe('List', () => {
 
   test('delete partial', () => {
     const editor = new Editor(
-      createScroll('<p>0123</p><ol><li data-list="ordered">5678</li></ol>'),
+      createScroll(
+        '<p>0123</p><ol><li class="ql-list-item ql-list-item-ordered">5678</li></ol>',
+      ),
     );
     editor.deleteText(2, 5);
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li data-list="ordered">0178</li>
+        <li class="ql-list-item ql-list-item-ordered">0178</li>
       </ol>
     `);
   });
@@ -305,9 +309,9 @@ describe('List', () => {
       createScroll(
         `
       <ol>
-        <li data-list="bullet">One</li>
-        <li class="ql-indent-1" data-list="bullet">Alpha</li>
-        <li data-list="bullet">Two</li>
+        <li class="ql-list-item ql-list-item-bullet">One</li>
+        <li class="ql-list-item ql-list-item-bullet ql-indent-1">Alpha</li>
+        <li class="ql-list-item ql-list-item-bullet">Two</li>
       </ol>
     `,
       ),
@@ -315,28 +319,30 @@ describe('List', () => {
     editor.formatLine(1, 10, { list: 'bullet' });
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li data-list="bullet">One</li>
-        <li class="ql-indent-1" data-list="bullet">Alpha</li>
-        <li data-list="bullet">Two</li>
+        <li class="ql-list-item ql-list-item-bullet">One</li>
+        <li class="ql-list-item ql-indent-1 ql-list-item-bullet">Alpha</li>
+        <li class="ql-list-item ql-list-item-bullet">Two</li>
       </ol>
     `);
   });
 
-  test('copy atttributes', () => {
+  test('copy attributes', () => {
     const editor = new Editor(
       createScroll('<p class="ql-align-center">Test</p>'),
     );
     editor.formatLine(4, 1, { list: 'bullet' });
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li class="ql-align-center" data-list="bullet">Test</li>
+        <li class="ql-list-item ql-list-item-bullet ql-align-center">Test</li>
       </ol>
     `);
   });
 
   test('insert block embed', () => {
     const editor = new Editor(
-      createScroll('<ol><li data-list="ordered">Test</li></ol>'),
+      createScroll(
+        '<ol><li class="ql-list-item ql-list-item-ordered">Test</li></ol>',
+      ),
     );
     editor.insertEmbed(
       2,
@@ -345,18 +351,20 @@ describe('List', () => {
     );
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li data-list="ordered">Te</li>
+        <li class="ql-list-item ql-list-item-ordered">Te</li>
       </ol>
       <iframe allowfullscreen="true" class="ql-video" frameborder="0" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0"></iframe>
       <ol>
-        <li data-list="ordered">st</li>
+        <li class="ql-list-item ql-list-item-ordered">st</li>
       </ol>
     `);
   });
 
   test('insert block embed at beginning', () => {
     const editor = new Editor(
-      createScroll('<ol><li data-list="ordered">Test</li></ol>'),
+      createScroll(
+        '<ol><li class="ql-list-item ql-list-item-ordered">Test</li></ol>',
+      ),
     );
     editor.insertEmbed(
       0,
@@ -366,14 +374,16 @@ describe('List', () => {
     expect(editor.scroll.domNode).toEqualHTML(`
       <iframe allowfullscreen="true" class="ql-video" frameborder="0" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0"></iframe>
       <ol>
-        <li data-list="ordered">Test</li>
+        <li class="ql-list-item ql-list-item-ordered">Test</li>
       </ol>
     `);
   });
 
   test('insert block embed at end', () => {
     const editor = new Editor(
-      createScroll('<ol><li data-list="ordered">Test</li></ol>'),
+      createScroll(
+        '<ol><li class="ql-list-item ql-list-item-ordered">Test</li></ol>',
+      ),
     );
     editor.insertEmbed(
       4,
@@ -382,11 +392,11 @@ describe('List', () => {
     );
     expect(editor.scroll.domNode).toEqualHTML(`
       <ol>
-        <li data-list="ordered">Test</li>
+        <li class="ql-list-item ql-list-item-ordered">Test</li>
       </ol>
       <iframe allowfullscreen="true" class="ql-video" frameborder="0" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0"></iframe>
       <ol>
-        <li data-list="ordered"><br /></li>
+        <li class="ql-list-item ql-list-item-ordered"><br /></li>
       </ol>
     `);
   });

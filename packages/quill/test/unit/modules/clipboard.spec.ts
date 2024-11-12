@@ -399,8 +399,8 @@ describe('Clipboard', () => {
     test('html nested checklist', () => {
       const delta = createClipboard().convert({
         html:
-          '<ul><li data-list="checked">One<ul><li data-list="checked">Alpha</li><li data-list="checked">Beta' +
-          '<ul><li data-list="checked">I</li></ul></li></ul></li></ul>',
+          '<ul><li class="ql-list-item ql-list-item-checked">One<ul><li class="ql-list-item ql-list-item-checked">Alpha</li><li class="ql-list-item ql-list-item-checked">Beta' +
+          '<ul><li class="ql-list-item ql-list-item-checked">I</li></ul></li></ul></li></ul>',
       });
       expect(delta).toEqual(
         new Delta()
