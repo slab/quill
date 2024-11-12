@@ -24,7 +24,6 @@ var isPlanNote = false;
 var belowContentHeight = 0;
 // Add fonts to whitelist
 let Font = Quill.import('formats/font');
-// We do not add Sans Serif since it is the default
 Font.whitelist = ['Times-New-Roman','Helvetica', 'Apple-Chancery','Papyrus','Rockwell','Optima', 'Georgia'];
 Quill.register(Font, true);
 
@@ -50,11 +49,11 @@ document.querySelector('#insert-table').addEventListener('click', function () {
 
 // Called each time when text changes in the editor
 const toolbar = document.getElementById("toolbar");
-// const toolbarWrapper = document.getElementById("toolbarWrapper");
+const toolbarWrapper = document.getElementById("toolbarWrapper");
 
-// quill.on('text-change', function (delta, source) {
-//     sendContentToNativeApp()
-// })
+quill.on('text-change', function (delta, source) {
+    sendContentToNativeApp()
+})
 
 // Called when user begin editing
 let editorHeight = document.getElementById('editor').offsetHeight;
@@ -80,21 +79,10 @@ const selection =() => {
 //                 toolbar.scrollIntoView();
 //             }, 100)
             
-//            // if(Boolean(selection().toString())) {
-//            //     setTimeout(() => {
-//            //         toolbar.scrollIntoView();
-//            //         snow.focus();
-//                     //snow.setSelection(range.index, range.length);
-//            //     }, 0)
-//            // } else {
-//            //     setTimeout(() => {
-//            //         toolbar.scrollIntoView();
-//            //         snow.focus();
-//                     //snow.setSelection(range.index, range.length);
-//            //     }, 150)
-//            // }
-            
 //         }
+//     } else {
+//         document.getElementById('editor').style='';
+//         toolbar.scrollIntoView();
 //     }
 // })
 

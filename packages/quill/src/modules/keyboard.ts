@@ -174,7 +174,7 @@ class Keyboard extends Module<KeyboardOptions> {
     this.quill.root.addEventListener('keydown', (evt) => {
       if (evt.defaultPrevented) return;
 
-      const isComposing = evt.which || evt.keyCode;
+      const isComposing = evt.which;
       if (isComposing) return;
       console.log('iscomposing :>> ', isComposing);
       const bindings = (this.bindings[isComposing] || []).filter((binding) => {
