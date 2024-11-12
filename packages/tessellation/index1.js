@@ -1,3 +1,5 @@
+import Quill from '../quill/dist';  // Import Quill
+import '../quill/dist/dist/quill.snow.css';  // Optional: Import the default Quill theme CSS
 // const toolbarOptions = [
 //   ['bold', 'italic', 'underline', 'strike'], // toggled buttons
 //   ['blockquote', 'code-block'],

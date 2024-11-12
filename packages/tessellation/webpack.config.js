@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './index.js',  // Your main JS file where you initialize Quill
+  entry: './index1.js',  // Your main JS file where you initialize Quill
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
