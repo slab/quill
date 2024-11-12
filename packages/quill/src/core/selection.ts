@@ -115,19 +115,21 @@ class Selection {
       this.composing = true;
     });
     this.emitter.on(Emitter.events.COMPOSITION_END, () => {
-      this.composing = false;
-      if (this.cursor.parent) {
-        const range = this.cursor.restore();
-        if (!range) return;
-        setTimeout(() => {
-          this.setNativeRange(
-            range.startNode,
-            range.startOffset,
-            range.endNode,
-            range.endOffset,
-          );
-        }, 1);
-      }
+      setTimeout(() => {
+        this.composing = false;
+        if (this.cursor.parent) {
+          const range = this.cursor.restore();
+          if (!range) return;
+          setTimeout(() => {
+            this.setNativeRange(
+              range.startNode,
+              range.startOffset,
+              range.endNode,
+              range.endOffset,
+            );
+          }, 1);
+        }
+      }, 0);
     });
   }
 
