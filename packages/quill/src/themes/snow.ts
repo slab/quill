@@ -32,7 +32,7 @@ class SnowTooltip extends BaseTooltip {
     // @ts-expect-error Fix me later
     this.root
       .querySelector('a.ql-action')
-      .addEventListener('click', (event) => {
+      .addEventListener('pointerup', (event) => {
         if (this.root.classList.contains('ql-editing')) {
           this.save();
         } else {
@@ -44,7 +44,7 @@ class SnowTooltip extends BaseTooltip {
     // @ts-expect-error Fix me later
     this.root
       .querySelector('a.ql-remove')
-      .addEventListener('click', (event) => {
+      .addEventListener('pointerup', (event) => {
         if (this.linkRange != null) {
           const range = this.linkRange;
           this.restoreFocus();

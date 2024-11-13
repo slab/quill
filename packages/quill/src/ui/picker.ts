@@ -22,7 +22,7 @@ class Picker {
     // @ts-expect-error Fix me later
     this.select.parentNode.insertBefore(this.container, this.select);
 
-    this.label.addEventListener('mousedown', () => {
+    this.label.addEventListener('pointerdown', () => {
       this.togglePicker();
     });
     this.label.addEventListener('keydown', (event) => {
@@ -61,7 +61,7 @@ class Picker {
     if (option.textContent) {
       item.setAttribute('data-label', option.textContent);
     }
-    item.addEventListener('click', () => {
+    item.addEventListener('pointerup', () => {
       this.selectItem(item, true);
     });
     item.addEventListener('keydown', (event) => {

@@ -68,7 +68,7 @@ class BaseTheme extends Theme {
     super(quill, options);
     const listener = (e: MouseEvent) => {
       if (!document.body.contains(quill.root)) {
-        document.body.removeEventListener('click', listener);
+        document.body.removeEventListener('pointerdown', listener);
         return;
       }
       if (
@@ -90,7 +90,7 @@ class BaseTheme extends Theme {
         });
       }
     };
-    quill.emitter.listenDOM('click', document.body, listener);
+    quill.emitter.listenDOM('pointerdown', document.body, listener);
   }
 
   addModule(name: 'clipboard'): Clipboard;
