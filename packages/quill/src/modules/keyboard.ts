@@ -12,12 +12,29 @@ const debug = logger('quill:keyboard');
 
 const SHORTKEY = /Mac/i.test(navigator.platform) ? 'metaKey' : 'ctrlKey';
 
+const CHECK_KOREAN = /[\u3131-\uD79D]/giu;
+function isIOS() {
+  return (
+    [
+      'iPad Simulator',
+      'iPhone Simulator',
+      'iPod Simulator',
+      'iPad',
+      'iPhone',
+      'iPod',
+    ].includes(navigator.platform) ||
+    (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+  );
+}
+const IOS = isIOS();
+
 export interface Context {
   collapsed: boolean;
   empty: boolean;
   offset: number;
   prefix: string;
   suffix: string;
+  containsKorean?: boolean;
   format: Record<string, unknown>;
   event: KeyboardEvent;
   line: BlockEmbed | BlockBlot;
@@ -204,6 +221,8 @@ class Keyboard extends Module<KeyboardOptions> {
           : '';
       const suffixText =
         leafEnd instanceof TextBlot ? leafEnd.value().slice(offsetEnd) : '';
+      const koreanPrefix = prefixText.match(CHECK_KOREAN);
+      const koreanSuffix = suffixText.match(CHECK_KOREAN);
       const curContext = {
         collapsed: range.length === 0,
         // @ts-expect-error Fix me later
@@ -213,6 +232,7 @@ class Keyboard extends Module<KeyboardOptions> {
         offset,
         prefix: prefixText,
         suffix: suffixText,
+        containsKorean: !!(koreanPrefix || koreanSuffix),
         event: evt,
       };
       const prevented = matches.some((binding) => {
@@ -351,6 +371,14 @@ class Keyboard extends Module<KeyboardOptions> {
     this.quill.updateContents(delta, Quill.sources.USER);
     this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
     this.quill.focus();
+
+    if (context.containsKorean && IOS) {
+      this.quill.blur();
+      this.quill.tempFocusHolder.focus();
+      setTimeout(() => {
+        this.quill.setSelection(range.index + 1);
+      }, 0);
+    }
   }
 }
 
@@ -454,7 +482,7 @@ const defaultOptions: KeyboardOptions = {
       key: 'Enter',
       collapsed: true,
       format: { list: 'checked' },
-      handler(range) {
+      handler(range, context) {
         const [line, offset] = this.quill.getLine(range.index);
         const formats = {
           // @ts-expect-error Fix me later
@@ -470,6 +498,14 @@ const defaultOptions: KeyboardOptions = {
         this.quill.updateContents(delta, Quill.sources.USER);
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
         this.quill.scrollSelectionIntoView();
+
+        if (context.containsKorean && IOS) {
+          this.quill.blur();
+          this.quill.tempFocusHolder.focus();
+          setTimeout(() => {
+            this.quill.setSelection(range.index + 1);
+          }, 0);
+        }
       },
     },
     'header enter': {
@@ -488,6 +524,14 @@ const defaultOptions: KeyboardOptions = {
         this.quill.updateContents(delta, Quill.sources.USER);
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
         this.quill.scrollSelectionIntoView();
+
+        if (context.containsKorean && IOS) {
+          this.quill.blur();
+          this.quill.tempFocusHolder.focus();
+          setTimeout(() => {
+            this.quill.setSelection(range.index + 1);
+          }, 0);
+        }
       },
     },
     'table backspace': {
