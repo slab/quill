@@ -367,7 +367,7 @@ function convertHTML(
   isRoot = false,
 ): string {
   if ('html' in blot && typeof blot.html === 'function') {
-    return blot.html(index, length);
+    return blot.html(index, length) ?? '';
   }
   if (blot instanceof TextBlot) {
     return escapeText(blot.value().slice(index, index + length));
