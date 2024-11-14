@@ -203,6 +203,12 @@ class Selection {
       range.setEnd(node, offset);
       return range.getBoundingClientRect();
     }
+    if (
+      node.parentNode instanceof HTMLElement &&
+      this.scroll.find(node.parentNode) === this.cursor
+    ) {
+      return node.parentNode.getBoundingClientRect();
+    }
     let side: 'left' | 'right' = 'left';
     let rect: DOMRect;
     if (node instanceof Text) {
