@@ -29,6 +29,7 @@ class Emitter extends EventEmitter<string> {
     TEXT_CHANGE: 'text-change',
     COMPOSITION_BEFORE_START: 'composition-before-start',
     COMPOSITION_START: 'composition-start',
+    COMPOSITION_UPDATE: 'composition-update',
     COMPOSITION_BEFORE_END: 'composition-before-end',
     COMPOSITION_END: 'composition-end',
   } as const;

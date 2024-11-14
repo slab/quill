@@ -19,6 +19,12 @@ class Composition {
       }
     });
 
+    this.scroll.domNode.addEventListener('compositionupdate', () => {
+      if (!this.scroll.batch) {
+        this.handleCompositionUpdate();
+      }
+    });
+
     this.scroll.domNode.addEventListener('compositionend', (event) => {
       if (this.isComposing) {
         // Webkit makes DOM changes after compositionend, so we use microtask to
@@ -43,6 +49,10 @@ class Composition {
       this.emitter.emit(Emitter.events.COMPOSITION_START, event);
       this.isComposing = true;
     }
+  }
+
+  private handleCompositionUpdate() {
+    this.emitter.emit(Emitter.events.COMPOSITION_UPDATE);
   }
 
   private handleCompositionEnd(event: CompositionEvent) {

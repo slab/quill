@@ -88,11 +88,11 @@ describe('Picker', () => {
     ).toEqual('false');
   });
 
-  test('aria attributes toggle correctly when the picker is opened via mousedown', () => {
+  test('aria attributes toggle correctly when the picker is opened via pointerdown', () => {
     const { pickerSelector } = setup();
     const pickerLabel = pickerSelector.querySelector('.ql-picker-label');
     pickerLabel?.dispatchEvent(
-      new Event('mousedown', {
+      new Event('pointerdown', {
         bubbles: true,
         cancelable: true,
       }),
