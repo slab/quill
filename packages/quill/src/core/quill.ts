@@ -190,6 +190,8 @@ class Quill {
   history: History;
   uploader: Uploader;
 
+  tempFocusHolder: HTMLInputElement;
+
   options: ExpandedQuillOptions;
 
   constructor(container: HTMLElement | string, options: QuillOptions = {}) {
@@ -277,6 +279,11 @@ class Quill {
       this.disable();
     }
     this.allowReadOnlyEdits = false;
+
+    this.tempFocusHolder = document.createElement('input');
+    this.tempFocusHolder.type = 'text';
+    this.tempFocusHolder.className = 'ql-clipboard';
+    this.container.appendChild(this.tempFocusHolder);
   }
 
   addContainer(container: string, refNode?: Node | null): HTMLDivElement;
