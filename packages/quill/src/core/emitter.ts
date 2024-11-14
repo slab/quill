@@ -3,7 +3,7 @@ import instances from './instances.js';
 import logger from './logger.js';
 
 const debug = logger('quill:events');
-const EVENTS = ['selectionchange', 'mousedown', 'mouseup', 'click'];
+const EVENTS = ['selectionchange', 'pointerdown', 'pointerup', 'click'];
 
 EVENTS.forEach((eventName) => {
   document.addEventListener(eventName, (...args) => {

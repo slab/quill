@@ -87,7 +87,7 @@ class Toolbar extends Module<ToolbarProps> {
       debug.warn('ignoring attaching to nonexistent format', format, input);
       return;
     }
-    const eventName = input.tagName === 'SELECT' ? 'change' : 'click';
+    const eventName = input.tagName === 'SELECT' ? 'change' : 'pointerup';
     input.addEventListener(eventName, (e) => {
       let value;
       if (input.tagName === 'SELECT') {
