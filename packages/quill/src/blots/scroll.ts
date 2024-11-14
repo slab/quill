@@ -46,6 +46,7 @@ class Scroll extends ScrollBlot {
     super(registry, domNode);
     this.emitter = emitter;
     this.batch = false;
+    this.domNode.addEventListener('DOMNodeInserted', () => {});
     this.optimize();
     this.enable();
     this.domNode.addEventListener('dragstart', (e) => this.handleDragStart(e));

@@ -47,8 +47,14 @@ class Composition {
 
   private handleCompositionEnd(event: CompositionEvent) {
     this.emitter.emit(Emitter.events.COMPOSITION_BEFORE_END, event);
-    this.scroll.batchEnd();
-    this.emitter.emit(Emitter.events.COMPOSITION_END, event);
+    // HACK: There is a bug in the safari browser in mobile devices and when we finish typing
+    // composition symbol MutationObserver dispatches part of events after firing compositionend event
+    // In normal behaviour MutationObserver dispatches all event before firing compositionend event
+    // https://bugs.webkit.org/show_bug.cgi?id=238013
+    setTimeout(() => {
+      this.scroll.batchEnd();
+      this.emitter.emit(Emitter.events.COMPOSITION_END, event);
+    }, 0);
     this.isComposing = false;
   }
 }
