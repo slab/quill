@@ -624,9 +624,6 @@ function matchTable(
   return delta;
 }
 
-const NBSP = '\u00a0';
-const SPACE_EXCLUDE_NBSP = `[^\\S${NBSP}]`;
-
 function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
   // @ts-expect-error
   let text = node.data as string;
@@ -642,8 +639,10 @@ function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
     ) {
       return delta;
     }
-    text = text.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
-    text = text.replace(new RegExp(`${SPACE_EXCLUDE_NBSP}{2,}`, 'g'), ' '); // collapse whitespace
+    // convert all non-nbsp whitespace into regular space
+    text = text.replace(/[^\S\u00a0]/g, ' ');
+    // collapse consecutive spaces into one
+    text = text.replace(/ {2,}/g, ' ');
     if (
       (node.previousSibling == null &&
         node.parentElement != null &&
@@ -651,7 +650,8 @@ function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
       (node.previousSibling instanceof Element &&
         isLine(node.previousSibling, scroll))
     ) {
-      text = text.replace(new RegExp(`^${SPACE_EXCLUDE_NBSP}+`), '');
+      // block structure means we don't need leading space
+      text = text.replace(/^ /, '');
     }
     if (
       (node.nextSibling == null &&
@@ -659,9 +659,11 @@ function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
         isLine(node.parentElement, scroll)) ||
       (node.nextSibling instanceof Element && isLine(node.nextSibling, scroll))
     ) {
-      text = text.replace(new RegExp(`${SPACE_EXCLUDE_NBSP}+$`), '');
+      // block structure means we don't need trailing space
+      text = text.replace(/ $/, '');
     }
-    text = text.replaceAll(NBSP, ' ');
+    // done removing whitespace and can normalize all to regular space
+    text = text.replaceAll('\u00a0', ' ');
   }
   return delta.insert(text);
 }
