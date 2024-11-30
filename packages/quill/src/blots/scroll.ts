@@ -1,4 +1,10 @@
-import { ContainerBlot, LeafBlot, Scope, ScrollBlot } from 'parchment';
+import {
+  BlockBlot,
+  ContainerBlot,
+  LeafBlot,
+  Scope,
+  ScrollBlot
+} from 'parchment';
 import type { Blot, Parent, EmbedBlot, ParentBlot, Registry } from 'parchment';
 import Delta, { AttributeMap, Op } from 'quill-delta';
 import Emitter from '../core/emitter.js';
@@ -381,7 +387,8 @@ class Scroll extends ScrollBlot {
     const formats: AttributeMap = {};
 
     Object.entries(attributes).forEach(([key, value]) => {
-      const isBlockBlot = this.query(key, Scope.BLOCK & Scope.BLOT) != null;
+      const match = this.query(key, Scope.BLOCK & Scope.BLOT);
+      const isBlockBlot = match != null && match.prototype instanceof BlockBlot;
       if (isBlockBlot) {
         blotName = key;
       } else {
