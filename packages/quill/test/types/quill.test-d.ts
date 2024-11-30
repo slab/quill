@@ -1,6 +1,7 @@
 import { assertType, expectTypeOf } from 'vitest';
-import Quill, { Delta } from '../../src/quill.js';
+import Quill from '../../src/quill.js';
 import type { EmitterSource, Parchment, Range } from '../../src/quill.js';
+import Delta from 'quill-delta';
 import type { default as Block, BlockEmbed } from '../../src/blots/block.js';
 import SnowTheme from '../../src/themes/snow.js';
 import { LeafBlot } from 'parchment';
