@@ -289,7 +289,7 @@ describe('Editor', () => {
 
     test('partial line', () => {
       const editor = createEditor(
-        '<h1>01</h1><ol><li data-list="ordered">34</li></ol>',
+        '<h1>01</h1><ol><li class="ql-list-item ql-list-item-ordered">34</li></ol>',
       );
       editor.removeFormat(1, 3);
       expect(editor.scroll.domNode).toEqualHTML('<p>01</p><p>34</p>');
@@ -306,7 +306,7 @@ describe('Editor', () => {
         `
         <h1>01<img src="/assets/favicon.png">3</h1>
         <ol>
-          <li data-list="ordered">5<strong>6<em>78</em>9</strong>0</li>
+          <li class="ql-list-item ql-list-item-ordered">5<strong>6<em>78</em>9</strong>0</li>
         </ol>
       `,
       );
@@ -321,8 +321,8 @@ describe('Editor', () => {
       const editor = createEditor(
         `
         <ol>
-          <li data-list="ordered">0123</li>
-          <li data-list="ordered">5678</li>
+          <li class="ql-list-item ql-list-item-ordered">0123</li>
+          <li class="ql-list-item ql-list-item-ordered">5678</li>
         </ol>
       `,
       );
@@ -846,7 +846,9 @@ describe('Editor', () => {
     });
 
     test('prepend to list item', () => {
-      const editor = createEditor('<ol><li data-list="bullet">2</li></ol>');
+      const editor = createEditor(
+        '<ol><li class="ql-list-item ql-list-item-bullet">2</li></ol>',
+      );
       editor.insertContents(0, new Delta().insert('1'));
       expect(editor.getDelta().ops).toEqual([
         { insert: '12' },
@@ -1059,7 +1061,9 @@ describe('Editor', () => {
     });
 
     test('inserts multiple lines to a container', () => {
-      const editor = createEditor(`<ol><li data-list="ordered"></li></ol>`);
+      const editor = createEditor(
+        `<ol><li class="ql-list-item ql-list-item-ordered"></li></ol>`,
+      );
       editor.insertContents(
         0,
         new Delta()
@@ -1274,10 +1278,10 @@ describe('Editor', () => {
       const editor = createEditor(
         `
           <ol>
-            <li data-list="ordered">One</li>
-            <li data-list="ordered">Two</li>
-            <li data-list="bullet">Foo</li>
-            <li data-list="bullet">Bar</li>
+            <li class="ql-list-item ql-list-item-ordered">One</li>
+            <li class="ql-list-item ql-list-item-ordered">Two</li>
+            <li class="ql-list-item ql-list-item-bullet">Foo</li>
+            <li class="ql-list-item ql-list-item-bullet">Bar</li>
           </ol>
         `,
       );
@@ -1297,12 +1301,12 @@ describe('Editor', () => {
       const editor = createEditor(
         `
           <ol>
-            <li data-list="ordered">One</li>
-            <li data-list="ordered">Two</li>
-            <li data-list="bullet" class="ql-indent-1">Alpha</li>
-            <li data-list="ordered" class="ql-indent-2">I</li>
-            <li data-list="ordered" class="ql-indent-2">II</li>
-            <li data-list="ordered">Three</li>
+            <li class="ql-list-item ql-list-item-ordered">One</li>
+            <li class="ql-list-item ql-list-item-ordered">Two</li>
+            <li class="ql-list-item ql-list-item-bullet ql-indent-1">Alpha</li>
+            <li class="ql-list-item ql-list-item-ordered ql-indent-2">I</li>
+            <li class="ql-list-item ql-list-item-ordered ql-indent-2">II</li>
+            <li class="ql-list-item ql-list-item-ordered">Three</li>
           </ol>
         `,
       );
@@ -1328,29 +1332,29 @@ describe('Editor', () => {
       const editor = createEditor(
         `
           <ol>
-            <li data-list="checked">One</li>
-            <li data-list="checked">Two</li>
-            <li data-list="unchecked" class="ql-indent-1">Alpha</li>
-            <li data-list="checked" class="ql-indent-2">I</li>
-            <li data-list="checked" class="ql-indent-2">II</li>
-            <li data-list="checked">Three</li>
+            <li class="ql-list-item ql-list-item-checked">One</li>
+            <li class="ql-list-item ql-list-item-checked">Two</li>
+            <li class="ql-list-item ql-list-item-unchecked ql-indent-1">Alpha</li>
+            <li class="ql-list-item ql-list-item-checked ql-indent-2">I</li>
+            <li class="ql-list-item ql-list-item-checked ql-indent-2">II</li>
+            <li class="ql-list-item ql-list-item-checked">Three</li>
           </ol>
         `,
       );
       expect(editor.getHTML(2, 20)).toEqualHTML(`
         <ul>
-          <li data-list="checked">e</li>
-          <li data-list="checked">Two
+          <li class="ql-list-item ql-list-item-checked">e</li>
+          <li class="ql-list-item ql-list-item-checked">Two
             <ul>
-              <li data-list="unchecked">Alpha
+              <li class="ql-list-item ql-list-item-unchecked">Alpha
                 <ul>
-                  <li data-list="checked">I</li>
-                  <li data-list="checked">II</li>
+                  <li class="ql-list-item ql-list-item-checked">I</li>
+                  <li class="ql-list-item ql-list-item-checked">II</li>
                 </ul>
               </li>
             </ul>
           </li>
-          <li data-list="checked">Thr</li>
+          <li class="ql-list-item ql-list-item-checked">Thr</li>
         </ul>
       `);
     });
@@ -1359,11 +1363,11 @@ describe('Editor', () => {
       const editor = createEditor(
         `
         <ol>
-          <li data-list="ordered">1111</li>
-          <li data-list="ordered" class="ql-indent-1">AAAA</li>
-          <li data-list="ordered" class="ql-indent-2">IIII</li>
-          <li data-list="ordered" class="ql-indent-1">BBBB</li>
-          <li data-list="ordered">2222</li>
+          <li class="ql-list-item ql-list-item-ordered">1111</li>
+          <li class="ql-list-item ql-list-item-ordered ql-indent-1">AAAA</li>
+          <li class="ql-list-item ql-list-item-ordered ql-indent-2">IIII</li>
+          <li class="ql-list-item ql-list-item-ordered ql-indent-1">BBBB</li>
+          <li class="ql-list-item ql-list-item-ordered">2222</li>
         </ol>
         `,
       );

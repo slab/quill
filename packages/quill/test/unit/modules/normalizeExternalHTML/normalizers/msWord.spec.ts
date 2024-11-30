@@ -25,21 +25,19 @@ describe('Microsoft Word', () => {
       HTMLCollection [
         <ul>
           <li
-            data-list="ordered"
+            class="ql-list-item ql-list-item-ordered"
           >
             item 1
           </li>
           <li
-            class="ql-indent-2"
-            data-list="bullet"
+            class="ql-list-item ql-list-item-bullet ql-indent-2"
           >
             item 2
           </li>
         </ul>,
         <ul>
           <li
-            class="ql-indent-3"
-            data-list="ordered"
+            class="ql-list-item ql-list-item-ordered ql-indent-3"
           >
             item 3 in another list
           </li>
@@ -49,7 +47,7 @@ describe('Microsoft Word', () => {
         </p>,
         <ul>
           <li
-            data-list="ordered"
+            class="ql-list-item ql-list-item-ordered"
           >
             the last item
           </li>

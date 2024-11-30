@@ -68,9 +68,10 @@ const normalizeListItem = (doc: Document) => {
     const ul = document.createElement('ul');
     childListItems.forEach((listItem) => {
       const li = document.createElement('li');
-      li.setAttribute('data-list', listItem.type);
+      li.classList.add(`ql-list-item`);
+      li.classList.add(`ql-list-item-${listItem.type}`);
       if (listItem.indent > 1) {
-        li.setAttribute('class', `ql-indent-${listItem.indent - 1}`);
+        li.classList.add(`ql-indent-${listItem.indent - 1}`);
       }
       li.innerHTML = listItem.element.innerHTML;
       ul.appendChild(li);
