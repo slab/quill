@@ -1,4 +1,5 @@
 import DropdownIcon from '../assets/icons/dropdown.svg';
+import createTrustedHtml from '../core/utils/createTrustedHtml.js';
 
 let optionsCounter = 0;
 
@@ -84,7 +85,7 @@ class Picker {
   buildLabel() {
     const label = document.createElement('span');
     label.classList.add('ql-picker-label');
-    label.innerHTML = DropdownIcon;
+    label.innerHTML = createTrustedHtml(DropdownIcon);
     // @ts-expect-error
     label.tabIndex = '0';
     label.setAttribute('role', 'button');

@@ -1,3 +1,5 @@
+import createTrustedHtml from '../../../core/utils/createTrustedHtml.js';
+
 const ignoreRegexp = /\bmso-list:[^;]*ignore/i;
 const idRegexp = /\bmso-list:[^;]*\bl(\d+)/i;
 const indentRegexp = /\bmso-list:[^;]*\blevel(\d+)/i;
@@ -72,7 +74,7 @@ const normalizeListItem = (doc: Document) => {
       if (listItem.indent > 1) {
         li.setAttribute('class', `ql-indent-${listItem.indent - 1}`);
       }
-      li.innerHTML = listItem.element.innerHTML;
+      li.innerHTML = createTrustedHtml(listItem.element.innerHTML);
       ul.appendChild(li);
     });
 

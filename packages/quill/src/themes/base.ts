@@ -13,6 +13,7 @@ import type History from '../modules/history.js';
 import type Keyboard from '../modules/keyboard.js';
 import type Uploader from '../modules/uploader.js';
 import type Selection from '../core/selection.js';
+import createTrustedHtml from '../core/utils/createTrustedHtml.js';
 
 const ALIGNS = [false, 'center', 'right', 'justify'];
 
@@ -119,18 +120,20 @@ class BaseTheme extends Theme {
         name = name.slice('ql-'.length);
         if (icons[name] == null) return;
         if (name === 'direction') {
-          // @ts-expect-error
-          button.innerHTML = icons[name][''] + icons[name].rtl;
+          button.innerHTML = createTrustedHtml(
+            // @ts-expect-error
+            icons[name][''] + icons[name].rtl,
+          );
         } else if (typeof icons[name] === 'string') {
           // @ts-expect-error
-          button.innerHTML = icons[name];
+          button.innerHTML = createTrustedHtml(icons[name]);
         } else {
           // @ts-expect-error
           const value = button.value || '';
           // @ts-expect-error
           if (value != null && icons[name][value]) {
             // @ts-expect-error
-            button.innerHTML = icons[name][value];
+            button.innerHTML = createTrustedHtml(icons[name][value]);
           }
         }
       });

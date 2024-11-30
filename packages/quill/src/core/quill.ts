@@ -24,6 +24,7 @@ import type { ThemeConstructor } from './theme.js';
 import scrollRectIntoView from './utils/scrollRectIntoView.js';
 import type { Rect } from './utils/scrollRectIntoView.js';
 import createRegistryWithFormats from './utils/createRegistryWithFormats.js';
+import createTrustedHtml from './utils/createTrustedHtml.js';
 
 const debug = logger('quill');
 
@@ -204,7 +205,7 @@ class Quill {
     }
     const html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
-    this.container.innerHTML = '';
+    this.container.innerHTML = createTrustedHtml('');
     instances.set(this.container, this);
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
