@@ -29,6 +29,21 @@ import subscriptIcon from '../assets/icons/subscript.svg';
 import superscriptIcon from '../assets/icons/superscript.svg';
 import strikeIcon from '../assets/icons/strike.svg';
 import tableIcon from '../assets/icons/table.svg';
+import tableBorderAllIcon from '../assets/icons/table-border-all.svg';
+import tableBorderBottomIcon from '../assets/icons/table-border-bottom.svg';
+import tableBorderLeftIcon from '../assets/icons/table-border-left.svg';
+import tableBorderNoneIcon from '../assets/icons/table-border-none.svg';
+import tableBorderOutsideIcon from '../assets/icons/table-border-outside.svg';
+import tableBorderRightIcon from '../assets/icons/table-border-right.svg';
+import tableBorderTopIcon from '../assets/icons/table-border-top.svg';
+import tableDeleteCellsIcon from '../assets/icons/table-delete-cells.svg';
+import tableDeleteColumnsIcon from '../assets/icons/table-delete-columns.svg';
+import tableDeleteRowsIcon from '../assets/icons/table-delete-rows.svg';
+import tableInsertCellsIcon from '../assets/icons/table-insert-cells.svg';
+import tableInsertColumnsIcon from '../assets/icons/table-insert-columns.svg';
+import tableInsertRowsIcon from '../assets/icons/table-insert-rows.svg';
+import tableMergeCellsIcon from '../assets/icons/table-merge-cells.svg';
+import tableUnmergeCellsIcon from '../assets/icons/table-unmerge-cells.svg';
 import underlineIcon from '../assets/icons/underline.svg';
 import videoIcon from '../assets/icons/video.svg';
 
@@ -77,6 +92,21 @@ export default {
   },
   strike: strikeIcon,
   table: tableIcon,
+  'table-border-all': tableBorderAllIcon,
+  'table-border-bottom': tableBorderBottomIcon,
+  'table-border-left': tableBorderLeftIcon,
+  'table-border-none': tableBorderNoneIcon,
+  'table-border-outside': tableBorderOutsideIcon,
+  'table-border-right': tableBorderRightIcon,
+  'table-border-top': tableBorderTopIcon,
+  'table-delete-cells': tableDeleteCellsIcon,
+  'table-delete-column': tableDeleteColumnsIcon,
+  'table-delete-row': tableDeleteRowsIcon,
+  'table-insert-cell': tableInsertCellsIcon,
+  'table-insert-column': tableInsertColumnsIcon,
+  'table-insert-row': tableInsertRowsIcon,
+  'table-merge-cells': tableMergeCellsIcon,
+  'table-unmerge-cells': tableUnmergeCellsIcon,
   underline: underlineIcon,
   video: videoIcon,
 };
