@@ -66,9 +66,10 @@ class BaseTheme extends Theme {
 
   constructor(quill: Quill, options: ThemeOptions) {
     super(quill, options);
+    const doc = quill.rootDocument ?? document;
     const listener = (e: MouseEvent) => {
-      if (!document.body.contains(quill.root)) {
-        document.body.removeEventListener('click', listener);
+      if (!doc.body.contains(quill.root)) {
+        doc.body.removeEventListener('click', listener);
         return;
       }
       if (
@@ -76,7 +77,7 @@ class BaseTheme extends Theme {
         // @ts-expect-error
         !this.tooltip.root.contains(e.target) &&
         // @ts-expect-error
-        document.activeElement !== this.tooltip.textbox &&
+        doc.activeElement !== this.tooltip.textbox &&
         !this.quill.hasFocus()
       ) {
         this.tooltip.hide();
@@ -90,7 +91,7 @@ class BaseTheme extends Theme {
         });
       }
     };
-    quill.emitter.listenDOM('click', document.body, listener);
+    quill.emitter.listenDOM('click', doc.body, listener);
   }
 
   addModule(name: 'clipboard'): Clipboard;

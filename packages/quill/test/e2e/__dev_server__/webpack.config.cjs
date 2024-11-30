@@ -6,13 +6,22 @@ const common = require('../../../webpack.common.cjs');
 const { merge } = require('webpack-merge');
 require('webpack-dev-server');
 
-module.exports = (env) =>
-  merge(common, {
+module.exports = (env) => {
+  console.log(env);
+  return merge(common, {
     plugins: [
       new HtmlWebpackPlugin({
         publicPath: '/',
         filename: 'index.html',
         template: path.resolve(__dirname, 'index.html'),
+        chunks: ['quill'],
+        inject: 'head',
+        scriptLoading: 'blocking',
+      }),
+      new HtmlWebpackPlugin({
+        publicPath: '/',
+        filename: 'iframe.html',
+        template: path.resolve(__dirname, 'iframe.html'),
         chunks: ['quill'],
         inject: 'head',
         scriptLoading: 'blocking',
@@ -30,3 +39,4 @@ module.exports = (env) =>
       webSocketServer: false,
     },
   });
+};

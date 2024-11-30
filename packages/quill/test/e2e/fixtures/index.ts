@@ -4,32 +4,36 @@ import Composition from './Composition.js';
 import Locker from './utils/Locker.js';
 import Clipboard from './Clipboard.js';
 
-export const test = base.extend<{
-  editorPage: EditorPage;
-  clipboard: Clipboard;
-  composition: Composition;
-}>({
-  editorPage: ({ page }, use) => {
-    use(new EditorPage(page));
-  },
-  composition: ({ page, browserName }, use) => {
-    test.fail(
-      browserName !== 'chromium',
-      'CDPSession is only available in Chromium',
-    );
-
-    use(new Composition(page, browserName));
-  },
-  clipboard: [
-    async ({ page }, use) => {
-      const locker = new Locker('clipboard');
-      await locker.lock();
-      await use(new Clipboard(page));
-      await locker.release();
+export const testWithMode = function (mode: 'regular' | 'iframe') {
+  return base.extend<{
+    editorPage: EditorPage;
+    clipboard: Clipboard;
+    composition: Composition;
+  }>({
+    editorPage: ({ page }, use) => {
+      use(new EditorPage(page, mode));
     },
-    { timeout: 30000 },
-  ],
-});
+    composition: ({ page, browserName }, use) => {
+      test.fail(
+        browserName !== 'chromium',
+        'CDPSession is only available in Chromium',
+      );
+
+      use(new Composition(page, browserName));
+    },
+    clipboard: [
+      async ({ page }, use) => {
+        const locker = new Locker('clipboard');
+        await locker.lock();
+        await use(new Clipboard(page));
+        await locker.release();
+      },
+      { timeout: 30000 },
+    ],
+  });
+};
+
+export const test = testWithMode('regular');
 
 export const CHAPTER = 'Chapter 1. Loomings.';
 export const P1 =
