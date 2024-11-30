@@ -4,7 +4,7 @@
   "description": "Your powerful, rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "https://quilljs.com",
-  "main": "quill.js",
+  "main": "dist/dist/quill.js",
   "type": "module",
   "dependencies": {
     "eventemitter3": "^5.0.1",
@@ -83,7 +83,8 @@
     "test": "run-s test:*",
     "test:unit": "vitest --config test/unit/vitest.config.ts",
     "test:fuzz": "vitest --config test/fuzz/vitest.config.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+		"postinstall": "npm run build"
   },
   "keywords": [
     "quill",
