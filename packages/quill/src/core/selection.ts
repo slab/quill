@@ -281,11 +281,11 @@ class Selection {
       const blot = this.scroll.find(node, true);
       // @ts-expect-error Fix me later
       const index = blot.offset(this.scroll);
-      if (offset === 0) {
-        return index;
-      }
       if (blot instanceof LeafBlot) {
         return index + blot.index(node, offset);
+      }
+      if (offset === 0) {
+        return index;
       }
       // @ts-expect-error Fix me later
       return index + blot.length();
