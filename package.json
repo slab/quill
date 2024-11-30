@@ -8,6 +8,7 @@
   "config": {
     "ports": {
       "webpack": "9080",
+      "tessellation": "9200",
       "website": "9000"
     }
   },
@@ -26,9 +27,10 @@
     "build": "run-p build:*",
     "build:quill": "npm run build -w quill",
     "build:website": "npm run build -w website",
-    "start": "run-p start:*",
+    "start": "[ -z \"$npm_package_config_ports_webpack\" ] && webpack-dev-server || webpack-dev-server --port $npm_package_config_ports_webpack",
     "start:quill": "npm start -w quill",
     "start:website": "NEXT_PUBLIC_LOCAL_QUILL=true npm start -w website",
+    "build:tessellation" : "npm run build -w quill && npx webpack --config webpack.config.js",
     "lint": "npm run lint -ws"
   },
   "keywords": [
@@ -46,6 +48,7 @@
   "engineStrict": true,
   "devDependencies": {
     "execa": "^9.0.2",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "webpack-cli": "^5.1.4"
   }
 }
