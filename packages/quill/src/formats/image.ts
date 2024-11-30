@@ -1,7 +1,7 @@
 import { EmbedBlot } from 'parchment';
 import { sanitize } from './link.js';
 
-const ATTRIBUTES = ['alt', 'height', 'width'];
+const ATTRIBUTES = ['alt', 'title', 'height', 'width'];
 
 class Image extends EmbedBlot {
   static blotName = 'image';
