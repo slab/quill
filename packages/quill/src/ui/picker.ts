@@ -1,4 +1,5 @@
 import DropdownIcon from '../assets/icons/dropdown.svg';
+import { Subscriber } from '../core/subscriber';
 
 let optionsCounter = 0;
 
@@ -11,21 +12,23 @@ function toggleAriaAttribute(element: HTMLElement, attribute: string) {
 
 class Picker {
   select: HTMLSelectElement;
+  subscriber: Subscriber;
   container: HTMLElement;
   label: HTMLElement;
 
-  constructor(select: HTMLSelectElement) {
+  constructor(select: HTMLSelectElement, subscriber: Subscriber) {
     this.select = select;
+    this.subscriber = subscriber;
     this.container = document.createElement('span');
     this.buildPicker();
     this.select.style.display = 'none';
     // @ts-expect-error Fix me later
     this.select.parentNode.insertBefore(this.container, this.select);
 
-    this.label.addEventListener('mousedown', () => {
+    this.subscriber.on(this, this.label, 'mousedown', () => {
       this.togglePicker();
     });
-    this.label.addEventListener('keydown', (event) => {
+    this.subscriber.on(this, this.label, 'keydown', (event) => {
       switch (event.key) {
         case 'Enter':
           this.togglePicker();
@@ -37,7 +40,7 @@ class Picker {
         default:
       }
     });
-    this.select.addEventListener('change', this.update.bind(this));
+    this.subscriber.on(this, this.select, 'change', this.update.bind(this));
   }
 
   togglePicker() {
@@ -61,10 +64,10 @@ class Picker {
     if (option.textContent) {
       item.setAttribute('data-label', option.textContent);
     }
-    item.addEventListener('click', () => {
+    this.subscriber.on(this, item, 'click', () => {
       this.selectItem(item, true);
     });
-    item.addEventListener('keydown', (event) => {
+    this.subscriber.on(this, item, 'keydown', (event) => {
       switch (event.key) {
         case 'Enter':
           this.selectItem(item, true);

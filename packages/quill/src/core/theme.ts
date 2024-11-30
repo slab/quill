@@ -1,4 +1,5 @@
 import type Quill from '../core.js';
+import Module from '../core/module.js';
 import type Clipboard from '../modules/clipboard.js';
 import type History from '../modules/history.js';
 import type Keyboard from '../modules/keyboard.js';
@@ -26,6 +27,14 @@ class Theme {
     protected quill: Quill,
     protected options: ThemeOptions,
   ) {}
+
+  detach() {
+    Object.values(this.modules).forEach((module) => {
+      if (module instanceof Module) {
+        module.detach();
+      }
+    });
+  }
 
   init() {
     Object.keys(this.options.modules).forEach((name) => {

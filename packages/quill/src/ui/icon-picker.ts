@@ -1,10 +1,15 @@
+import { Subscriber } from '../core/subscriber.js';
 import Picker from './picker.js';
 
 class IconPicker extends Picker {
   defaultItem: HTMLElement | null;
 
-  constructor(select: HTMLSelectElement, icons: Record<string, string>) {
-    super(select);
+  constructor(
+    select: HTMLSelectElement,
+    subscriber: Subscriber,
+    icons: Record<string, string>,
+  ) {
+    super(select, subscriber);
     this.container.classList.add('ql-icon-picker');
     Array.from(this.container.querySelectorAll('.ql-picker-item')).forEach(
       (item) => {

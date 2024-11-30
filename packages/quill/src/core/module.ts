@@ -7,6 +7,8 @@ abstract class Module<T extends {} = {}> {
     public quill: Quill,
     protected options: Partial<T> = {},
   ) {}
+
+  detach() {}
 }
 
 export default Module;

@@ -35,4 +35,22 @@ describe('emitter', () => {
     document.body.click();
     expect(calls).toEqual(2);
   });
+
+  test('ignoreDOM', () => {
+    const quill = new Quill(document.createElement('div'));
+    document.body.appendChild(quill.container);
+
+    let calls = 0;
+    quill.emitter.listenDOM('click', document.body, () => {
+      calls += 1;
+    });
+
+    document.body.click();
+    expect(calls).toEqual(1);
+
+    quill.emitter.ignoreDOM();
+
+    document.body.click();
+    expect(calls).toEqual(1);
+  });
 });
