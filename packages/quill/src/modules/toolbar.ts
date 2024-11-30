@@ -250,6 +250,14 @@ function addSelect(
 Toolbar.DEFAULTS = {
   container: null,
   handlers: {
+    align(value){
+      if(value === 'left' || value === 'right' || value === 'center' || value === 'justify'){
+        this.quill.format('align', value, Quill.sources.USER) 
+      }
+      else{
+        this.quill.format('align', false, Quill.sources.USER)
+      }
+    },
     clean() {
       const range = this.quill.getSelection();
       if (range == null) return;
