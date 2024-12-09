@@ -339,6 +339,7 @@ Syntax.DEFAULTS = {
   interval: 1000,
   languages: [
     { key: 'plain', label: 'Plain' },
+    { key: 'awk', label: 'AWK' },
     { key: 'bash', label: 'Bash' },
     { key: 'cpp', label: 'C++' },
     { key: 'cs', label: 'C#' },
