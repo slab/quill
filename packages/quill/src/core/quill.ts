@@ -113,7 +113,7 @@ class Quill {
   static import(name: `themes/${string}`): typeof Theme;
   static import(name: 'parchment'): typeof Parchment;
   static import(name: 'delta'): typeof Delta;
-  static import(name: string): unknown;
+  static import<T = unknown>(name: string): T | undefined;
   static import(name: string) {
     if (this.imports[name] == null) {
       debug.error(`Cannot import ${name}. Are you sure it was registered?`);
@@ -532,8 +532,10 @@ class Quill {
     return this.scroll.lines(index, length);
   }
 
-  getModule(name: string) {
-    return this.theme.modules[name];
+  getModule<T = unknown>(name: string): T | undefined {
+    if (this.theme.modules[name] !== undefined) {
+      return this.theme.modules[name] as T;
+    }
   }
 
   getSelection(focus: true): Range;
