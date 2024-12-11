@@ -92,6 +92,8 @@ class SnowTooltip extends BaseTooltip {
 }
 
 class SnowTheme extends BaseTheme {
+  tooltip: SnowTooltip;
+
   constructor(quill: Quill, options: ThemeOptions) {
     if (
       options.modules.toolbar != null &&
@@ -148,4 +150,4 @@ SnowTheme.DEFAULTS = merge({}, BaseTheme.DEFAULTS, {
   },
 } satisfies ThemeOptions);
 
-export default SnowTheme;
+export { SnowTheme as default, SnowTooltip };
