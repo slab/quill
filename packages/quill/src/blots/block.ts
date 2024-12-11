@@ -10,10 +10,12 @@ import Delta from 'quill-delta';
 import Break from './break.js';
 import Inline from './inline.js';
 import TextBlot from './text.js';
+import type Scroll from './scroll.js';
 
 const NEWLINE_LENGTH = 1;
 
 class Block extends BlockBlot {
+  scroll: Scroll;
   cache: { delta?: Delta | null; length?: number } = {};
 
   delta(): Delta {
@@ -129,6 +131,7 @@ Block.defaultChild = Break;
 Block.allowedChildren = [Break, Inline, EmbedBlot, TextBlot];
 
 class BlockEmbed extends EmbedBlot {
+  scroll: Scroll;
   attributes: AttributorStore;
   domNode: HTMLElement;
 

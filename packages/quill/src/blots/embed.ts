@@ -1,6 +1,7 @@
 import type { ScrollBlot } from 'parchment';
 import { EmbedBlot } from 'parchment';
 import TextBlot from './text.js';
+import type Scroll from './scroll.js';
 
 const GUARD_TEXT = '\uFEFF';
 
@@ -12,6 +13,7 @@ export interface EmbedContextRange {
 }
 
 class Embed extends EmbedBlot {
+  scroll: Scroll;
   contentNode: HTMLSpanElement;
   leftGuard: Text;
   rightGuard: Text;
