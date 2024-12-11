@@ -77,6 +77,18 @@ interface KeyboardOptions {
 class Keyboard extends Module<KeyboardOptions> {
   static DEFAULTS: KeyboardOptions;
 
+  static keys = {
+    BACKSPACE: 8,
+    TAB: 9,
+    ENTER: 13,
+    ESCAPE: 27,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    DELETE: 46,
+  };
+
   static match(evt: KeyboardEvent, binding: BindingObject) {
     if (
       (['altKey', 'ctrlKey', 'metaKey', 'shiftKey'] as const).some((key) => {
@@ -101,48 +113,51 @@ class Keyboard extends Module<KeyboardOptions> {
         this.addBinding(this.options.bindings[name]);
       }
     });
-    this.addBinding({ key: 'Enter', shiftKey: null }, this.handleEnter);
     this.addBinding(
-      { key: 'Enter', metaKey: null, ctrlKey: null, altKey: null },
+      { key: Keyboard.keys.ENTER, shiftKey: null },
+      this.handleEnter,
+    );
+    this.addBinding(
+      { key: Keyboard.keys.ENTER, metaKey: null, ctrlKey: null, altKey: null },
       () => {},
     );
     if (/Firefox/i.test(navigator.userAgent)) {
       // Need to handle delete and backspace for Firefox in the general case #1171
       this.addBinding(
-        { key: 'Backspace' },
+        { key: Keyboard.keys.BACKSPACE },
         { collapsed: true },
         this.handleBackspace,
       );
       this.addBinding(
-        { key: 'Delete' },
+        { key: Keyboard.keys.DELETE },
         { collapsed: true },
         this.handleDelete,
       );
     } else {
       this.addBinding(
-        { key: 'Backspace' },
+        { key: Keyboard.keys.BACKSPACE },
         { collapsed: true, prefix: /^.?$/ },
         this.handleBackspace,
       );
       this.addBinding(
-        { key: 'Delete' },
+        { key: Keyboard.keys.DELETE },
         { collapsed: true, suffix: /^.?$/ },
         this.handleDelete,
       );
     }
     this.addBinding(
-      { key: 'Backspace' },
+      { key: Keyboard.keys.BACKSPACE },
       { collapsed: false },
       this.handleDeleteRange,
     );
     this.addBinding(
-      { key: 'Delete' },
+      { key: Keyboard.keys.DELETE },
       { collapsed: false },
       this.handleDeleteRange,
     );
     this.addBinding(
       {
-        key: 'Backspace',
+        key: Keyboard.keys.BACKSPACE,
         altKey: null,
         ctrlKey: null,
         metaKey: null,
@@ -194,7 +209,9 @@ class Keyboard extends Module<KeyboardOptions> {
       // evt.isComposing is false when pressing Enter/Backspace when composing in Safari
       // https://bugs.webkit.org/show_bug.cgi?id=165004
       const isComposing =
-        evt.keyCode === 229 && (evt.key === 'Enter' || evt.key === 'Backspace');
+        evt.keyCode === 229 &&
+        (evt.which === Keyboard.keys.ENTER ||
+          evt.which === Keyboard.keys.BACKSPACE);
       if (isComposing) return;
 
       const bindings = (this.bindings[evt.key] || []).concat(
@@ -409,7 +426,7 @@ const defaultOptions: KeyboardOptions = {
       },
     },
     'outdent backspace': {
-      key: 'Backspace',
+      key: Keyboard.keys.BACKSPACE,
       collapsed: true,
       shiftKey: null,
       metaKey: null,
@@ -452,7 +469,7 @@ const defaultOptions: KeyboardOptions = {
       },
     },
     'blockquote empty enter': {
-      key: 'Enter',
+      key: Keyboard.keys.ENTER,
       collapsed: true,
       format: ['blockquote'],
       empty: true,
@@ -461,7 +478,7 @@ const defaultOptions: KeyboardOptions = {
       },
     },
     'list empty enter': {
-      key: 'Enter',
+      key: Keyboard.keys.ENTER,
       collapsed: true,
       format: ['list'],
       empty: true,
@@ -479,7 +496,7 @@ const defaultOptions: KeyboardOptions = {
       },
     },
     'checklist enter': {
-      key: 'Enter',
+      key: Keyboard.keys.ENTER,
       collapsed: true,
       format: { list: 'checked' },
       handler(range, context) {
@@ -509,7 +526,7 @@ const defaultOptions: KeyboardOptions = {
       },
     },
     'header enter': {
-      key: 'Enter',
+      key: Keyboard.keys.ENTER,
       collapsed: true,
       format: ['header'],
       suffix: /^$/,
@@ -535,21 +552,21 @@ const defaultOptions: KeyboardOptions = {
       },
     },
     'table backspace': {
-      key: 'Backspace',
+      key: Keyboard.keys.BACKSPACE,
       format: ['table'],
       collapsed: true,
       offset: 0,
       handler() {},
     },
     'table delete': {
-      key: 'Delete',
+      key: Keyboard.keys.DELETE,
       format: ['table'],
       collapsed: true,
       suffix: /^$/,
       handler() {},
     },
     'table enter': {
-      key: 'Enter',
+      key: Keyboard.keys.ENTER,
       shiftKey: null,
       format: ['table'],
       handler(range) {
@@ -637,7 +654,7 @@ const defaultOptions: KeyboardOptions = {
       },
     },
     'code exit': {
-      key: 'Enter',
+      key: Keyboard.keys.ENTER,
       collapsed: true,
       format: ['code-block'],
       prefix: /^$/,
@@ -874,4 +891,4 @@ function tableSide(_table: unknown, row: Blot, cell: Blot, offset: number) {
   return null;
 }
 
-export { Keyboard as default, SHORTKEY, normalize, deleteRange };
+export { Keyboard as default, SHORTKEY, normalize, deleteRange, BindingObject };
