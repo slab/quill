@@ -67,7 +67,7 @@ const STYLE_ATTRIBUTORS = [
   return memo;
 }, {});
 
-interface ClipboardOptions {
+export interface ClipboardOptions {
   matchers: [Selector, Matcher][];
 }
 
