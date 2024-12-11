@@ -173,7 +173,7 @@ class Clipboard extends Module<ClipboardOptions> {
     e.preventDefault();
     const [range] = this.quill.selection.getRange();
     if (range == null) return;
-    const { html, text } = this.onCopy(range, isCut);
+    const { html, text } = this.onCopy(range);
     e.clipboardData?.setData('text/plain', text);
     e.clipboardData?.setData('text/html', html);
     if (isCut) {
@@ -225,7 +225,6 @@ class Clipboard extends Module<ClipboardOptions> {
     this.onPaste(range, { html, text });
   }
 
-  onCopy(range: Range, isCut: boolean): { html: string; text: string };
   onCopy(range: Range) {
     const text = this.quill.getText(range);
     const html = this.quill.getSemanticHTML(range);
