@@ -332,6 +332,7 @@ class Keyboard extends Module<KeyboardOptions> {
   }
 
   handleEnter(range: Range, context: Context) {
+    //console.log('🪶 Quill - handleEnter: ', range, context);
     const lineFormats = Object.keys(context.format).reduce(
       (formats: Record<string, unknown>, format) => {
         if (
@@ -344,23 +345,33 @@ class Keyboard extends Module<KeyboardOptions> {
       },
       {},
     );
+
+    // [Customized for TextJam]
+    // If there is a space character at the end of the line when we hit enter, delete it
+    //const isSpaceAtEnd = range.index + range.length - 1 > 0 && this.quill.getText(range.index + range.length - 1, 1) === ' ';
+    //const deleteExtraLength = isSpaceAtEnd ? 1 : 0;
+    const deleteExtraLength = 0;
+    
+    // [Customized for TextJam]
+    // Go ahead and apply our deltas now, and adjust if we're deleting a space
     const delta = new Delta()
-      .retain(range.index)
-      .delete(range.length)
+      .retain(range.index - deleteExtraLength)
+      .delete(range.length + deleteExtraLength)
       .insert('\n', lineFormats);
     this.quill.updateContents(delta, Quill.sources.USER);
-    this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+    this.quill.setSelection(range.index + 1 - deleteExtraLength, Quill.sources.SILENT);
     this.quill.focus();
 
+    // [Customized for TextJam]
     // Preserve the format of the text from the prior line
-    // Customized for TextJam
+    // Reverted from earlier version of Quill
+    /*
     Object.keys(context.format).forEach(name => {
       if (lineFormats[name] != null) return;
       if (Array.isArray(context.format[name])) return;
       if (name === 'code' || name === 'link') return;
       this.quill.format(name, context.format[name], Quill.sources.USER);
-    });
-
+    });*/
 
   }
 }
