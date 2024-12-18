@@ -244,6 +244,12 @@ describe('Clipboard', () => {
       expect(delta).toEqual(new Delta().insert('0\n1 2  3  4\n5 6  7 8'));
     });
 
+    test('multiple whitespaces', () => {
+      const html = '<div>1   2    3</div>';
+      const delta = createClipboard().convert({ html });
+      expect(delta).toEqual(new Delta().insert('1 2 3'));
+    });
+
     test('inline whitespace', () => {
       const html = '<p>0 <strong>1</strong> 2</p>';
       const delta = createClipboard().convert({ html });
@@ -256,19 +262,23 @@ describe('Clipboard', () => {
       const html = '<span>0&nbsp;<strong>1</strong>&nbsp;2</span>';
       const delta = createClipboard().convert({ html });
       expect(delta).toEqual(
-        new Delta()
-          .insert('0\u00a0')
-          .insert('1', { bold: true })
-          .insert('\u00a02'),
+        new Delta().insert('0 ').insert('1', { bold: true }).insert(' 2'),
       );
     });
 
     test('consecutive intentional whitespace', () => {
       const html = '<strong>&nbsp;&nbsp;1&nbsp;&nbsp;</strong>';
       const delta = createClipboard().convert({ html });
-      expect(delta).toEqual(
-        new Delta().insert('\u00a0\u00a01\u00a0\u00a0', { bold: true }),
-      );
+      expect(delta).toEqual(new Delta().insert('  1  ', { bold: true }));
+    });
+
+    test('intentional whitespace at line start/end', () => {
+      expect(
+        createClipboard().convert({ html: '<p>0 &nbsp;</p><p>&nbsp; 2</p>' }),
+      ).toEqual(new Delta().insert('0  \n  2'));
+      expect(
+        createClipboard().convert({ html: '<p>0&nbsp; </p><p> &nbsp;2</p>' }),
+      ).toEqual(new Delta().insert('0 \n 2'));
     });
 
     test('newlines between inline elements', () => {
