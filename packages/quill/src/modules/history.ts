@@ -110,6 +110,7 @@ class History extends Module<HistoryOptions> {
     let undoDelta = changeDelta.invert(oldDelta);
     let undoRange = this.currentRange;
     const timestamp = Date.now();
+    if (undoDelta.length() === 0) return;
     if (
       // @ts-expect-error Fix me later
       this.lastRecorded + this.options.delay > timestamp &&
@@ -120,10 +121,10 @@ class History extends Module<HistoryOptions> {
         undoDelta = undoDelta.compose(item.delta);
         undoRange = item.range;
       }
+      if (undoDelta.length() === 0) return;
     } else {
       this.lastRecorded = timestamp;
     }
-    if (undoDelta.length() === 0) return;
     this.stack.undo.push({ delta: undoDelta, range: undoRange });
     // @ts-expect-error Fix me later
     if (this.stack.undo.length > this.options.maxStack) {

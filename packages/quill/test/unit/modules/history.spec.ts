@@ -210,6 +210,40 @@ describe('History', () => {
       );
     });
 
+    test('correctly ignores empty changes', async () => {
+      const { quill } = setup();
+      quill.updateContents(
+        new Delta().retain(12).insert('es'),
+        Quill.sources.USER,
+      );
+      quill.history.lastRecorded = 0;
+      quill.updateContents(
+        new Delta().retain(14).insert('!'),
+        Quill.sources.USER,
+      );
+      // @ts-expect-error
+      await sleep((quill.history.options.delay as number) * 1.25);
+
+      // empty change
+      quill.deleteText({
+        index: 2,
+        length: 0,
+      });
+
+      quill.updateContents(
+        new Delta().retain(15).insert('!'),
+        Quill.sources.USER,
+      );
+      expect(quill.getContents()).toEqual(
+        new Delta().insert('The lazy foxes!!\n'),
+      );
+
+      quill.history.undo();
+      expect(quill.getContents()).toEqual(
+        new Delta().insert('The lazy foxes!\n'),
+      );
+    });
+
     test('ignore remote changes', () => {
       const { quill } = setup();
       // @ts-expect-error
