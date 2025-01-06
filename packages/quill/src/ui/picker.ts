@@ -34,6 +34,9 @@ class Picker {
           this.escape();
           event.preventDefault();
           break;
+        case 'ArrowLeft':
+        case 'ArrowRight':
+          this.toggleTabIndex();
         default:
       }
     });
@@ -46,6 +49,10 @@ class Picker {
     toggleAriaAttribute(this.label, 'aria-expanded');
     // @ts-expect-error
     toggleAriaAttribute(this.options, 'aria-hidden');
+  }
+
+  toggleTabIndex() {
+    this.label.tabIndex = this.label.tabIndex === 0 ? -1 : 0;
   }
 
   buildItem(option: HTMLOptionElement) {
@@ -85,8 +92,11 @@ class Picker {
     const label = document.createElement('span');
     label.classList.add('ql-picker-label');
     label.innerHTML = DropdownIcon;
+
+    // TODO: @cofi set all tabindex to -1 initially and then per JS set first one to 0. Then per keyboard right/left navigation set the next/prev to 0 and the rest to -1
     // @ts-expect-error
-    label.tabIndex = '0';
+    label.tabIndex = '-1';
+
     label.setAttribute('role', 'button');
     label.setAttribute('aria-expanded', 'false');
     this.container.appendChild(label);

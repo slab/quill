@@ -133,6 +133,7 @@ class Toolbar extends Module<ToolbarProps> {
       }
       this.update(range);
     });
+    input.tabIndex = 123;
     this.controls.push([format, input]);
   }
 
