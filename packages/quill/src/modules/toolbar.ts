@@ -27,6 +27,8 @@ class Toolbar extends Module<ToolbarProps> {
   controls: [string, HTMLElement][];
   handlers: Record<string, Handler>;
 
+  hasRovingTabindex: boolean = false;
+
   constructor(quill: Quill, options: Partial<ToolbarProps>) {
     super(quill, options);
     if (Array.isArray(this.options.container)) {
@@ -45,6 +47,10 @@ class Toolbar extends Module<ToolbarProps> {
       return;
     }
     this.container.classList.add('ql-toolbar');
+
+    // Check if the parent element has the custom "roving-tabindex" class in order to enable or disable roving tabindex
+    this.hasRovingTabindex = this.container.closest('.roving-tabindex') !== null;
+
     this.controls = [];
     this.handlers = {};
     if (this.options.handlers) {
@@ -133,8 +139,52 @@ class Toolbar extends Module<ToolbarProps> {
       }
       this.update(range);
     });
-    input.tabIndex = 123;
+
+    if (this.hasRovingTabindex && input.tagName === 'BUTTON') {
+      input.addEventListener('keydown', (e) => {
+        this.handleKeyboardEvent(e);
+      });
+    }
+
     this.controls.push([format, input]);
+  }
+
+  handleKeyboardEvent(e: KeyboardEvent) {
+    var target = e.currentTarget;
+    if (!target) return;
+
+    switch (e.key) {
+      case 'ArrowLeft':
+      case 'ArrowRight':
+        this.updateTabIndexes(target, e.key);
+        break;
+    }
+  }
+
+  updateTabIndexes(target: EventTarget, key: string) {
+    const currentIndex = this.controls.findIndex(control => control[1] === target);
+    const currentItem = this.controls[currentIndex][1];
+    currentItem.tabIndex = -1;
+
+    let nextIndex;
+    if (key === 'ArrowLeft') {
+      nextIndex = currentIndex === 0 ? this.controls.length - 1 : currentIndex - 1;
+    } else if (key === 'ArrowRight') {
+      nextIndex = currentIndex === this.controls.length - 1 ? 0 : currentIndex + 1;
+    }
+
+    if (nextIndex === undefined) return;
+    const nextItem = this.controls[nextIndex][1];
+    if (nextItem.tagName === 'SELECT') {
+      const qlPickerLabel = nextItem.previousElementSibling?.querySelectorAll('.ql-picker-label')[0];
+      if (qlPickerLabel && qlPickerLabel.tagName === 'SPAN') {
+        (qlPickerLabel as HTMLElement).tabIndex = 0;
+        (qlPickerLabel as HTMLElement).focus();
+      }
+    } else {
+      nextItem.tabIndex = 0;
+      nextItem.focus();
+    }
   }
 
   update(range: Range | null) {
