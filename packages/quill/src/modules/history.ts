@@ -71,15 +71,16 @@ class History extends Module<HistoryOptions> {
       );
     }
 
-    this.quill.root.addEventListener('beforeinput', (event) => {
-      if (event.inputType === 'historyUndo') {
-        this.undo();
-        event.preventDefault();
-      } else if (event.inputType === 'historyRedo') {
-        this.redo();
-        event.preventDefault();
-      }
-    });
+    // FIXME: this is causing a ton of issues with our keydown event bindings.
+    // this.quill.root.addEventListener('beforeinput', (event) => {
+    //   if (event.inputType === 'historyUndo') {
+    //     this.undo();
+    //     event.preventDefault();
+    //   } else if (event.inputType === 'historyRedo') {
+    //     this.redo();
+    //     event.preventDefault();
+    //   }
+    // });
   }
 
   change(source: 'undo' | 'redo', dest: 'redo' | 'undo') {
