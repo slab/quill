@@ -153,12 +153,9 @@ class Toolbar extends Module<ToolbarProps> {
     var target = e.currentTarget;
     if (!target) return;
 
-    switch (e.key) {
-      case 'ArrowLeft':
-      case 'ArrowRight':
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         this.updateTabIndexes(target, e.key);
-        break;
-    }
+            }
   }
 
   updateTabIndexes(target: EventTarget, key: string) {
@@ -166,14 +163,14 @@ class Toolbar extends Module<ToolbarProps> {
     const currentItem = this.controls[currentIndex][1];
     currentItem.tabIndex = -1;
 
-    let nextIndex;
+    let nextIndex: number | null = null;
     if (key === 'ArrowLeft') {
       nextIndex = currentIndex === 0 ? this.controls.length - 1 : currentIndex - 1;
     } else if (key === 'ArrowRight') {
       nextIndex = currentIndex === this.controls.length - 1 ? 0 : currentIndex + 1;
     }
 
-    if (nextIndex === undefined) return;
+    if (nextIndex === null) return;
     const nextItem = this.controls[nextIndex][1];
     if (nextItem.tagName === 'SELECT') {
       const qlPickerLabel = nextItem.previousElementSibling?.querySelectorAll('.ql-picker-label')[0];

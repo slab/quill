@@ -129,12 +129,9 @@ class Picker {
     var target = e.currentTarget;
     if (!target) return;
 
-    switch (e.key) {
-      case 'ArrowLeft':
-      case 'ArrowRight':
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         this.updateTabIndexes(target, e.key);
-        break;
-    }
+            }
   }
 
   updateTabIndexes(target: EventTarget, key: string) {
