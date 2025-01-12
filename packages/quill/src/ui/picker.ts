@@ -96,9 +96,6 @@ class Picker {
     // Set tabIndex to -1 by default to prevent focus
     // @ts-expect-error
     label.tabIndex = '-1';
-    label.addEventListener('keydown', (event) => {
-      this.handleKeyboardEvent(event);
-    });
 
 
     label.setAttribute('role', 'button');
@@ -122,37 +119,6 @@ class Picker {
         item.setAttribute('tabindex', '0');
       });
     }
-  }
-
-  handleKeyboardEvent(e: KeyboardEvent) {
-    if (!this.hasRovingTabindex) return;
-    var target = e.currentTarget;
-    if (!target) return;
-
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-        this.updateTabIndexes(target, e.key);
-            }
-  }
-
-  updateTabIndexes(target: EventTarget, key: string) {
-    this.label.setAttribute('tabindex', '-1');
-
-    const toolbar = this.container.closest('.ql-toolbar');
-    if (!toolbar) return;
-    const items = Array.from(toolbar.querySelectorAll('.ql-picker .ql-picker-label, .ql-toolbar button'));
-    const currentIndex = items.indexOf(target as HTMLElement);
-    let newIndex;
-
-    if (key === 'ArrowLeft') {
-      newIndex = (currentIndex - 1 + items.length) % items.length;
-    } else if (key === 'ArrowRight') {
-      newIndex = (currentIndex + 1) % items.length;
-    }
-
-    if (!newIndex) return;
-
-    items[newIndex].setAttribute('tabindex', '0');
-    (items[newIndex] as HTMLElement).focus();
   }
 
   buildOptions() {

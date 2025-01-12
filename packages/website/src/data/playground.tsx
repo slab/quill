@@ -4,6 +4,10 @@ const playground = [
     url: '/playground/snow',
   },
   {
+    title: 'Basic setup with roving tabindex',
+    url: '/playground/roving-tabindex',
+  },
+  {
     title: 'Using Quill inside a form',
     url: '/playground/form',
   },
