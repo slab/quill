@@ -23,6 +23,7 @@ import { FontStyle } from '../formats/font.js';
 import { SizeStyle } from '../formats/size.js';
 import { deleteRange } from './keyboard.js';
 import normalizeExternalHTML from './normalizeExternalHTML/index.js';
+import { SOFT_BREAK_CHARACTER } from '../blots/soft-break.js';
 
 const debug = logger('quill:clipboard');
 
@@ -33,6 +34,7 @@ const CLIPBOARD_CONFIG: [Selector, Matcher][] = [
   [Node.TEXT_NODE, matchText],
   [Node.TEXT_NODE, matchNewline],
   ['br', matchBreak],
+  ['br.soft-break', matchSoftBreak],
   [Node.ELEMENT_NODE, matchNewline],
   [Node.ELEMENT_NODE, matchBlot],
   [Node.ELEMENT_NODE, matchAttributor],
@@ -494,6 +496,10 @@ function matchBreak(node: Node, delta: Delta) {
     delta.insert('\n');
   }
   return delta;
+}
+
+function matchSoftBreak(node: Node, delta: Delta) {
+  return new Delta().insert(SOFT_BREAK_CHARACTER)
 }
 
 function matchCodeBlock(node: Node, delta: Delta, scroll: ScrollBlot) {
