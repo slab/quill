@@ -362,11 +362,7 @@ class Keyboard extends Module<KeyboardOptions> {
   }
 
   handleShiftEnter(range: Range) {
-    this.quill.insertEmbed(
-      range.index,
-      SoftBreak.blotName,
-      SOFT_BREAK_CHARACTER,
-    );
+    this.quill.insertText(range.index, SOFT_BREAK_CHARACTER);
     this.quill.setSelection(range.index + 1);
   }
 }
