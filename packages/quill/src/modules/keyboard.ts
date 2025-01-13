@@ -87,11 +87,11 @@ class Keyboard extends Module<KeyboardOptions> {
     });
     this.addBinding(
       {
-        key: "Enter",
+        key: 'Enter',
         shiftKey: true,
       },
-      this.handleShiftEnter
-    )
+      this.handleShiftEnter,
+    );
     this.addBinding({ key: 'Enter', shiftKey: null }, this.handleEnter);
     this.addBinding(
       { key: 'Enter', metaKey: null, ctrlKey: null, altKey: null },
@@ -362,7 +362,11 @@ class Keyboard extends Module<KeyboardOptions> {
   }
 
   handleShiftEnter(range: Range) {
-    this.quill.insertEmbed(range.index, SoftBreak.blotName, SOFT_BREAK_CHARACTER)
+    this.quill.insertEmbed(
+      range.index,
+      SoftBreak.blotName,
+      SOFT_BREAK_CHARACTER,
+    );
     this.quill.setSelection(range.index + 1);
   }
 }

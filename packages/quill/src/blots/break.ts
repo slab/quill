@@ -1,5 +1,5 @@
 import { EmbedBlot } from 'parchment';
-import SoftBreak from './soft-break';
+import SoftBreak from './soft-break.js';
 
 class Break extends EmbedBlot {
   static value() {
@@ -9,10 +9,12 @@ class Break extends EmbedBlot {
   optimize(): void {
     const thisIsLastBlotInParent = this.next == null;
     const noPrevBlots = this.prev == null;
-    const prevBlotIsSoftBreak = this.prev != null && this.prev.statics.blotName == SoftBreak.blotName;
-    const shouldRender = thisIsLastBlotInParent && (noPrevBlots || prevBlotIsSoftBreak)
+    const prevBlotIsSoftBreak =
+      this.prev != null && this.prev.statics.blotName == SoftBreak.blotName;
+    const shouldRender =
+      thisIsLastBlotInParent && (noPrevBlots || prevBlotIsSoftBreak);
     if (!shouldRender) {
-        this.remove()
+      this.remove();
     }
   }
 

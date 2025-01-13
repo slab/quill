@@ -39,7 +39,7 @@ Quill.register({
   'blots/block': Block,
   'blots/block/embed': BlockEmbed,
   'blots/break': Break,
-  "blots/soft-break": SoftBreak,
+  'blots/soft-break': SoftBreak,
   'blots/container': Container,
   'blots/cursor': Cursor,
   'blots/embed': Embed,

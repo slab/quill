@@ -498,8 +498,8 @@ function matchBreak(node: Node, delta: Delta) {
   return delta;
 }
 
-function matchSoftBreak(node: Node, delta: Delta) {
-  return new Delta().insert(SOFT_BREAK_CHARACTER)
+function matchSoftBreak() {
+  return new Delta().insert(SOFT_BREAK_CHARACTER);
 }
 
 function matchCodeBlock(node: Node, delta: Delta, scroll: ScrollBlot) {

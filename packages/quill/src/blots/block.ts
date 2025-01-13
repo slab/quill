@@ -13,7 +13,7 @@ import TextBlot from './text.js';
 import SoftBreak, { SOFT_BREAK_CHARACTER } from './soft-break.js';
 
 const NEWLINE_LENGTH = 1;
-const softBreakRegex = new RegExp(`(${SOFT_BREAK_CHARACTER})`, "g");
+const softBreakRegex = new RegExp(`(${SOFT_BREAK_CHARACTER})`, 'g');
 
 class Block extends BlockBlot {
   cache: { delta?: Delta | null; length?: number } = {};
@@ -27,9 +27,9 @@ class Block extends BlockBlot {
 
   deleteAt(index: number, length: number) {
     super.deleteAt(index, length);
-    this.children.forEach(child => {
+    this.children.forEach((child) => {
       if (child instanceof Break) {
-        child.optimize()
+        child.optimize();
       }
     });
     this.cache = {};
@@ -49,9 +49,9 @@ class Block extends BlockBlot {
         value,
       );
     }
-    this.children.forEach(child => {
+    this.children.forEach((child) => {
       if (child instanceof Break) {
-        child.optimize()
+        child.optimize();
       }
     });
     this.cache = {};
@@ -69,13 +69,13 @@ class Block extends BlockBlot {
     if (text.length > 0) {
       const softLines = text.split(softBreakRegex);
       let i = index;
-      softLines.forEach(str => {
+      softLines.forEach((str) => {
         if (str === SOFT_BREAK_CHARACTER) {
           super.insertAt(i, SoftBreak.blotName, SOFT_BREAK_CHARACTER);
         } else {
           super.insertAt(Math.min(i, this.length() - 1), str);
         }
-        i += str.length
+        i += str.length;
       });
 
       this.cache = {};
@@ -93,9 +93,9 @@ class Block extends BlockBlot {
 
   insertBefore(blot: Blot, ref?: Blot | null) {
     super.insertBefore(blot, ref);
-    this.children.forEach(child => {
+    this.children.forEach((child) => {
       if (child instanceof Break) {
-        child.optimize()
+        child.optimize();
       }
     });
     this.cache = {};
@@ -116,8 +116,11 @@ class Block extends BlockBlot {
   optimize(context: { [key: string]: any }) {
     super.optimize(context);
 
-    // in order for an end-of-block soft break to be rendered properly by the browser, we need a trailing break  
-    if (this.children.length > 0 && this.children.tail?.statics.blotName === SoftBreak.blotName) {
+    // in order for an end-of-block soft break to be rendered properly by the browser, we need a trailing break
+    if (
+      this.children.length > 0 &&
+      this.children.tail?.statics.blotName === SoftBreak.blotName
+    ) {
       const breakBlot = this.scroll.create(Break.blotName);
       super.insertBefore(breakBlot, null);
     }
