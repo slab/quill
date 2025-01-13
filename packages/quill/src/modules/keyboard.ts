@@ -7,6 +7,7 @@ import logger from '../core/logger.js';
 import Module from '../core/module.js';
 import type { BlockEmbed } from '../blots/block.js';
 import type { Range } from '../core/selection.js';
+import SoftBreak, { SOFT_BREAK_CHARACTER } from '../blots/soft-break.js';
 
 const debug = logger('quill:keyboard');
 
@@ -84,6 +85,13 @@ class Keyboard extends Module<KeyboardOptions> {
         this.addBinding(this.options.bindings[name]);
       }
     });
+    this.addBinding(
+      {
+        key: "Enter",
+        shiftKey: true,
+      },
+      this.handleShiftEnter
+    )
     this.addBinding({ key: 'Enter', shiftKey: null }, this.handleEnter);
     this.addBinding(
       { key: 'Enter', metaKey: null, ctrlKey: null, altKey: null },
@@ -351,6 +359,11 @@ class Keyboard extends Module<KeyboardOptions> {
     this.quill.updateContents(delta, Quill.sources.USER);
     this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
     this.quill.focus();
+  }
+
+  handleShiftEnter(range: Range) {
+    this.quill.insertEmbed(range.index, SoftBreak.blotName, SOFT_BREAK_CHARACTER)
+    this.quill.setSelection(range.index + 1);
   }
 }
 

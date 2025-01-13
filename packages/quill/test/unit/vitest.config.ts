@@ -20,6 +20,11 @@ export default defineConfig({
       provider: 'playwright',
       name: process.env.BROWSER || 'chromium',
       slowHijackESM: false,
+      providerOptions: {
+        launch: {
+          args: ["--remote-debugging-port=9222"],
+        },
+      },
     },
   },
 });
