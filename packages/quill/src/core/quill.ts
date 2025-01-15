@@ -237,6 +237,12 @@ class Quill {
         this.root.classList.toggle('ql-blank', this.editor.isBlank());
       }
     });
+    this.emitter.on(Emitter.events.COMPOSITION_START, () => {
+      this.root.classList.toggle('ql-blank', this.editor.isBlank());
+    });
+    this.emitter.on(Emitter.events.COMPOSITION_END, () => {
+      this.root.classList.toggle('ql-blank', this.editor.isBlank());
+    });
     this.emitter.on(Emitter.events.SCROLL_UPDATE, (source, mutations) => {
       const oldRange = this.selection.lastRange;
       const [newRange] = this.selection.getRange();
