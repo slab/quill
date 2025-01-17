@@ -94,7 +94,7 @@ class History extends Module<HistoryOptions> {
     });
     this.lastRecorded = 0;
     this.ignoreChange = true;
-    this.quill.updateContents(item.delta, Quill.sources.USER);
+    this.quill.updateContents(item.delta, source);
     this.ignoreChange = false;
 
     this.restoreSelection(item);
