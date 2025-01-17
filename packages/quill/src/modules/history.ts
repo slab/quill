@@ -1,7 +1,7 @@
 import { Scope } from 'parchment';
 import type Delta from 'quill-delta';
 import Module from '../core/module.js';
-import Quill from '../core/quill.js';
+import Quill, { EmitterSource } from '../core/quill.js';
 import type Scroll from '../blots/scroll.js';
 import type { Range } from '../core/selection.js';
 
@@ -82,13 +82,13 @@ class History extends Module<HistoryOptions> {
     });
   }
 
-  change(source: 'undo' | 'redo', dest: 'redo' | 'undo') {
-    if (this.stack[source].length === 0) return;
-    const item = this.stack[source].pop();
+  change(sourceStack: 'undo' | 'redo', destStack: 'redo' | 'undo', source: EmitterSource) {
+    if (this.stack[sourceStack].length === 0) return;
+    const item = this.stack[sourceStack].pop();
     if (!item) return;
     const base = this.quill.getContents();
     const inverseDelta = item.delta.invert(base);
-    this.stack[dest].push({
+    this.stack[destStack].push({
       delta: inverseDelta,
       range: transformRange(item.range, inverseDelta),
     });
@@ -135,8 +135,8 @@ class History extends Module<HistoryOptions> {
     }
   }
 
-  redo() {
-    this.change('redo', 'undo');
+  redo(source: EmitterSource = Quill.sources.USER) {
+    this.change('redo', 'undo', source);
   }
 
   transform(delta: Delta) {
@@ -144,8 +144,8 @@ class History extends Module<HistoryOptions> {
     transformStack(this.stack.redo, delta);
   }
 
-  undo() {
-    this.change('undo', 'redo');
+  undo(source: EmitterSource = Quill.sources.USER) {
+    this.change('undo', 'redo', source);
   }
 
   protected restoreSelection(stackItem: StackItem) {
