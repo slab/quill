@@ -294,8 +294,11 @@ class Scroll extends ScrollBlot {
     if (!Array.isArray(mutations)) {
       mutations = this.observer.takeRecords();
     }
-    mutations = mutations.filter(({ target }) => {
+    mutations = mutations.filter(({ target, type }) => {
       const blot = this.find(target, true);
+      if (type === 'attributes' && target === this.scroll.domNode) {
+        return false;
+      }
       return blot && !isUpdatable(blot);
     });
     if (mutations.length > 0) {
