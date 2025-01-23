@@ -8,11 +8,15 @@ import Module from '../core/module.js';
 import type { BlockEmbed } from '../blots/block.js';
 import type { Range } from '../core/selection.js';
 
+// eslint-disable-next-line no-irregular-whitespace
+export const ZERO_SPACE = String.fromCharCode(0x200b); // '&#8203;​'
+export const CHECK_KOREAN =
+  /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3\uA960-\uA97F\uD7B0-\uD7FF\uFFA0-\uFFDC]/giu;
+
 const debug = logger('quill:keyboard');
 
 const SHORTKEY = /Mac/i.test(navigator.platform) ? 'metaKey' : 'ctrlKey';
 
-const CHECK_KOREAN = /[\u3131-\uD79D]/giu;
 function isIOS() {
   return (
     [
@@ -304,9 +308,11 @@ class Keyboard extends Module<KeyboardOptions> {
 
   handleBackspace(range: Range, context: Context) {
     // Check for astral symbols
-    const length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix)
-      ? 2
-      : 1;
+    let length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix) ? 2 : 1;
+
+    if (context.offset === 1 && context.prefix === ZERO_SPACE) {
+      length = 2;
+    }
     if (range.index === 0 || this.quill.getLength() <= 1) return;
     let formats = {};
     const [line] = this.quill.getLine(range.index);
@@ -338,6 +344,7 @@ class Keyboard extends Module<KeyboardOptions> {
   }
 
   handleDelete(range: Range, context: Context) {
+    // const text = context.suffix;
     // Check for astral symbols
     const length = /^[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(context.suffix)
       ? 2
@@ -345,9 +352,9 @@ class Keyboard extends Module<KeyboardOptions> {
     if (range.index >= this.quill.getLength() - length) return;
     let formats = {};
     const [line] = this.quill.getLine(range.index);
+    const lineLength = line?.length() ?? 0;
     let delta = new Delta().retain(range.index).delete(length);
-    // @ts-expect-error Fix me later
-    if (context.offset >= line.length() - 1) {
+    if (context.offset >= lineLength - 1) {
       const [next] = this.quill.getLine(range.index + 1);
       if (next) {
         // @ts-expect-error Fix me later
