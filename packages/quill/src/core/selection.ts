@@ -7,6 +7,7 @@ import type Cursor from '../blots/cursor.js';
 import type Scroll from '../blots/scroll.js';
 
 const debug = logger('quill:selection');
+const COMPOSITION_CLASS_NAME = 'ql-composition';
 
 type NativeRange = AbstractRange;
 
@@ -113,6 +114,7 @@ class Selection {
   handleComposition() {
     this.emitter.on(Emitter.events.COMPOSITION_BEFORE_START, () => {
       this.composing = true;
+      this.root.classList.add(COMPOSITION_CLASS_NAME);
     });
     this.emitter.on(Emitter.events.COMPOSITION_UPDATE, () => {
       if (this.cursor.parent) {
@@ -125,6 +127,9 @@ class Selection {
           range.endOffset,
         );
       }
+    });
+    this.emitter.on(Emitter.events.COMPOSITION_BEFORE_END, () => {
+      this.root.classList.remove(COMPOSITION_CLASS_NAME);
     });
     this.emitter.on(Emitter.events.COMPOSITION_END, () => {
       this.composing = false;

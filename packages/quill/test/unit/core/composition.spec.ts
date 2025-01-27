@@ -11,7 +11,7 @@ describe('Composition', () => {
     const scroll = new Scroll(createRegistry(), document.createElement('div'), {
       emitter,
     });
-    new Composition(scroll, emitter);
+    const composition = new Composition(scroll, emitter);
 
     vitest.spyOn(emitter, 'emit');
 
@@ -24,6 +24,27 @@ describe('Composition', () => {
     expect(emitter.emit).toHaveBeenCalledWith(
       Quill.events.COMPOSITION_START,
       event,
+    );
+    expect(scroll.batch).not.toBe(false);
+    expect(composition.isComposing).toBe(true);
+  });
+
+  test('triggers events on compositionupdate', async () => {
+    const emitter = new Emitter();
+    const scroll = new Scroll(createRegistry(), document.createElement('div'), {
+      emitter,
+    });
+    new Composition(scroll, emitter);
+
+    vitest.spyOn(emitter, 'emit');
+
+    const event = new CompositionEvent('compositionstart');
+    scroll.domNode.dispatchEvent(event);
+    const updateEvent = new CompositionEvent('compositionupdate');
+    scroll.domNode.dispatchEvent(updateEvent);
+    expect(emitter.emit).toHaveBeenCalledWith(
+      Quill.events.COMPOSITION_UPDATE,
+      updateEvent,
     );
   });
 });

@@ -19,14 +19,19 @@ class Composition {
       }
     });
 
-    this.scroll.domNode.addEventListener('compositionupdate', () => {
-      if (!this.scroll.batch) {
-        this.handleCompositionUpdate();
+    this.scroll.domNode.addEventListener('compositionupdate', (event) => {
+      if (this.isComposing) {
+        return;
       }
+      this.handleCompositionUpdate(event);
     });
 
     this.scroll.domNode.addEventListener('compositionend', (event) => {
       if (this.isComposing) {
+        // HACK: There is a bug in the safari browser in mobile devices and when we finish typing
+        // composition symbol MutationObserver dispatches part of events after firing compositionend event
+        // In normal behaviour MutationObserver dispatches all event before firing compositionend event
+        // https://bugs.webkit.org/show_bug.cgi?id=238013
         // Webkit makes DOM changes after compositionend, so we use microtask to
         // ensure the order.
         // https://bugs.webkit.org/show_bug.cgi?id=31902
@@ -51,20 +56,14 @@ class Composition {
     }
   }
 
-  private handleCompositionUpdate() {
-    this.emitter.emit(Emitter.events.COMPOSITION_UPDATE);
+  private handleCompositionUpdate(event: CompositionEvent) {
+    this.emitter.emit(Emitter.events.COMPOSITION_UPDATE, event);
   }
 
   private handleCompositionEnd(event: CompositionEvent) {
     this.emitter.emit(Emitter.events.COMPOSITION_BEFORE_END, event);
-    // HACK: There is a bug in the safari browser in mobile devices and when we finish typing
-    // composition symbol MutationObserver dispatches part of events after firing compositionend event
-    // In normal behaviour MutationObserver dispatches all event before firing compositionend event
-    // https://bugs.webkit.org/show_bug.cgi?id=238013
-    setTimeout(() => {
-      this.scroll.batchEnd();
-      this.emitter.emit(Emitter.events.COMPOSITION_END, event);
-    }, 0);
+    this.scroll.batchEnd();
+    this.emitter.emit(Emitter.events.COMPOSITION_END, event);
     this.isComposing = false;
   }
 }

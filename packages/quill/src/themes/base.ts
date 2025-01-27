@@ -232,16 +232,17 @@ class BaseTooltip extends Tooltip {
   }
 
   listen() {
-    // @ts-expect-error Fix me later
-    this.textbox.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        this.save();
-        event.preventDefault();
-      } else if (event.key === 'Escape') {
-        this.cancel();
-        event.preventDefault();
-      }
-    });
+    if (this.textbox) {
+      this.textbox.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          this.save();
+          event.preventDefault();
+        } else if (event.key === 'Escape') {
+          this.cancel();
+          event.preventDefault();
+        }
+      });
+    }
   }
 
   cancel() {
