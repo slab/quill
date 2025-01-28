@@ -27,6 +27,9 @@ import IndentClass from '../../../src/formats/indent.js';
 import { ColorClass } from '../../../src/formats/color.js';
 import Quill from '../../../src/core.js';
 import { normalizeHTML } from '../__helpers__/utils.js';
+import SoftBreak, {
+  SOFT_BREAK_CHARACTER,
+} from '../../../src/blots/soft-break.js';
 
 const createEditor = (htmlOrContents: string | Delta) => {
   const container = document.createElement('div');
@@ -54,6 +57,7 @@ const createEditor = (htmlOrContents: string | Delta) => {
       CodeBlockContainer,
       Blockquote,
       SizeClass,
+      SoftBreak,
     ]),
   });
   if (typeof htmlOrContents !== 'string') {
@@ -162,6 +166,30 @@ describe('Editor', () => {
         <p><br></p>`);
     });
 
+    test('insert soft line', () => {
+      const editor = createEditor('<p><strong>0123</strong></p>');
+      editor.insertText(3, SOFT_BREAK_CHARACTER);
+      expect(editor.getDelta()).toEqual(
+        new Delta()
+          .insert(`012${SOFT_BREAK_CHARACTER}3`, { bold: true })
+          .insert('\n'),
+      );
+      expect(editor.scroll.domNode).toEqualHTML(`
+        <p><strong>012<br class="soft-break">3</strong></p>`);
+    });
+
+    test('append soft line', () => {
+      const editor = createEditor('<ol><li data-list="bullet">0123</li></ol>');
+      editor.insertText(4, SOFT_BREAK_CHARACTER);
+      expect(editor.getDelta()).toEqual(
+        new Delta()
+          .insert(`0123${SOFT_BREAK_CHARACTER}`)
+          .insert('\n', { list: 'bullet' }),
+      );
+      expect(editor.scroll.domNode).toEqualHTML(`
+        <ol><li data-list="bullet">0123<br class="soft-break" /><br /></li></ol>`);
+    });
+
     test('multiline text', () => {
       const editor = createEditor('<p><strong>0123</strong></p>');
       editor.insertText(2, '\n!!\n!!\n');
@@ -245,6 +273,17 @@ describe('Editor', () => {
       expect(editor.scroll.domNode).toEqualHTML('<p><em>01235678</em></p>');
     });
 
+    test('soft line', () => {
+      const editor = createEditor(
+        '<p><strong>0123<br class="soft-break" /></strong><br /></p>',
+      );
+      editor.deleteText(4, 1);
+      expect(editor.getDelta()).toEqual(
+        new Delta().insert('0123', { bold: true }).insert('\n'),
+      );
+      expect(editor.scroll.domNode).toEqualHTML('<p><strong>0123</strong></p>');
+    });
+
     test('entire document', () => {
       const editor = createEditor('<p><strong><em>0123</em></strong></p>');
       editor.deleteText(0, 5);
@@ -270,6 +309,19 @@ describe('Editor', () => {
       editor.formatLine(1, 1, { header: 1 });
       expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
     });
+
+    test('soft line', () => {
+      const editor = createEditor('<p>01<br class="soft-break" />23</p>');
+      editor.formatLine(0, 1, { header: 1 });
+      expect(editor.getDelta()).toEqual(
+        new Delta()
+          .insert(`01${SOFT_BREAK_CHARACTER}23`)
+          .insert('\n', { header: 1 }),
+      );
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<h1>01<br class="soft-break" />23</h1>',
+      );
+    });
   });
 
   describe('removeFormat', () => {
@@ -293,6 +345,22 @@ describe('Editor', () => {
       );
       editor.removeFormat(1, 3);
       expect(editor.scroll.domNode).toEqualHTML('<p>01</p><p>34</p>');
+    });
+
+    test('soft line', () => {
+      const editor = createEditor(
+        '<p><strong>01<br class="soft-break" />23</strong></p>',
+      );
+      editor.removeFormat(0, 2);
+      expect(editor.getDelta()).toEqual(
+        new Delta()
+          .insert('01')
+          .insert(`${SOFT_BREAK_CHARACTER}23`, { bold: true })
+          .insert('\n'),
+      );
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p>01<strong><br class="soft-break" />23</strong></p>',
+      );
     });
 
     test('remove embed', () => {
@@ -385,6 +453,52 @@ describe('Editor', () => {
       const editor = createEditor('<h1>01</h1>');
       editor.applyDelta(new Delta().retain(2).insert('\n'));
       expect(editor.scroll.domNode).toEqualHTML('<p>01</p><h1><br></h1>');
+    });
+
+    test('insert soft line at end of block', () => {
+      const editor = createEditor(
+        `<ol>
+          <li data-list="ordered">0</li>
+          <li data-list="ordered">1</li>
+        </ol>`,
+      );
+      editor.applyDelta(new Delta().retain(3).insert(SOFT_BREAK_CHARACTER));
+      expect(editor.getDelta()).toEqual(
+        new Delta()
+          .insert('0')
+          .insert('\n', { list: 'ordered' })
+          .insert(`1${SOFT_BREAK_CHARACTER}`)
+          .insert('\n', { list: 'ordered' }),
+      );
+      expect(editor.scroll.domNode).toEqualHTML(
+        `<ol>
+          <li data-list="ordered">0</li>
+          <li data-list="ordered">
+            1
+            <br class="soft-break"/>
+            <br />
+          </li>
+        </ol>`,
+      );
+    });
+
+    test('insert soft line in middle of block', () => {
+      const editor = createEditor(
+        `<ol>
+          <li data-list="ordered">01</li>
+        </ol>`,
+      );
+      editor.applyDelta(new Delta().retain(1).insert(SOFT_BREAK_CHARACTER));
+      expect(editor.getDelta()).toEqual(
+        new Delta()
+          .insert(`0${SOFT_BREAK_CHARACTER}1`)
+          .insert('\n', { list: 'ordered' }),
+      );
+      expect(editor.scroll.domNode).toEqualHTML(
+        `<ol>
+          <li data-list="ordered">0<br class="soft-break">1</li>
+        </ol>`,
+      );
     });
 
     test('formatted embed', () => {

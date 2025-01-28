@@ -15,6 +15,7 @@ import Embed from './blots/embed.js';
 import Inline from './blots/inline.js';
 import Scroll from './blots/scroll.js';
 import TextBlot from './blots/text.js';
+import SoftBreak from './blots/soft-break.js';
 
 import Clipboard from './modules/clipboard.js';
 import History from './modules/history.js';
@@ -38,6 +39,7 @@ Quill.register({
   'blots/block': Block,
   'blots/block/embed': BlockEmbed,
   'blots/break': Break,
+  'blots/soft-break': SoftBreak,
   'blots/container': Container,
   'blots/cursor': Cursor,
   'blots/embed': Embed,
