@@ -34,12 +34,13 @@ describe('Composition', () => {
     const scroll = new Scroll(createRegistry(), document.createElement('div'), {
       emitter,
     });
-    new Composition(scroll, emitter);
+    const composition = new Composition(scroll, emitter);
 
     vitest.spyOn(emitter, 'emit');
 
     const event = new CompositionEvent('compositionstart');
     scroll.domNode.dispatchEvent(event);
+    composition.isComposing = false;
     const updateEvent = new CompositionEvent('compositionupdate');
     scroll.domNode.dispatchEvent(updateEvent);
     expect(emitter.emit).toHaveBeenCalledWith(

@@ -344,7 +344,6 @@ class Keyboard extends Module<KeyboardOptions> {
   }
 
   handleDelete(range: Range, context: Context) {
-    // const text = context.suffix;
     // Check for astral symbols
     const length = /^[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(context.suffix)
       ? 2
