@@ -28,9 +28,11 @@ import { ColorClass } from '../../../src/formats/color.js';
 import Quill from '../../../src/core.js';
 import { normalizeHTML } from '../__helpers__/utils.js';
 
-const createEditor = (html: string) => {
+const createEditor = (htmlOrContents: string | Delta) => {
   const container = document.createElement('div');
-  container.innerHTML = normalizeHTML(html);
+  if (typeof htmlOrContents === 'string') {
+    container.innerHTML = normalizeHTML(htmlOrContents);
+  }
   document.body.appendChild(container);
   const quill = new Quill(container, {
     registry: createRegistry([
@@ -54,6 +56,9 @@ const createEditor = (html: string) => {
       SizeClass,
     ]),
   });
+  if (typeof htmlOrContents !== 'string') {
+    quill.setContents(htmlOrContents);
+  }
   return quill.editor;
 };
 
@@ -1244,6 +1249,25 @@ describe('Editor', () => {
       expect(editor.getHTML(1, 14)).toEqual(
         '<h1 class="ql-align-center">eader</h1><p>Text</p><blockquote>Quo</blockquote>',
       );
+    });
+
+    test('collapsible spaces', () => {
+      expect(
+        createEditor('<p><strong>123 </strong>123<em> 123</em></p>').getHTML(
+          0,
+          11,
+        ),
+      ).toEqual('<strong>123&nbsp;</strong>123<em>&nbsp;123</em>');
+
+      expect(createEditor(new Delta().insert('1   2\n')).getHTML(0, 5)).toEqual(
+        '1&nbsp;&nbsp;&nbsp;2',
+      );
+
+      expect(
+        createEditor(
+          new Delta().insert('  123', { bold: true }).insert('\n'),
+        ).getHTML(0, 5),
+      ).toEqual('<strong>&nbsp;&nbsp;123</strong>');
     });
 
     test('mixed list', () => {

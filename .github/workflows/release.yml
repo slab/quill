@@ -13,6 +13,9 @@ on:
         default: true
         required: true
 
+permissions:
+  contents: write
+
 jobs:
   test:
     uses: ./.github/workflows/_test.yml
