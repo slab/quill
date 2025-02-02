@@ -28,7 +28,7 @@ class Image extends EmbedBlot {
   }
 
   static match(url: string) {
-    return /\.(jpe?g|gif|png)$/.test(url) || /^data:image\/.+;base64/.test(url);
+    return /\.(jpe?g|gif|png|webp|svg)$/.test(url) || /^data:image\/.+;base64/.test(url);
   }
 
   static sanitize(url: string) {
