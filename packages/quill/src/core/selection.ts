@@ -35,6 +35,12 @@ export class Range {
   ) {}
 }
 
+export function isRange(value: any): value is Range {
+  return (
+    value && typeof value === 'object' && 'index' in value && 'length' in value
+  );
+}
+
 class Selection {
   scroll: Scroll;
   emitter: Emitter;
