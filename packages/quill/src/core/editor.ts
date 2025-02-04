@@ -16,6 +16,14 @@ type SelectionInfo = {
   oldRange: Range;
 };
 
+export type SemanticHTMLOptions = {
+  preserveWhitespace?: boolean;
+};
+
+const defaultSemanticHTMLOptions: SemanticHTMLOptions = {
+  preserveWhitespace: false,
+} as const;
+
 class Editor {
   scroll: Scroll;
   delta: Delta;
@@ -195,15 +203,20 @@ class Editor {
     return { ...lineFormats, ...leafFormats };
   }
 
-  getHTML(index: number, length: number): string {
+  getHTML(
+    index: number,
+    length: number,
+    options?: SemanticHTMLOptions,
+  ): string {
+    const finalOptions = { ...defaultSemanticHTMLOptions, ...options };
     const [line, lineOffset] = this.scroll.line(index);
     if (line) {
       const lineLength = line.length();
       const isWithinLine = line.length() >= lineOffset + length;
       if (isWithinLine && !(lineOffset === 0 && length === lineLength)) {
-        return convertHTML(line, lineOffset, length, true);
+        return convertHTML(line, lineOffset, length, finalOptions, true);
       }
-      return convertHTML(this.scroll, index, length, true);
+      return convertHTML(this.scroll, index, length, finalOptions, true);
     }
     return '';
   }
@@ -327,13 +340,14 @@ function convertListHTML(
   items: ListItem[],
   lastIndent: number,
   types: string[],
+  options: SemanticHTMLOptions,
 ): string {
   if (items.length === 0) {
     const [endTag] = getListType(types.pop());
     if (lastIndent <= 0) {
       return `</li></${endTag}>`;
     }
-    return `</li></${endTag}>${convertListHTML([], lastIndent - 1, types)}`;
+    return `</li></${endTag}>${convertListHTML([], lastIndent - 1, types, options)}`;
   }
   const [{ child, offset, length, indent, type }, ...rest] = items;
   const [tag, attribute] = getListType(type);
@@ -344,9 +358,10 @@ function convertListHTML(
         child,
         offset,
         length,
-      )}${convertListHTML(rest, indent, types)}`;
+        options,
+      )}${convertListHTML(rest, indent, types, options)}`;
     }
-    return `<${tag}><li>${convertListHTML(items, lastIndent + 1, types)}`;
+    return `<${tag}><li>${convertListHTML(items, lastIndent + 1, types, options)}`;
   }
   const previousType = types[types.length - 1];
   if (indent === lastIndent && type === previousType) {
@@ -354,16 +369,18 @@ function convertListHTML(
       child,
       offset,
       length,
-    )}${convertListHTML(rest, indent, types)}`;
+      options,
+    )}${convertListHTML(rest, indent, types, options)}`;
   }
   const [endTag] = getListType(types.pop());
-  return `</li></${endTag}>${convertListHTML(items, lastIndent - 1, types)}`;
+  return `</li></${endTag}>${convertListHTML(items, lastIndent - 1, types, options)}`;
 }
 
 function convertHTML(
   blot: Blot,
   index: number,
   length: number,
+  options: SemanticHTMLOptions,
   isRoot = false,
 ): string {
   if ('html' in blot && typeof blot.html === 'function') {
@@ -371,6 +388,7 @@ function convertHTML(
   }
   if (blot instanceof TextBlot) {
     const escapedText = escapeText(blot.value().slice(index, index + length));
+    if (options.preserveWhitespace) return escapedText;
     return escapedText.replaceAll(' ', '&nbsp;');
   }
   if (blot instanceof ParentBlot) {
@@ -390,11 +408,11 @@ function convertHTML(
           type: formats.list,
         });
       });
-      return convertListHTML(items, -1, []);
+      return convertListHTML(items, -1, [], options);
     }
     const parts: string[] = [];
     blot.children.forEachAt(index, length, (child, offset, childLength) => {
-      parts.push(convertHTML(child, offset, childLength));
+      parts.push(convertHTML(child, offset, childLength, options));
     });
     if (isRoot || blot.statics.blotName === 'list') {
       return parts.join('');

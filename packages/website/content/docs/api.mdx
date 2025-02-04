@@ -116,10 +116,14 @@ This method is useful for exporting the contents of the editor in a format that 
 
 The `length` parameter defaults to the length of the remaining document.
 
+The `options` parameter allows to modify output:
+
+- `preserveWhitespace` - if true all whitespaces are preserved, otherwise all whitespaces are changed to `"&nbsp;"` (default: false)
+
 **Methods**
 
 ```typescript
-getSemanticHTML(index: number = 0, length: number = remaining): string
+getSemanticHTML(index: number = 0, length: number = remaining, options?: SemanticHTMLOptions): string
 ```
 
 **Examples**

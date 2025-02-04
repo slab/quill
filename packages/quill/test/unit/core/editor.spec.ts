@@ -1281,6 +1281,7 @@ describe('Editor', () => {
           </ol>
         `,
       );
+      
       expect(editor.getHTML(2, 12)).toEqualHTML(`
         <ol>
           <li>e</li>
@@ -1408,6 +1409,18 @@ describe('Editor', () => {
       expect(editor.getHTML(1, 7)).toEqual('<pre>\n0123\n\n\n\n</pre>');
       expect(editor.getHTML(2, 7)).toEqual('<pre>\n123\n\n\n4\n</pre>');
       expect(editor.getHTML(5, 7)).toEqual('<pre>\n\n\n\n4567\n</pre>');
+    });
+
+    test('option preserveWhitespace is disabled (DEFAULT)', () => {
+      const editor = createEditor('<p>This is Quill</p>');
+      expect(editor.getHTML(0, 14)).toEqual('<p>This&nbsp;is&nbsp;Quill</p>');
+    });
+
+    test('option preserveWhitespace is enabled', () => {
+      const editor = createEditor('<p>This is Quill</p>');
+      expect(editor.getHTML(0, 14, { preserveWhitespace: true })).toEqual(
+        '<p>This is Quill</p>',
+      );
     });
   });
 });

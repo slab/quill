@@ -9,14 +9,14 @@ import type Clipboard from '../modules/clipboard.js';
 import type History from '../modules/history.js';
 import type Keyboard from '../modules/keyboard.js';
 import type Uploader from '../modules/uploader.js';
-import Editor from './editor.js';
+import Editor, { SemanticHTMLOptions } from './editor.js';
 import Emitter from './emitter.js';
 import type { EmitterSource } from './emitter.js';
 import instances from './instances.js';
 import logger from './logger.js';
 import type { DebugLevel } from './logger.js';
 import Module from './module.js';
-import Selection, { Range } from './selection.js';
+import Selection, { isRange, Range } from './selection.js';
 import type { Bounds } from './selection.js';
 import Composition from './composition.js';
 import Theme from './theme.js';
@@ -537,15 +537,47 @@ class Quill {
     return this.selection.getRange()[0];
   }
 
-  getSemanticHTML(range: Range): string;
-  getSemanticHTML(index?: number, length?: number): string;
-  getSemanticHTML(index: Range | number = 0, length?: number) {
-    if (typeof index === 'number') {
-      length = length ?? this.getLength() - index;
+  getSemanticHTML(options?: SemanticHTMLOptions): string;
+  getSemanticHTML(range: Range, options?: SemanticHTMLOptions): string;
+  getSemanticHTML(index: number, options?: SemanticHTMLOptions): string;
+  getSemanticHTML(
+    index: number,
+    length: number,
+    options?: SemanticHTMLOptions,
+  ): string;
+  getSemanticHTML(
+    indexOrRangeOrOptions?: Range | number | SemanticHTMLOptions,
+    lengthOrOptions?: number | SemanticHTMLOptions,
+    options?: SemanticHTMLOptions,
+  ) {
+    let finalIndex: number | Range = 0;
+    let finalLength: number | undefined = undefined;
+    let finalOptions: SemanticHTMLOptions = {};
+
+    if (indexOrRangeOrOptions === undefined) {
+      finalIndex = 0;
+      finalLength = this.getLength() - finalIndex;
+    } else if (isRange(indexOrRangeOrOptions)) {
+      finalIndex = indexOrRangeOrOptions as Range;
+      finalOptions = (lengthOrOptions as SemanticHTMLOptions) ?? {};
+    } else if (typeof indexOrRangeOrOptions === 'number') {
+      finalIndex = indexOrRangeOrOptions;
+      if (typeof lengthOrOptions === 'number') {
+        finalLength = lengthOrOptions;
+        finalOptions = options ?? {};
+      } else {
+        finalLength = this.getLength() - finalIndex;
+        finalOptions = (lengthOrOptions as SemanticHTMLOptions) ?? {};
+      }
+    } else {
+      finalIndex = 0;
+      finalLength = this.getLength() - finalIndex;
+      finalOptions = indexOrRangeOrOptions;
     }
+
     // @ts-expect-error
-    [index, length] = overload(index, length);
-    return this.editor.getHTML(index, length);
+    [finalIndex, finalLength] = overload(finalIndex, finalLength);
+    return this.editor.getHTML(finalIndex, finalLength, finalOptions);
   }
 
   getText(range?: Range): string;
