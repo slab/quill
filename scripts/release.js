@@ -31,9 +31,17 @@ if (!process.env.CI) {
 exec('echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc');
 
 async function main() {
-  const configGit = (await import("./utils/configGit.mjs")).default;
-  await configGit();
+  try {
+    const configGit = (await import("./utils/configGit.mjs")).default;
+    await configGit();
 
+   
+
+  } catch (error) {
+    console.error("An error occurred:", error);
+    exitWithError("Exiting due to an error.");
+  }
+}
   /*
    * Check that the git working directory is clean
    */

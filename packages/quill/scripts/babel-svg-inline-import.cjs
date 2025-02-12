@@ -17,10 +17,14 @@ module.exports = ({ types: t }) => {
               const id = specifier.local.name;
               const reference = state && state.file && state.file.opts.filename;
               const absolutePath = resolve(dirname(reference), givenPath);
-              const content = optimize(
-                fs.readFileSync(absolutePath).toString(),
-                { plugins: [] },
-              ).data;
+              const content = fs.readFileSync(absolutePath).toString();
+              let optimizedContent;
+              try {
+                optimizedContent = optimize(content, { plugins: [] }).data;
+              } catch (error) {
+                console.error(`Error optimizing SVG: ${absolutePath}`, error);
+                return;
+              }
 
               const variableValue = t.stringLiteral(content);
               const variable = t.variableDeclarator(

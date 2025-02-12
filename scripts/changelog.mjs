@@ -16,7 +16,14 @@ const changeLogFilePath = join(
   changelogFilename
 );
 
-const currentChangeLog = await readFile(changeLogFilePath, "utf-8");
+(async () => {
+try {
+  const currentChangeLog = await readFile(changeLogFilePath, "utf-8");
+ 
+} catch (error) {
+  console.error("Error occurred:", error);
+  process.exit(1);
+}
 
 const { stdout } =
   await $`gh release list --exclude-drafts --json=tagName,publishedAt,name,isLatest`;
@@ -66,3 +73,9 @@ await $`git add ${changelogFilename}`;
 const message = `Update ${changelogFilename}: ${release.tagName}`;
 await $`git commit -m ${message}`;
 await $`git push origin main`;
+
+} catch (error) {
+  console.error("An error occurred:", error);
+  process.exit(1);
+}
+})();
