@@ -1,4 +1,4 @@
-import { Blot, EmbedBlot, ParentBlot } from 'parchment';
+import { EmbedBlot, ParentBlot } from 'parchment';
 import SoftBreak from './soft-break.js';
 import { getLastLeafInParent } from './block.js';
 
@@ -10,9 +10,14 @@ class Break extends EmbedBlot {
   optimize(): void {
     const thisIsLastBlotInParent = this.next == null;
     const thisIsFirstBlotInParent = this.prev == null;
-    const thisIsOnlyBlotInParent = thisIsLastBlotInParent && thisIsFirstBlotInParent
-    const prevLeaf = this.prev instanceof ParentBlot ? getLastLeafInParent(this.prev) : this.prev
-    const prevLeafIsSoftBreak = prevLeaf != null && prevLeaf.statics.blotName == SoftBreak.blotName;
+    const thisIsOnlyBlotInParent =
+      thisIsLastBlotInParent && thisIsFirstBlotInParent;
+    const prevLeaf =
+      this.prev instanceof ParentBlot
+        ? getLastLeafInParent(this.prev)
+        : this.prev;
+    const prevLeafIsSoftBreak =
+      prevLeaf != null && prevLeaf.statics.blotName == SoftBreak.blotName;
     const shouldRender = thisIsOnlyBlotInParent || prevLeafIsSoftBreak;
     if (!shouldRender) {
       this.remove();
@@ -29,6 +34,5 @@ class Break extends EmbedBlot {
 }
 Break.blotName = 'break';
 Break.tagName = 'BR';
-
 
 export default Break;
