@@ -3,6 +3,7 @@ import {
   BlockBlot,
   EmbedBlot,
   LeafBlot,
+  ParentBlot,
   Scope,
 } from 'parchment';
 import type { Blot, Parent } from 'parchment';
@@ -29,11 +30,7 @@ class Block extends BlockBlot {
 
   deleteAt(index: number, length: number) {
     super.deleteAt(index, length);
-    this.children.forEach((child) => {
-      if (child instanceof Break) {
-        child.optimize();
-      }
-    });
+    this.optimizeChildren();
     this.cache = {};
   }
 
@@ -51,11 +48,7 @@ class Block extends BlockBlot {
         value,
       );
     }
-    this.children.forEach((child) => {
-      if (child instanceof Break) {
-        child.optimize();
-      }
-    });
+    this.optimizeChildren();
     this.cache = {};
   }
 
@@ -95,11 +88,7 @@ class Block extends BlockBlot {
 
   insertBefore(blot: Blot, ref?: Blot | null) {
     super.insertBefore(blot, ref);
-    this.children.forEach((child) => {
-      if (child instanceof Break) {
-        child.optimize();
-      }
-    });
+    this.optimizeChildren();
     this.cache = {};
   }
 
@@ -117,11 +106,13 @@ class Block extends BlockBlot {
 
   optimize(context: { [key: string]: any }) {
     super.optimize(context);
+    const lastLeafInBlock = getLastLeafInParent(this);
 
     // in order for an end-of-block soft break to be rendered properly by the browser, we need a trailing break
     if (
-      this.children.length > 0 &&
-      this.children.tail?.statics.blotName === SoftBreak.blotName
+      lastLeafInBlock != null
+      && lastLeafInBlock.statics.blotName === SoftBreak.blotName
+      && this.children.tail?.statics.blotName !== Break.blotName
     ) {
       const breakBlot = this.scroll.create(Break.blotName);
       super.insertBefore(breakBlot, null);
@@ -151,6 +142,14 @@ class Block extends BlockBlot {
     const next = super.split(index, force);
     this.cache = {};
     return next;
+  }
+
+  private optimizeChildren() {
+    this.children.forEach((child) => {
+      if (child instanceof Break) {
+        child.optimize();
+      }
+    });
   }
 }
 Block.blotName = 'block';
@@ -210,6 +209,19 @@ class BlockEmbed extends EmbedBlot {
 }
 BlockEmbed.scope = Scope.BLOCK_BLOT;
 // It is important for cursor behavior BlockEmbeds use tags that are block level elements
+
+export function getLastLeafInParent(blot: ParentBlot): Blot | null {
+  let current = blot.children.tail;
+  const MAX_ITERATIONS = 1000;
+  for (let i = 0; current != null && i < MAX_ITERATIONS; i++) {
+    if (current instanceof ParentBlot) {
+      current = current.children.tail;
+    } else {
+      return current
+    }
+  }
+  return null
+}
 
 function blockDelta(blot: BlockBlot, filter = true) {
   return blot

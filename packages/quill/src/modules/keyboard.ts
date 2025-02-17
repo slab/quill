@@ -7,7 +7,7 @@ import logger from '../core/logger.js';
 import Module from '../core/module.js';
 import type { BlockEmbed } from '../blots/block.js';
 import type { Range } from '../core/selection.js';
-import SoftBreak, { SOFT_BREAK_CHARACTER } from '../blots/soft-break.js';
+import { SOFT_BREAK_CHARACTER } from '../blots/soft-break.js';
 
 // eslint-disable-next-line no-irregular-whitespace
 export const ZERO_SPACE = String.fromCharCode(0x200b); // '&#8203;​'
