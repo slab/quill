@@ -3,7 +3,6 @@ import {
   BlockBlot,
   EmbedBlot,
   LeafBlot,
-  ParentBlot,
   Scope,
 } from 'parchment';
 import type { Blot, Parent } from 'parchment';
@@ -104,7 +103,7 @@ class Block extends BlockBlot {
 
   optimize(context: { [key: string]: any }) {
     super.optimize(context);
-    const lastLeafInBlock = getLastLeafInParent(this);
+    const lastLeafInBlock = this.descendants(LeafBlot).at(-1);
 
     // in order for an end-of-block soft break to be rendered properly by the browser, we need a trailing break
     if (
@@ -206,19 +205,6 @@ class BlockEmbed extends EmbedBlot {
 }
 BlockEmbed.scope = Scope.BLOCK_BLOT;
 // It is important for cursor behavior BlockEmbeds use tags that are block level elements
-
-export function getLastLeafInParent(blot: ParentBlot): Blot | null {
-  let current = blot.children.tail;
-  const MAX_ITERATIONS = 1000;
-  for (let i = 0; current != null && i < MAX_ITERATIONS; i++) {
-    if (current instanceof ParentBlot) {
-      current = current.children.tail;
-    } else {
-      return current;
-    }
-  }
-  return null;
-}
 
 function blockDelta(blot: BlockBlot, filter = true) {
   return blot
