@@ -161,7 +161,7 @@ describe('Editor', () => {
         <p><br></p>`);
     });
 
-    test('insert soft line', () => {
+    test('insert soft line break', () => {
       const editor = createEditor('<p><strong>0123</strong></p>');
       editor.insertText(3, SOFT_BREAK_CHARACTER);
       expect(editor.getDelta()).toEqual(
@@ -173,7 +173,7 @@ describe('Editor', () => {
         <p><strong>012<br class="soft-break">3</strong></p>`);
     });
 
-    test('append soft line', () => {
+    test('append soft line break', () => {
       const editor = createEditor('<ol><li data-list="bullet">0123</li></ol>');
       editor.insertText(4, SOFT_BREAK_CHARACTER);
       expect(editor.getDelta()).toEqual(
@@ -183,6 +183,18 @@ describe('Editor', () => {
       );
       expect(editor.scroll.domNode).toEqualHTML(`
         <ol><li data-list="bullet">0123<br class="soft-break" /><br /></li></ol>`);
+    });
+
+    test('append soft line break in format', () => {
+      const editor = createEditor('<p><strong>0123</strong></p>');
+      editor.insertText(4, SOFT_BREAK_CHARACTER);
+      expect(editor.getDelta()).toEqual(
+        new Delta()
+          .insert('0123', { bold: true })
+          .insert(`${SOFT_BREAK_CHARACTER}\n`),
+      );
+      expect(editor.scroll.domNode).toEqualHTML(`
+        <p><strong>0123</strong><br class="soft-break"><br></p>`);
     });
 
     test('multiline text', () => {
@@ -268,7 +280,7 @@ describe('Editor', () => {
       expect(editor.scroll.domNode).toEqualHTML('<p><em>01235678</em></p>');
     });
 
-    test('soft line', () => {
+    test('soft line break at end of bold text', () => {
       const editor = createEditor(
         '<p><strong>0123<br class="soft-break" /></strong><br /></p>',
       );
@@ -277,6 +289,32 @@ describe('Editor', () => {
         new Delta().insert('0123', { bold: true }).insert('\n'),
       );
       expect(editor.scroll.domNode).toEqualHTML('<p><strong>0123</strong></p>');
+    });
+
+    test('text before soft line break', () => {
+      const editor = createEditor(
+        '<p>0<br class="soft-break" />1</p>',
+      );
+      editor.deleteText(2, 1);
+      expect(editor.getDelta()).toEqual(
+        new Delta().insert(`0${SOFT_BREAK_CHARACTER}`).insert('\n'),
+      );
+      // importantly deleting the character after a soft break, such that the soft break becomes
+      // the last leaf in the block, should add the trailing break
+      expect(editor.scroll.domNode).toEqualHTML('<p>0<br class="soft-break" /><br /></p>');
+    });
+
+    test('text before soft line break within an inline parent', () => {
+      const editor = createEditor(
+        '<p><strong>0<br class="soft-break" />1</strong></p>',
+      );
+      editor.deleteText(2, 1);
+      expect(editor.getDelta()).toEqual(
+        new Delta().insert(`0${SOFT_BREAK_CHARACTER}`, {bold: true}).insert('\n'),
+      );
+      // importantly deleting the character after a soft break, such that the soft break becomes
+      // the last leaf in the block, should add the trailing break
+      expect(editor.scroll.domNode).toEqualHTML('<p><strong>0<br class="soft-break" /></strong><br></p>',);
     });
 
     test('entire document', () => {
@@ -305,7 +343,7 @@ describe('Editor', () => {
       expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
     });
 
-    test('soft line', () => {
+    test('soft line break', () => {
       const editor = createEditor('<p>01<br class="soft-break" />23</p>');
       editor.formatLine(0, 1, { header: 1 });
       expect(editor.getDelta()).toEqual(
@@ -342,7 +380,7 @@ describe('Editor', () => {
       expect(editor.scroll.domNode).toEqualHTML('<p>01</p><p>34</p>');
     });
 
-    test('soft line', () => {
+    test('soft line break', () => {
       const editor = createEditor(
         '<p><strong>01<br class="soft-break" />23</strong></p>',
       );
@@ -450,7 +488,7 @@ describe('Editor', () => {
       expect(editor.scroll.domNode).toEqualHTML('<p>01</p><h1><br></h1>');
     });
 
-    test('insert soft line at end of block', () => {
+    test('insert soft line break at end of block', () => {
       const editor = createEditor(
         `<ol>
           <li data-list="ordered">0</li>
@@ -477,7 +515,7 @@ describe('Editor', () => {
       );
     });
 
-    test('insert soft line in middle of block', () => {
+    test('insert soft line break in middle of block', () => {
       const editor = createEditor(
         `<ol>
           <li data-list="ordered">01</li>
