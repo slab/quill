@@ -27,11 +27,7 @@ class Block extends BlockBlot {
 
   deleteAt(index: number, length: number) {
     super.deleteAt(index, length);
-    this.children.forEach((child) => {
-      if (child instanceof Break) {
-        child.optimize();
-      }
-    });
+    this.optimizeChildren();
     this.cache = {};
   }
 
@@ -49,11 +45,7 @@ class Block extends BlockBlot {
         value,
       );
     }
-    this.children.forEach((child) => {
-      if (child instanceof Break) {
-        child.optimize();
-      }
-    });
+    this.optimizeChildren();
     this.cache = {};
   }
 
@@ -93,11 +85,7 @@ class Block extends BlockBlot {
 
   insertBefore(blot: Blot, ref?: Blot | null) {
     super.insertBefore(blot, ref);
-    this.children.forEach((child) => {
-      if (child instanceof Break) {
-        child.optimize();
-      }
-    });
+    this.optimizeChildren();
     this.cache = {};
   }
 
@@ -149,6 +137,14 @@ class Block extends BlockBlot {
     const next = super.split(index, force);
     this.cache = {};
     return next;
+  }
+
+  private optimizeChildren() {
+    this.children.forEach((child) => {
+      if (child instanceof Break) {
+        child.optimize();
+      }
+    });
   }
 }
 Block.blotName = 'block';
