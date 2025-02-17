@@ -108,9 +108,9 @@ class Block extends BlockBlot {
 
     // in order for an end-of-block soft break to be rendered properly by the browser, we need a trailing break
     if (
-      lastLeafInBlock != null
-      && lastLeafInBlock.statics.blotName === SoftBreak.blotName
-      && this.children.tail?.statics.blotName !== Break.blotName
+      lastLeafInBlock != null &&
+      lastLeafInBlock.statics.blotName === SoftBreak.blotName &&
+      this.children.tail?.statics.blotName !== Break.blotName
     ) {
       const breakBlot = this.scroll.create(Break.blotName);
       super.insertBefore(breakBlot, null);
@@ -214,10 +214,10 @@ export function getLastLeafInParent(blot: ParentBlot): Blot | null {
     if (current instanceof ParentBlot) {
       current = current.children.tail;
     } else {
-      return current
+      return current;
     }
   }
-  return null
+  return null;
 }
 
 function blockDelta(blot: BlockBlot, filter = true) {

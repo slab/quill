@@ -292,16 +292,16 @@ describe('Editor', () => {
     });
 
     test('text before soft line break', () => {
-      const editor = createEditor(
-        '<p>0<br class="soft-break" />1</p>',
-      );
+      const editor = createEditor('<p>0<br class="soft-break" />1</p>');
       editor.deleteText(2, 1);
       expect(editor.getDelta()).toEqual(
         new Delta().insert(`0${SOFT_BREAK_CHARACTER}`).insert('\n'),
       );
       // importantly deleting the character after a soft break, such that the soft break becomes
       // the last leaf in the block, should add the trailing break
-      expect(editor.scroll.domNode).toEqualHTML('<p>0<br class="soft-break" /><br /></p>');
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p>0<br class="soft-break" /><br /></p>',
+      );
     });
 
     test('text before soft line break within an inline parent', () => {
@@ -310,11 +310,15 @@ describe('Editor', () => {
       );
       editor.deleteText(2, 1);
       expect(editor.getDelta()).toEqual(
-        new Delta().insert(`0${SOFT_BREAK_CHARACTER}`, {bold: true}).insert('\n'),
+        new Delta()
+          .insert(`0${SOFT_BREAK_CHARACTER}`, { bold: true })
+          .insert('\n'),
       );
       // importantly deleting the character after a soft break, such that the soft break becomes
       // the last leaf in the block, should add the trailing break
-      expect(editor.scroll.domNode).toEqualHTML('<p><strong>0<br class="soft-break" /></strong><br></p>',);
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p><strong>0<br class="soft-break" /></strong><br></p>',
+      );
     });
 
     test('entire document', () => {
