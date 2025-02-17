@@ -17,7 +17,7 @@ class Break extends EmbedBlot {
         : this.prev;
     const prevLeafIsSoftBreak =
       prevLeaf != null && prevLeaf.statics.blotName == SoftBreak.blotName;
-    const shouldRender = thisIsOnlyBlotInParent || prevLeafIsSoftBreak;
+    const shouldRender =  thisIsOnlyBlotInParent || (thisIsLastBlotInParent && prevLeafIsSoftBreak);
     if (!shouldRender) {
       this.remove();
     }
