@@ -29,8 +29,8 @@ class Theme {
   ) {}
 
   detach() {
-    Object.values(this.modules).forEach((module) => {
-      if (module instanceof Module) {
+    Object.values(this.modules).forEach((module: Object) => {
+      if ('detach' in module && typeof module.detach === 'function') {
         module.detach();
       }
     });

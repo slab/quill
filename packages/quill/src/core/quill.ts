@@ -235,7 +235,6 @@ class Quill {
     }
     const scrollBlotName = Parchment.ScrollBlot.blotName;
     const ScrollBlot = this.options.registry.query(scrollBlotName);
-    console.log(ScrollBlot);
     if (!ScrollBlot || !('blotName' in ScrollBlot)) {
       throw new Error(
         `Cannot initialize Quill without "${scrollBlotName}" blot`,
