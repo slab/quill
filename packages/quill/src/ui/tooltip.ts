@@ -1,5 +1,6 @@
 import type Quill from '../core.js';
 import type { Bounds } from '../core/selection.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
 
 const isScrollable = (el: Element) => {
   const { overflowY } = getComputedStyle(el, null);
@@ -18,7 +19,8 @@ class Tooltip {
     // @ts-expect-error
     this.root.innerHTML = this.constructor.TEMPLATE;
     if (isScrollable(this.quill.root)) {
-      this.quill.root.addEventListener('scroll', () => {
+      const subscriber = findOrCreateSubscriber(this.quill.root);
+      subscriber.on(this, this.quill.root, 'scroll', () => {
         this.root.style.marginTop = `${-1 * this.quill.root.scrollTop}px`;
       });
     }

@@ -1,6 +1,7 @@
 import { merge } from 'lodash-es';
 import type Quill from '../core/quill.js';
 import Emitter from '../core/emitter.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
 import Theme from '../core/theme.js';
 import type { ThemeOptions } from '../core/theme.js';
 import ColorPicker from '../ui/color-picker.js';
@@ -141,13 +142,14 @@ class BaseTheme extends Theme {
     selects: NodeListOf<HTMLSelectElement>,
     icons: Record<string, string | Record<string, string>>,
   ) {
+    const subscriber = findOrCreateSubscriber(this.quill.root);
     this.pickers = Array.from(selects).map((select) => {
       if (select.classList.contains('ql-align')) {
         if (select.querySelector('option') == null) {
           fillSelect(select, ALIGNS);
         }
         if (typeof icons.align === 'object') {
-          return new IconPicker(select, icons.align);
+          return new IconPicker(select, subscriber, icons.align);
         }
       }
       if (
@@ -164,7 +166,7 @@ class BaseTheme extends Theme {
             format === 'background' ? '#ffffff' : '#000000',
           );
         }
-        return new ColorPicker(select, icons[format] as string);
+        return new ColorPicker(select, subscriber, icons[format] as string);
       }
       if (select.querySelector('option') == null) {
         if (select.classList.contains('ql-font')) {
@@ -175,7 +177,7 @@ class BaseTheme extends Theme {
           fillSelect(select, SIZES);
         }
       }
-      return new Picker(select);
+      return new Picker(select, subscriber);
     });
     const update = () => {
       this.pickers.forEach((picker) => {
@@ -232,8 +234,9 @@ class BaseTooltip extends Tooltip {
   }
 
   listen() {
+    const subscriber = findOrCreateSubscriber(this.quill.root);
     // @ts-expect-error Fix me later
-    this.textbox.addEventListener('keydown', (event) => {
+    subscriber.on(this, this.textbox, 'keydown', (event) => {
       if (event.key === 'Enter') {
         this.save();
         event.preventDefault();
