@@ -2,6 +2,7 @@ import { EmbedBlot } from 'parchment';
 import { sanitize } from './link.js';
 
 const ATTRIBUTES = ['alt', 'height', 'width'];
+const SAFE_ATTRIBUTES = ['src', 'alt', 'height', 'width'];
 
 class Image extends EmbedBlot {
   static blotName = 'image';
@@ -16,7 +17,7 @@ class Image extends EmbedBlot {
   }
 
   static formats(domNode: Element) {
-    return ATTRIBUTES.reduce(
+    return SAFE_ATTRIBUTES.reduce(
       (formats: Record<string, string | null>, attribute) => {
         if (domNode.hasAttribute(attribute)) {
           formats[attribute] = domNode.getAttribute(attribute);
@@ -42,7 +43,7 @@ class Image extends EmbedBlot {
   domNode: HTMLImageElement;
 
   format(name: string, value: string) {
-    if (ATTRIBUTES.indexOf(name) > -1) {
+    if (SAFE_ATTRIBUTES.indexOf(name) > -1) {
       if (value) {
         this.domNode.setAttribute(name, value);
       } else {
