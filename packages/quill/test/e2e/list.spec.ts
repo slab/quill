@@ -119,7 +119,7 @@ test.describe('list', () => {
         expect(await editorPage.getContents()).toEqual([
           { insert: 'item 1' },
           { insert: '\n', attributes: { list } },
-          { insert: '我' },
+          { insert: '我​​​' },
           { insert: '\n', attributes: { list } },
         ]);
       });
@@ -134,7 +134,7 @@ test.describe('list', () => {
         await editorPage.setSelection(9, 0);
         await editorPage.typeWordWithIME(composition, '我');
         await page.keyboard.press('Backspace');
-        expect(await editorPage.getContents()).toEqual([{ insert: '\n' }]);
+        expect(await editorPage.getContents()).toEqual([{ insert: '​​​\n' }]);
       });
     });
   }
