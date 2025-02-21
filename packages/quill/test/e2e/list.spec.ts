@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from './fixtures/index.js';
 import { isMac } from './utils/index.js';
+import { ZERO_SPACE } from '../../src/core/constants.js';
 
 const listTypes = ['bullet', 'checked'];
 
@@ -119,7 +120,7 @@ test.describe('list', () => {
         expect(await editorPage.getContents()).toEqual([
           { insert: 'item 1' },
           { insert: '\n', attributes: { list } },
-          { insert: '我​​​' },
+          { insert: ZERO_SPACE + '我' },
           { insert: '\n', attributes: { list } },
         ]);
       });
@@ -134,7 +135,7 @@ test.describe('list', () => {
         await editorPage.setSelection(9, 0);
         await editorPage.typeWordWithIME(composition, '我');
         await page.keyboard.press('Backspace');
-        expect(await editorPage.getContents()).toEqual([{ insert: '​​​\n' }]);
+        expect(await editorPage.getContents()).toEqual([{ insert: '\n' }]);
       });
     });
   }
