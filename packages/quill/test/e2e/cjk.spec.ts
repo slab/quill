@@ -1,6 +1,5 @@
 import { expect } from '@playwright/test';
 import { test } from './fixtures/index.js';
-import { ZERO_SPACE } from '../../src/core/constants.js';
 
 test.describe('CJK', () => {
   test.beforeEach(async ({ editorPage }) => {
@@ -14,7 +13,7 @@ test.describe('CJK', () => {
       await editorPage.setSelection(0, 0);
       await editorPage.typeWordWithIME(composition, '안녕하세요');
       expect(await editorPage.getContents()).toEqual([
-        { insert: ZERO_SPACE + '안녕하세요\n' },
+        { insert: '안녕하세요\n' },
       ]);
     });
 
@@ -27,7 +26,7 @@ test.describe('CJK', () => {
       await editorPage.setSelection(0, 0);
       await editorPage.typeWordWithIME(composition, '안녕하세요');
       expect(await editorPage.getContents()).toEqual([
-        { insert: ZERO_SPACE + '안녕하세요test\n' },
+        { insert: '안녕하세요test\n' },
       ]);
     });
 
@@ -61,7 +60,7 @@ test.describe('CJK', () => {
       await editorPage.setSelection(0, 0);
       await editorPage.typeWordWithIME(composition, 'こんにちは');
       expect(await editorPage.getContents()).toEqual([
-        { insert: ZERO_SPACE + 'こんにちは\n' },
+        { insert: 'こんにちは\n' },
       ]);
     });
 
@@ -74,7 +73,7 @@ test.describe('CJK', () => {
       await editorPage.setSelection(0, 0);
       await editorPage.typeWordWithIME(composition, 'こんにちは');
       expect(await editorPage.getContents()).toEqual([
-        { insert: ZERO_SPACE + 'こんにちはtest\n' },
+        { insert: 'こんにちはtest\n' },
       ]);
     });
 
@@ -107,9 +106,7 @@ test.describe('CJK', () => {
 
       await editorPage.setSelection(0, 0);
       await editorPage.typeWordWithIME(composition, '你好');
-      expect(await editorPage.getContents()).toEqual([
-        { insert: ZERO_SPACE + '你好\n' },
-      ]);
+      expect(await editorPage.getContents()).toEqual([{ insert: '你好\n' }]);
     });
 
     test('typing at beginning of existing line', async ({
@@ -121,7 +118,7 @@ test.describe('CJK', () => {
       await editorPage.setSelection(0, 0);
       await editorPage.typeWordWithIME(composition, '你好');
       expect(await editorPage.getContents()).toEqual([
-        { insert: ZERO_SPACE + '你好test\n' },
+        { insert: '你好test\n' },
       ]);
     });
 

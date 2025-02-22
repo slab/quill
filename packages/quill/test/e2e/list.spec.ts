@@ -1,7 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from './fixtures/index.js';
 import { isMac } from './utils/index.js';
-import { ZERO_SPACE } from '../../src/core/constants.js';
 
 const listTypes = ['bullet', 'checked'];
 
@@ -120,7 +119,7 @@ test.describe('list', () => {
         expect(await editorPage.getContents()).toEqual([
           { insert: 'item 1' },
           { insert: '\n', attributes: { list } },
-          { insert: ZERO_SPACE + '我' },
+          { insert: '我' },
           { insert: '\n', attributes: { list } },
         ]);
       });

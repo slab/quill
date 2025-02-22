@@ -7,7 +7,7 @@ import logger from '../core/logger.js';
 import Module from '../core/module.js';
 import type { BlockEmbed } from '../blots/block.js';
 import type { Range } from '../core/selection.js';
-import { CHECK_KOREAN, ZERO_SPACE } from '../core/constants.js';
+import { CHECK_KOREAN } from '../core/constants.js';
 
 const debug = logger('quill:keyboard');
 
@@ -136,7 +136,7 @@ class Keyboard extends Module<KeyboardOptions> {
     } else {
       this.addBinding(
         { key: Keyboard.keys.BACKSPACE },
-        { collapsed: true, prefix: /^\u200B?.?$/ },
+        { collapsed: true, prefix: /^.?$/ },
         this.handleBackspace,
       );
       this.addBinding(
@@ -304,19 +304,10 @@ class Keyboard extends Module<KeyboardOptions> {
 
   handleBackspace(range: Range, context: Context) {
     // Check for astral symbols
-    let length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix) ? 2 : 1;
+    const length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix)
+      ? 2
+      : 1;
 
-    if (context.offset === 2 && context.prefix.startsWith(ZERO_SPACE)) {
-      length = 2;
-    }
-
-    if (
-      context.offset === 1 &&
-      range.index > 2 &&
-      context.prefix === ZERO_SPACE
-    ) {
-      length = 2;
-    }
     if (range.index === 0 || this.quill.getLength() <= 1) return;
     let formats = {};
     const [line] = this.quill.getLine(range.index);

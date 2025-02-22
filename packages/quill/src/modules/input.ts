@@ -3,7 +3,6 @@ import Module from '../core/module.js';
 import Quill from '../core/quill.js';
 import type { Range } from '../core/selection.js';
 import { deleteRange } from './keyboard.js';
-import { CHECK_KOREAN, ZERO_SPACE } from '../core/constants.js';
 
 const INSERT_TYPES = ['insertText', 'insertReplacementText'];
 
@@ -53,30 +52,6 @@ class Input extends Module {
       event.defaultPrevented ||
       !INSERT_TYPES.includes(event.inputType)
     ) {
-      const range = this.quill.getSelection();
-      if (range) {
-        const [line, offset] = this.quill.getLine(range.index);
-        // In the case that we are typing Korean/Japanese (Romaji) at the beginning of a new line, sometimes
-        // jamo do not compose together as expected but placing a ZWSP immediately before fixes this problem
-        if (
-          offset === 0 &&
-          this.quill.composition.isComposing &&
-          line &&
-          CHECK_KOREAN.test(line.domNode.textContent ?? '')
-        ) {
-          const cursor = this.quill.selection.cursor.domNode;
-          cursor.parentNode?.insertBefore(
-            document.createTextNode(ZERO_SPACE),
-            cursor,
-          );
-          this.quill.setSelection(
-            range.index +
-              ZERO_SPACE.length +
-              (getPlainTextFromInputEvent(event)?.length ?? 0),
-            'user',
-          );
-        }
-      }
       return;
     }
 
@@ -104,18 +79,6 @@ class Input extends Module {
     const range = this.quill.getSelection();
     if (range) {
       this.replaceText(range);
-      const [line, offset] = this.quill.getLine(range.index);
-      // In the case that we are typing Japanese (Romaji) or Chinese (Pinyin) at the beginning of a new line, sometimes
-      // this is necessary to enable correct char composition
-      if (
-        offset === 0 &&
-        line &&
-        !line.domNode.textContent?.startsWith(ZERO_SPACE) &&
-        !CHECK_KOREAN.test(line.domNode.textContent ?? '')
-      ) {
-        this.quill.insertText(range.index, ZERO_SPACE, 'user');
-        this.quill.setSelection(range.index + ZERO_SPACE.length, 0, 'user');
-      }
     }
   }
 }
