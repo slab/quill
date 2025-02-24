@@ -36,7 +36,35 @@ class UINode extends Module {
 
     this.handleArrowKeys();
     this.handleNavigationShortcuts();
+    this.quill.root.addEventListener('pointerdown', this.handleClick);
   }
+
+  private handleClick = (event: PointerEvent) => {
+    // If a user clicks on a list decoration, manually set the selection to the beginning of that list item
+    if (
+      event.target instanceof Element &&
+      event.target?.classList.contains('ql-ui') &&
+      event.target.parentElement instanceof HTMLLIElement
+    ) {
+      const blot = Quill.find(event.target, true);
+      if (
+        blot &&
+        !(blot instanceof Quill) &&
+        ['bullet', 'ordered'].includes(
+          event.target.parentElement?.dataset.list ?? '',
+        )
+      ) {
+        const index = this.quill.getIndex(blot);
+        this.quill.selection.setNativeRange(
+          event.target.nextSibling,
+          0,
+          event.target.nextSibling,
+          0,
+        );
+        this.quill.setSelection(index, 'user');
+      }
+    }
+  };
 
   private handleArrowKeys() {
     this.quill.keyboard.addBinding({
