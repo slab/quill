@@ -3,7 +3,6 @@ import Module from '../core/module.js';
 import Quill from '../core/quill.js';
 import type { Range } from '../core/selection.js';
 import { deleteRange } from './keyboard.js';
-import { ZERO_SPACE } from '../core/constants.js';
 
 const INSERT_TYPES = ['insertText', 'insertReplacementText'];
 
@@ -53,24 +52,6 @@ class Input extends Module {
       event.defaultPrevented ||
       !INSERT_TYPES.includes(event.inputType)
     ) {
-      const range = this.quill.getSelection();
-      if (range) {
-        const [leaf, offset] = this.quill.getLeaf(range.index);
-        // In the case that we are typing Korean/Japanese (Romaji) at the beginning of a new line, sometimes
-        // jamo do not compose together as expected but placing a ZWSP immediately before fixes this problem
-        if (
-          offset === 0 &&
-          this.quill.composition.isComposing &&
-          leaf &&
-          leaf.domNode.textContent?.trim().length === 0
-        ) {
-          leaf.domNode.parentNode?.insertBefore(
-            document.createTextNode(ZERO_SPACE),
-            leaf.domNode,
-          );
-        }
-      }
-
       return;
     }
 

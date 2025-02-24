@@ -20,9 +20,6 @@ class Composition {
     });
 
     this.scroll.domNode.addEventListener('compositionupdate', (event) => {
-      if (this.isComposing) {
-        return;
-      }
       this.handleCompositionUpdate(event);
     });
 

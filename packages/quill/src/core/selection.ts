@@ -116,18 +116,6 @@ class Selection {
       this.composing = true;
       this.root.classList.add(COMPOSITION_CLASS_NAME);
     });
-    this.emitter.on(Emitter.events.COMPOSITION_UPDATE, () => {
-      if (this.cursor.parent) {
-        const range = this.cursor.restore();
-        if (!range) return;
-        this.setNativeRange(
-          range.startNode,
-          range.startOffset,
-          range.endNode,
-          range.endOffset,
-        );
-      }
-    });
     this.emitter.on(Emitter.events.COMPOSITION_BEFORE_END, () => {
       this.root.classList.remove(COMPOSITION_CLASS_NAME);
     });
