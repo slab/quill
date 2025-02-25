@@ -160,4 +160,48 @@ test.describe('list', () => {
       { insert: '\n', attributes: { list: 'unchecked' } },
     ]);
   });
+
+  test('bullet list decoration is clickable', async ({
+    editorPage,
+    page,
+    composition,
+  }) => {
+    await editorPage.setContents([
+      { insert: 'item 1' },
+      { insert: '\n', attributes: { list: 'bullet' } },
+    ]);
+
+    await editorPage.setSelection(7, 0);
+    const rect = await editorPage.root.locator('li').evaluate((element) => {
+      return element.getBoundingClientRect();
+    });
+    await page.mouse.click(rect.left + 5, rect.top + 5);
+    await editorPage.typeWordWithIME(composition, '我');
+    expect(await editorPage.getContents()).toEqual([
+      { insert: '我item 1' },
+      { insert: '\n', attributes: { list: 'bullet' } },
+    ]);
+  });
+
+  test('ordered list decoration is clickable', async ({
+    editorPage,
+    page,
+    composition,
+  }) => {
+    await editorPage.setContents([
+      { insert: 'item 1' },
+      { insert: '\n', attributes: { list: 'ordered' } },
+    ]);
+
+    await editorPage.setSelection(7, 0);
+    const rect = await editorPage.root.locator('li').evaluate((element) => {
+      return element.getBoundingClientRect();
+    });
+    await page.mouse.click(rect.left + 5, rect.top + 5);
+    await editorPage.typeWordWithIME(composition, '我');
+    expect(await editorPage.getContents()).toEqual([
+      { insert: '我item 1' },
+      { insert: '\n', attributes: { list: 'ordered' } },
+    ]);
+  });
 });

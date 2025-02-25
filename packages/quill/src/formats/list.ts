@@ -25,6 +25,9 @@ class ListItem extends Block {
   constructor(scroll: Scroll, domNode: HTMLElement) {
     super(scroll, domNode);
     const ui = domNode.ownerDocument.createElement('span');
+    // though the UI decoration is within the contenteditable, it should not be selectable
+    ui.style.userSelect = 'none';
+
     const listEventHandler = (e: Event) => {
       if (!scroll.isEnabled()) return;
       const format = this.statics.formats(domNode, scroll);
