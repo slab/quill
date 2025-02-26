@@ -350,6 +350,7 @@ function isLine(node: Node, scroll: ScrollBlot) {
     'table',
     'td',
     'tr',
+    'th',
     'ul',
     'video',
   ].includes(node.tagName.toLowerCase());
