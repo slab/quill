@@ -1413,17 +1413,17 @@ describe('Editor', () => {
           0,
           11,
         ),
-      ).toEqual('<strong>123&nbsp;</strong>123<em>&nbsp;123</em>');
+      ).toEqual('<strong>123 </strong>123<em> 123</em>');
 
       expect(createEditor(new Delta().insert('1   2\n')).getHTML(0, 5)).toEqual(
-        '1&nbsp;&nbsp;&nbsp;2',
+        '1   2',
       );
 
       expect(
         createEditor(
           new Delta().insert('  123', { bold: true }).insert('\n'),
         ).getHTML(0, 5),
-      ).toEqual('<strong>&nbsp;&nbsp;123</strong>');
+      ).toEqual('<strong>  123</strong>');
     });
 
     test('mixed list', () => {

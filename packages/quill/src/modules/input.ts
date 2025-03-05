@@ -2,7 +2,7 @@ import Delta from 'quill-delta';
 import Module from '../core/module.js';
 import Quill from '../core/quill.js';
 import type { Range } from '../core/selection.js';
-import { CHECK_KOREAN, deleteRange, ZERO_SPACE } from './keyboard.js';
+import { deleteRange } from './keyboard.js';
 
 const INSERT_TYPES = ['insertText', 'insertReplacementText'];
 
@@ -52,18 +52,6 @@ class Input extends Module {
       event.defaultPrevented ||
       !INSERT_TYPES.includes(event.inputType)
     ) {
-      const range = this.quill.getSelection();
-      const [, offset] = this.quill.getLine(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-        range?.index!,
-      );
-      const text = getPlainTextFromInputEvent(event);
-      // In the case that we are typing Korean at the beginning of a new line, sometimes
-      // jamo do not compose together as expected but placing a ZWSP immediately before fixes this problem
-      if (range && offset === 0 && text && CHECK_KOREAN.test(text)) {
-        this.quill.insertText(range.index, ZERO_SPACE, 'user');
-      }
-
       return;
     }
 

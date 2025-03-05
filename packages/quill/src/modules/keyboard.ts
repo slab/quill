@@ -8,11 +8,7 @@ import Module from '../core/module.js';
 import type { BlockEmbed } from '../blots/block.js';
 import type { Range } from '../core/selection.js';
 import { SOFT_BREAK_CHARACTER } from '../blots/soft-break.js';
-
-// eslint-disable-next-line no-irregular-whitespace
-export const ZERO_SPACE = String.fromCharCode(0x200b); // '&#8203;​'
-export const CHECK_KOREAN =
-  /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3\uA960-\uA97F\uD7B0-\uD7FF\uFFA0-\uFFDC]/giu;
+import { CHECK_KOREAN } from '../core/constants.js';
 
 const debug = logger('quill:keyboard');
 
@@ -316,11 +312,10 @@ class Keyboard extends Module<KeyboardOptions> {
 
   handleBackspace(range: Range, context: Context) {
     // Check for astral symbols
-    let length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix) ? 2 : 1;
+    const length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix)
+      ? 2
+      : 1;
 
-    if (context.offset === 1 && context.prefix === ZERO_SPACE) {
-      length = 2;
-    }
     if (range.index === 0 || this.quill.getLength() <= 1) return;
     let formats = {};
     const [line] = this.quill.getLine(range.index);
@@ -352,7 +347,6 @@ class Keyboard extends Module<KeyboardOptions> {
   }
 
   handleDelete(range: Range, context: Context) {
-    // const text = context.suffix;
     // Check for astral symbols
     const length = /^[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(context.suffix)
       ? 2
