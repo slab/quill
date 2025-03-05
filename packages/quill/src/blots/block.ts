@@ -11,8 +11,10 @@ import Break from './break.js';
 import Inline from './inline.js';
 import TextBlot from './text.js';
 import type Scroll from './scroll.js';
+import SoftBreak, { SOFT_BREAK_CHARACTER } from './soft-break.js';
 
 const NEWLINE_LENGTH = 1;
+const softBreakRegex = new RegExp(`(${SOFT_BREAK_CHARACTER})`, 'g');
 
 class Block extends BlockBlot {
   scroll: Scroll;
@@ -27,6 +29,7 @@ class Block extends BlockBlot {
 
   deleteAt(index: number, length: number) {
     super.deleteAt(index, length);
+    this.optimizeChildren();
     this.cache = {};
   }
 
@@ -44,6 +47,7 @@ class Block extends BlockBlot {
         value,
       );
     }
+    this.optimizeChildren();
     this.cache = {};
   }
 
@@ -57,11 +61,17 @@ class Block extends BlockBlot {
     const lines = value.split('\n');
     const text = lines.shift() as string;
     if (text.length > 0) {
-      if (index < this.length() - 1 || this.children.tail == null) {
-        super.insertAt(Math.min(index, this.length() - 1), text);
-      } else {
-        this.children.tail.insertAt(this.children.tail.length(), text);
-      }
+      const softLines = text.split(softBreakRegex);
+      let i = index;
+      softLines.forEach((str) => {
+        if (str === SOFT_BREAK_CHARACTER) {
+          super.insertAt(i, SoftBreak.blotName, SOFT_BREAK_CHARACTER);
+        } else {
+          super.insertAt(Math.min(i, this.length() - 1), str);
+        }
+        i += str.length;
+      });
+
       this.cache = {};
     }
     // TODO: Fix this next time the file is edited.
@@ -76,11 +86,8 @@ class Block extends BlockBlot {
   }
 
   insertBefore(blot: Blot, ref?: Blot | null) {
-    const { head } = this.children;
     super.insertBefore(blot, ref);
-    if (head instanceof Break) {
-      head.remove();
-    }
+    this.optimizeChildren();
     this.cache = {};
   }
 
@@ -98,6 +105,17 @@ class Block extends BlockBlot {
 
   optimize(context: { [key: string]: any }) {
     super.optimize(context);
+    const lastLeafInBlock = this.descendants(LeafBlot).at(-1);
+
+    // in order for an end-of-block soft break to be rendered properly by the browser, we need a trailing break
+    if (
+      lastLeafInBlock != null &&
+      lastLeafInBlock.statics.blotName === SoftBreak.blotName &&
+      this.children.tail?.statics.blotName !== Break.blotName
+    ) {
+      const breakBlot = this.scroll.create(Break.blotName);
+      super.insertBefore(breakBlot, null);
+    }
     this.cache = {};
   }
 
@@ -123,6 +141,14 @@ class Block extends BlockBlot {
     const next = super.split(index, force);
     this.cache = {};
     return next;
+  }
+
+  private optimizeChildren() {
+    this.children.forEach((child) => {
+      if (child instanceof Break) {
+        child.optimize();
+      }
+    });
   }
 }
 Block.blotName = 'block';
