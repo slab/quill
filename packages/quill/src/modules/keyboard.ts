@@ -408,8 +408,12 @@ class Keyboard extends Module<KeyboardOptions> {
   }
 
   handleShiftEnter(range: Range) {
-    this.quill.insertText(range.index, SOFT_BREAK_CHARACTER);
-    this.quill.setSelection(range.index + 1);
+    this.quill.insertText(
+      range.index,
+      SOFT_BREAK_CHARACTER,
+      Quill.sources.USER,
+    );
+    this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
   }
 }
 
