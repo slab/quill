@@ -359,19 +359,21 @@ describe('Clipboard', () => {
       ],
       [
         '<p><strong><em>a</em><br></strong><br></p>',
-        new Delta().insert('a', {
-          bold: true,
-          italic: true,
-        })
-        .insert(`${SOFT_BREAK_CHARACTER}`, {bold: true}),
+        new Delta()
+          .insert('a', {
+            bold: true,
+            italic: true,
+          })
+          .insert(`${SOFT_BREAK_CHARACTER}`, { bold: true }),
       ],
       [
         '<p><strong><em>a</em></strong><br><br></p>',
-        new Delta().insert('a', {
-          bold: true,
-          italic: true,
-        })
-        .insert(`${SOFT_BREAK_CHARACTER}`),
+        new Delta()
+          .insert('a', {
+            bold: true,
+            italic: true,
+          })
+          .insert(`${SOFT_BREAK_CHARACTER}`),
       ],
     ];
     for (let [html, expectedDelta] of softBreaksCases) {
