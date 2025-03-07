@@ -2,6 +2,7 @@ import Delta from 'quill-delta';
 import { describe, expect, test, vitest } from 'vitest';
 import Quill from '../../../src/core.js';
 import { Range } from '../../../src/core/selection.js';
+import { SOFT_BREAK_CHARACTER } from '../../../src/blots/soft-break.js';
 import Bold from '../../../src/formats/bold.js';
 import Header from '../../../src/formats/header.js';
 import Image from '../../../src/formats/image.js';
@@ -307,12 +308,78 @@ describe('Clipboard', () => {
       expect(delta).toEqual(new Delta().insert('\n'));
     });
 
-    test('break', () => {
+    test('break tag pasted without a parent should be treated as soft break', () => {
+      const html = '<br>';
+      const delta = createClipboard().convert({ html });
+      expect(delta).toEqual(new Delta().insert(SOFT_BREAK_CHARACTER));
+    });
+
+    test('breaks are treated as soft breaks unless they are at the end of a block', () => {
       const html =
         '<div>0<br>1</div><div>2<br></div><div>3</div><div><br>4</div><div><br></div><div>5</div>';
       const delta = createClipboard().convert({ html });
-      expect(delta).toEqual(new Delta().insert('0\n1\n2\n3\n\n4\n\n5'));
+      expect(delta).toEqual(
+        new Delta().insert(
+          `0${SOFT_BREAK_CHARACTER}1\n2\n3\n${SOFT_BREAK_CHARACTER}4\n\n5`,
+        ),
+      );
     });
+
+    const softBreaksCases: [string, Delta][] = [
+      ['<p><br></p>', new Delta()],
+      ['<p><br><br></p>', new Delta().insert(`${SOFT_BREAK_CHARACTER}`)],
+      [
+        '<p><strong>a</strong><br></p>',
+        new Delta().insert('a', { bold: true }),
+      ],
+      [
+        '<p><strong>a<br></strong></p>',
+        new Delta().insert('a', { bold: true }),
+      ],
+      [
+        '<p><strong>a</strong><br><br></p>',
+        new Delta()
+          .insert('a', { bold: true })
+          .insert(`${SOFT_BREAK_CHARACTER}`),
+      ],
+      [
+        '<p><strong>a<br></strong><br></p>',
+        new Delta().insert(`a${SOFT_BREAK_CHARACTER}`, { bold: true }),
+      ],
+      [
+        '<p><strong><em>a<br></em></strong></p>',
+        new Delta().insert('a', { bold: true, italic: true }),
+      ],
+      [
+        '<p><strong><em>a<br></em></strong><br></p>',
+        new Delta().insert(`a${SOFT_BREAK_CHARACTER}`, {
+          bold: true,
+          italic: true,
+        }),
+      ],
+      [
+        '<p><strong><em>a</em><br></strong><br></p>',
+        new Delta().insert('a', {
+          bold: true,
+          italic: true,
+        })
+        .insert(`${SOFT_BREAK_CHARACTER}`, {bold: true}),
+      ],
+      [
+        '<p><strong><em>a</em></strong><br><br></p>',
+        new Delta().insert('a', {
+          bold: true,
+          italic: true,
+        })
+        .insert(`${SOFT_BREAK_CHARACTER}`),
+      ],
+    ];
+    for (let [html, expectedDelta] of softBreaksCases) {
+      test(`breaks matching for nested formats ${html}`, () => {
+        const delta = createClipboard().convert({ html });
+        expect(delta).toEqual(expectedDelta);
+      });
+    }
 
     test('empty block', () => {
       const html = '<h1>Test</h1><h2></h2><p>Body</p>';
@@ -583,7 +650,7 @@ describe('Clipboard', () => {
           .insert('i1\ni2\n', { list: 'ordered' })
           .insert('i3\n', { list: 'ordered', indent: 1 })
           .insert('text', { bold: true })
-          .insert('\n'),
+          .insert(`\n${SOFT_BREAK_CHARACTER}`),
       );
     });
 
