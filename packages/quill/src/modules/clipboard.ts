@@ -490,7 +490,7 @@ function matchBlot(node: Node, delta: Delta, scroll: ScrollBlot) {
 }
 
 function matchBreak(node: Node, delta: Delta, scroll: ScrollBlot) {
-  let parentLineElement = getParentLine(node, scroll);
+  const parentLineElement = getParentLine(node, scroll);
   if (parentLineElement == null) {
     // <br> tags pasted without a parent will be treated as soft breaks
     return new Delta().insert(SOFT_BREAK_CHARACTER);

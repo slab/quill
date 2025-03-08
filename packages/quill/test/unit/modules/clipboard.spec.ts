@@ -386,7 +386,7 @@ describe('Clipboard', () => {
           .insert(`${SOFT_BREAK_CHARACTER}`),
       ],
     ];
-    for (let [html, expectedDelta] of softBreaksCases) {
+    for (const [html, expectedDelta] of softBreaksCases) {
       test(`breaks matching for nested formats ${html}`, () => {
         const delta = createClipboard().convert({ html });
         expect(delta).toEqual(expectedDelta);
