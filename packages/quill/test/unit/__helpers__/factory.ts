@@ -10,6 +10,7 @@ import ListItem, { ListContainer } from '../../../src/formats/list.js';
 import Inline from '../../../src/blots/inline.js';
 import Emitter from '../../../src/core/emitter.js';
 import { normalizeHTML } from './utils.js';
+import SoftBreak from '../../../src/blots/soft-break.js';
 
 export const createRegistry = (formats: unknown[] = []) => {
   const registry = new Registry();
@@ -19,6 +20,7 @@ export const createRegistry = (formats: unknown[] = []) => {
   });
   registry.register(Block);
   registry.register(Break);
+  registry.register(SoftBreak);
   registry.register(Cursor);
   registry.register(Inline);
   registry.register(Scroll);

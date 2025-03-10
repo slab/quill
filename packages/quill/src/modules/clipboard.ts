@@ -34,7 +34,6 @@ const CLIPBOARD_CONFIG: [Selector, Matcher][] = [
   [Node.TEXT_NODE, matchText],
   [Node.TEXT_NODE, matchNewline],
   ['br', matchBreak],
-  ['br.soft-break', matchSoftBreak],
   [Node.ELEMENT_NODE, matchNewline],
   [Node.ELEMENT_NODE, matchBlot],
   [Node.ELEMENT_NODE, matchAttributor],
@@ -490,15 +489,46 @@ function matchBlot(node: Node, delta: Delta, scroll: ScrollBlot) {
   return delta;
 }
 
-function matchBreak(node: Node, delta: Delta) {
-  if (!deltaEndsWith(delta, '\n')) {
-    delta.insert('\n');
+function matchBreak(node: Node, delta: Delta, scroll: ScrollBlot) {
+  const parentLineElement = getParentLine(node, scroll);
+  if (parentLineElement == null) {
+    // <br> tags pasted without a parent will be treated as soft breaks
+    return new Delta().insert(SOFT_BREAK_CHARACTER);
   }
-  return delta;
+  if (isPre(parentLineElement)) {
+    // code blocks don't allow soft breaks
+    return new Delta().insert('\n');
+  }
+  if (isInLastPositionOfParentLine(node, parentLineElement)) {
+    // ignore trailing breaks
+    return delta;
+  }
+  return new Delta().insert(SOFT_BREAK_CHARACTER);
 }
 
-function matchSoftBreak() {
-  return new Delta().insert(SOFT_BREAK_CHARACTER);
+function getParentLine(node: Node, scroll: ScrollBlot): HTMLElement | null {
+  let current: Node = node;
+  while (current.parentElement != null) {
+    if (isLine(current.parentElement, scroll)) {
+      return current.parentElement;
+    }
+    current = current.parentElement;
+  }
+  return null;
+}
+
+function isInLastPositionOfParentLine(
+  node: Node,
+  parentLineElement: HTMLElement,
+): boolean {
+  let current: Node = node;
+  while (current.nextSibling == null && current.parentElement != null) {
+    if (current.parentElement === parentLineElement) {
+      return true;
+    }
+    current = current.parentElement;
+  }
+  return false;
 }
 
 function matchCodeBlock(node: Node, delta: Delta, scroll: ScrollBlot) {
