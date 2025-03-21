@@ -190,11 +190,11 @@ describe('Editor', () => {
       editor.insertText(4, SOFT_BREAK_CHARACTER);
       expect(editor.getDelta()).toEqual(
         new Delta()
-          .insert('0123', { bold: true })
-          .insert(`${SOFT_BREAK_CHARACTER}\n`),
+          .insert(`0123${SOFT_BREAK_CHARACTER}`, { bold: true })
+          .insert('\n'),
       );
       expect(editor.scroll.domNode).toEqualHTML(`
-        <p><strong>0123</strong><br class="soft-break"><br></p>`);
+        <p><strong>0123<br class="soft-break"></strong><br></p>`);
     });
 
     test('multiline text', () => {
@@ -239,6 +239,20 @@ describe('Editor', () => {
       editor.insertText(2, '23', { bold: false, strike: false });
       expect(editor.getDelta()).toEqual(
         new Delta().insert('01', { strike: true }).insert('23\n'),
+      );
+    });
+
+    test('formatted text at the end of a block that ends with other format', () => {
+      const editor = createEditor('<p><strong>01</strong></p>');
+      editor.insertText(2, 'example', { link: 'http://example.com' });
+      expect(editor.getDelta()).toEqual(
+        new Delta()
+          .insert('01', { bold: true })
+          .insert('example', { link: 'http://example.com', bold: true })
+          .insert('\n'),
+      );
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p><strong>01<a rel="noopener noreferrer" target="_blank" href="http://example.com">example</a></strong></p>',
       );
     });
   });
