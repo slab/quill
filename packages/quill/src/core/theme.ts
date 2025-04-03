@@ -4,7 +4,6 @@ import type History from '../modules/history.js';
 import type Keyboard from '../modules/keyboard.js';
 import type { ToolbarProps } from '../modules/toolbar.js';
 import type Uploader from '../modules/uploader.js';
-
 export interface ThemeOptions {
   modules: Record<string, unknown> & {
     toolbar?: null | ToolbarProps;
@@ -48,6 +47,19 @@ class Theme {
       this.options.modules[name] || {},
     );
     return this.modules[name];
+  }
+
+  destroy() {
+    Object.values(this.modules).forEach((module) => {
+      if (typeof module === 'object' && module !== null) {
+        try {
+          // @ts-expect-error
+          module.destroy?.();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    });
   }
 }
 

@@ -7,6 +7,8 @@ abstract class Module<T extends {} = {}> {
     public quill: Quill,
     protected options: Partial<T> = {},
   ) {}
+
+  destroy?(): void;
 }
 
 export default Module;

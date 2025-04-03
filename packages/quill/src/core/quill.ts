@@ -763,6 +763,10 @@ class Quill {
       true,
     );
   }
+
+  destroy() {
+    this.theme.destroy();
+  }
 }
 
 function resolveSelector(selector: string | HTMLElement | null | undefined) {

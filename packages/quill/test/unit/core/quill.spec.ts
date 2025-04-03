@@ -1,7 +1,7 @@
 import '../../../src/quill.js';
 import Delta from 'quill-delta';
 import { LeafBlot, Registry } from 'parchment';
-import { afterEach, beforeEach, describe, expect, test, vitest } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vitest, vi } from 'vitest';
 import type { MockedFunction } from 'vitest';
 import Emitter from '../../../src/core/emitter.js';
 import Theme from '../../../src/core/theme.js';
@@ -67,6 +67,31 @@ describe('Quill', () => {
 
       expect(Quill.import('formats/a-blot')).toEqual(ABlot);
       expect(Quill.import('modules/a-module')).toEqual(AModule);
+    });
+  });
+
+  describe('destroy()', () => {
+    test('destroy', () => {
+      class MyModule {
+        destroy() {
+
+        }
+      }
+      Quill.register({
+        'modules/my-module': MyModule,
+      });
+      Quill.import('modules/my-module');
+
+      const quill = new Quill(createContainer(), {
+        modules: {
+          'my-module': true
+        },
+      });
+      const myModule = quill.getModule('my-module') as MyModule;
+      expect(myModule).toBeInstanceOf(MyModule);
+      const spy = vi.spyOn(myModule, 'destroy');
+      quill.destroy();
+      expect(spy).toHaveBeenCalled();
     });
   });
 
