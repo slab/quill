@@ -10,17 +10,27 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 22
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
+
       - name: Install dependencies
-        run: npm ci
+        run: |
+          pnpm install --frozen-lockfile
+
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps
         working-directory: packages/quill
       - name: Run Playwright tests
         uses: coactions/setup-xvfb@v1
         with:
-          run: npm run test:e2e -- --headed
+          run: pnpm run test:e2e --headed
           working-directory: packages/quill
+
   fuzz:
     name: Fuzz Tests
     runs-on: ubuntu-latest
@@ -32,12 +42,22 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
-      - run: npm ci
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
+
+      - run: |
+          pnpm install --frozen-lockfile
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
-      - run: npm run test:fuzz -w quill
+      - run: pnpm exec playwright install --with-deps
+        working-directory: packages/quill
+      - run: pnpm --filter quill run test:fuzz
+
   unit:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -53,11 +73,19 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 22
 
-      - run: npm ci
-      - run: npx playwright install --with-deps
-      - run: npm run lint
-      - run: npm run test:unit -w quill || npm run test:unit -w quill || npm run test:unit -w quill
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
+
+      - run: |
+          pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps
+        working-directory: packages/quill
+      - run: pnpm run lint
+      - run: pnpm -r run test:unit
         env:
           BROWSER: ${{ matrix.browser }}

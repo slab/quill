@@ -7,7 +7,7 @@
   "keywords": [],
   "license": "BSD-3-Clause",
   "scripts": {
-    "dev": "PORT=$npm_package_config_ports_website next dev",
+    "dev": "next dev",
     "start": "npm run dev",
     "build": "next build",
     "lint": "next lint",
@@ -33,7 +33,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
-    "slugify": "^1.6.5"
+    "slugify": "^1.6.5",
+    "quill-next": "workspace:*"
   },
   "prettier": {
     "singleQuote": true

@@ -3,18 +3,18 @@
 set -e
 
 DIST=dist
+NODE_BIN=./node_modules/.bin
 
 TMPDIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir')
-npx tsc --declaration --emitDeclarationOnly --outDir $TMPDIR
+$NODE_BIN/tsc --declaration --emitDeclarationOnly --outDir $TMPDIR
 
 rm -rf $DIST
 mkdir $DIST
 mv $TMPDIR/src/* $DIST
 rm -rf $TMPDIR
-npx babel src --out-dir $DIST --copy-files --no-copy-ignored --extensions .ts --source-maps
-npx webpack -- --mode $1
+$NODE_BIN/babel src --out-dir $DIST --copy-files --no-copy-ignored --extensions .ts --source-maps
+$NODE_BIN/webpack -- --mode $1
 # https://github.com/webpack-contrib/mini-css-extract-plugin/issues/151
-rm -rf $DIST/dist/*.css.js $DIST/dist/*.css.js.*
-cp package.json $DIST
-cp README.md $DIST
-cp LICENSE $DIST
+cp -R $DIST/dist/*.css $DIST
+cp -R $DIST/dist/*.txt $DIST
+rm -rf $DIST/dist

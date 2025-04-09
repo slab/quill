@@ -13,7 +13,8 @@ const bannerPack = new BannerPlugin({
   banner: [
     `Quill Editor v${pkg.version}`,
     pkg.homepage,
-    `Copyright (c) 2017-${new Date().getFullYear()}, Slab`,
+    `Copyright (c) ${new Date().getFullYear()}, Vincent Chan`,
+    `Copyright (c) 2017-2025, Slab`,
     'Copyright (c) 2014, Jason Chen',
     'Copyright (c) 2013, salesforce.com',
   ].join('\n'),

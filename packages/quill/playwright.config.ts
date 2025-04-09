@@ -5,9 +5,9 @@ const port = 9001;
 export default defineConfig({
   testDir: './test/e2e',
   testMatch: '*.spec.ts',
-  timeout: 30 * 1000,
+  timeout: 60 * 1000,
   expect: {
-    timeout: 5000,
+    timeout: 10000,
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

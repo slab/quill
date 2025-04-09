@@ -19,7 +19,6 @@ export default defineConfig({
       enabled: true,
       provider: 'playwright',
       name: process.env.BROWSER || 'chromium',
-      slowHijackESM: false,
     },
   },
 });

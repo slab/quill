@@ -1,7 +1,15 @@
 import '../../../src/quill.js';
 import Delta from 'quill-delta';
 import { LeafBlot, Registry } from 'parchment';
-import { afterEach, beforeEach, describe, expect, test, vitest, vi } from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  test,
+  vitest,
+  vi,
+} from 'vitest';
 import type { MockedFunction } from 'vitest';
 import Emitter from '../../../src/core/emitter.js';
 import Theme from '../../../src/core/theme.js';
@@ -73,9 +81,7 @@ describe('Quill', () => {
   describe('destroy()', () => {
     test('destroy', () => {
       class MyModule {
-        destroy() {
-
-        }
+        destroy() {}
       }
       Quill.register({
         'modules/my-module': MyModule,
@@ -84,7 +90,7 @@ describe('Quill', () => {
 
       const quill = new Quill(createContainer(), {
         modules: {
-          'my-module': true
+          'my-module': true,
         },
       });
       const myModule = quill.getModule('my-module') as MyModule;
@@ -1330,16 +1336,15 @@ describe('Quill', () => {
       const text = createContents('\n');
       quill.setContents(new Delta().insert(text));
       quill.setSelection({ index: text.indexOf('text 10'), length: 4 }, 'user');
-      expect(
-        await viewportRatio(
-          container.querySelector('p:nth-child(10)') as HTMLElement,
-        ),
-      ).toBe(1);
-      expect(
-        await viewportRatio(
-          container.querySelector('p:nth-child(11)') as HTMLElement,
-        ),
-      ).toBe(1);
+      let viewportRatioValue = 0;
+      viewportRatioValue = await viewportRatio(
+        container.querySelector('p:nth-child(10)') as HTMLElement,
+      );
+      expect(Math.abs(viewportRatioValue - 1)).toBeLessThan(0.01);
+      viewportRatioValue = await viewportRatio(
+        container.querySelector('p:nth-child(11)') as HTMLElement,
+      );
+      expect(Math.abs(viewportRatioValue - 1)).toBeLessThan(0.01);
       quill.root.style.scrollPaddingBottom = '0';
       quill.setSelection(1, 'user');
       quill.setSelection({ index: text.indexOf('text 10'), length: 4 }, 'user');

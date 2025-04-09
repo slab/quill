@@ -1,5 +1,8 @@
 import { useLayoutEffect, useRef } from 'react';
 import { withoutSSR } from './NoSSR';
+import Quill from 'quill-next';
+import "quill-next/dist/quill.snow.css";
+import "quill-next/dist/quill.bubble.css";
 
 const Editor = ({
   children,
@@ -25,11 +28,11 @@ const Editor = ({
   const configRef = useRef(config);
 
   useLayoutEffect(() => {
-    const quill = new window.Quill(ref.current, configRef.current);
+    const quill = new Quill(ref.current, configRef.current);
     if (rootStyleRef) {
       Object.assign(quill.root.style, rootStyleRef.current);
     }
-    quill.on(window.Quill.events.SELECTION_CHANGE, () => {
+    quill.on(Quill.events.SELECTION_CHANGE, () => {
       onSelectionChangeRef.current?.();
     });
 

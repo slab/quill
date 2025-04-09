@@ -24,8 +24,6 @@ export default function Document() {
           href="/assets/images/favicon.ico"
         />
         <link rel="stylesheet" href={`${process.env.katex}/katex.min.css`} />
-        <link rel="stylesheet" href={`${process.env.cdn}/quill.snow.css`} />
-        <link rel="stylesheet" href={`${process.env.cdn}/quill.bubble.css`} />
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"
