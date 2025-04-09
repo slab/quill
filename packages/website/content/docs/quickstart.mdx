@@ -7,7 +7,7 @@ The best way to get started is to try a simple example. Quill is initialized wit
   <Sandpack files={{
   "/index.html":  `
 <!-- Include stylesheet -->
-<link href="{{site.cdn}}/quill.snow.css" rel="stylesheet" />
+<link href="https://esm.sh/quill-next/dist/quill.snow.css" rel="stylesheet" />
 
 <!-- Create the editor container -->
 <div id="editor">
@@ -16,11 +16,10 @@ The best way to get started is to try a simple example. Quill is initialized wit
   <p><br /></p>
 </div>
 
-<!-- Include the Quill library -->
-<script src="{{site.cdn}}/quill.js"></script>
-
 <!-- Initialize Quill editor -->
-<script>
+<script type="module">
+  import Quill from 'https://esm.sh/quill-next';
+
   const quill = new Quill('#editor', {
     theme: 'snow'
   });

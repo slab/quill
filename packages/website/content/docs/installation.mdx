@@ -19,15 +19,16 @@ To import the full build, you will need to include the "quill.js" script and the
 <Sandpack
   files={{
     "index.html": `
-<script src="{{site.cdn}}/quill.js"></script>
-<link href="{{site.cdn}}/quill.snow.css" rel="stylesheet">
+<link href="https://esm.sh/quill-next/dist/quill.snow.css" rel="stylesheet" />
 
 <div id="editor">
   <h2>Demo Content</h2>
   <p>Preset build with <code>snow</code> theme, and some common formats.</p>
 </div>
 
-<script>
+<script type="module">
+  import Quill from 'https://esm.sh/quill-next';
+
   const quill = new Quill('#editor', {
     theme: 'snow'
   });
@@ -47,14 +48,15 @@ To fully customize your Quill build, you can import the core library and add onl
 <Sandpack
   files={{
     "index.html": `
-<link href="{{site.cdn}}/quill.core.css" rel="stylesheet">
-<script src="{{site.cdn}}/quill.core.js"></script>
+<link href="https://esm.sh/quill-next/dist/quill.core.css" rel="stylesheet" />
 
 <div id="editor">
   <p>Core build with no theme, formatting, non-essential modules</p>
 </div>
 
-<script>
+<script type="module">
+  import Quill from 'https://esm.sh/quill-next/dist/core.js';
+
   const quill = new Quill('#editor');
 </script>
     `
@@ -73,7 +75,7 @@ CDN builds expose `Quill` to the global `window` object.
 If your project uses bundlers such as [Webpack](https://webpack.js.org/) or [Vite](https://vitejs.dev/), it's recommended to install Quill via [npm](https://www.npmjs.com/).
 
 ```bash
-npm install quill@{{site.version}}
+npm install quill-next@{{site.version}}
 ```
 
 Similar to the CDN approach, you can import the full build from `"quill"` or the core build from `"quill/core"`.

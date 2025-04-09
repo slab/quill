@@ -9,7 +9,7 @@ import './styles.scss';
 export default function MyApp({ Component, pageProps }) {
   return (
     <Theme accentColor="yellow">
-      <GoogleAnalytics gaId="G-B37E2WMSPW" />
+      <GoogleAnalytics gaId="G-8676QJP3KG" />
       <Component {...pageProps} />
     </Theme>
   );

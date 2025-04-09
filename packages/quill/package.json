@@ -6,7 +6,7 @@
   "contributors": [
     "Jason Chen <jhchen7@gmail.com>"
   ],
-  "homepage": "https://quilljs.com",
+  "homepage": "https://quill-next.diverse.space/",
   "main": "dist/quill.js",
   "type": "module",
   "dependencies": {
