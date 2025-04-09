@@ -11,7 +11,7 @@
     "start": "npm run dev",
     "build": "next build",
     "lint": "next lint",
-    "serve": "npm run serve"
+    "serve": "next start"
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.11.3",
