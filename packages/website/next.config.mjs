@@ -3,7 +3,6 @@ import env from './env.js';
 
 /** @type {import('next').NextConfig} */
 export default withMDX()({
-  output: 'export',
   images: {
     unoptimized: true,
   },
