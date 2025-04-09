@@ -1,9 +1,9 @@
+import { lazy, Suspense } from 'react';
 import { MDXRemote } from 'next-mdx-remote';
 import docs from '../data/docs';
 import { Highlight, themes } from 'prism-react-renderer';
 import api from '../data/api';
 import Sandpack, { SandpackWithQuillTemplate } from './Sandpack';
-import Editor from './Editor';
 import {
   Heading1,
   Heading2,
@@ -16,6 +16,16 @@ import Hint from './Hint';
 import SEO from './SEO';
 import Link from './Link';
 
+const Editor = lazy(() => import('./Editor'));
+
+function LazyEditor(props) {
+  return (
+    <Suspense>
+      <Editor {...props} />
+    </Suspense>
+  )
+}
+
 const components = {
   h1: Heading1,
   h2: Heading2,
@@ -27,7 +37,7 @@ const components = {
   Sandpack,
   SandpackWithQuillTemplate,
   Hint,
-  Editor,
+  Editor: LazyEditor,
   pre: ({ children }) => {
     const className = children.props.className || '';
     const matches = className.match(/language-(?<lang>.*)/);

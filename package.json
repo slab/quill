@@ -27,7 +27,7 @@
   },
   "scripts": {
     "build": "pnpm -r build",
-    "build:quill": "pnpm --filter quill run build",
+    "build:quill": "pnpm --filter quill-next run build",
     "build:website": "pnpm run --filter website build",
     "start": "run-p start:*",
     "start:quill": "pnpm start -w quill",
