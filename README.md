@@ -59,7 +59,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 </script>
 ```
 
-Take a look at the [Quill](https://quilljs.com/) website for more documentation, guides and [live playground](https://quilljs.com/playground/)!
+Take a look at the [Quill Next](https://quill-next.diverse.space/) website for more documentation, guides and [live playground](https://quill-next.diverse.space/playground/snow)!
 
 ## Download
 
