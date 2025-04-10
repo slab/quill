@@ -34,7 +34,8 @@
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "slugify": "^1.6.5",
-    "quill-next": "workspace:*"
+    "quill-next": "workspace:*",
+    "quill-next-react": "workspace:*"
   },
   "prettier": {
     "singleQuote": true

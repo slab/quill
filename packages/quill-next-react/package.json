@@ -1,0 +1,31 @@
+{
+  "name": "quill-next-react",
+  "version": "1.0.0-alpha.0",
+  "author": "Vincent Chan <okcdz@diverse.space>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vincentdchan/quill-next",
+    "directory": "packages/quill-next-react"
+  },
+  "type": "module",
+  "module": "./dist/index.js",
+  "scripts": {
+    "build": "vite build && tsc",
+    "build:ts": "tsc"
+  },
+  "peerDependencies": {
+    "quill-next": "workspace:*",
+    "react": "*",
+    "react-dom": "*"
+  },
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "quill-next": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.2.5"
+  }
+}

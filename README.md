@@ -67,6 +67,13 @@ Take a look at the [Quill Next](https://quill-next.diverse.space/) website for m
 npm install quill-next
 ```
 
+
+## Packages
+
+- **[Quill](./packages/quill/):** The original Quill editor with bug fixes and improvements.
+- **[Quill Next React](./packages/quill-next-react/)**: The React wrapper for Quill Next.
+- **[Website](./packages/website/)**: The website of Quill Next, including demo and documentation.
+
 ## License
 
 BSD 3-clause

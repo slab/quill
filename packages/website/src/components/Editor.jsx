@@ -1,8 +1,9 @@
-import { useLayoutEffect, useRef } from 'react';
+import { lazy, Suspense } from 'react';
 import { withoutSSR } from './NoSSR';
-import Quill from 'quill-next';
 import "quill-next/dist/quill.snow.css";
 import "quill-next/dist/quill.bubble.css";
+
+const QuillEditor = lazy(() => import("quill-next-react"));
 
 const Editor = ({
   children,
@@ -12,37 +13,24 @@ const Editor = ({
   onLoad,
   ...props
 }) => {
-  const ref = useRef(null);
-  const rootStyleRef = useRef(rootStyle);
-  const onSelectionChangeRef = useRef(onSelectionChange);
-  const onLoadRef = useRef(onLoad);
-
-  useLayoutEffect(() => {
-    onSelectionChangeRef.current = onSelectionChange;
-  }, [onSelectionChange]);
-
-  useLayoutEffect(() => {
-    onLoadRef.current = onLoad;
-  }, [onLoad]);
-
-  const configRef = useRef(config);
-
-  useLayoutEffect(() => {
-    const quill = new Quill(ref.current, configRef.current);
-    if (rootStyleRef) {
-      Object.assign(quill.root.style, rootStyleRef.current);
+  const onReady = (quill) => {
+    if (rootStyle) {
+      Object.assign(quill.root.style, rootStyle);
     }
-    quill.on(Quill.events.SELECTION_CHANGE, () => {
-      onSelectionChangeRef.current?.();
-    });
-
-    onLoadRef.current?.(quill);
-  }, []);
+    if (typeof onLoad === "function") {
+      onLoad(quill);
+    }
+  }
 
   return (
-    <div ref={ref} {...props}>
-      {children}
-    </div>
+    <Suspense>
+      <QuillEditor
+        onReady={onReady}
+        config={config}
+        onSelectionChange={onSelectionChange}
+        {...props}
+      />
+    </Suspense>
   );
 };
 

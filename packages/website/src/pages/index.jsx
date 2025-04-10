@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { lazy } from 'react';
 import DevelopersIcon from '../svg/features/developers.svg';
 import ScaleIcon from '../svg/features/scale.svg';
 import GitHub from '../components/GitHub';
@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import Link from 'next/link';
 import NoSSR, { withoutSSR } from '../components/NoSSR';
+import Editor from '../components/Editor';
 
 import LinkedInLogo from '../svg/users/linkedin.svg';
 import MicrosoftLogo from '../svg/users/microsoft.svg';
@@ -26,8 +27,6 @@ import GemLogo from '../svg/users/gem.svg';
 import ModeLogo from '../svg/users/mode.svg';
 import TypeformLogo from '../svg/users/typeform.svg';
 import SlabLogo from '../svg/users/slab.svg';
-
-const Editor = lazy(() => import('../components/Editor'));
 
 const fonts = ['sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'];
 const userBuckets = [
@@ -58,13 +57,9 @@ const userBuckets = [
   [['Slab', 'https://slab.com/', SlabLogo]],
 ];
 
-const Content = () => {
+const content = () => {
   const cdn = process.env.cdn;
-
-  return (
-    <div
-      dangerouslySetInnerHTML={{
-        __html: `
+  return `
                 <h1 class="ql-align-center">Quill Rich Text Editor</h1>
                 <p><br></p>
                 <p>Quill is a free, <a href="https://github.com/slab/quill/">open source</a> WYSIWYG editor built for the modern web. With its <a href="https://quilljs.com/docs/modules/">modular architecture</a> and expressive <a href="https://quilljs.com/docs/api">API</a>, it is completely customizable to fit any need.</p>
@@ -91,10 +86,7 @@ const Content = () => {
                 <p class="ql-align-center"><span class="ql-formula" data-value="x^2 + (y - \\sqrt[3]{x^2})^2 = 1"></span></p>
                 <p><br></p>
 
-`,
-      }}
-    />
-  );
+`;
 };
 
 const Users = withoutSSR(() => {
@@ -246,7 +238,6 @@ const IndexPage = () => {
                 </div>
               ))}
             </div>
-                      <Suspense>
             <NoSSR>
               <div id="demo-container">
                 <div
@@ -264,8 +255,8 @@ const IndexPage = () => {
                             theme: 'bubble',
                           }}
                           onLoad={handleEditorLoad(0)}
+                          dangerouslySetInnerHTML={{ __html: content() }}
                         >
-                          <Content />
                         </Editor>
                     </div>
                   </div>
@@ -325,8 +316,8 @@ const IndexPage = () => {
                           theme: 'snow',
                         }}
                         onLoad={handleEditorLoad(1)}
+                        dangerouslySetInnerHTML={{ __html: content() }}
                       >
-                        <Content />
                       </Editor>
                     </div>
                   </div>
@@ -362,15 +353,14 @@ const IndexPage = () => {
                           theme: 'snow',
                         }}
                         onLoad={handleEditorLoad(2)}
+                        dangerouslySetInnerHTML={{ __html: content() }}
                       >
-                        <Content />
                       </Editor>
                     </div>
                   </div>
                 </div>
               </div>
             </NoSSR>
-                      </Suspense>
           </div>
         </div>
       </div>

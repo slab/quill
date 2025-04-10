@@ -15,16 +15,7 @@ import {
 import Hint from './Hint';
 import SEO from './SEO';
 import Link from './Link';
-
-const Editor = lazy(() => import('./Editor'));
-
-function LazyEditor(props) {
-  return (
-    <Suspense>
-      <Editor {...props} />
-    </Suspense>
-  )
-}
+import Editor from './Editor';
 
 const components = {
   h1: Heading1,
@@ -37,7 +28,7 @@ const components = {
   Sandpack,
   SandpackWithQuillTemplate,
   Hint,
-  Editor: LazyEditor,
+  Editor,
   pre: ({ children }) => {
     const className = children.props.className || '';
     const matches = className.match(/language-(?<lang>.*)/);
