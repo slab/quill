@@ -9,9 +9,15 @@
   },
   "type": "module",
   "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "vite build && tsc",
-    "build:ts": "tsc"
+    "build:ts": "tsc",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "test:unit": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "peerDependencies": {
     "quill-next": "workspace:*",
@@ -19,13 +25,30 @@
     "react-dom": "*"
   },
   "license": "BSD-3-Clause",
+  "dependencies": {
+    "parchment": "*"
+  },
   "devDependencies": {
+    "@storybook/addon-essentials": "^8.6.12",
+    "@storybook/addon-interactions": "^8.6.12",
+    "@storybook/addon-onboarding": "^8.6.12",
+    "@storybook/blocks": "^8.6.12",
+    "@storybook/react": "^8.6.12",
+    "@storybook/react-vite": "^8.6.12",
+    "@storybook/test": "^8.6.12",
+    "@types/node": "^20.10.0",
     "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.2",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^8.57.0",
     "quill-next": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "storybook": "^8.6.12",
     "typescript": "^5.8.3",
-    "vite": "^6.2.5"
+    "vite": "^6.2.5",
+    "vitest": "^3.1.1"
   }
 }

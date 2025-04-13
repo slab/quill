@@ -1,7 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Quill, { type Delta, type EmitterSource, type QuillOptions } from "quill-next";
 import { useQuillEvent } from "./hooks/use-quill-event";
-import { QuillContext } from './context/quill-context';
+import { QuillContext } from "./context/quill-context";
+import { BlotConstructor } from "parchment";
+import { ForkedRegistry } from "./forked-registry";
 
 export type EditorChangeHandler = (
   ...args:
@@ -34,7 +36,24 @@ export interface IQuillEditorProps {
     // Should be InnerHTML['innerHTML'].
     // But unfortunately we're mixing renderer-specific type declarations.
     __html: string | TrustedHTML;
-} | undefined;
+  } | undefined;
+  blots?: BlotConstructor[];
+}
+
+function makeQuillWithBlots(container: HTMLElement, options: QuillOptions, blots?: BlotConstructor[]) {
+  const originalImports = Quill.imports;
+  const newImports = {
+    ...originalImports,
+  }
+
+  Quill.imports = newImports;
+  blots?.forEach((blot) => {
+    Quill.register(blot);
+  });
+  const quill = new Quill(container, options);
+  Quill.imports = originalImports;
+
+  return quill;
 }
 
 const QuillEditor = (props: IQuillEditorProps) => {
@@ -50,6 +69,7 @@ const QuillEditor = (props: IQuillEditorProps) => {
     className,
     style,
     dangerouslySetInnerHTML,
+    blots,
   } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const [quill, setQuill] = useState<Quill | null>(null);
@@ -59,9 +79,16 @@ const QuillEditor = (props: IQuillEditorProps) => {
       containerRef.current.innerHTML = dangerouslySetInnerHTML.__html as any;
     }
 
-    const quill = new Quill(containerRef.current!, {
-      ...config,
-    });
+    const forkedRegistry = new ForkedRegistry(Quill.DEFAULTS.registry);
+
+    const quill = makeQuillWithBlots(
+      containerRef.current!,
+      {
+        ...config,
+        registry: forkedRegistry,
+      },
+      blots,
+    );
 
     if (defaultValue) {
       quill.setContents(defaultValue);

@@ -86,6 +86,7 @@ jobs:
       - run: pnpm exec playwright install --with-deps
         working-directory: packages/quill
       - run: pnpm run lint
+      - run: pnpm run build:quill
       - run: pnpm -r run test:unit
         env:
           BROWSER: ${{ matrix.browser }}
