@@ -1,0 +1,40 @@
+{
+  "ts-node": {
+    "compilerOptions": {
+      "esModuleInterop": true
+    }
+  },
+  "compilerOptions": {
+    "outDir": "./dist",
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "declaration": false,
+    "module": "ES2020",
+    "moduleResolution": "bundler",
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "preserve"
+  },
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

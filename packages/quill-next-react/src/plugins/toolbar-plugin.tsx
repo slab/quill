@@ -7,19 +7,47 @@ import {
   debounceTime,
   filter,
 } from "rxjs";
-import Quill, { Bounds, Range } from "quill-next";
+import Quill, { Bounds } from "quill-next";
 import { useQuill } from "../hooks/use-quill";
 import { PrerenderPanel } from "../components/prerender-panel.component";
+import { useQuillFormats } from "../hooks/use-quill-formats";
+
+export interface IToolbarRenderProps {
+  bounds: Bounds;
+  formats: Record<string, unknown>;
+}
 
 export interface IToolbarPluginProps {
   parentSelector?: string;
   verticalPadding?: number;
-  render: (bounds: Bounds) => React.ReactNode;
+  render: (props: IToolbarRenderProps) => React.ReactNode;
+}
+
+function limitBoundsInRect(bounds: Bounds, rect: Bounds): Bounds | null {
+  let top = Math.max(bounds.top, rect.top);
+
+  if (top > rect.bottom) {
+    return null;
+  }
+
+  if (bounds.bottom < rect.top) {
+    return null;
+  }
+
+  return {
+    left: Math.max(bounds.left, rect.left),
+    right: Math.min(bounds.right, rect.right),
+    top,
+    bottom: Math.min(bounds.bottom, rect.bottom),
+    width: Math.min(bounds.width, rect.width),
+    height: Math.min(bounds.height, rect.height),
+  };
 }
 
 function ToolbarPlugin(props: IToolbarPluginProps) {
   const { parentSelector, verticalPadding } = props;
   const quill = useQuill();
+  const formats = useQuillFormats();
   const [bounds, setBounds] = useState<Bounds | null>(null);
 
   useEffect(() => {
@@ -40,7 +68,10 @@ function ToolbarPlugin(props: IToolbarPluginProps) {
     const editorChange$ = fromEvent(quill, Quill.events.EDITOR_CHANGE);
 
     const position = (reference: Bounds) => {
-      setBounds(reference);
+      const containerRect = quill.container.getBoundingClientRect();
+
+      const limitedBounds = limitBoundsInRect(reference, containerRect);
+      setBounds(limitedBounds);
     };
 
     editorChange$
@@ -58,25 +89,29 @@ function ToolbarPlugin(props: IToolbarPluginProps) {
         setBounds(null);
       });
 
+    const scroll$ = fromEvent(quill.root, "scroll");
+
     merge(
+      scroll$,
       editorChange$.pipe(
-        filter(([eventName]) => eventName === Quill.events.SELECTION_CHANGE)
+        filter(([eventName]) => eventName === Quill.events.SELECTION_CHANGE),
+        debounceTime(100),
       ),
       quillContainerMouseUp$
     )
-      .pipe(debounceTime(200), takeUntil(dispose$))
+      .pipe(takeUntil(dispose$))
       .subscribe(() => {
         if (isMouseDown) {
           return;
         }
-        const range = quill.getSelection();
+        const range = quill.getSelection(false);
         if (!range || range.length === 0) {
           return;
         }
 
         const lines = quill.getLines(range.index, range.length);
         if (lines.length === 1) {
-          const bounds = quill.getBounds(range);
+          const bounds = quill.selection.getBounds(range.index, range.length);
           if (bounds != null) {
             position(bounds);
           }
@@ -87,7 +122,7 @@ function ToolbarPlugin(props: IToolbarPluginProps) {
             lastLine.length() - 1,
             range.index + range.length - index
           );
-          const indexBounds = quill.getBounds(new Range(index, length));
+          const indexBounds = quill.selection.getBounds(index, length);
           if (indexBounds != null) {
             position(indexBounds);
           }
@@ -106,7 +141,7 @@ function ToolbarPlugin(props: IToolbarPluginProps) {
       bounds={bounds}
       className="qn-toolbar-container"
       verticalPadding={verticalPadding}
-      render={() => props.render(bounds)}
+      render={() => props.render({ bounds, formats })}
     />
   );
 }

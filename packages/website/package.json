@@ -30,17 +30,19 @@
     "lz-string": "^1.5.0",
     "next": "^14.0.4",
     "next-mdx-remote": "^4.4.1",
+    "quill-next": "workspace:*",
+    "quill-next-react": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
-    "slugify": "^1.6.5",
-    "quill-next": "workspace:*",
-    "quill-next-react": "workspace:*"
+    "slugify": "^1.6.5"
   },
   "prettier": {
     "singleQuote": true
   },
   "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.2",
     "http-proxy": "^1.18.1",
     "prism-react-renderer": "^2.3.0",
     "prismjs": "^1.29.0",

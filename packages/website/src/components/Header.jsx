@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import classNames from 'classnames';
 import LogoIcon from '../svg/logo.svg';
 import Link from 'next/link';
@@ -11,6 +12,7 @@ import playground from '../data/playground';
 import docs from '../data/docs';
 import ActiveLink from './ActiveLink';
 import ClickOutsideHandler from './ClickOutsideHandler';
+import { Inter } from "next/font/google";
 
 const MainNav = ({ ...props }) => {
   return (
@@ -32,6 +34,8 @@ const MainNav = ({ ...props }) => {
     </nav>
   );
 };
+
+const inter = Inter({ subsets: ['latin'] })
 
 const VersionSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -90,46 +94,57 @@ const VersionSelector = () => {
 
 const Header = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  useEffect(() => {
+    // set [data-theme]=dark on html
+    
+    const html = document.querySelector('html');
+    if (html) {
+      html.setAttribute('data-theme', 'dark');
+    }
+
+  }, []);
 
   return (
-    <header className={styles.header}>
-      <div className={styles.headerContent}>
-        <div className={styles.logo}>
-          <Link href="/">
-            <LogoIcon width="60" />
-          </Link>
-          <VersionSelector />
-        </div>
-        <MainNav className={styles.mainNav} />
-        <nav className={styles.secondaryNav}>
-          <a
-            href="https://github.com/slab/quill"
-            target="_blank"
-            title="Edit on GitHub"
+    <header className={styles.headerContainer + ' ' + inter.className}>
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <div className={styles.logo}>
+            <Link href="/">
+              <LogoIcon />
+            </Link>
+            {/* <VersionSelector /> */}
+          </div>
+          <MainNav className={styles.mainNav} />
+          <nav className={styles.secondaryNav}>
+            <a
+              href="https://github.com/slab/quill"
+              target="_blank"
+              title="Edit on GitHub"
+            >
+              <OctocatIcon />
+            </a>
+            <DocSearch
+              appId="ZTZN3V01SS"
+              indexName="quilljsdev"
+              apiKey="7e6ff70a985e6af9bfea77c780411b9a"
+            />
+          </nav>
+          <button
+            className={styles.mobileNavToggle}
+            onClick={() => setIsNavOpen(!isNavOpen)}
           >
-            <OctocatIcon />
-          </a>
-          <DocSearch
-            appId="ZTZN3V01SS"
-            indexName="quilljsdev"
-            apiKey="7e6ff70a985e6af9bfea77c780411b9a"
-          />
-        </nav>
-        <button
-          className={styles.mobileNavToggle}
-          onClick={() => setIsNavOpen(!isNavOpen)}
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+        <div
+          className={classNames(styles.mobileNav, {
+            [styles.isNavOpen]: isNavOpen,
+          })}
         >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </div>
-      <div
-        className={classNames(styles.mobileNav, {
-          [styles.isNavOpen]: isNavOpen,
-        })}
-      >
-        <MainNav className={styles.mobileMainNav} />
+          <MainNav className={styles.mobileMainNav} />
+        </div>
       </div>
     </header>
   );

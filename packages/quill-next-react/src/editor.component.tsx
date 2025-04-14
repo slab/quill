@@ -69,9 +69,9 @@ const QuillEditor = (props: IQuillEditorProps) => {
   const [quill, setQuill] = useState<Quill | null>(null);
 
   useEffect(() => {
-    if (dangerouslySetInnerHTML && containerRef.current) {
-      containerRef.current.innerHTML = dangerouslySetInnerHTML.__html as any;
-    }
+    // if (dangerouslySetInnerHTML && containerRef.current) {
+    //   containerRef.current.innerHTML = dangerouslySetInnerHTML.__html as any;
+    // }
 
     const forkedRegistry = new ForkedRegistry(Quill.DEFAULTS.registry);
 
@@ -90,9 +90,9 @@ const QuillEditor = (props: IQuillEditorProps) => {
       blots,
     );
 
-    if (defaultValue) {
-      quill.setContents(defaultValue);
-    }
+    // if (defaultValue) {
+    //   quill.setContents(defaultValue);
+    // }
 
     setQuill(quill);
 
@@ -112,6 +112,24 @@ const QuillEditor = (props: IQuillEditorProps) => {
   useEffect(() => {
     quill?.enable(!readOnly);
   }, [quill, readOnly]);
+
+  useEffect(() => {
+    if (dangerouslySetInnerHTML && quill) {
+      const contents = quill.clipboard.convert({
+        html: `${dangerouslySetInnerHTML.__html}<p><br></p>`,
+        text: '\n',
+      });
+      quill.setContents(contents);
+    }
+  }, [quill]);
+
+  useEffect(() => {
+    // we must set the contents after the quill is initialized
+    // so we can listen to the NextLinkAttached event
+    if (defaultValue && quill) {
+      quill.setContents(defaultValue);
+    }
+  }, [defaultValue, quill]);
 
   useQuillEvent(quill, Quill.events.TEXT_CHANGE, onTextChange);
   useQuillEvent(quill, Quill.events.SELECTION_CHANGE, onSelectionChange);

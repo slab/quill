@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef, CSSProperties } from "react";
+import React, { useLayoutEffect, useState, useRef, CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { Bounds } from "quill-next";
-import { timer, Subject, takeUntil } from "rxjs";
 
 export interface PrerenderPanelProps {
   parentElement?: HTMLElement | string;
@@ -24,7 +23,7 @@ function PrerenderPanel(props: PrerenderPanelProps) {
   const [contentRect, setContentRect] = useState<DOMRect | null>(null);
   const [isPrerendering, setIsPrerendering] = useState(true);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let parentContainer: HTMLElement | null = null;
 
     if (typeof parentElement === "string") {
@@ -56,24 +55,14 @@ function PrerenderPanel(props: PrerenderPanelProps) {
     };
   }, [parentElement]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isPrerendering || !bounds) {
       return;
     }
-    const dispose$ = new Subject<void>();
+    const rect = containerRef.current?.getBoundingClientRect() ?? null;
+    setContentRect(rect);
+    setIsPrerendering(false);
 
-    timer(0)
-      .pipe(takeUntil(dispose$))
-      .subscribe(() => {
-        const rect = containerRef.current?.getBoundingClientRect() ?? null;
-        setContentRect(rect);
-        setIsPrerendering(false);
-      });
-
-    return () => {
-      dispose$.next();
-      dispose$.complete();
-    };
   }, [bounds, isPrerendering]);
 
   return createPortal(

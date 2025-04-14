@@ -4,6 +4,12 @@ import SEO from './SEO';
 import Header from './Header';
 import playground from '../data/playground';
 import docs from '../data/docs';
+import { Jost, Inter } from "next/font/google";
+
+const jost = Jost({
+  weight: '400',
+  subsets: ['latin'],
+});
 
 const Layout = ({ children, title }) => {
   return (
@@ -16,15 +22,7 @@ const Layout = ({ children, title }) => {
           <div className="logo row">
             <LogoIcon />
           </div>
-          <h1>Your powerful rich text editor.</h1>
-          <div className="actions row">
-            <Link href={docs[0].url} className="action documentation">
-              Documentation
-            </Link>
-            <Link href={playground[0].url} className="action">
-              Playground
-            </Link>
-          </div>
+          <h1 className={jost.className}>Your powerful and extensible rich text editor.</h1>
         </div>
       </footer>
     </>

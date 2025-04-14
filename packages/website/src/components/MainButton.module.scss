@@ -1,0 +1,46 @@
+
+
+.mainButton {
+  --spacing-1: 8px;
+  --spacing-1-5: 12px;
+  --rounding-normal: 4px;
+
+  display: inline-flex;
+  display: inline-flex;
+  flex-direction: row;
+  gap: var(--spacing-1);
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: var(--spacing-1) var(--spacing-1-5);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: .2px;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--rounding-normal);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &.white {
+    --grey-500: #000;
+    --grey-50: #fff;
+
+    color: var(--grey-500);
+    background: var(--grey-50);
+  }
+
+  &.black {
+    --grey-500: #fff;
+    --grey-50: #000;
+
+    color: var(--grey-500);
+    background: var(--grey-50);
+    border: 1px solid var(--grey-500);
+  }
+}

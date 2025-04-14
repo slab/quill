@@ -135,4 +135,6 @@ export type {
   Keyboard,
 };
 
+export { Link };
+
 export default Quill;

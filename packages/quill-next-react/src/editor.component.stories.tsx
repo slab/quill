@@ -1,9 +1,12 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { QuillEditor } from './editor.component';
-import { Delta } from "quill-next";
+import Quill, { Delta } from "quill-next";
+import { NextTheme } from './next-theme';
 import "quill-next/dist/quill.snow.css";
 import "quill-next/dist/quill.bubble.css";
+
+Quill.register('themes/next', NextTheme);
 
 const meta = {
   title: 'QuillEditor/Basic',
@@ -44,6 +47,25 @@ export const Bubble: Story = {
       modules: {
         toolbar: true,
       }
+    },
+  },
+}
+
+export const Next: Story = {
+  decorators: [
+    (Story) => (
+      <div style={{ margin: '3em' }}>
+        {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}
+        <Story />
+      </div>
+    ),
+  ],
+  args: {
+    defaultValue: new Delta().insert("Hello World: ").insert("link", {
+      link: "https://github.com/vincentdchan/quill-next",
+    }),
+    config: {
+      theme: 'next',
     },
   },
 }

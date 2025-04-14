@@ -3,14 +3,15 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { QuillEditor, IQuillEditorProps } from "./editor.component";
 import { Delta } from "quill-next";
 import { useQuillNextImage } from "./quill-next-image.component";
-import { ToolbarPlugin } from "./plugins/toolbar-plugin.component";
-import { SlashCommandPlugin } from "./plugins/slash-command-plugin.component";
-import { NotionToolbar } from "./components/notion-toolbar.component";
+import { NotionToolbarPlugin } from "./plugins/notion-toolbar-plugin";
+import { SlashCommandPlugin } from "./plugins/slash-command-plugin";
+import { useNextLinkBlot } from "./hooks/use-next-link-blot";
 import {
   NoitionMenuList,
   NotionMenuItemHeader,
   NotionMenuItem,
 } from "./components/notion-menu-list.component";
+import { LinkToolbarPlugin } from "./plugins/link-toolbar-plugin";
 import "quill-next/dist/quill.snow.css";
 import "quill-next/dist/quill.bubble.css";
 
@@ -26,9 +27,10 @@ function WrappedQuillEditor(props: IQuillEditorProps) {
   ];
   const { blots = [] } = props;
   const ImageBlot = useQuillNextImage();
+  const LinkBlot = useNextLinkBlot();
   return (
-    <QuillEditor {...props} blots={[...blots, ImageBlot]}>
-      <ToolbarPlugin render={() => <NotionToolbar />} />
+    <QuillEditor {...props} blots={[...blots, ImageBlot, LinkBlot]}>
+      <NotionToolbarPlugin />
       <SlashCommandPlugin
         length={slashCommands.length}
         render={({ selectedIndex, content, apply }) => (
@@ -46,6 +48,7 @@ function WrappedQuillEditor(props: IQuillEditorProps) {
           </NoitionMenuList>
         )}
       />
+      <LinkToolbarPlugin />
     </QuillEditor>
   );
 }
@@ -66,16 +69,22 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
   args: {
-    defaultValue: new Delta().insert("Hello World\n").insert(
-      {
-        image:
-          "https://github.com/vincentdchan/quill-next/raw/main/images/quill-next.png",
-      },
-      {
-        naturalWidth: 800,
-        naturalHeight: 197,
-      }
-    ),
-    config: {},
+    defaultValue: new Delta().insert("Hello World\n")
+      .insert("link", {
+        link: "https://github.com/vincentdchan/quill-next",
+      })
+      .insert(
+        {
+          image:
+            "https://github.com/vincentdchan/quill-next/raw/main/images/quill-next.png",
+        },
+        {
+          naturalWidth: 800,
+          naturalHeight: 197,
+        }
+      ),
+    config: {
+      theme: 'next',
+    },
   },
 };

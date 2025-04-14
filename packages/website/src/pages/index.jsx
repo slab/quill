@@ -1,15 +1,18 @@
-import { lazy } from 'react';
+import { Suspense, lazy } from "react";
 import DevelopersIcon from '../svg/features/developers.svg';
 import ScaleIcon from '../svg/features/scale.svg';
 import GitHub from '../components/GitHub';
+import OctocatIcon from '../svg/octocat.svg';
 import CrossPlatformIcon from '../svg/features/cross-platform.svg';
 import Layout from '../components/Layout';
 import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import Link from 'next/link';
-import NoSSR, { withoutSSR } from '../components/NoSSR';
+import NoSSR from '../components/NoSSR';
 import Editor from '../components/Editor';
+import { Jost, Inter } from "next/font/google";
 
+import MainButton from '../components/MainButton';
 import LinkedInLogo from '../svg/users/linkedin.svg';
 import MicrosoftLogo from '../svg/users/microsoft.svg';
 import SalesforceLogo from '../svg/users/salesforce.svg';
@@ -60,9 +63,9 @@ const userBuckets = [
 const content = () => {
   const cdn = process.env.cdn;
   return `
-                <h1 class="ql-align-center">Quill Rich Text Editor</h1>
+                <h1>Quill Next Editor</h1>
                 <p><br></p>
-                <p>Quill is a free, <a href="https://github.com/slab/quill/">open source</a> WYSIWYG editor built for the modern web. With its <a href="https://quilljs.com/docs/modules/">modular architecture</a> and expressive <a href="https://quilljs.com/docs/api">API</a>, it is completely customizable to fit any need.</p>
+                <p>Quill Next is a fork of <a href="https://github.com/slab/quill/">Quill</a>.</p>
                 <p><br></p>
                 <iframe class="ql-video ql-align-center" src="https://player.vimeo.com/video/253905163" width="500" height="280" allowfullscreen></iframe>
                 <p><br></p>
@@ -89,27 +92,14 @@ const content = () => {
 `;
 };
 
-const Users = withoutSSR(() => {
-  const [selectedUsers] = useState(() =>
-    userBuckets.map((bucket) => {
-      const index = Math.floor(Math.random() * bucket.length);
-      return bucket[index];
-    }),
-  );
-
-  return (
-    <ul id="logo-container">
-      <li>Used In</li>
-      {selectedUsers.map(([name, url, Logo]) => (
-        <li key={name}>
-          <a title={name} href={url} target="_blank">
-            <Logo />
-          </a>
-        </li>
-      ))}
-    </ul>
-  );
+const jost = Jost({
+  weight: '300',
+  subsets: ['latin'],
 });
+
+const EnhancedEditor = lazy(() => import('../components/EnhancedEditor'));
+
+const inter = Inter({ subsets: ['latin'] })
 
 const IndexPage = () => {
   const [activeIndex, setActiveIndex] = useState(1);
@@ -180,49 +170,34 @@ const IndexPage = () => {
     <Layout>
       <div
         id="above-container"
-        className={classNames({ 'demo-active': isDemoActive })}
+        className={
+          classNames({ 'demo-active': isDemoActive })
+          + ' ' + inter.className
+        }
       >
         <div className="container">
-          <div id="announcement-container">
-            <a
-              target="_blank"
-              href="https://slab.com/blog/announcing-quill-2-0/"
-            >
-              <strong>Quill 2.0 is released!</strong>
-              &nbsp;&nbsp;&bull;&nbsp;&nbsp;Read the
-              announcement&nbsp;&nbsp;&gt;
-            </a>
-          </div>
           <div id="users-container">
-            <h2>
-              <button
-                className="prev"
-                style={{ visibility: activeIndex === 0 ? 'hidden' : undefined }}
-                onClick={() => setActiveIndex(activeIndex - 1)}
+            <h1 className={jost.className}>
+              The next gen of Quill
+            </h1>
+            <h1 className={jost.className}>
+              Powerful and extensible rich text editor
+            </h1>
+            <div className="buttons-container">
+              <MainButton
+                variant='white'
+                href="https://github.com/vincentdchan/quill-next"
+                target="_blank"
               >
-                <span className="arrow">
-                  <span className="tip"></span>
-                  <span className="shaft"></span>
-                </span>
-              </button>
-              Switch Examples
-              <button
-                className="next"
-                style={{ visibility: activeIndex === 2 ? 'hidden' : undefined }}
-                onClick={() => setActiveIndex(activeIndex + 1)}
-              >
-                <span className="arrow">
-                  <span className="tip"></span>
-                  <span className="shaft"></span>
-                </span>
-              </button>
-            </h2>
-            <h1>Your powerful rich text editor.</h1>
-            <Users />
+                <OctocatIcon />
+                Check on Github
+              </MainButton>
+              <MainButton variant='black' href="/docs/quickstart">Documentation</MainButton>
+            </div>
           </div>
 
           <div id="laptop-container" onClick={() => setIsDemoActive(true)}>
-            <div id="camera-container">
+            {/* <div id="camera-container">
               {[0, 1, 2].map((index) => (
                 <div
                   key={index}
@@ -237,125 +212,27 @@ const IndexPage = () => {
                   <div className="dot" />
                 </div>
               ))}
-            </div>
+            </div> */}
             <NoSSR>
               <div id="demo-container">
                 <div
                   id="carousel-container"
-                  style={{ marginLeft: `${activeIndex * -100}%` }}
                 >
                   <div id="bubble-wrapper">
                     <div id="bubble-container">
-                        <Editor
+                      <Suspense>
+                        <EnhancedEditor
                           config={{
                             bounds: '#bubble-container .ql-container',
                             modules: {
                               syntax: true,
                             },
-                            theme: 'bubble',
+                            theme: 'next',
                           }}
                           onLoad={handleEditorLoad(0)}
                           dangerouslySetInnerHTML={{ __html: content() }}
-                        >
-                        </Editor>
-                    </div>
-                  </div>
-                  <div id="snow-wrapper">
-                    <div id="snow-container">
-                      <div className="toolbar">
-                        <span className="ql-formats">
-                          <select className="ql-header" defaultValue="3">
-                            <option value="1">Heading</option>
-                            <option value="2">Subheading</option>
-                            <option value="3">Normal</option>
-                          </select>
-                          <select className="ql-font" defaultValue="sailec">
-                            <option value="sailec">Sailec Light</option>
-                            <option value="sofia">Sofia Pro</option>
-                            <option value="slabo">Slabo 27px</option>
-                            <option value="roboto">Roboto Slab</option>
-                            <option value="inconsolata">Inconsolata</option>
-                            <option value="ubuntu">Ubuntu Mono</option>
-                          </select>
-                        </span>
-                        <span className="ql-formats">
-                          <button className="ql-bold"></button>
-                          <button className="ql-italic"></button>
-                          <button className="ql-underline"></button>
-                        </span>
-                        <span className="ql-formats">
-                          <button className="ql-list" value="ordered"></button>
-                          <button className="ql-list" value="bullet"></button>
-                          <select className="ql-align" defaultValue="false">
-                            <option label="left"></option>
-                            <option label="center" value="center"></option>
-                            <option label="right" value="right"></option>
-                            <option label="justify" value="justify"></option>
-                          </select>
-                        </span>
-                        <span className="ql-formats">
-                          <button className="ql-link"></button>
-                          <button className="ql-image"></button>
-                          <button className="ql-video"></button>
-                        </span>
-                        <span className="ql-formats">
-                          <button className="ql-formula"></button>
-                          <button className="ql-code-block"></button>
-                        </span>
-                        <span className="ql-formats">
-                          <button className="ql-clean"></button>
-                        </span>
-                      </div>
-                      <Editor
-                        config={{
-                          bounds: '#snow-container .ql-container',
-                          modules: {
-                            syntax: true,
-                            toolbar: '#snow-container .toolbar',
-                          },
-                          theme: 'snow',
-                        }}
-                        onLoad={handleEditorLoad(1)}
-                        dangerouslySetInnerHTML={{ __html: content() }}
-                      >
-                      </Editor>
-                    </div>
-                  </div>
-                  <div id="full-wrapper">
-                    <div id="full-container">
-                      <Editor
-                        config={{
-                          bounds: '#full-container .ql-container',
-                          modules: {
-                            syntax: true,
-                            toolbar: [
-                              [{ font: fonts }, { size: [] }],
-                              ['bold', 'italic', 'underline', 'strike'],
-                              [{ color: [] }, { background: [] }],
-                              [{ script: 'super' }, { script: 'sub' }],
-                              [
-                                { header: '1' },
-                                { header: '2' },
-                                'blockquote',
-                                'code-block',
-                              ],
-                              [
-                                { list: 'ordered' },
-                                { list: 'bullet' },
-                                { indent: '-1' },
-                                { indent: '+1' },
-                              ],
-                              [{ direction: 'rtl' }, { align: [] }],
-                              ['link', 'image', 'video', 'formula'],
-                              ['clean'],
-                            ],
-                          },
-                          theme: 'snow',
-                        }}
-                        onLoad={handleEditorLoad(2)}
-                        dangerouslySetInnerHTML={{ __html: content() }}
-                      >
-                      </Editor>
+                        />
+                      </Suspense>
                     </div>
                   </div>
                 </div>
@@ -365,57 +242,36 @@ const IndexPage = () => {
         </div>
       </div>
 
-      <div id="detail-container">
-        <div className="container">
-          <Link className="action" href="/docs/quickstart">
-            Documentation
-          </Link>
-          <h1>An API Driven Rich Text Editor</h1>
-        </div>
-      </div>
-
       <div id="features-container">
         <div className="container">
-          <div className="row">
-            <div className="feature columns">
-              <DevelopersIcon />
-              <div className="details">
-                <h2>Built for Developers</h2>
-                <span>
-                  Granular access to the editor&apos;s content, changes and
-                  events through a simple API. Works consistently and
-                  deterministically with JSON as both input and output.
-                </span>
-              </div>
+          <div className="feature row">
+            <div className="columns details">
+              <h2>Built on Delta</h2>
+              <span>
+                Clean, readable JSON describing your content.
+              </span>
+              <Link className="action-link" href="/docs/quickstart">
+                Learn More
+              </Link>
             </div>
-            <div className="feature columns">
-              <CrossPlatformIcon />
-              <div className="details">
-                <h2>Cross Platform</h2>
-                <span>
-                  Supports all modern browsers on desktops, tablets and phones.
-                  Experience the same consistent behavior and produced HTML
-                  across platforms.
-                </span>
-              </div>
+            <div className="columns">
+              <ScaleIcon />
             </div>
           </div>
 
-          <div id="github-wrapper">
+          {/* <div id="github-wrapper">
             <div id="github-container">
               <GitHub />
             </div>
-          </div>
+          </div> */}
 
           <hr />
 
           <div className="feature row">
             <div className="columns details">
-              <h2>Fits Like a Glove</h2>
+              <h2>Quill meets React</h2>
               <span>
-                Used in small projects and giant Fortune 500s alike. Start
-                simple with the Quill core then easily customize or add your own
-                extensions later if your product needs grow.
+                Delivering rich features, built for extension.
               </span>
               <Link className="action-link" href="/docs/quickstart">
                 Learn More

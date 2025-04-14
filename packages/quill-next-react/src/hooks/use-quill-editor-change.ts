@@ -1,3 +1,4 @@
+import Quill from "quill-next";
 import { useRef, useEffect } from "react";
 import { useQuill } from "./use-quill";
 import { EditorChangeHandler } from "../types/editor-change-handler.type";
@@ -18,10 +19,10 @@ export function useQuillEditorChange(callback: EditorChangeHandler, deps?: React
       callbackRef.current(...args);
     }
 
-    quill.on('editor-change', editorChange);
+    quill.on(Quill.events.EDITOR_CHANGE, editorChange);
 
     return () => {
-      quill.off('editor-change', editorChange);
+      quill.off(Quill.events.EDITOR_CHANGE, editorChange);
     }
   }, [quill]);
 }

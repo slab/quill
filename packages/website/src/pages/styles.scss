@@ -39,16 +39,6 @@ a {
   color: inherit;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Sofia Pro', sans-serif;
-  font-weight: normal;
-}
-
 h1 {
   font-size: 4.2rem;
 }
@@ -153,13 +143,14 @@ svg .feat-3 {
 
 .logo {
   display: inline-block;
-  height: 6.3em;
+  height: 3.0em;
   vertical-align: middle;
   width: 10.5em;
 }
 
 .container {
   max-width: 1200px;
+  height: 100%;
 }
 
 .center {
@@ -362,20 +353,16 @@ header .action {
 
 footer {
   font-size: 1.5rem;
-  background-color: #1d1e30;
   color: #fff;
   margin-top: 5.5em;
   padding-bottom: 5.5em;
-  padding-top: 7.5em;
   text-align: center;
 }
 
 footer h1 {
   font-family: 'Sailec Light', sans-serif;
-  font-size: 3.75rem;
+  font-size: 2.35rem;
   letter-spacing: 0.2rem;
-  margin-bottom: 1.67em;
-  margin-top: 1.67em;
 }
 
 footer .actions.row {
@@ -436,11 +423,13 @@ body.home .arrow .shaft {
 }
 
 #above-container {
-  background-color: #f4f5f5;
   position: relative;
+  padding-top: 12rem;
+  height: 80vh;
 }
 #above-container > .container {
-  height: 840px;
+  display: flex;
+  flex-direction: row;
 }
 
 #announcement-container {
@@ -462,18 +451,43 @@ body.home .arrow .shaft {
 
 #users-container {
   font-size: 1.25rem;
-  left: 0;
-  padding-bottom: 0.53em;
-  padding-top: 5.53em;
-  position: absolute;
-  text-align: center;
-  top: 0;
-  width: 100%;
+  padding-bottom: 4rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
 }
+
+#users-container .buttons-container {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+}
+
 #users-container h1 {
-  font-size: 5rem;
+  font-size: 3.2rem;
   margin-bottom: 0.25em;
+  text-align: left;
+
+  /* 1. Define the gradient as the background */
+  background: linear-gradient(
+    to right,
+    #a0a0a0 0%,    /* Start with darker grey */
+    #f0f0f0 30%,   /* Transition to light grey/white */
+    #ffffff 50%,   /* White center */
+    #f0f0f0 70%,   /* Transition back to light grey/white */
+    #a0a0a0 100%   /* End with darker grey */
+  );
+
+  /* 2. Clip the background to the text shape */
+  -webkit-background-clip: text; /* For Safari/Chrome */
+  background-clip: text;
+
+  /* 3. Make the text color transparent so the background gradient shows through */
+  color: transparent;
 }
+
 #users-container h2 {
   display: none;
   font-size: 4rem;
@@ -511,62 +525,54 @@ body.home .arrow .shaft {
 }
 
 #laptop-container {
+  position: relative;
   background-color: #000;
-  border: 4px solid #707070;
-  bottom: -145px;
-  border-bottom: 0px;
-  border-top-left-radius: 40px;
-  border-top-right-radius: 40px;
+  border: 1px solid #707070;
+  border-radius: 40px;
   box-shadow: 0 0 40px 2px rgba(28, 31, 47, 0.1);
-  font-size: 1.5rem;
-  padding: 20px 20px 0 20px;
-  position: absolute;
-  width: 100%;
+  font-size: 1.4rem;
+  flex: 1;
+  overflow: hidden;
 }
-#above-container:not(.demo-active) #laptop-container:hover {
-  bottom: -135px;
-}
-#above-container:not(.demo-active) .ql-editor {
-  overflow-y: hidden;
-}
-#camera-container {
-  background-color: #000;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  left: 50%;
-  line-height: 26px;
-  margin-left: -90px;
-  position: absolute;
-  text-align: center;
-  width: 180px;
-  z-index: 1;
-}
+// #camera-container {
+//   background-color: #000;
+//   border-bottom-left-radius: 8px;
+//   border-bottom-right-radius: 8px;
+//   left: 50%;
+//   line-height: 26px;
+//   margin-left: -90px;
+//   position: absolute;
+//   text-align: center;
+//   width: 180px;
+//   z-index: 1;
+// }
 
-#camera-container .camera {
-  cursor: pointer;
-  display: inline-block;
-  height: 30px;
-  width: 30px;
-}
+// #camera-container .camera {
+//   cursor: pointer;
+//   display: inline-block;
+//   height: 30px;
+//   width: 30px;
+// }
 
-#camera-container .camera .dot {
-  background-color: #707070;
-  border-radius: 4px;
-  display: inline-block;
-  height: 8px;
-  width: 8px;
-}
-#camera-container .camera.active .dot {
-  background-color: #2dc937;
-}
+// #camera-container .camera .dot {
+//   background-color: #707070;
+//   border-radius: 4px;
+//   display: inline-block;
+//   height: 8px;
+//   width: 8px;
+// }
+// #camera-container .camera.active .dot {
+//   background-color: #2dc937;
+// }
 
 #demo-container {
-  background-color: #fff;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   opacity: 0.85;
   overflow: hidden;
   width: 100%;
+  position: relative;
+  height: 100%;
 }
 #demo-container h1 {
   font-size: 3rem;
@@ -580,16 +586,13 @@ body.home .arrow .shaft {
 #demo-container .ql-size-large {
   font-size: 24px;
 }
-#above-container.demo-active #demo-container,
-#demo-container:hover {
-  opacity: 1;
-}
 #carousel-container {
   font-size: 1.5rem;
-  margin-left: -100%;
-  margin-top: 30px;
-  transition: margin 500ms ease-in-out 0s;
-  width: 300%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
 }
 #carousel-container::after {
   clear: both;
@@ -628,10 +631,7 @@ body.home .arrow .shaft {
 #bubble-wrapper,
 #snow-wrapper,
 #full-wrapper {
-  display: inline-block;
-  float: left;
-  height: 595px;
-  width: 33.33%;
+  height: 100%;
 }
 #snow-wrapper .toolbar {
   border: none;
@@ -650,9 +650,6 @@ body.home .arrow .shaft {
 #above-container.demo-active #announcement-container {
   display: none;
 }
-#above-container.demo-active #users-container h1 {
-  display: none;
-}
 #above-container.demo-active #users-container h2 {
   display: inline-block;
 }
@@ -669,7 +666,6 @@ body.home .arrow .shaft {
 }
 
 #detail-container {
-  background-color: #fff;
   font-size: 1.5rem;
   margin-top: -5px;
   position: relative;
@@ -691,13 +687,11 @@ body.home .arrow .shaft {
 }
 
 #detail-container h1 {
-  font-family: 'Sailec Light', sans-serif;
   letter-spacing: 0.2rem;
   font-size: 3.33rem;
 }
 
 #features-container {
-  background-color: #fff;
   padding-top: 5.83em;
   position: relative;
   z-index: 10;
@@ -1022,7 +1016,7 @@ body:not(.home) .navbar-link:before {
 
 #docs-container {
   margin-bottom: 5em;
-  margin-top: 1.5em;
+  margin-top: 9em;
 }
 #docs-container .anchor {
   background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMS4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDQ4Mi44IDQ4Mi44IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0ODIuOCA0ODIuODsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiPgo8Zz4KCTxnPgoJCTxwYXRoIGQ9Ik0yNTUuMiwyMDkuM2MtNS4zLDUuMy01LjMsMTMuOCwwLDE5LjFjMjEuOSwyMS45LDIxLjksNTcuNSwwLDc5LjRsLTExNSwxMTVjLTIxLjksMjEuOS01Ny41LDIxLjktNzkuNCwwbC0xNy4zLTE3LjMgICAgYy0yMS45LTIxLjktMjEuOS01Ny41LDAtNzkuNGwxMTUtMTE1YzUuMy01LjMsNS4zLTEzLjgsMC0xOS4xcy0xMy44LTUuMy0xOS4xLDBsLTExNSwxMTVDOC43LDMyMi43LDAsMzQzLjYsMCwzNjUuOCAgICBjMCwyMi4yLDguNiw0My4xLDI0LjQsNTguOGwxNy4zLDE3LjNjMTYuMiwxNi4yLDM3LjUsMjQuMyw1OC44LDI0LjNzNDIuNi04LjEsNTguOC0yNC4zbDExNS0xMTVjMzIuNC0zMi40LDMyLjQtODUuMiwwLTExNy42ICAgIEMyNjkuMSwyMDQsMjYwLjUsMjA0LDI1NS4yLDIwOS4zeiIgZmlsbD0iIzAwMDAwMCIvPgoJCTxwYXRoIGQ9Ik00NTguNSw1OC4ybC0xNy4zLTE3LjNjLTMyLjQtMzIuNC04NS4yLTMyLjQtMTE3LjYsMGwtMTE1LDExNWMtMzIuNCwzMi40LTMyLjQsODUuMiwwLDExNy42YzUuMyw1LjMsMTMuOCw1LjMsMTkuMSwwICAgIHM1LjMtMTMuOCwwLTE5LjFjLTIxLjktMjEuOS0yMS45LTU3LjUsMC03OS40bDExNS0xMTVjMjEuOS0yMS45LDU3LjUtMjEuOSw3OS40LDBsMTcuMywxNy4zYzIxLjksMjEuOSwyMS45LDU3LjUsMCw3OS40bC0xMTUsMTE1ICAgIGMtNS4zLDUuMy01LjMsMTMuOCwwLDE5LjFjMi42LDIuNiw2LjEsNCw5LjUsNHM2LjktMS4zLDkuNS00bDExNS0xMTVjMTUuNy0xNS43LDI0LjQtMzYuNiwyNC40LTU4LjggICAgQzQ4Mi44LDk0LjgsNDc0LjIsNzMuOSw0NTguNSw1OC4yeiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=);
