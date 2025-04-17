@@ -94,6 +94,7 @@ class Cursor extends EmbedBlot {
     // @ts-expect-error TODO: make TextBlot.text public
     const nextText = nextTextBlot ? nextTextBlot.text : '';
     const { textNode } = this;
+    const hasCursorCharacter = textNode.data.includes(Cursor.CONTENTS);
     // take text from inside this blot and reset it
     const newText = textNode.data.split(Cursor.CONTENTS).join('');
     textNode.data = Cursor.CONTENTS;
@@ -128,7 +129,11 @@ class Cursor extends EmbedBlot {
           return offset;
         }
         if (node === textNode) {
-          return prevTextLength + offset - 1;
+          // After selecting all text (cmd + a), the cursor's breaking space
+          // doesn't exist, and so we do not need to adjust the selection offset.
+          const offsetAdjusted = hasCursorCharacter ? -1 : 0;
+
+          return prevTextLength + offset + offsetAdjusted;
         }
         if (nextTextBlot && node === nextTextBlot.domNode) {
           return prevTextLength + newText.length + offset;
