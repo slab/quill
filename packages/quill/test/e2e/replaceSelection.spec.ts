@@ -5,6 +5,33 @@ test.describe('replace selection', () => {
   test.beforeEach(async ({ editorPage }) => {
     await editorPage.open();
   });
+  
+test.describe('cursor blot', () => {
+    test('sets the correct caret position after replacing a cursor blot', async ({
+      page,
+      editorPage,
+    }) => {
+      await editorPage.setContents([{ insert: '12\n' }]);
+      await editorPage.selectText('1');
+      await page.keyboard.press('ControlOrMeta+a');
+      await page.keyboard.press('Delete');
+
+      expect(await editorPage.getContents()).toEqual([{ insert: '\n' }]);
+      // Adding a format places the cursor in the document
+      await page.keyboard.press('ControlOrMeta+b');
+      await page.keyboard.press('ControlOrMeta+a');
+      await page.keyboard.type('A');
+
+      expect(await editorPage.getContents()).toEqual([
+        { insert: 'A', attributes: { bold: true } },
+        { insert: '\n' },
+      ]);
+      expect(await editorPage.getSelection()).toEqual({
+        index: 1,
+        length: 0,
+      });
+    });
+  });
 
   test.describe('replace a colored text', () => {
     test('after a normal text', async ({ page, editorPage }) => {
