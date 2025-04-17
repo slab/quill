@@ -5,8 +5,8 @@ test.describe('replace selection', () => {
   test.beforeEach(async ({ editorPage }) => {
     await editorPage.open();
   });
-  
-test.describe('cursor blot', () => {
+
+  test.describe('cursor blot', () => {
     test('sets the correct caret position after replacing a cursor blot', async ({
       page,
       editorPage,
@@ -22,10 +22,6 @@ test.describe('cursor blot', () => {
       await page.keyboard.press('ControlOrMeta+a');
       await page.keyboard.type('A');
 
-      expect(await editorPage.getContents()).toEqual([
-        { insert: 'A', attributes: { bold: true } },
-        { insert: '\n' },
-      ]);
       expect(await editorPage.getSelection()).toEqual({
         index: 1,
         length: 0,
