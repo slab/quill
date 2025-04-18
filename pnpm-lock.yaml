@@ -178,9 +178,15 @@ importers:
 
   packages/quill-next-react:
     dependencies:
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
       parchment:
         specifier: '*'
         version: 3.0.0
+      rxjs:
+        specifier: ^7.8.2
+        version: 7.8.2
     devDependencies:
       '@storybook/addon-essentials':
         specifier: ^8.6.12
@@ -203,6 +209,9 @@ importers:
       '@storybook/test':
         specifier: ^8.6.12
         version: 8.6.12(storybook@8.6.12(prettier@3.5.3))
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
       '@types/node':
         specifier: ^20.10.0
         version: 20.17.30
@@ -225,7 +234,7 @@ importers:
         specifier: ^8.57.0
         version: 8.57.1
       quill-next:
-        specifier: workspace:*
+        specifier: workspace:2.0.4-alpha.0
         version: link:../quill
       react:
         specifier: ^18.2.0
@@ -242,6 +251,9 @@ importers:
       vite:
         specifier: ^6.2.5
         version: 6.2.5(@types/node@20.17.30)(sass@1.86.3)(stylus@0.62.0)(terser@5.39.0)
+      vite-plugin-css-injected-by-js:
+        specifier: ^3.5.2
+        version: 3.5.2(vite@6.2.5(@types/node@20.17.30)(sass@1.86.3)(stylus@0.62.0)(terser@5.39.0))
       vitest:
         specifier: ^3.1.1
         version: 3.1.1(@types/debug@4.1.12)(@types/node@20.17.30)(@vitest/browser@3.1.1)(jsdom@22.1.0)(sass@1.86.3)(stylus@0.62.0)(terser@5.39.0)
@@ -5932,6 +5944,9 @@ packages:
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
 
+  rxjs@7.8.2:
+    resolution: {integrity: sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA==}
+
   sade@1.8.1:
     resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
     engines: {node: '>=6'}
@@ -6688,6 +6703,11 @@ packages:
     resolution: {integrity: sha512-V+IxPAE2FvXpTCHXyNem0M+gWm6J7eRyWPR6vYoG/Gl+IscNOjXzztUhimQgTxaAoUoj40Qqimaa0NLIOOAH4w==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
+
+  vite-plugin-css-injected-by-js@3.5.2:
+    resolution: {integrity: sha512-2MpU/Y+SCZyWUB6ua3HbJCrgnF0KACAsmzOQt1UvRVJCGF6S8xdA3ZUhWcWdM9ivG4I5az8PnQmwwrkC2CAQrQ==}
+    peerDependencies:
+      vite: '>2.0.0-0'
 
   vite@6.2.5:
     resolution: {integrity: sha512-j023J/hCAa4pRIUH6J9HemwYfjB5llR2Ps0CWeikOtdR8+pAURAk0DoJC5/mm9kd+UgdnIy7d6HE4EAvlYhPhA==}
@@ -13707,6 +13727,10 @@ snapshots:
     dependencies:
       queue-microtask: 1.2.3
 
+  rxjs@7.8.2:
+    dependencies:
+      tslib: 2.8.1
+
   sade@1.8.1:
     dependencies:
       mri: 1.2.0
@@ -14602,6 +14626,10 @@ snapshots:
       - terser
       - tsx
       - yaml
+
+  vite-plugin-css-injected-by-js@3.5.2(vite@6.2.5(@types/node@20.17.30)(sass@1.86.3)(stylus@0.62.0)(terser@5.39.0)):
+    dependencies:
+      vite: 6.2.5(@types/node@20.17.30)(sass@1.86.3)(stylus@0.62.0)(terser@5.39.0)
 
   vite@6.2.5(@types/node@20.17.30)(sass@1.86.3)(stylus@0.62.0)(terser@5.39.0):
     dependencies:

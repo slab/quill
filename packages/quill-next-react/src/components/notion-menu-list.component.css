@@ -1,0 +1,66 @@
+.qn-notion-menu-list {
+  border-radius: 10px;
+  background: white;
+  backdrop-filter: none;
+  position: relative;
+  max-width: calc(-24px + 100vw);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 14px 28px -6px,
+    rgba(0, 0, 0, 0.06) 0px 2px 4px -1px, rgba(84, 72, 49, 0.08) 0px 0px 0px 1px;
+  overflow: hidden;
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont,
+    "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji",
+    Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+
+  min-width: 180px;
+}
+
+.qn-notion-menu-item-header {
+  display: flex;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+  color: rgb(120, 119, 116);
+  fill: rgba(55, 53, 47, 0.45);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 120%;
+  user-select: none;
+}
+
+.qn-notion-menu-item {
+  display: flex;
+  transition: background 20ms ease-in;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  border-radius: 6px;
+
+  align-items: center;
+  gap: 8px;
+  line-height: 120%;
+  width: 100%;
+  user-select: none;
+  min-height: 28px;
+  font-size: 14px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.qn-notion-menu-item:hover {
+  background-color: rgba(55, 53, 47, 0.06);
+}
+
+.qn-notion-menu-item.active {
+  background-color: rgba(55, 53, 47, 0.06);
+}
+
+.qn-notion-menu-item .qn-notion-menu-item-content {
+  margin-left: 0px;
+  margin-right: 0px;
+  min-width: 0px;
+  flex: 1 1 auto;
+  height: 32px;
+  display: flex;
+  align-items: center;
+}

@@ -33,6 +33,7 @@ export type {
   ExpandedQuillOptions,
   QuillOptions,
 };
+export { default as Theme } from './core/theme.js';
 
 Quill.register({
   'blots/block': Block,

@@ -12,6 +12,6 @@
     "emitDeclarationOnly": true
   },
   "include": [
-    "src"
+    "src", 
   ]
 }

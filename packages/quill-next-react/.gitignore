@@ -5,3 +5,4 @@
 *storybook.log
 
 !.eslintrc.cjs
+!.storybook

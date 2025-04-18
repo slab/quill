@@ -1,0 +1,24 @@
+
+.qn-notion-toolbar-button {
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  fill: rgb(50, 48, 44);
+  border-radius: 6px;
+  height: 28px;
+  width: 28px;
+  padding: 6px;
+  box-sizing: border-box;
+  isolation: isolate;
+
+}
+
+.qn-notion-toolbar-button.active {
+  fill: rgb(35, 131, 226);
+}
+
+.qn-notion-toolbar-button:hover {
+  background-color: rgba(55, 53, 47, 0.06);
+}

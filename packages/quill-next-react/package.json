@@ -1,6 +1,6 @@
 {
   "name": "quill-next-react",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "author": "Vincent Chan <okcdz@diverse.space>",
   "repository": {
     "type": "git",
@@ -26,7 +26,9 @@
   },
   "license": "BSD-3-Clause",
   "dependencies": {
-    "parchment": "*"
+    "lodash-es": "^4.17.21",
+    "parchment": "*",
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^8.6.12",
@@ -36,6 +38,7 @@
     "@storybook/react": "^8.6.12",
     "@storybook/react-vite": "^8.6.12",
     "@storybook/test": "^8.6.12",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.10.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.2",
@@ -43,12 +46,13 @@
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^8.57.0",
-    "quill-next": "workspace:*",
+    "quill-next": "workspace:2.0.4-alpha.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "storybook": "^8.6.12",
     "typescript": "^5.8.3",
     "vite": "^6.2.5",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
     "vitest": "^3.1.1"
   }
 }

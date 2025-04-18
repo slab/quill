@@ -4,22 +4,9 @@ import { useQuillEvent } from "./hooks/use-quill-event";
 import { QuillContext } from "./context/quill-context";
 import { BlotConstructor } from "parchment";
 import { ForkedRegistry } from "./forked-registry";
+import { EditorChangeHandler } from './types/editor-change-handler.type';
+import { NextTheme } from './next-theme';
 
-export type EditorChangeHandler = (
-  ...args:
-    | [
-        'text-change',
-        Delta,
-        Delta,
-        EmitterSource,
-      ]
-    | [
-        'selection-change',
-        Range,
-        Range,
-        EmitterSource,
-      ]
-) => void;
 
 export interface IQuillEditorProps {
   defaultValue?: Delta;
@@ -46,12 +33,19 @@ function makeQuillWithBlots(container: HTMLElement, options: QuillOptions, blots
     ...originalImports,
   }
 
-  Quill.imports = newImports;
-  blots?.forEach((blot) => {
-    Quill.register(blot);
-  });
-  const quill = new Quill(container, options);
-  Quill.imports = originalImports;
+  let quill: Quill;
+  try {
+    Quill.imports = newImports;
+
+    Quill.register("themes/next", NextTheme);
+
+    blots?.forEach((blot) => {
+      Quill.register(blot, true);
+    });
+    quill = new Quill(container, options);
+  } finally {
+    Quill.imports = originalImports;
+  }
 
   return quill;
 }
@@ -81,12 +75,18 @@ const QuillEditor = (props: IQuillEditorProps) => {
 
     const forkedRegistry = new ForkedRegistry(Quill.DEFAULTS.registry);
 
+    const quillOptions: QuillOptions = {
+      ...config,
+      registry: forkedRegistry,
+    };
+
+    if (!quillOptions.theme) {
+      quillOptions.theme = 'next';
+    }
+
     const quill = makeQuillWithBlots(
       containerRef.current!,
-      {
-        ...config,
-        registry: forkedRegistry,
-      },
+      quillOptions,
       blots,
     );
 

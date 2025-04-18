@@ -1,9 +1,13 @@
-import { defineConfig } from 'vitest/config'
-import { resolve } from 'path'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vitest/config';
+import { resolve } from 'path';
+import react from '@vitejs/plugin-react';
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    cssInjectedByJsPlugin(),
+  ],
   build: {
     sourcemap: 'inline',
     lib: {
@@ -18,6 +22,8 @@ export default defineConfig({
         'react-dom',
         'quill-next',
         'parchment',
+        'rxjs',
+        'lodash-es',
       ],
     },
   },
