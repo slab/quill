@@ -4,6 +4,7 @@ import { QuillEditor, IQuillEditorProps } from "./editor.component";
 import { Delta } from "quill-next";
 import { useQuillNextImage } from "./quill-next-image.component";
 import { NotionToolbarPlugin } from "./plugins/notion-toolbar-plugin";
+import { NotionLinkToolbar } from "./components/notion-link-toolbar.component";
 import { SlashCommandPlugin } from "./plugins/slash-command-plugin";
 import { useNextLinkBlot } from "./hooks/use-next-link-blot";
 import {
@@ -48,7 +49,7 @@ function WrappedQuillEditor(props: IQuillEditorProps) {
           </NoitionMenuList>
         )}
       />
-      <LinkToolbarPlugin />
+      <LinkToolbarPlugin render={(url) => <NotionLinkToolbar url={url} />} />
     </QuillEditor>
   );
 }

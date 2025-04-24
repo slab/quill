@@ -1,0 +1,21 @@
+
+.qn-notion-link-toolbar-container {
+  border-radius: 10px;
+  background: white;
+  backdrop-filter: none;
+  position: relative;
+  max-width: calc(-24px + 100vw);
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px -2px, rgba(84, 72, 49, 0.08) 0px 0px 0px 1px;
+  overflow: hidden;
+  height: 32px;
+}
+
+.qn-notion-link-toolbar {
+  display: flex ;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  color: rgb(120, 119, 116);
+  font-weight: 400;
+  fill: rgba(55, 53, 47, 0.45);
+}
