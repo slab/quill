@@ -26,6 +26,7 @@
   },
   "license": "BSD-3-Clause",
   "dependencies": {
+    "@emotion/react": "^11.14.0",
     "lodash-es": "^4.17.21",
     "parchment": "*",
     "rxjs": "^7.8.2"

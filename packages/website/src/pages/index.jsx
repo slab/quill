@@ -65,7 +65,10 @@ const content = () => {
   return `
                 <h1>Quill Next Editor</h1>
                 <p><br></p>
-                <p>Quill Next is a fork of <a href="https://github.com/slab/quill/">Quill</a>.</p>
+                <p>
+                  Quill Next is a fork of <a href="https://github.com/slab/quill/">Quill</a>.
+                  Created by <span class="qn-mention" data-value="Vincent Chan">Vincent Chan</span>
+                </p>
                 <p><br></p>
                 <iframe class="ql-video ql-align-center" src="https://player.vimeo.com/video/253905163" width="500" height="280" allowfullscreen></iframe>
                 <p><br></p>
@@ -178,11 +181,14 @@ const IndexPage = () => {
         <div className="container">
           <div id="users-container">
             <h1 className={jost.className}>
-              The next gen of Quill
+              Still the Quill you know and love
             </h1>
             <h1 className={jost.className}>
-              Powerful and extensible rich text editor
+              Now enhanced with React
             </h1>
+            <h4 className={jost.className}>
+              Your powerful and extensible rich text editor
+            </h4>
             <div className="buttons-container">
               <MainButton
                 variant='white'

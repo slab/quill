@@ -9,7 +9,7 @@ import {
 } from "rxjs";
 import Quill, { Bounds } from "quill-next";
 import { useQuill } from "../hooks/use-quill";
-import { PrerenderPanel } from "../components/prerender-panel.component";
+import { RectAnchor } from "../components/rect-anchor.component";
 import { useQuillFormats } from "../hooks/use-quill-formats";
 
 export interface IToolbarRenderProps {
@@ -136,7 +136,7 @@ function ToolbarPlugin(props: IToolbarPluginProps) {
   }, [quill]);
 
   return (
-    <PrerenderPanel
+    <RectAnchor
       parentElement={parentSelector}
       bounds={bounds}
       className="qn-toolbar-container"

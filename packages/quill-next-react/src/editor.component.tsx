@@ -73,11 +73,11 @@ const QuillEditor = (props: IQuillEditorProps) => {
     //   containerRef.current.innerHTML = dangerouslySetInnerHTML.__html as any;
     // }
 
-    const forkedRegistry = new ForkedRegistry(Quill.DEFAULTS.registry);
+    // const forkedRegistry = new ForkedRegistry(Quill.DEFAULTS.registry);
 
     const quillOptions: QuillOptions = {
       ...config,
-      registry: forkedRegistry,
+      // registry: forkedRegistry,
     };
 
     if (!quillOptions.theme) {

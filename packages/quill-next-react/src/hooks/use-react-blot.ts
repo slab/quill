@@ -15,14 +15,19 @@ export interface IReactBlotOptions {
   blotName: string;
   scope?: BlotScope;
   tagName?: string;
+  /**
+   * This is required, the quill will find the blot by this className
+   */
+  className: string;
   create?: (value?: unknown) => HTMLElement;
+  onAttach?: (domNode: HTMLElement) => void;
   render: RenderFunc;
 }
 
 export function useEmbedBlot(
   options: IReactBlotOptions,
 ): BlotConstructor {
-  const { blotName, tagName, create, render, scope } = options;
+  const { blotName, className, tagName, create, render, scope, onAttach } = options;
 
   const renderFuncRef = useRef<RenderFunc>(render);
   useEffect(() => {
@@ -39,6 +44,16 @@ export function useEmbedBlot(
       static override blotName: string = blotName;
       static override tagName = tagName || 'div';
       static override scope: Scope = blotScope;
+      static override className = className;
+
+      static override value(_domNode: Node) {
+        const domNode = _domNode as HTMLElement;
+        const value = domNode.getAttribute("data-value");
+        if (value) {
+          return value;
+        }
+        return super.value(_domNode);
+      }
 
       static override create(value?: unknown) {
         if (create) {
@@ -62,12 +77,15 @@ export function useEmbedBlot(
       }
 
       override attach(): void {
+        if (onAttach) {
+          onAttach(this.domNode as HTMLElement);
+        }
+
         this.root = createRoot(this.domNode as HTMLElement);
         this.render();
       }
 
       override detach(): void {
-        console.log("detatch");
         if (this.root) {
           const root = this.root;
           this.root = null;

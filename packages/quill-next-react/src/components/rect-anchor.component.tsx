@@ -2,21 +2,27 @@ import React, { useLayoutEffect, useState, useRef, CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { Bounds } from "quill-next";
 
-export interface PrerenderPanelProps {
+export interface RectAnchorProps {
+  placement?: "top" | "bottom";
   parentElement?: HTMLElement | string;
   className?: string;
   bounds?: Bounds;
   verticalPadding?: number;
   render: () => React.ReactNode;
+  onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-function PrerenderPanel(props: PrerenderPanelProps) {
+function RectAnchor(props: RectAnchorProps) {
   const {
     className,
     bounds,
     parentElement,
     verticalPadding = 12,
+    placement = "top",
     render,
+    onMouseEnter,
+    onMouseLeave,
   } = props;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [parentRect, setParentRect] = useState<DOMRect | null>(null);
@@ -80,10 +86,13 @@ function PrerenderPanel(props: PrerenderPanelProps) {
               : computeToolbarPosition(
                   bounds,
                   verticalPadding,
+                  placement,
                   parentRect,
                   contentRect
                 )
           }
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
         >
           {render()}
         </div>
@@ -96,14 +105,26 @@ function PrerenderPanel(props: PrerenderPanelProps) {
 function computeToolbarPosition(
   bounds: Bounds,
   verticalPadding: number,
+  placement: "top" | "bottom",
   parentRect?: DOMRect,
   toolbarRect?: DOMRect
 ): CSSProperties {
-  let top = bounds.top - toolbarRect.height - verticalPadding;
-  let left = bounds.left + bounds.width / 2 - (toolbarRect?.width ?? 0) / 2;
+  let top: number = 0;
+  let left: number = 0;
+  if (placement === "top") {
+    top = bounds.top - toolbarRect.height - verticalPadding;
+    left = bounds.left + bounds.width / 2 - (toolbarRect?.width ?? 0) / 2;
 
-  if (top < parentRect.top) {
+    if (top < parentRect.top) {
+      top = bounds.bottom + verticalPadding;
+    }
+  } else {
     top = bounds.bottom + verticalPadding;
+    left = bounds.left + bounds.width / 2 - (toolbarRect?.width ?? 0) / 2;
+
+    if (top > parentRect.bottom) {
+      top = bounds.top - toolbarRect.height - verticalPadding;
+    }
   }
 
   if (left < parentRect.left) {
@@ -117,6 +138,6 @@ function computeToolbarPosition(
   };
 }
 
-PrerenderPanel.displayName = "PrerenderPanel";
+RectAnchor.displayName = "RectAnchor";
 
-export { PrerenderPanel };
+export { RectAnchor };

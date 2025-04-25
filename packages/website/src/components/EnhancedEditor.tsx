@@ -1,5 +1,6 @@
 import type Quill from "quill-next";
-import QuillEditor, { type IQuillEditorProps, ToolbarPlugin, NotionToolbar } from "quill-next-react";
+import QuillEditor, { type IQuillEditorProps, NotionLinkToolbarPlugin, NotionToolbarPlugin, useNextLinkBlot, useEmbedBlot, IRenderOptions } from "quill-next-react";
+import Mention from "./Mention";
 import "quill-next/dist/quill.snow.css";
 
 export interface IEnhancedEditor extends IQuillEditorProps {
@@ -8,7 +9,20 @@ export interface IEnhancedEditor extends IQuillEditorProps {
 }
 
 function EnhancedEditor(props: IEnhancedEditor) {
-  const { onLoad, rootStyle, children, ...rest } = props;
+  const { onLoad, rootStyle, blots, children, ...rest } = props;
+  const LinkBlot = useNextLinkBlot();
+  const MentionBlot = useEmbedBlot({
+    blotName: "mention",
+    tagName: "SPAN",
+    className: "qn-mention",
+    render: (options: IRenderOptions) => {
+      return <Mention value={options.value as string} />;
+    },
+    onAttach: (domNode: HTMLElement) => {
+      domNode.style.whiteSpace = "pre-wrap";
+      domNode.style.wordBreak = "break-word";
+    }
+  });
 
   const onReady = (quill: Quill) => {
     if (rootStyle) {
@@ -20,8 +34,9 @@ function EnhancedEditor(props: IEnhancedEditor) {
   }
 
   return (
-    <QuillEditor onReady={onReady} {...rest}>
-      <ToolbarPlugin render={({ formats }) => <NotionToolbar formats={formats} />} />
+    <QuillEditor onReady={onReady} blots={[...(blots || []), LinkBlot, MentionBlot]} {...rest}>
+      <NotionToolbarPlugin />
+      <NotionLinkToolbarPlugin />
       {children}
     </QuillEditor>
   )

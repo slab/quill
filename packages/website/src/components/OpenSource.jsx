@@ -6,7 +6,7 @@ import Link from './Link';
 
 const OpenSource = () => (
   <div className={classNames('feature row', styles.container)}>
-    <div className="six columns details">
+    {/* <div className="six columns details">
       <h2>An Open Source Project</h2>
       <span className={styles.about}>
         Quill is developed and maintained by{' '}
@@ -22,7 +22,7 @@ const OpenSource = () => (
     </div>
     <div className="six columns">
       <OpenSourceIcon />
-    </div>
+    </div> */}
   </div>
 );
 

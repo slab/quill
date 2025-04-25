@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useQuillInput, type IUseQuillInputResult } from "../hooks/use-quill-input";
-import { PrerenderPanel } from "../components/prerender-panel.component";
+import { RectAnchor } from "../components/rect-anchor.component";
 import { Subject, fromEvent, takeUntil } from "rxjs";
 import { useQuill } from "../hooks/use-quill";
 import { Delta } from "quill-next";
@@ -97,7 +97,7 @@ export function SlashCommandPlugin(props: ISlashCommandPluginProps) {
   }
 
   return (
-    <PrerenderPanel
+    <RectAnchor
       className="qn-slash-command-container"
       bounds={inputResult.bounds}
       render={() =>

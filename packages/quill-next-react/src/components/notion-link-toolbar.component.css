@@ -1,5 +1,6 @@
 
 .qn-notion-link-toolbar-container {
+  font-family: Helvetica, Arial, sans-serif;
   border-radius: 10px;
   background: white;
   backdrop-filter: none;
@@ -8,14 +9,47 @@
   box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px -2px, rgba(84, 72, 49, 0.08) 0px 0px 0px 1px;
   overflow: hidden;
   height: 32px;
+  padding: 4px 0px 4px 6px;
 }
 
 .qn-notion-link-toolbar {
-  display: flex ;
-  flex-direction: column;
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
   font-size: 12px;
   color: rgb(120, 119, 116);
   font-weight: 400;
   fill: rgba(55, 53, 47, 0.45);
+  height: 100%;
+}
+
+.qn-notion-link-toolbar input {
+  border: none;
+  outline: none;
+  font-size: 12px;
+  flex: 1;
+}
+
+.qn-notion-link-toolbar .qn-notion-link-toolbar-button {
+  margin-left: 6px;
+  user-select: none;
+  transition: background 20ms ease-in;
+  cursor: pointer;
+  display: flex ;
+  flex-direction: column;
+  align-items: center;
+  padding: 2px 6px;
+  white-space: nowrap;
+  margin-right: 2px;
+  border-radius: 4px;
+  color: rgb(50, 48, 44);
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 12px;
+}
+
+.qn-notion-link-toolbar-button:hover {
+  background: rgba(55, 53, 47, 0.06);
 }

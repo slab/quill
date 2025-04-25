@@ -46,6 +46,7 @@ export function QuillNextImage(options: IRenderOptions) {
 export function useQuillNextImage() {
   return useEmbedBlot({
     blotName: "image",
+    className: "qn-image",
     render: (options: IRenderOptions) => {
       return <QuillNextImage {...options} />;
     },
