@@ -1443,17 +1443,17 @@ body:not(.home) .navbar-link:before {
     padding-top: 2px;
   }
   #sidebar-container li.active > a {
-    color: #1d1e30;
+    color: #c9c9c9;
   }
   #sidebar-container a {
     color: #797b82;
     display: block;
   }
   #sidebar-container a:hover {
-    color: #1d1e30;
+    color: #858585;
   }
   #sidebar-container > ul > li.active > a {
-    border-left: 3px solid #1d1e30;
+    border-left: 3px solid #c9c9c9;
     padding-left: 1.15em;
   }
 }

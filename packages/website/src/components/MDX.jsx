@@ -36,11 +36,11 @@ const components = {
       <Highlight
         code={children.props.children}
         theme={{
-          ...themes.oneLight,
-          plain: {
-            ...themes.oneLight.plain,
-            background: 'transparent',
-          },
+          ...themes.vsDark,
+          // plain: {
+          //   ...themes.oneLight.plain,
+          //   background: 'transparent',
+          // },
         }}
         language={
           matches && matches.groups && matches.groups.lang

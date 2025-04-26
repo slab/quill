@@ -119,6 +119,7 @@ export const StandaloneSandpack = withoutSSR(
           externalResources:
             externalResources && externalResources.map(replaceCDN),
         }}
+        theme="dark"
         template="static"
         files={Object.keys(files).reduce((f, name) => {
           const fullName = name.startsWith('/') ? name : `/${name}`;
@@ -176,6 +177,7 @@ const Sandpack = ({
   return (
     <div className={styles.container} style={isReady ? {} : { opacity: '0' }}>
       <SandpackProvider
+        theme="dark"
         options={{
           autorun: defaultShowPreview,
           visibleFiles,
