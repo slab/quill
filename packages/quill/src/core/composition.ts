@@ -13,20 +13,24 @@ class Composition {
   }
 
   private setupListeners() {
+    // On compositionstart: enter batch mode
     this.scroll.domNode.addEventListener('compositionstart', (event) => {
       if (!this.isComposing) {
+        this.isComposing = true;
+        this.scroll.batchStart();               // <-- Start a batch (like v1.3.7)
         this.handleCompositionStart(event);
       }
     });
 
+    // On compositionend: exit batch mode and apply changes immediately
     this.scroll.domNode.addEventListener('compositionend', (event) => {
       if (this.isComposing) {
-        // Webkit makes DOM changes after compositionend, so we use microtask to
-        // ensure the order.
-        // https://bugs.webkit.org/show_bug.cgi?id=31902
-        queueMicrotask(() => {
+        // Use microtask to wait for DOM update (already in code), then flush
+        setTimeout(() => {
           this.handleCompositionEnd(event);
-        });
+          this.scroll.batchEnd();                 // <-- End the batch to flush the IME text
+          this.isComposing = false;
+        }, 0);
       }
     });
   }
