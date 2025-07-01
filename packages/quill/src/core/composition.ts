@@ -25,7 +25,7 @@ class Composition {
       if (this.isComposing) {
         setTimeout(() => {
           this.handleCompositionEnd(event);
-          this.scroll.batchEnd();                 // <-- End the batch to flush the IME text
+          this.scroll.batchEnd();
           this.isComposing = false;
         }, 0);
       }
