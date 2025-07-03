@@ -13,7 +13,12 @@ class Tooltip {
 
   constructor(quill: Quill, boundsContainer?: HTMLElement) {
     this.quill = quill;
-    this.boundsContainer = boundsContainer || document.body;
+    // Use shadow root or document body based on context
+    this.boundsContainer =
+      boundsContainer ||
+      (quill.domRoot.isInShadowDOM()
+        ? ((quill.domRoot.getRoot() as ShadowRoot).host as HTMLElement)
+        : document.body);
     this.root = quill.addContainer('ql-tooltip');
     // @ts-expect-error
     this.root.innerHTML = this.constructor.TEMPLATE;

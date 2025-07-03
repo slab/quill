@@ -5,6 +5,7 @@ import type { EmitterSource } from './emitter.js';
 import logger from './logger.js';
 import type Cursor from '../blots/cursor.js';
 import type Scroll from '../blots/scroll.js';
+import type { DOMRootType } from './dom-root.js';
 
 const debug = logger('quill:selection');
 
@@ -38,6 +39,7 @@ export class Range {
 class Selection {
   scroll: Scroll;
   emitter: Emitter;
+  domRoot: DOMRootType;
   composing: boolean;
   mouseDown: boolean;
 
@@ -47,9 +49,10 @@ class Selection {
   lastRange: Range | null;
   lastNative: NormalizedRange | null;
 
-  constructor(scroll: Scroll, emitter: Emitter) {
+  constructor(scroll: Scroll, emitter: Emitter, domRoot: DOMRootType) {
     this.emitter = emitter;
     this.scroll = scroll;
+    this.domRoot = domRoot;
     this.composing = false;
     this.mouseDown = false;
     this.root = this.scroll.domNode;
@@ -61,7 +64,7 @@ class Selection {
     this.lastNative = null;
     this.handleComposition();
     this.handleDragging();
-    this.emitter.listenDOM('selectionchange', document, () => {
+    this.emitter.listenDOM('selectionchange', this.domRoot.getRoot(), () => {
       if (!this.mouseDown && !this.composing) {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
       }
@@ -87,7 +90,7 @@ class Selection {
               );
             }
             const triggeredByTyping = mutations.some(
-              (mutation) =>
+              (mutation: MutationRecord) =>
                 mutation.type === 'characterData' ||
                 mutation.type === 'childList' ||
                 (mutation.type === 'attributes' &&
@@ -132,10 +135,10 @@ class Selection {
   }
 
   handleDragging() {
-    this.emitter.listenDOM('mousedown', document.body, () => {
+    this.emitter.listenDOM('mousedown', this.domRoot.getRoot(), () => {
       this.mouseDown = true;
     });
-    this.emitter.listenDOM('mouseup', document.body, () => {
+    this.emitter.listenDOM('mouseup', this.domRoot.getRoot(), () => {
       this.mouseDown = false;
       this.update(Emitter.sources.USER);
     });
@@ -194,7 +197,7 @@ class Selection {
       }
     }
     [node, offset] = leaf.position(offset, true);
-    const range = document.createRange();
+    const range = this.domRoot.createRange();
     if (length > 0) {
       range.setStart(node, offset);
       [leaf, offset] = this.scroll.leaf(index + length);
@@ -239,10 +242,10 @@ class Selection {
   }
 
   getNativeRange(): NormalizedRange | null {
-    const selection = document.getSelection();
-    if (selection == null || selection.rangeCount <= 0) return null;
-    const nativeRange = selection.getRangeAt(0);
+    // Use DOMRoot's Safari-aware range detection
+    const nativeRange = this.domRoot.getNativeRange();
     if (nativeRange == null) return null;
+
     const range = this.normalizeNative(nativeRange);
     debug.info('getNativeRange', range);
     return range;
@@ -262,10 +265,10 @@ class Selection {
   }
 
   hasFocus(): boolean {
+    const activeElement = this.domRoot.getActiveElement();
     return (
-      document.activeElement === this.root ||
-      (document.activeElement != null &&
-        contains(this.root, document.activeElement))
+      activeElement === this.root ||
+      (activeElement != null && contains(this.root, activeElement))
     );
   }
 
@@ -372,7 +375,7 @@ class Selection {
     ) {
       return;
     }
-    const selection = document.getSelection();
+    const selection = this.domRoot.getSelection();
     if (selection == null) return;
     if (startNode != null) {
       if (!this.hasFocus()) this.root.focus({ preventScroll: true });
@@ -399,13 +402,15 @@ class Selection {
           );
           endNode = endNode.parentNode;
         }
-        const range = document.createRange();
-        // @ts-expect-error Fix me later
-        range.setStart(startNode, startOffset);
-        // @ts-expect-error Fix me later
-        range.setEnd(endNode, endOffset);
-        selection.removeAllRanges();
-        selection.addRange(range);
+        // Use DOMRoot's Safari-aware range setting
+        if (startNode != null && endNode != null) {
+          this.domRoot.setNativeRange(
+            startNode,
+            startOffset as number,
+            endNode,
+            endOffset as number,
+          );
+        }
       }
     } else {
       selection.removeAllRanges();

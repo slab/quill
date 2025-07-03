@@ -25,6 +25,7 @@ import Input from './modules/input.js';
 import UINode from './modules/uiNode.js';
 
 export { default as Module } from './core/module.js';
+export { default as DOMRoot } from './core/dom-root.js';
 export { Delta, Op, OpIterator, AttributeMap, Parchment, Range };
 export type {
   Bounds,

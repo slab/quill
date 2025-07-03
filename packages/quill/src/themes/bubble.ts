@@ -58,7 +58,7 @@ class BubbleTooltip extends BaseTooltip {
             }
           }
         } else if (
-          document.activeElement !== this.textbox &&
+          this.quill.domRoot.getActiveElement() !== this.textbox &&
           this.quill.hasFocus()
         ) {
           this.hide();

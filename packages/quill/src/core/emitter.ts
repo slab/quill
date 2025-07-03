@@ -1,20 +1,52 @@
 import { EventEmitter } from 'eventemitter3';
 import instances from './instances.js';
 import logger from './logger.js';
+import type { DOMRootType } from './dom-root.js';
 
 const debug = logger('quill:events');
 const EVENTS = ['selectionchange', 'mousedown', 'mouseup', 'click'];
 
-EVENTS.forEach((eventName) => {
-  document.addEventListener(eventName, (...args) => {
-    Array.from(document.querySelectorAll('.ql-container')).forEach((node) => {
-      const quill = instances.get(node);
-      if (quill && quill.emitter) {
-        quill.emitter.handleDOM(...args);
-      }
+// Delegate events to the Quill editors in the document or shadow root.
+const initializedRoots = new WeakSet<Document | ShadowRoot>();
+
+// Initialize global event delegation for a specific root context
+function initializeGlobalEvents(domRoot: DOMRootType) {
+  const root = domRoot.getRoot();
+
+  // Avoid duplicate initialization
+  if (initializedRoots.has(root)) {
+    return;
+  }
+  initializedRoots.add(root);
+
+  EVENTS.forEach((eventName) => {
+    root.addEventListener(eventName, (...args) => {
+      // Find all Quill containers within this root's scope
+      const containers = domRoot.querySelectorAll('.ql-container');
+      containers.forEach((node) => {
+        const quill = instances.get(node);
+        if (quill && quill.emitter) {
+          quill.emitter.handleDOM(...args);
+        }
+      });
     });
   });
-});
+}
+
+// Initialize global events for the document (backward compatibility)
+if (typeof document !== 'undefined') {
+  EVENTS.forEach((eventName) => {
+    document.addEventListener(eventName, (...args) => {
+      Array.from(document.querySelectorAll('.ql-container')).forEach((node) => {
+        const quill = instances.get(node);
+        if (quill && quill.emitter) {
+          quill.emitter.handleDOM(...args);
+        }
+      });
+    });
+  });
+  initializedRoots.add(document);
+}
 
 class Emitter extends EventEmitter<string> {
   static events = {
@@ -67,9 +99,15 @@ class Emitter extends EventEmitter<string> {
     }
     this.domListeners[eventName].push({ node, handler });
   }
+
+  // Initialize global events for a DOMRoot context
+  static initializeGlobalEvents(domRoot: DOMRootType) {
+    initializeGlobalEvents(domRoot);
+  }
 }
 
 export type EmitterSource =
   (typeof Emitter.sources)[keyof typeof Emitter.sources];
 
+export { initializeGlobalEvents };
 export default Emitter;

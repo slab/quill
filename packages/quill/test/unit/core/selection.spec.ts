@@ -1,6 +1,7 @@
 import Selection, { Range } from '../../../src/core/selection.js';
 import Cursor from '../../../src/blots/cursor.js';
 import Emitter from '../../../src/core/emitter.js';
+import { DOMRoot } from '../../../src/core/dom-root.js';
 import { expect, describe, test } from 'vitest';
 import { createRegistry, createScroll } from '../__helpers__/factory.js';
 import Bold from '../../../src/formats/bold.js';
@@ -29,7 +30,8 @@ const createSelection = (html: string, container = document.body) => {
     ]),
     container,
   );
-  return new Selection(scroll, scroll.emitter);
+  const domRoot = DOMRoot(container);
+  return new Selection(scroll, scroll.emitter, domRoot);
 };
 
 describe('Selection', () => {

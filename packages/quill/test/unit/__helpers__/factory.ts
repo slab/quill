@@ -9,6 +9,7 @@ import TextBlot from '../../../src/blots/text.js';
 import ListItem, { ListContainer } from '../../../src/formats/list.js';
 import Inline from '../../../src/blots/inline.js';
 import Emitter from '../../../src/core/emitter.js';
+import { DOMRoot } from '../../../src/core/dom-root.js';
 import { normalizeHTML } from './utils.js';
 
 export const createRegistry = (formats: unknown[] = []) => {
@@ -37,8 +38,10 @@ export const createScroll = (
   const emitter = new Emitter();
   const root = container.appendChild(document.createElement('div'));
   root.innerHTML = normalizeHTML(html);
+  const domRoot = DOMRoot(container);
   const scroll = new Scroll(registry, root, {
     emitter,
+    domRoot,
   });
   return scroll;
 };

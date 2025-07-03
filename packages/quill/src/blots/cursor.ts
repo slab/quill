@@ -3,6 +3,7 @@ import type { Parent, ScrollBlot } from 'parchment';
 import type Selection from '../core/selection.js';
 import TextBlot from './text.js';
 import type { EmbedContextRange } from './embed.js';
+import type { DOMRootType } from '../core/dom-root.js';
 
 class Cursor extends EmbedBlot {
   static blotName = 'cursor';
@@ -21,7 +22,9 @@ class Cursor extends EmbedBlot {
   constructor(scroll: ScrollBlot, domNode: HTMLElement, selection: Selection) {
     super(scroll, domNode);
     this.selection = selection;
-    this.textNode = document.createTextNode(Cursor.CONTENTS);
+    // Access DOMRoot through scroll (enhanced with domRoot property)
+    const domRoot = (scroll as any).domRoot as DOMRootType;
+    this.textNode = domRoot.createTextNode(Cursor.CONTENTS);
     this.domNode.appendChild(this.textNode);
     this.savedLength = 0;
   }
@@ -115,7 +118,8 @@ class Cursor extends EmbedBlot {
       mergedTextBlot = nextTextBlot;
       nextTextBlot.insertAt(0, newText);
     } else {
-      const newTextNode = document.createTextNode(newText);
+      const domRoot = (this.scroll as any).domRoot as DOMRootType;
+      const newTextNode = domRoot.createTextNode(newText);
       mergedTextBlot = this.scroll.create(newTextNode);
       this.parent.insertBefore(mergedTextBlot, this);
     }

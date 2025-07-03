@@ -30,13 +30,15 @@ class Toolbar extends Module<ToolbarProps> {
   constructor(quill: Quill, options: Partial<ToolbarProps>) {
     super(quill, options);
     if (Array.isArray(this.options.container)) {
-      const container = document.createElement('div');
+      const container = quill.domRoot.createElement('div') as HTMLDivElement;
       container.setAttribute('role', 'toolbar');
-      addControls(container, this.options.container);
+      addControls(container, this.options.container, quill);
       quill.container?.parentNode?.insertBefore(container, quill.container);
       this.container = container;
     } else if (typeof this.options.container === 'string') {
-      this.container = document.querySelector(this.options.container);
+      this.container = quill.domRoot.querySelector(
+        this.options.container,
+      ) as HTMLElement;
     } else {
       this.container = this.options.container;
     }
@@ -184,8 +186,14 @@ class Toolbar extends Module<ToolbarProps> {
 }
 Toolbar.DEFAULTS = {};
 
-function addButton(container: HTMLElement, format: string, value?: string) {
-  const input = document.createElement('button');
+function addButton(
+  container: HTMLElement,
+  format: string,
+  value?: string,
+  quill?: Quill,
+) {
+  const doc = quill ? quill.domRoot : container.ownerDocument;
+  const input = doc.createElement('button') as HTMLButtonElement;
   input.setAttribute('type', 'button');
   input.classList.add(`ql-${format}`);
   input.setAttribute('aria-pressed', 'false');
@@ -203,24 +211,26 @@ function addControls(
   groups:
     | (string | Record<string, unknown>)[][]
     | (string | Record<string, unknown>)[],
+  quill?: Quill,
 ) {
   if (!Array.isArray(groups[0])) {
     // @ts-expect-error
     groups = [groups];
   }
   groups.forEach((controls: any) => {
-    const group = document.createElement('span');
+    const doc = quill ? quill.domRoot : container.ownerDocument;
+    const group = doc.createElement('span') as HTMLSpanElement;
     group.classList.add('ql-formats');
     controls.forEach((control: any) => {
       if (typeof control === 'string') {
-        addButton(group, control);
+        addButton(group, control, undefined, quill);
       } else {
         const format = Object.keys(control)[0];
         const value = control[format];
         if (Array.isArray(value)) {
-          addSelect(group, format, value);
+          addSelect(group, format, value, quill);
         } else {
-          addButton(group, format, value);
+          addButton(group, format, value, quill);
         }
       }
     });
@@ -232,11 +242,13 @@ function addSelect(
   container: HTMLElement,
   format: string,
   values: Array<string | boolean>,
+  quill?: Quill,
 ) {
-  const input = document.createElement('select');
+  const doc = quill ? quill.domRoot : container.ownerDocument;
+  const input = doc.createElement('select') as HTMLSelectElement;
   input.classList.add(`ql-${format}`);
   values.forEach((value) => {
-    const option = document.createElement('option');
+    const option = doc.createElement('option') as HTMLOptionElement;
     if (value !== false) {
       option.setAttribute('value', String(value));
     } else {

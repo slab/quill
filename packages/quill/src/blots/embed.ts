@@ -1,6 +1,7 @@
 import type { ScrollBlot } from 'parchment';
 import { EmbedBlot } from 'parchment';
 import TextBlot from './text.js';
+import type { DOMRootType } from '../core/dom-root.js';
 
 const GUARD_TEXT = '\uFEFF';
 
@@ -18,13 +19,15 @@ class Embed extends EmbedBlot {
 
   constructor(scroll: ScrollBlot, node: Node) {
     super(scroll, node);
-    this.contentNode = document.createElement('span');
+    // Access DOMRoot through scroll (enhanced with domRoot property)
+    const domRoot = (scroll as any).domRoot as DOMRootType;
+    this.contentNode = domRoot.createElement('span') as HTMLSpanElement;
     this.contentNode.setAttribute('contenteditable', 'false');
     Array.from(this.domNode.childNodes).forEach((childNode) => {
       this.contentNode.appendChild(childNode);
     });
-    this.leftGuard = document.createTextNode(GUARD_TEXT);
-    this.rightGuard = document.createTextNode(GUARD_TEXT);
+    this.leftGuard = domRoot.createTextNode(GUARD_TEXT);
+    this.rightGuard = domRoot.createTextNode(GUARD_TEXT);
     this.domNode.appendChild(this.leftGuard);
     this.domNode.appendChild(this.contentNode);
     this.domNode.appendChild(this.rightGuard);
@@ -40,6 +43,8 @@ class Embed extends EmbedBlot {
     let range: EmbedContextRange | null = null;
     let textNode: Text;
     const text = node.data.split(GUARD_TEXT).join('');
+    const domRoot = (this.scroll as any).domRoot as DOMRootType;
+
     if (node === this.leftGuard) {
       if (this.prev instanceof TextBlot) {
         const prevLength = this.prev.length();
@@ -49,7 +54,7 @@ class Embed extends EmbedBlot {
           startOffset: prevLength + text.length,
         };
       } else {
-        textNode = document.createTextNode(text);
+        textNode = domRoot.createTextNode(text);
         this.parent.insertBefore(this.scroll.create(textNode), this);
         range = {
           startNode: textNode,
@@ -64,7 +69,7 @@ class Embed extends EmbedBlot {
           startOffset: text.length,
         };
       } else {
-        textNode = document.createTextNode(text);
+        textNode = domRoot.createTextNode(text);
         this.parent.insertBefore(this.scroll.create(textNode), this.next);
         range = {
           startNode: textNode,
