@@ -23,7 +23,7 @@ class TableCell extends Block {
     return undefined;
   }
 
-  next: this | null;
+  declare next: this | null;
 
   cellOffset() {
     if (this.parent) {
@@ -60,8 +60,8 @@ class TableRow extends Container {
   static blotName = 'table-row';
   static tagName = 'TR';
 
-  children: LinkedList<TableCell>;
-  next: this | null;
+  declare children: LinkedList<TableCell>;
+  declare next: this | null;
 
   checkMerge() {
     // @ts-expect-error
@@ -120,14 +120,14 @@ class TableBody extends Container {
   static blotName = 'table-body';
   static tagName = 'TBODY';
 
-  children: LinkedList<TableRow>;
+  declare children: LinkedList<TableRow>;
 }
 
 class TableContainer extends Container {
   static blotName = 'table-container';
   static tagName = 'TABLE';
 
-  children: LinkedList<TableBody>;
+  declare children: LinkedList<TableBody>;
 
   balanceCells() {
     const rows = this.descendants(TableRow);

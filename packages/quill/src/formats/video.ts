@@ -36,7 +36,7 @@ class Video extends BlockEmbed {
     return domNode.getAttribute('src');
   }
 
-  domNode: HTMLVideoElement;
+  declare domNode: HTMLVideoElement;
 
   format(name: string, value: string) {
     if (ATTRIBUTES.indexOf(name) > -1) {
