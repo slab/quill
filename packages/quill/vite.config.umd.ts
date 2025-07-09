@@ -48,9 +48,4 @@ export default buildConfigs({
     input: './src/main.ts',
     name: 'Quill',
   },
-  /*
-  'quill.core': {
-    input: './src/core.ts',
-    name: 'Quill',
-  },*/
 });
