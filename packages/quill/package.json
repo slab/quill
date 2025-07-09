@@ -6,6 +6,7 @@
   "homepage": "https://quilljs.com",
   "main": "quill.umd.js",
   "module": "quill.esm.js",
+  "types": "quill.d.ts",
   "type": "module",
   "dependencies": {
     "eventemitter3": "^5.0.1",
