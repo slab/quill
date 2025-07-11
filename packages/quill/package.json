@@ -8,6 +8,52 @@
   "module": "quill.js",
   "types": "quill.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./quill.js",
+      "require": "./quill.umd.js"
+    },
+    "./assets/*": {
+      "import": "./assets/*",
+      "require": "./assets/*"
+    },
+    "./blots/*": {
+      "import": "./blots/*.js",
+      "require": "./blots/*.js"
+    },
+    "./core/*": {
+      "import": "./core/*.js",
+      "require": "./core/*.js"
+    },
+    "./fonts/*": {
+      "import": "./fonts/*",
+      "require": "./fonts/*"
+    },
+    "./formats/*": {
+      "import": "./formats/*.js",
+      "require": "./formats/*.js"
+    },
+    "./modules/*": {
+      "import": "./modules/*.js",
+      "require": "./modules/*.js"
+    },
+    "./themes/*": {
+      "import": "./themes/*.js",
+      "require": "./themes/*.js"
+    },
+    "./ui/*": {
+      "import": "./ui/*.js",
+      "require": "./ui/*.js"
+    },
+    "./quill.core.css": "./quill.core.css",
+    "./quill.snow.css": "./quill.snow.css",
+    "./quill.bubble.css": "./quill.bubble.css",
+    "./quill.tiny.css": "./quill.tiny.css",
+    "./css/core.css": "./quill.core.css",
+    "./css/snow.css": "./quill.snow.css",
+    "./css/bubble.css": "./quill.bubble.css",
+    "./css/tiny.css": "./quill.tiny.css"
+  },
   "dependencies": {
     "eventemitter3": "^5.0.1",
     "lodash-es": "^4.17.21",
