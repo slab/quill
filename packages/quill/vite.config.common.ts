@@ -12,6 +12,7 @@ export default defineConfig({
     }),
     dts({
       include: ['src'],
+      exclude: ['src/helpers'],
     }),
   ],
   resolve: {
