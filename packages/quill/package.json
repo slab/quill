@@ -48,11 +48,9 @@
     "./quill.core.css": "./quill.core.css",
     "./quill.snow.css": "./quill.snow.css",
     "./quill.bubble.css": "./quill.bubble.css",
-    "./quill.tiny.css": "./quill.tiny.css",
     "./css/core.css": "./quill.core.css",
     "./css/snow.css": "./quill.snow.css",
-    "./css/bubble.css": "./quill.bubble.css",
-    "./css/tiny.css": "./quill.tiny.css"
+    "./css/bubble.css": "./quill.bubble.css"
   },
   "dependencies": {
     "eventemitter3": "^5.0.1",
