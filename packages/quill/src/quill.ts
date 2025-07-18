@@ -1,31 +1,11 @@
 /**
- * This is entry point for ESM.
+ * This is entry point for UMD.
  */
 
 import Quill from './main.js';
-import type {
-  Bounds,
-  DebugLevel,
-  EmitterSource,
-  ExpandedQuillOptions,
-  QuillOptions,
-} from './core.js';
+import registerDefaultThemes from '@/helpers/registerDefaultThemes';
 
-export {
-  AttributeMap,
-  Delta,
-  Module,
-  Op,
-  OpIterator,
-  Parchment,
-  Range,
-} from './core.js';
-export type {
-  Bounds,
-  DebugLevel,
-  EmitterSource,
-  ExpandedQuillOptions,
-  QuillOptions,
-};
+registerDefaultThemes();
 
+export * from './main.js';
 export default Quill;

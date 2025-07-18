@@ -8,7 +8,7 @@ const __dirname = import.meta.dirname || new URL('.', import.meta.url).pathname;
 const srcPath = (p: string) => resolve(__dirname, `src/${p}`);
 
 const defaultInput = {
-  quill: srcPath('quill.ts'),
+  main: srcPath('main.ts'),
   'quill.core': srcPath('core.ts'),
   'quill.core.css': srcPath('assets/core.styl'),
   'quill.bubble.css': srcPath('assets/bubble.styl'),

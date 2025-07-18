@@ -45,7 +45,7 @@ function buildConfigs(input: Record<string, ConfigBuildInput>): UserConfig[] {
 
 export default buildConfigs({
   quill: {
-    input: './src/main.ts',
+    input: './src/quill.ts',
     name: 'Quill',
   },
 });
