@@ -7,5 +7,4 @@ import registerDefaultThemes from '@/helpers/registerDefaultThemes';
 
 registerDefaultThemes();
 
-export * from './main.js';
 export default Quill;
