@@ -17,7 +17,7 @@ export default defineConfig({
   use: {
     actionTimeout: 0,
     trace: 'on-first-retry',
-    baseURL: `https://127.0.0.1:${port}`,
+    baseURL: `http://localhost:${port}`,
     ignoreHTTPSErrors: true,
   },
   projects: [
@@ -34,7 +34,7 @@ export default defineConfig({
     { name: 'Safari', use: { ...devices['Desktop Safari'] } },
   ],
   webServer: {
-    command: `npx webpack serve --config test/e2e/__dev_server__/webpack.config.cjs --env port=${port}`,
+    command: `vite test/e2e/__dev_server__ --port ${port}`,
     port,
     ignoreHTTPSErrors: true,
     reuseExistingServer: !process.env.CI,

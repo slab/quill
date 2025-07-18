@@ -130,7 +130,7 @@ Block.allowedChildren = [Break, Inline, EmbedBlot, TextBlot];
 
 class BlockEmbed extends EmbedBlot {
   attributes: AttributorStore;
-  domNode: HTMLElement;
+  declare domNode: HTMLElement;
 
   attach() {
     super.attach();

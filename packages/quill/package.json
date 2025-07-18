@@ -4,8 +4,50 @@
   "description": "Your powerful, rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "https://quilljs.com",
-  "main": "quill.js",
+  "main": "quill.umd.js",
+  "module": "main.js",
+  "types": "main.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./main.js",
+      "require": "./quill.umd.js"
+    },
+    "./assets/*": {
+      "import": "./assets/*",
+      "require": "./assets/*"
+    },
+    "./blots/*": {
+      "import": "./blots/*.js",
+      "require": "./blots/*.js"
+    },
+    "./core/*": {
+      "import": "./core/*.js",
+      "require": "./core/*.js"
+    },
+    "./fonts/*": {
+      "import": "./fonts/*",
+      "require": "./fonts/*"
+    },
+    "./formats/*": {
+      "import": "./formats/*.js",
+      "require": "./formats/*.js"
+    },
+    "./modules/*": {
+      "import": "./modules/*.js",
+      "require": "./modules/*.js"
+    },
+    "./themes/*": {
+      "import": "./themes/*.js",
+      "require": "./themes/*.js"
+    },
+    "./ui/*": {
+      "import": "./ui/*.js",
+      "require": "./ui/*.js"
+    },
+    "./css/*.css": "./quill.*.css",
+    "./*": "./*"
+  },
   "dependencies": {
     "eventemitter3": "^5.0.1",
     "lodash-es": "^4.17.21",
@@ -13,51 +55,37 @@
     "quill-delta": "^5.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.9",
-    "@babel/core": "^7.24.0",
-    "@babel/preset-env": "^7.24.0",
-    "@babel/preset-typescript": "^7.23.3",
     "@playwright/test": "1.44.1",
     "@types/highlight.js": "^9.12.4",
     "@types/lodash-es": "^4.17.12",
-    "@types/node": "^20.10.0",
-    "@types/webpack": "^5.28.5",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.2.0",
-    "@vitest/browser": "^1.1.3",
-    "babel-loader": "^9.1.3",
-    "babel-plugin-transform-define": "^2.1.4",
-    "css-loader": "^6.10.0",
-    "eslint": "^8.57.0",
+    "@types/micromatch": "^4.0.9",
+    "@types/node": "^20.19.4",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "@vitest/browser": "^3.2.4",
+    "ajv": "^8.17.1",
+    "chalk": "^5.4.1",
+    "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-import-resolver-webpack": "^0.13.8",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsx-a11y": "^6.8.0",
-    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-import-resolver-typescript": "^3.10.1",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-require-extensions": "^0.1.3",
     "glob": "10.4.2",
-    "highlight.js": "^9.18.1",
-    "html-loader": "^4.2.0",
-    "html-webpack-plugin": "^5.5.3",
+    "highlight.js": "^10.7.3",
     "jsdom": "^22.1.0",
-    "mini-css-extract-plugin": "^2.7.6",
-    "prettier": "^3.0.3",
-    "source-map-loader": "^5.0.0",
-    "style-loader": "^3.3.3",
+    "micromatch": "^4.0.8",
+    "prettier": "^3.6.2",
     "stylus": "^0.62.0",
-    "stylus-loader": "^7.1.3",
-    "svgo": "^3.2.0",
-    "terser-webpack-plugin": "^5.3.9",
-    "transpile-webpack-plugin": "^1.1.3",
-    "ts-loader": "^9.5.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.4.2",
-    "vitest": "^1.1.3",
-    "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1",
-    "webpack-merge": "^5.10.0"
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.2",
+    "vite-plugin-dts": "^4.5.4",
+    "vite-plugin-html-resolve-alias": "^2.0.0",
+    "vite-plugin-static-copy": "^3.1.0",
+    "vite-svg-loader": "^5.1.0",
+    "vitest": "^3.2.4"
   },
   "license": "BSD-3-Clause",
   "repository": {
@@ -75,7 +103,7 @@
     "defaults"
   ],
   "scripts": {
-    "build": "./scripts/build production",
+    "build": "npx tsx scripts/build.ts",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint .",
     "lint:tsc": "tsc --noEmit --skipLibCheck",
