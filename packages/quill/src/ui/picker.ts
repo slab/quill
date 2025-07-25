@@ -13,10 +13,15 @@ class Picker {
   select: HTMLSelectElement;
   container: HTMLElement;
   label: HTMLElement;
+  options: HTMLElement;
 
   constructor(select: HTMLSelectElement) {
     this.select = select;
-    this.container = document.createElement('span');
+
+    // Use ownerDocument for proper context (works in both regular and shadow DOM)
+    const doc = this.select.ownerDocument;
+    this.container = doc.createElement('span');
+
     this.buildPicker();
     this.select.style.display = 'none';
     // @ts-expect-error Fix me later
@@ -44,12 +49,12 @@ class Picker {
     this.container.classList.toggle('ql-expanded');
     // Toggle aria-expanded and aria-hidden to make the picker accessible
     toggleAriaAttribute(this.label, 'aria-expanded');
-    // @ts-expect-error
     toggleAriaAttribute(this.options, 'aria-hidden');
   }
 
   buildItem(option: HTMLOptionElement) {
-    const item = document.createElement('span');
+    const doc = this.select.ownerDocument;
+    const item = doc.createElement('span');
     // @ts-expect-error
     item.tabIndex = '0';
     item.setAttribute('role', 'button');
@@ -82,7 +87,8 @@ class Picker {
   }
 
   buildLabel() {
-    const label = document.createElement('span');
+    const doc = this.select.ownerDocument;
+    const label = doc.createElement('span');
     label.classList.add('ql-picker-label');
     label.innerHTML = DropdownIcon;
     // @ts-expect-error
@@ -94,7 +100,8 @@ class Picker {
   }
 
   buildOptions() {
-    const options = document.createElement('span');
+    const doc = this.select.ownerDocument;
+    const options = doc.createElement('span');
     options.classList.add('ql-picker-options');
 
     // Don't want screen readers to read this until options are visible
@@ -107,7 +114,6 @@ class Picker {
     optionsCounter += 1;
     this.label.setAttribute('aria-controls', options.id);
 
-    // @ts-expect-error
     this.options = options;
 
     Array.from(this.select.options).forEach((option) => {
@@ -140,7 +146,6 @@ class Picker {
   close() {
     this.container.classList.remove('ql-expanded');
     this.label.setAttribute('aria-expanded', 'false');
-    // @ts-expect-error
     this.options.setAttribute('aria-hidden', 'true');
   }
 

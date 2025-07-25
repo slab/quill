@@ -3,6 +3,7 @@ import type { Blot, Parent, EmbedBlot, ParentBlot, Registry } from 'parchment';
 import Delta, { AttributeMap, Op } from 'quill-delta';
 import Emitter from '../core/emitter.js';
 import type { EmitterSource } from '../core/emitter.js';
+import type { DOMRootType } from '../core/dom-root.js';
 import Block, { BlockEmbed, bubbleFormats } from './block.js';
 import Break from './break.js';
 import Container from './container.js';
@@ -36,15 +37,17 @@ class Scroll extends ScrollBlot {
   static allowedChildren = [Block, BlockEmbed, Container];
 
   emitter: Emitter;
+  domRoot: DOMRootType;
   batch: false | MutationRecord[];
 
   constructor(
     registry: Registry,
     domNode: HTMLDivElement,
-    { emitter }: { emitter: Emitter },
+    { emitter, domRoot }: { emitter: Emitter; domRoot: DOMRootType },
   ) {
     super(registry, domNode);
     this.emitter = emitter;
+    this.domRoot = domRoot;
     this.batch = false;
     this.optimize();
     this.enable();

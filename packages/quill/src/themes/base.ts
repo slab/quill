@@ -67,8 +67,12 @@ class BaseTheme extends Theme {
   constructor(quill: Quill, options: ThemeOptions) {
     super(quill, options);
     const listener = (e: MouseEvent) => {
-      if (!document.body.contains(quill.root)) {
-        document.body.removeEventListener('click', listener);
+      // Use DOMRoot to check if quill root is still in the DOM context
+      const root = quill.domRoot.getRoot();
+      const rootElement =
+        root === document ? document.body : (root as ShadowRoot);
+      if (!rootElement.contains(quill.root)) {
+        quill.domRoot.removeEventListener('click', listener);
         return;
       }
       if (
@@ -76,7 +80,7 @@ class BaseTheme extends Theme {
         // @ts-expect-error
         !this.tooltip.root.contains(e.target) &&
         // @ts-expect-error
-        document.activeElement !== this.tooltip.textbox &&
+        quill.domRoot.getActiveElement() !== this.tooltip.textbox &&
         !this.quill.hasFocus()
       ) {
         this.tooltip.hide();
@@ -90,7 +94,8 @@ class BaseTheme extends Theme {
         });
       }
     };
-    quill.emitter.listenDOM('click', document.body, listener);
+    // Use DOMRoot for context-aware event listening
+    quill.domRoot.addEventListener('click', listener);
   }
 
   addModule(name: 'clipboard'): Clipboard;
@@ -197,7 +202,7 @@ BaseTheme.DEFAULTS = merge({}, Theme.DEFAULTS, {
             'input.ql-image[type=file]',
           );
           if (fileInput == null) {
-            fileInput = document.createElement('input');
+            fileInput = this.quill.domRoot.createElement('input');
             fileInput.setAttribute('type', 'file');
             fileInput.setAttribute(
               'accept',
@@ -350,7 +355,7 @@ function fillSelect(
   defaultValue: unknown = false,
 ) {
   values.forEach((value) => {
-    const option = document.createElement('option');
+    const option = select.ownerDocument.createElement('option');
     if (value === defaultValue) {
       option.setAttribute('selected', 'selected');
     } else {

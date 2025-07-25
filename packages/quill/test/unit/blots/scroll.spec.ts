@@ -1,6 +1,7 @@
 import { describe, expect, test, vitest } from 'vitest';
 import Emitter from '../../../src/core/emitter.js';
 import Selection, { Range } from '../../../src/core/selection.js';
+import { DOMRoot } from '../../../src/core/dom-root.js';
 import Cursor from '../../../src/blots/cursor.js';
 import Scroll from '../../../src/blots/scroll.js';
 import Delta from 'quill-delta';
@@ -14,7 +15,8 @@ const createScroll = (html: string) => {
   const registry = createRegistry([Underline, Strike]);
   const container = document.body.appendChild(document.createElement('div'));
   container.innerHTML = normalizeHTML(html);
-  return new Scroll(registry, container, { emitter });
+  const domRoot = DOMRoot(document.body);
+  return new Scroll(registry, container, { emitter, domRoot });
 };
 
 describe('Scroll', () => {
@@ -85,7 +87,8 @@ describe('Scroll', () => {
 
     test('cursor', () => {
       const scroll = createScroll('<p><u>0</u>1<u>2</u></p>');
-      const selection = new Selection(scroll, scroll.emitter);
+      const domRoot = DOMRoot(document.body);
+      const selection = new Selection(scroll, scroll.emitter, domRoot);
       selection.setRange(new Range(2));
       selection.format('strike', true);
       const [leaf, offset] = selection.scroll.leaf(2);

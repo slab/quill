@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Character Swap Test - Shadow DOM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    .test-container {
+      margin: 20px 0;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 5px;
+    }
+    .shadow-host {
+      border: 2px solid #007bff;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 3px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Character Swap Test - Shadow DOM</h1>
+  
+  <div class="test-container">
+    <h2>Test Instructions:</h2>
+    <ol>
+      <li>Click in the shadow DOM editor below</li>
+      <li>Press Enter to create a new line</li>
+      <li>Type "abc" on the new line</li>
+      <li>Check if you see "abc" or "bac"</li>
+    </ol>
+  </div>
+
+  <div class="test-container">
+    <h2>Shadow DOM Quill Editor</h2>
+    <div id="shadow-host" class="shadow-host"></div>
+    <h3>Delta Output:</h3>
+    <pre id="delta-output"></pre>
+  </div>
+
+  <!-- Use local build -->
+  <script src="../../../dist/quill.js"></script>
+  
+  <script>
+    // Shadow DOM editor
+    const shadowHost = document.getElementById('shadow-host');
+    const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+    
+    // Create container for Quill in shadow DOM
+    const shadowContainer = document.createElement('div');
+    shadowContainer.innerHTML = `
+      <style>
+        .ql-container {
+          border: 1px solid #ccc;
+          min-height: 200px;
+        }
+        .ql-editor {
+          min-height: 150px;
+          padding: 10px;
+        }
+      </style>
+      <div id="shadow-editor"></div>
+    `;
+    shadowRoot.appendChild(shadowContainer);
+    
+    // Initialize Quill in shadow DOM
+    const shadowQuill = new Quill(shadowRoot.querySelector('#shadow-editor'));
+    
+    // Add some initial content
+    shadowQuill.setText('Type on this line, then press Enter and type "abc" on the new line.\n');
+    
+    // Monitor changes
+    const deltaOutput = document.getElementById('delta-output');
+    shadowQuill.on('text-change', (delta, oldDelta, source) => {
+      console.log('Text change:', delta, source);
+      deltaOutput.textContent = JSON.stringify(shadowQuill.getContents(), null, 2);
+    });
+    
+    // Log selection changes
+    shadowQuill.on('selection-change', (range, oldRange, source) => {
+      if (range) {
+        console.log('Selection:', range, source);
+      }
+    });
+  </script>
+</body>
+</html>

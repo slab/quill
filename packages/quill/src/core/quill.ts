@@ -27,6 +27,8 @@ import type {
   ScrollRectIntoViewOptions,
 } from './utils/scrollRectIntoView.js';
 import createRegistryWithFormats from './utils/createRegistryWithFormats.js';
+import { DOMRoot } from './dom-root.js';
+import type { DOMRootType } from './dom-root.js';
 
 const debug = logger('quill');
 
@@ -182,6 +184,7 @@ class Quill {
   root: HTMLDivElement;
   scroll: Scroll;
   emitter: Emitter;
+  domRoot: DOMRootType;
   protected allowReadOnlyEdits: boolean;
   editor: Editor;
   composition: Composition;
@@ -205,6 +208,7 @@ class Quill {
     if (this.options.debug) {
       Quill.debug(this.options.debug);
     }
+    this.domRoot = DOMRoot(this.container);
     const html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
@@ -212,6 +216,8 @@ class Quill {
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
     this.emitter = new Emitter();
+    // Initialize global event delegation for this DOMRoot context
+    Emitter.initializeGlobalEvents(this.domRoot);
     const scrollBlotName = Parchment.ScrollBlot.blotName;
     const ScrollBlot = this.options.registry.query(scrollBlotName);
     if (!ScrollBlot || !('blotName' in ScrollBlot)) {
@@ -221,9 +227,10 @@ class Quill {
     }
     this.scroll = new ScrollBlot(this.options.registry, this.root, {
       emitter: this.emitter,
+      domRoot: this.domRoot,
     }) as Scroll;
     this.editor = new Editor(this.scroll);
-    this.selection = new Selection(this.scroll, this.emitter);
+    this.selection = new Selection(this.scroll, this.emitter, this.domRoot);
     this.composition = new Composition(this.scroll, this.emitter);
     this.theme = new this.options.theme(this, this.options); // eslint-disable-line new-cap
     this.keyboard = this.theme.addModule('keyboard');
@@ -290,7 +297,7 @@ class Quill {
   ): HTMLDivElement | HTMLElement {
     if (typeof container === 'string') {
       const className = container;
-      container = document.createElement('div');
+      container = this.domRoot.createElement('div') as HTMLDivElement;
       container.classList.add(className);
     }
     this.container.insertBefore(container, refNode);
@@ -676,7 +683,6 @@ class Quill {
   scrollRectIntoView(rect: Rect, options: ScrollRectIntoViewOptions = {}) {
     scrollRectIntoView(this.root, rect, options);
   }
-
   /**
    * @deprecated Use Quill#scrollSelectionIntoView() instead.
    */

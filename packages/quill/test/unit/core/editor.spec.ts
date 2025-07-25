@@ -6,6 +6,7 @@ import Scroll from '../../../src/blots/scroll.js';
 import { Registry } from 'parchment';
 import Text from '../../../src/blots/text.js';
 import Emitter from '../../../src/core/emitter.js';
+import { DOMRoot } from '../../../src/core/dom-root.js';
 import Break from '../../../src/blots/break.js';
 import { describe, expect, test } from 'vitest';
 import { createRegistry } from '../__helpers__/factory.js';
@@ -888,6 +889,7 @@ describe('Editor', () => {
       const editor = new Editor(
         new Scroll(registry, document.createElement('div'), {
           emitter: new Emitter(),
+          domRoot: DOMRoot(document.body),
         }),
       );
 
