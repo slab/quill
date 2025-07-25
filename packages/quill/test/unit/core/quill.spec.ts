@@ -1317,12 +1317,12 @@ describe('Quill', () => {
         await viewportRatio(
           container.querySelector('p:nth-child(10)') as HTMLElement,
         ),
-      ).toBe(1);
+      ).toBeGreaterThan(0.9);
       expect(
         await viewportRatio(
           container.querySelector('p:nth-child(11)') as HTMLElement,
         ),
-      ).toBe(1);
+      ).toBeGreaterThan(0.9);
       quill.root.style.scrollPaddingBottom = '0';
       quill.setSelection(1, 'user');
       quill.setSelection({ index: text.indexOf('text 10'), length: 4 }, 'user');

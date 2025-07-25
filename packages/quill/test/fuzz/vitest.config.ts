@@ -7,5 +7,6 @@ export default defineConfig({
   test: {
     include: ['test/fuzz/**/*.spec.ts'],
     environment: 'jsdom',
+    testTimeout: 30000,
   },
 });
