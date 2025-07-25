@@ -57,10 +57,26 @@ const getScrollDistance = (
   return 0;
 };
 
-const scrollRectIntoView = (root: HTMLElement, targetRect: Rect) => {
+interface ScrollOffsetRecord {
+  element: Element | Window;
+  left: number;
+  top: number;
+}
+
+export interface ScrollRectIntoViewOptions {
+  smooth?: boolean;
+}
+
+const scrollRectIntoView = (
+  root: HTMLElement,
+  targetRect: Rect,
+  options: ScrollRectIntoViewOptions = {},
+) => {
   const document = root.ownerDocument;
 
   let rect = targetRect;
+
+  const records: ScrollOffsetRecord[] = [];
 
   let current: Element | null = root;
   while (current) {
@@ -97,7 +113,14 @@ const scrollRectIntoView = (root: HTMLElement, targetRect: Rect) => {
     );
     if (scrollDistanceX || scrollDistanceY) {
       if (isDocumentBody) {
-        document.defaultView?.scrollBy(scrollDistanceX, scrollDistanceY);
+        if (document.defaultView) {
+          records.push({
+            element: document.defaultView,
+            left: scrollDistanceX,
+            top: scrollDistanceY,
+          });
+          document.defaultView.scrollBy(scrollDistanceX, scrollDistanceY);
+        }
       } else {
         const { scrollLeft, scrollTop } = current;
         if (scrollDistanceY) {
@@ -106,6 +129,13 @@ const scrollRectIntoView = (root: HTMLElement, targetRect: Rect) => {
         if (scrollDistanceX) {
           current.scrollLeft += scrollDistanceX;
         }
+
+        records.push({
+          element: current,
+          left: scrollDistanceX,
+          top: scrollDistanceY,
+        });
+
         const scrolledLeft = current.scrollLeft - scrollLeft;
         const scrolledTop = current.scrollTop - scrollTop;
         rect = {
@@ -121,6 +151,15 @@ const scrollRectIntoView = (root: HTMLElement, targetRect: Rect) => {
       isDocumentBody || style.position === 'fixed'
         ? null
         : getParentElement(current);
+  }
+
+  if (options.smooth) {
+    // Revert all the changes in the scroll position
+    // and then scroll to the target position with smooth animation
+    records.forEach(({ element, top, left }) => {
+      element.scrollBy({ top: -top, left: -left, behavior: 'instant' });
+      element.scrollBy({ top, left, behavior: 'smooth' });
+    });
   }
 };
 

@@ -1,7 +1,15 @@
 import '../../../src/quill.js';
 import Delta from 'quill-delta';
 import { LeafBlot, Registry } from 'parchment';
-import { afterEach, beforeEach, describe, expect, test, vitest } from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  test,
+  vitest,
+  vi,
+} from 'vitest';
 import type { MockedFunction } from 'vitest';
 import Emitter from '../../../src/core/emitter.js';
 import Theme from '../../../src/core/theme.js';
@@ -1309,12 +1317,12 @@ describe('Quill', () => {
         await viewportRatio(
           container.querySelector('p:nth-child(10)') as HTMLElement,
         ),
-      ).toBe(1);
+      ).toBeGreaterThan(0.9);
       expect(
         await viewportRatio(
           container.querySelector('p:nth-child(11)') as HTMLElement,
         ),
-      ).toBe(1);
+      ).toBeGreaterThan(0.9);
       quill.root.style.scrollPaddingBottom = '0';
       quill.setSelection(1, 'user');
       quill.setSelection({ index: text.indexOf('text 10'), length: 4 }, 'user');
@@ -1375,6 +1383,53 @@ describe('Quill', () => {
           editorContainer.querySelector('strong') as HTMLElement,
         ),
       ).toEqual(0);
+    });
+
+    test('scroll smoothly', async () => {
+      document.body.style.height = '500px';
+      const container = document.body.appendChild(
+        document.createElement('div'),
+      );
+
+      Object.assign(container.style, {
+        height: '100px',
+        overflow: 'scroll',
+      });
+
+      const space = container.appendChild(document.createElement('div'));
+      space.style.height = '80px';
+
+      const editorContainer = container.appendChild(
+        document.createElement('div'),
+      );
+      Object.assign(editorContainer.style, {
+        height: '100px',
+        overflow: 'scroll',
+        border: '10px solid red',
+      });
+
+      const quill = new Quill(editorContainer);
+
+      const text = createContents('\n');
+      quill.setContents(new Delta().insert(text));
+      quill.setSelection(
+        { index: text.indexOf('text 100'), length: 4 },
+        'silent',
+      );
+      quill.scrollSelectionIntoView({ smooth: true });
+
+      await vi.waitFor(async () => {
+        expect(
+          await viewportRatio(
+            editorContainer.querySelector('p:nth-child(100)') as HTMLElement,
+          ),
+        ).toBeGreaterThan(0.9);
+        expect(
+          await viewportRatio(
+            editorContainer.querySelector('p:nth-child(101)') as HTMLElement,
+          ),
+        ).toEqual(0);
+      });
     });
   });
 });

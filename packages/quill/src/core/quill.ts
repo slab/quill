@@ -22,7 +22,10 @@ import Composition from './composition.js';
 import Theme from './theme.js';
 import type { ThemeConstructor } from './theme.js';
 import scrollRectIntoView from './utils/scrollRectIntoView.js';
-import type { Rect } from './utils/scrollRectIntoView.js';
+import type {
+  Rect,
+  ScrollRectIntoViewOptions,
+} from './utils/scrollRectIntoView.js';
 import createRegistryWithFormats from './utils/createRegistryWithFormats.js';
 
 const debug = logger('quill');
@@ -670,8 +673,8 @@ class Quill {
     );
   }
 
-  scrollRectIntoView(rect: Rect) {
-    scrollRectIntoView(this.root, rect);
+  scrollRectIntoView(rect: Rect, options: ScrollRectIntoViewOptions = {}) {
+    scrollRectIntoView(this.root, rect, options);
   }
 
   /**
@@ -688,11 +691,11 @@ class Quill {
    * Scroll the current selection into the visible area.
    * If the selection is already visible, no scrolling will occur.
    */
-  scrollSelectionIntoView() {
+  scrollSelectionIntoView(options: ScrollRectIntoViewOptions = {}) {
     const range = this.selection.lastRange;
     const bounds = range && this.selection.getBounds(range.index, range.length);
     if (bounds) {
-      this.scrollRectIntoView(bounds);
+      this.scrollRectIntoView(bounds, options);
     }
   }
 

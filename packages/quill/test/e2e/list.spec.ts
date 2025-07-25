@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from './fixtures/index.js';
-import { isMac } from './utils/index.js';
+import { isMac, sleep } from './utils/index.js';
 
 const listTypes = ['bullet', 'checked'];
 
@@ -11,20 +11,24 @@ test.describe('list', () => {
 
   for (const list of listTypes) {
     test.describe(`navigation with shortcuts ${list}`, () => {
-      test('jump to line start', async ({ page, editorPage }) => {
+      test('jump to line start', async ({ editorPage }) => {
         await editorPage.setContents([
           { insert: 'item 1' },
           { insert: '\n', attributes: { list } },
         ]);
 
+        await editorPage.root.click(); // required by Firefox
         await editorPage.moveCursorAfterText('item 1');
-        await page.keyboard.press(isMac ? `Meta+ArrowLeft` : 'Home');
+        await editorPage.root.press(isMac ? `Meta+ArrowLeft` : 'Home');
+        await sleep(500); // internal(uiNode): wait for selectionchange to fire
+
         expect(await editorPage.getSelection()).toEqual({
           index: 0,
           length: 0,
         });
 
-        await page.keyboard.type('start ');
+        await sleep(500); // internal(uiNode): wait for selectionchange to fire
+        await editorPage.root.pressSequentially('start ');
         expect(await editorPage.getContents()).toEqual([
           { insert: 'start item 1' },
           { insert: '\n', attributes: { list } },
@@ -49,6 +53,7 @@ test.describe('list', () => {
             length: 0,
           });
           await page.keyboard.press('ArrowRight');
+          await sleep(500); // internal(uiNode): wait for selectionchange to fire
           await page.keyboard.press('ArrowRight');
           expect(await editorPage.getSelection()).toEqual({
             index: firstLine.length + 2,
@@ -73,6 +78,7 @@ test.describe('list', () => {
             length: 0,
           });
           await page.keyboard.press('ArrowLeft');
+          await sleep(500); // internal(uiNode): wait for selectionchange to fire
           await page.keyboard.press('ArrowLeft');
           expect(await editorPage.getSelection()).toEqual({
             index: firstLine.length + 2,
