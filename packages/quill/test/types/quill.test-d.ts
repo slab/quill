@@ -196,6 +196,7 @@ const quill = new Quill('#editor');
 
 {
   quill.scrollSelectionIntoView();
+  quill.scrollSelectionIntoView({ smooth: true });
 }
 
 {
@@ -219,6 +220,10 @@ const quill = new Quill('#editor');
   quill.scrollRectIntoView({ left: 0, right: 0, top: 0, bottom: 0 });
   quill.scrollRectIntoView(
     document.createElement('div').getBoundingClientRect(),
+  );
+  quill.scrollRectIntoView(
+    document.createElement('div').getBoundingClientRect(),
+    { smooth: true },
   );
 }
 

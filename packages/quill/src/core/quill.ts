@@ -691,11 +691,11 @@ class Quill {
    * Scroll the current selection into the visible area.
    * If the selection is already visible, no scrolling will occur.
    */
-  scrollSelectionIntoView() {
+  scrollSelectionIntoView(options: ScrollRectIntoViewOptions = {}) {
     const range = this.selection.lastRange;
     const bounds = range && this.selection.getBounds(range.index, range.length);
     if (bounds) {
-      this.scrollRectIntoView(bounds);
+      this.scrollRectIntoView(bounds, options);
     }
   }
 
