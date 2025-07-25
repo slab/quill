@@ -22,7 +22,10 @@ import Composition from './composition.js';
 import Theme from './theme.js';
 import type { ThemeConstructor } from './theme.js';
 import scrollRectIntoView from './utils/scrollRectIntoView.js';
-import type { Rect } from './utils/scrollRectIntoView.js';
+import type {
+  Rect,
+  ScrollRectIntoViewOptions,
+} from './utils/scrollRectIntoView.js';
 import createRegistryWithFormats from './utils/createRegistryWithFormats.js';
 
 const debug = logger('quill');
@@ -670,8 +673,8 @@ class Quill {
     );
   }
 
-  scrollRectIntoView(rect: Rect) {
-    scrollRectIntoView(this.root, rect);
+  scrollRectIntoView(rect: Rect, options: ScrollRectIntoViewOptions = {}) {
+    scrollRectIntoView(this.root, rect, options);
   }
 
   /**
