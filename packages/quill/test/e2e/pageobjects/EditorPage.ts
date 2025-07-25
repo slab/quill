@@ -55,15 +55,33 @@ const updateSelectionDef = [
 ];
 
 export default class EditorPage {
-  constructor(protected readonly page: Page) {}
+  constructor(
+    protected readonly page: Page,
+    protected readonly mode: 'regular' | 'iframe' = 'regular',
+  ) {}
 
   get root() {
+    if (this.mode === 'iframe') {
+      return this.page.frameLocator('iframe').locator('.ql-editor');
+    }
     return this.page.locator('.ql-editor');
   }
 
+  get toolbar() {
+    if (this.mode === 'iframe') {
+      return this.page.frameLocator('iframe').locator('#toolbar-container');
+    }
+    return this.page.locator('#toolbar-container');
+  }
+
   async open() {
-    await this.page.goto('/');
-    await this.page.waitForSelector('.ql-editor', { timeout: 10000 });
+    await this.page.goto(this.mode === 'iframe' ? '/iframe.html' : '/');
+    await this.page.waitForSelector(
+      this.mode === 'iframe' ? 'iframe' : '.ql-editor',
+      {
+        timeout: 10000,
+      },
+    );
   }
 
   async html(content: string, title = '') {

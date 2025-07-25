@@ -13,7 +13,7 @@ class Tooltip {
 
   constructor(quill: Quill, boundsContainer?: HTMLElement) {
     this.quill = quill;
-    this.boundsContainer = boundsContainer || document.body;
+    this.boundsContainer = boundsContainer || quill.rootDocument.body;
     this.root = quill.addContainer('ql-tooltip');
     // @ts-expect-error
     this.root.innerHTML = this.constructor.TEMPLATE;

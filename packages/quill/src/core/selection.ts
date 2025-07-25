@@ -5,6 +5,7 @@ import type { EmitterSource } from './emitter.js';
 import logger from './logger.js';
 import type Cursor from '../blots/cursor.js';
 import type Scroll from '../blots/scroll.js';
+import { isElement } from './utils/crossRealmIsElement.js';
 
 const debug = logger('quill:selection');
 
@@ -42,6 +43,7 @@ class Selection {
   mouseDown: boolean;
 
   root: HTMLElement;
+  rootDocument: Document;
   cursor: Cursor;
   savedRange: Range;
   lastRange: Range | null;
@@ -53,6 +55,7 @@ class Selection {
     this.composing = false;
     this.mouseDown = false;
     this.root = this.scroll.domNode;
+    this.rootDocument = this.root.ownerDocument;
     // @ts-expect-error
     this.cursor = this.scroll.create('cursor', this);
     // savedRange is last non-null range
@@ -132,10 +135,10 @@ class Selection {
   }
 
   handleDragging() {
-    this.emitter.listenDOM('mousedown', document.body, () => {
+    this.emitter.listenDOM('mousedown', this.rootDocument.body, () => {
       this.mouseDown = true;
     });
-    this.emitter.listenDOM('mouseup', document.body, () => {
+    this.emitter.listenDOM('mouseup', this.rootDocument.body, () => {
       this.mouseDown = false;
       this.update(Emitter.sources.USER);
     });
@@ -224,7 +227,7 @@ class Selection {
       }
       rect = range.getBoundingClientRect();
     } else {
-      if (!(leaf.domNode instanceof Element)) return null;
+      if (!isElement(leaf.domNode)) return null;
       rect = leaf.domNode.getBoundingClientRect();
       if (offset > 0) side = 'right';
     }
@@ -239,7 +242,7 @@ class Selection {
   }
 
   getNativeRange(): NormalizedRange | null {
-    const selection = document.getSelection();
+    const selection = this.rootDocument.getSelection();
     if (selection == null || selection.rangeCount <= 0) return null;
     const nativeRange = selection.getRangeAt(0);
     if (nativeRange == null) return null;
@@ -262,10 +265,10 @@ class Selection {
   }
 
   hasFocus(): boolean {
+    const doc = this.rootDocument;
     return (
-      document.activeElement === this.root ||
-      (document.activeElement != null &&
-        contains(this.root, document.activeElement))
+      doc.activeElement === this.root ||
+      (doc.activeElement != null && contains(this.root, doc.activeElement))
     );
   }
 
@@ -372,7 +375,7 @@ class Selection {
     ) {
       return;
     }
-    const selection = document.getSelection();
+    const selection = this.rootDocument.getSelection();
     if (selection == null) return;
     if (startNode != null) {
       if (!this.hasFocus()) this.root.focus({ preventScroll: true });
@@ -385,14 +388,14 @@ class Selection {
         endNode !== native.endContainer ||
         endOffset !== native.endOffset
       ) {
-        if (startNode instanceof Element && startNode.tagName === 'BR') {
+        if (isElement(startNode) && startNode.tagName === 'BR') {
           // @ts-expect-error Fix me later
           startOffset = Array.from(startNode.parentNode.childNodes).indexOf(
             startNode,
           );
           startNode = startNode.parentNode;
         }
-        if (endNode instanceof Element && endNode.tagName === 'BR') {
+        if (isElement(endNode) && endNode.tagName === 'BR') {
           // @ts-expect-error Fix me later
           endOffset = Array.from(endNode.parentNode.childNodes).indexOf(
             endNode,

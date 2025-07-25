@@ -1432,4 +1432,25 @@ describe('Quill', () => {
       });
     });
   });
+
+  describe('iframe', () => {
+    const createDocument = (): Document => {
+      const iframe = document.createElement('iframe');
+      document.body.appendChild(iframe);
+      return iframe.contentDocument!;
+    };
+    const createContainer = (html: string | { html: string } = '') => {
+      const doc = createDocument();
+      const container = doc!.createElement('div');
+      container.innerHTML = normalizeHTML(html);
+      doc!.body.appendChild(container);
+      return container;
+    };
+
+    test('initialize empty', () => {
+      const quill = new Quill(createContainer('0123'));
+      expect(quill.getContents()).toEqual(new Delta().insert('0123\n'));
+      expect(quill.root.innerHTML).toMatchInlineSnapshot('"<p>0123</p>"');
+    });
+  });
 });

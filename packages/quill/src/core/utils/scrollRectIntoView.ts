@@ -73,6 +73,7 @@ const scrollRectIntoView = (
   options: ScrollRectIntoViewOptions = {},
 ) => {
   const document = root.ownerDocument;
+  const win = document.defaultView ?? window;
 
   let rect = targetRect;
 
@@ -85,11 +86,9 @@ const scrollRectIntoView = (
       ? {
           top: 0,
           right:
-            window.visualViewport?.width ??
-            document.documentElement.clientWidth,
+            win.visualViewport?.width ?? document.documentElement.clientWidth,
           bottom:
-            window.visualViewport?.height ??
-            document.documentElement.clientHeight,
+            win.visualViewport?.height ?? document.documentElement.clientHeight,
           left: 0,
         }
       : getElementRect(current);

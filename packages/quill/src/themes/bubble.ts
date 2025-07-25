@@ -28,6 +28,7 @@ class BubbleTooltip extends BaseTooltip {
     this.quill.on(
       Emitter.events.EDITOR_CHANGE,
       (type, range, oldRange, source) => {
+        const doc = quill.rootDocument;
         if (type !== Emitter.events.SELECTION_CHANGE) return;
         if (
           range != null &&
@@ -58,7 +59,7 @@ class BubbleTooltip extends BaseTooltip {
             }
           }
         } else if (
-          document.activeElement !== this.textbox &&
+          doc.activeElement !== this.textbox &&
           this.quill.hasFocus()
         ) {
           this.hide();

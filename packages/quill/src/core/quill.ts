@@ -180,6 +180,7 @@ class Quill {
 
   container: HTMLElement;
   root: HTMLDivElement;
+  rootDocument: Document;
   scroll: Scroll;
   emitter: Emitter;
   protected allowReadOnlyEdits: boolean;
@@ -198,6 +199,7 @@ class Quill {
   constructor(container: HTMLElement | string, options: QuillOptions = {}) {
     this.options = expandConfig(container, options);
     this.container = this.options.container;
+    this.rootDocument = this.container.ownerDocument;
     if (this.container == null) {
       debug.error('Invalid Quill container', container);
       return;

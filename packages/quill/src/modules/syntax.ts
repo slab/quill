@@ -235,10 +235,11 @@ class Syntax extends Module<SyntaxOptions> {
   initListener() {
     this.quill.on(Quill.events.SCROLL_BLOT_MOUNT, (blot: Blot) => {
       if (!(blot instanceof SyntaxCodeBlockContainer)) return;
-      const select = this.quill.root.ownerDocument.createElement('select');
+      const doc = this.quill.rootDocument;
+      const select = doc.createElement('select');
       // @ts-expect-error Fix me later
       this.options.languages.forEach(({ key, label }) => {
-        const option = select.ownerDocument.createElement('option');
+        const option = doc.createElement('option');
         option.textContent = label;
         option.setAttribute('value', key);
         select.appendChild(option);
@@ -299,7 +300,7 @@ class Syntax extends Module<SyntaxOptions> {
           return delta.insert(line);
         }, new Delta());
     }
-    const container = this.quill.root.ownerDocument.createElement('div');
+    const container = this.quill.rootDocument.createElement('div');
     container.classList.add(CodeBlock.className);
     container.innerHTML = highlight(this.options.hljs, language, text);
     return traverse(

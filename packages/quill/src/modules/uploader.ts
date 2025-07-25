@@ -17,12 +17,13 @@ class Uploader extends Module<UploaderOptions> {
     quill.root.addEventListener('drop', (e) => {
       e.preventDefault();
       let native: ReturnType<typeof document.createRange> | null = null;
-      if (document.caretRangeFromPoint) {
-        native = document.caretRangeFromPoint(e.clientX, e.clientY);
+      const doc = quill.rootDocument;
+      if (doc.caretRangeFromPoint) {
+        native = doc.caretRangeFromPoint(e.clientX, e.clientY);
         // @ts-expect-error
-      } else if (document.caretPositionFromPoint) {
+      } else if (doc.caretPositionFromPoint) {
         // @ts-expect-error
-        const position = document.caretPositionFromPoint(e.clientX, e.clientY);
+        const position = doc.caretPositionFromPoint(e.clientX, e.clientY);
         native = document.createRange();
         native.setStart(position.offsetNode, position.offset);
         native.setEnd(position.offsetNode, position.offset);
