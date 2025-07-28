@@ -612,9 +612,33 @@ describe('Quill', () => {
 
     test('works with range', () => {
       const quill = new Quill(createContainer('<h1>Welcome</h1>'));
-      expect(quill.getText({ index: 1, length: 2 })).toMatchInlineSnapshot(
-        '"el"',
-      );
+      expect(
+        quill.getSemanticHTML({ index: 1, length: 2 }),
+      ).toMatchInlineSnapshot('"el"');
+    });
+
+    test('works with only options', () => {
+      const quill = new Quill(createContainer('<h1>Welcome to quill</h1>'));
+      expect(quill.getSemanticHTML({ preserveWhitespace: true }))
+        .toMatchInlineSnapshot(`
+        "<h1>Welcome to quill</h1>"
+      `);
+    });
+
+    test('works with index and options', () => {
+      const quill = new Quill(createContainer('<h1>Welcome to quill</h1>'));
+      expect(quill.getSemanticHTML(0, { preserveWhitespace: true }))
+        .toMatchInlineSnapshot(`
+        "<h1>Welcome to quill</h1>"
+      `);
+    });
+
+    test('works with index, length and options', () => {
+      const quill = new Quill(createContainer('<h1>Welcome to quill</h1>'));
+      expect(quill.getSemanticHTML(0, 10, { preserveWhitespace: true }))
+        .toMatchInlineSnapshot(`
+        "Welcome to"
+      `);
     });
   });
 
