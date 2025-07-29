@@ -3,6 +3,7 @@ import Emitter from '../core/emitter.js';
 import BaseTheme, { BaseTooltip } from './base.js';
 import LinkBlot from '../formats/link.js';
 import { Range } from '../core/selection.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
 import icons from '../ui/icons.js';
 import Quill from '../core/quill.js';
 import type { Context } from '../modules/keyboard.js';
@@ -29,31 +30,30 @@ class SnowTooltip extends BaseTooltip {
 
   listen() {
     super.listen();
+    const subscriber = findOrCreateSubscriber(this.quill.root);
+    const actionNode = this.root.querySelector('a.ql-action');
     // @ts-expect-error Fix me later
-    this.root
-      .querySelector('a.ql-action')
-      .addEventListener('click', (event) => {
-        if (this.root.classList.contains('ql-editing')) {
-          this.save();
-        } else {
-          // @ts-expect-error Fix me later
-          this.edit('link', this.preview.textContent);
-        }
-        event.preventDefault();
-      });
+    subscriber.on(this, actionNode, 'click', (event) => {
+      if (this.root.classList.contains('ql-editing')) {
+        this.save();
+      } else {
+        // @ts-expect-error Fix me later
+        this.edit('link', this.preview.textContent);
+      }
+      event.preventDefault();
+    });
+    const removeNode = this.root.querySelector('a.ql-remove');
     // @ts-expect-error Fix me later
-    this.root
-      .querySelector('a.ql-remove')
-      .addEventListener('click', (event) => {
-        if (this.linkRange != null) {
-          const range = this.linkRange;
-          this.restoreFocus();
-          this.quill.formatText(range, 'link', false, Emitter.sources.USER);
-          delete this.linkRange;
-        }
-        event.preventDefault();
-        this.hide();
-      });
+    subscriber.on(this, removeNode, 'click', (event) => {
+      if (this.linkRange != null) {
+        const range = this.linkRange;
+        this.restoreFocus();
+        this.quill.formatText(range, 'link', false, Emitter.sources.USER);
+        delete this.linkRange;
+      }
+      event.preventDefault();
+      this.hide();
+    });
     this.quill.on(
       Emitter.events.SELECTION_CHANGE,
       (range, oldRange, source) => {

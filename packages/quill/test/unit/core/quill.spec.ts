@@ -22,6 +22,8 @@ import Quill, {
 import { Range } from '../../../src/core/selection.js';
 import Snow from '../../../src/themes/snow.js';
 import { normalizeHTML } from '../__helpers__/utils.js';
+import { findOrCreateSubscriber } from '../../../src/core/subscriber.js';
+import { Module } from '../../../src/quill.js';
 
 const createContainer = (html: string | { html: string } = '') => {
   const container = document.createElement('div');
@@ -112,6 +114,20 @@ describe('Quill', () => {
         '"<p class="ql-align-center">Test</p>"',
       );
     });
+
+    test('event listeners tracking', () => {
+      const container = createContainer();
+      const quill = new Quill(container);
+      const subscriber = findOrCreateSubscriber(quill.root);
+      const subscriptions = subscriber
+        .getSubscriptions()
+        .map((subscription) => ({
+          ...subscription,
+          source: subscription.source.constructor.name,
+          target: subscription.target.constructor.name,
+        }));
+      expect(subscriptions).toMatchSnapshot();
+    });
   });
 
   describe('api', () => {
@@ -121,6 +137,29 @@ describe('Quill', () => {
       vitest.spyOn(quill.emitter, 'emit');
       return { quill, oldDelta };
     };
+
+    test('configure', () => {
+      const { quill } = setup();
+      const { options, root, scroll, theme } = quill;
+      const childNodes = [...root.childNodes];
+      const modules = { ...quill.theme.modules };
+      vitest.spyOn(quill, 'detach');
+      quill.configure();
+      // The new configuration detaches the old one
+      expect(quill.detach).toHaveBeenCalled();
+      // The editor's HTML content is preserved
+      expect(quill.root).toBe(root);
+      childNodes.forEach((child, index) => {
+        expect(child).toBe(quill.root.childNodes[index]);
+      });
+      // Options, scroll, theme, and modules are reinstantiated
+      expect(quill.options).not.toBe(options);
+      expect(quill.scroll).not.toBe(scroll);
+      expect(quill.theme).not.toBe(theme);
+      Object.keys(modules).forEach((key) => {
+        expect(quill.theme.modules[key]).not.toBe(modules[key]);
+      });
+    });
 
     test('deleteText()', () => {
       const { quill, oldDelta } = setup();
@@ -135,6 +174,22 @@ describe('Quill', () => {
         oldDelta,
         Emitter.sources.API,
       );
+    });
+
+    test('detach()', () => {
+      const { quill } = setup();
+      vitest.spyOn(quill.scroll, 'detach');
+      vitest.spyOn(quill.theme, 'detach');
+      vitest.spyOn(Module.prototype, 'detach');
+      quill.detach();
+      const subscriber = findOrCreateSubscriber(quill.root);
+      expect(subscriber.getSubscriptions().length).toEqual(0);
+      expect(quill.emitter.eventNames()).toEqual([]);
+      expect(quill.emitter.getDomListeners()).toEqual({});
+      expect(quill.scroll.detach).toHaveBeenCalled();
+      expect(quill.theme.detach).toHaveBeenCalled();
+      const nModules = Object.entries(quill.theme.modules).length;
+      expect(Module.prototype.detach).toHaveBeenCalledTimes(nModules);
     });
 
     test('format()', () => {

@@ -1,6 +1,7 @@
 import Embed from '../blots/embed.js';
 import type Scroll from '../blots/scroll.js';
 import Emitter from './emitter.js';
+import { findOrCreateSubscriber } from './subscriber.js';
 
 class Composition {
   isComposing = false;
@@ -13,13 +14,14 @@ class Composition {
   }
 
   private setupListeners() {
-    this.scroll.domNode.addEventListener('compositionstart', (event) => {
+    const subscriber = findOrCreateSubscriber(this.scroll.domNode);
+    subscriber.on(this, this.scroll.domNode, 'compositionstart', (event) => {
       if (!this.isComposing) {
         this.handleCompositionStart(event);
       }
     });
 
-    this.scroll.domNode.addEventListener('compositionend', (event) => {
+    subscriber.on(this, this.scroll.domNode, 'compositionend', (event) => {
       if (this.isComposing) {
         // Webkit makes DOM changes after compositionend, so we use microtask to
         // ensure the order.

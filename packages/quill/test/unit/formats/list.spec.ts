@@ -4,11 +4,12 @@ import {
   createRegistry,
 } from '../__helpers__/factory.js';
 import Editor from '../../../src/core/editor.js';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vitest } from 'vitest';
 import List, { ListContainer } from '../../../src/formats/list.js';
 import IndentClass from '../../../src/formats/indent.js';
 import { AlignClass } from '../../../src/formats/align.js';
 import Video from '../../../src/formats/video.js';
+import { findOrCreateSubscriber } from '../../../src/core/subscriber.js';
 
 const createScroll = (html: string) =>
   baseCreateScroll(
@@ -389,5 +390,14 @@ describe('List', () => {
         <li data-list="ordered"><br /></li>
       </ol>
     `);
+  });
+
+  test('remove event listeners on detach', () => {
+    const scroll = createScroll('<p>Hello World!</p>');
+    const listItem = new List(scroll, scroll.domNode);
+    const subscriber = findOrCreateSubscriber(scroll.domNode);
+    vitest.spyOn(subscriber, 'removeSourceListeners');
+    listItem.detach();
+    expect(subscriber.removeSourceListeners).toHaveBeenCalledWith(listItem);
   });
 });

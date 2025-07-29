@@ -21,6 +21,28 @@ title: API
 
 ## Content
 
+### configure
+
+Applies a new [configuration](/docs/configuration/) to an existing instance of Quill. To reset a quill instance to its defaults, call `quill.configure()` without any arguments.
+
+**Methods**
+
+```typescript
+configure(options: QuillOptions = {}): void
+```
+
+**Example 1: resetting an instance to defaults**
+
+```typescript
+quill.configure();
+```
+
+**Example 2: setting up a read-only instance with the built-in Bubble theme**
+
+```typescript
+quill.configure({ theme: 'bubble', readOnly: true });
+```
+
 ### deleteText
 
 Deletes text from the editor, returning a [Delta](/docs/delta/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
@@ -58,6 +80,22 @@ document.querySelector('#deleteButton').addEventListener('click', () => {
     `
   }}
 />
+
+### detach
+
+Deactivates a Quill instance by removing all event subscriptions. Useful to cleanup the environment and prevent memory leaks.
+
+**Methods**
+
+```typescript
+detach(): void
+```
+
+**Examples**
+
+```typescript
+quill.detach();
+```
 
 ### getContents
 

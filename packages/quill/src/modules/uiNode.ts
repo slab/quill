@@ -1,6 +1,8 @@
 import { ParentBlot } from 'parchment';
 import Module from '../core/module.js';
 import Quill from '../core/quill.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
+import type { Subscriber } from '../core/subscriber.js';
 
 const isMac = /Mac/i.test(navigator.platform);
 
@@ -28,12 +30,13 @@ const canMoveCaretBeforeUINode = (event: KeyboardEvent) => {
 };
 
 class UINode extends Module {
+  subscriber: Subscriber;
   isListening = false;
   selectionChangeDeadline = 0;
 
   constructor(quill: Quill, options: Record<string, never>) {
     super(quill, options);
-
+    this.subscriber = findOrCreateSubscriber(this.quill.root);
     this.handleArrowKeys();
     this.handleNavigationShortcuts();
   }
@@ -67,7 +70,7 @@ class UINode extends Module {
   }
 
   private handleNavigationShortcuts() {
-    this.quill.root.addEventListener('keydown', (event) => {
+    this.subscriber.on(this, this.quill.root, 'keydown', (event) => {
       if (!event.defaultPrevented && canMoveCaretBeforeUINode(event)) {
         this.ensureListeningToSelectionChange();
       }
@@ -94,7 +97,7 @@ class UINode extends Module {
       }
     };
 
-    document.addEventListener('selectionchange', listener, {
+    this.subscriber.on(this, document, 'selectionchange', listener, {
       once: true,
     });
   }

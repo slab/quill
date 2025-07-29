@@ -3,6 +3,7 @@ import Emitter from '../core/emitter.js';
 import BaseTheme, { BaseTooltip } from './base.js';
 import { Range } from '../core/selection.js';
 import type { Bounds } from '../core/selection.js';
+import { findOrCreateSubscriber } from '../core/subscriber.js';
 import icons from '../ui/icons.js';
 import Quill from '../core/quill.js';
 import type { ThemeOptions } from '../core/theme.js';
@@ -69,8 +70,10 @@ class BubbleTooltip extends BaseTooltip {
 
   listen() {
     super.listen();
+    const subscriber = findOrCreateSubscriber(this.quill.root);
+    const closeNode = this.root.querySelector('.ql-close');
     // @ts-expect-error Fix me later
-    this.root.querySelector('.ql-close').addEventListener('click', () => {
+    subscriber.on(this, closeNode, 'click', () => {
       this.root.classList.remove('ql-editing');
     });
     this.quill.on(Emitter.events.SCROLL_OPTIMIZE, () => {

@@ -37,8 +37,6 @@ export const createScroll = (
   const emitter = new Emitter();
   const root = container.appendChild(document.createElement('div'));
   root.innerHTML = normalizeHTML(html);
-  const scroll = new Scroll(registry, root, {
-    emitter,
-  });
+  const scroll = new Scroll(registry, root, { emitter });
   return scroll;
 };
