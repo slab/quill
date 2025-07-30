@@ -355,6 +355,31 @@ class Selection {
     ];
   }
 
+  // tool
+  static isSelectionForward () {
+    const selection = document.getSelection();
+    if (!selection) {
+      return true;
+    }
+    const { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
+    if(!anchorNode || !focusNode) {
+      return true;
+    }
+
+    let isForward = false;
+    if (anchorNode === focusNode) {
+      isForward = anchorOffset <= focusOffset;
+    } else {
+      const range = document.createRange();
+      range.setStart(anchorNode, anchorOffset);
+      range.setEnd(focusNode, focusOffset);
+
+      isForward = !range.collapsed; // not collapsed : anchor < focus
+    }
+    return isForward;
+  }
+
+
   setNativeRange(
     startNode: Node | null,
     startOffset?: number,
@@ -404,7 +429,19 @@ class Selection {
         range.setStart(startNode, startOffset);
         // @ts-expect-error Fix me later
         range.setEnd(endNode, endOffset);
+
+        const isForwardSelectionDirection = Selection.isSelectionForward();
         selection.removeAllRanges();
+
+        if (!isForwardSelectionDirection && endNode && startNode) {
+          if (!selection.setBaseAndExtent) {
+            debug.warn('selection.setBaseAndExtent is not function!');
+          } else {
+            // @ts-expect-error Fix me later
+            selection.setBaseAndExtent(endNode, endOffset, startNode, startOffset);
+          }
+        }
+
         selection.addRange(range);
       }
     } else {
