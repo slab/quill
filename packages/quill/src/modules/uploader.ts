@@ -15,6 +15,7 @@ class Uploader extends Module<UploaderOptions> {
   constructor(quill: Quill, options: Partial<UploaderOptions>) {
     super(quill, options);
     quill.root.addEventListener('drop', (e) => {
+      if (e.defaultPrevented) return;
       e.preventDefault();
       let native: ReturnType<typeof document.createRange> | null = null;
       if (document.caretRangeFromPoint) {
