@@ -22,8 +22,8 @@ resets(arr)
     visibility: hidden
 
 .ql-container:not(.ql-disabled)
-  li[data-list=checked],
-  li[data-list=unchecked]
+  li.ql-list-item-checked,
+  li.ql-list-item-unchecked
     > .ql-ui
       cursor: pointer
 
@@ -81,35 +81,35 @@ resets(arr)
       white-space: nowrap
       width: LIST_STYLE_WIDTH
 
-  li[data-list=checked],
-  li[data-list=unchecked]
+  li.ql-list-item-checked,
+  li.ql-list-item-unchecked
     > .ql-ui
       color: #777
 
-  li[data-list=bullet] > .ql-ui:before
+  li.ql-list-item-bullet > .ql-ui:before
     content: '\2022'
-  li[data-list=checked] > .ql-ui:before
+  li.ql-list-item-checked > .ql-ui:before
     content: '\2611'
-  li[data-list=unchecked] > .ql-ui:before
+  li.ql-list-item-unchecked > .ql-ui:before
     content: '\2610'
 
-  li[data-list]
+  li.ql-list-item
     @supports (counter-set: none)
       counter-set: resets(1..MAX_INDENT)
     @supports not (counter-set: none)
       counter-reset: resets(1..MAX_INDENT)
 
-  li[data-list=ordered]
+  li.ql-list-item-ordered
     counter-increment: list-0
     > .ql-ui:before
       content: unquote('counter(list-0, ' + LIST_STYLE[0] + ')') '. '
   for num in (1..MAX_INDENT)
-    li[data-list=ordered].ql-indent-{num}
+    li.ql-list-item-ordered.ql-indent-{num}
       counter-increment: unquote('list-' + num)
       > .ql-ui:before
         content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
     if (num < MAX_INDENT)
-      li[data-list].ql-indent-{num}
+      li.ql-list-item.ql-indent-{num}
         @supports (counter-set: none)
           counter-set: resets((num+1)..MAX_INDENT)
         @supports not (counter-set: none)

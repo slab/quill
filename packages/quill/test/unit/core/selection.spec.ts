@@ -123,7 +123,7 @@ describe('Selection', () => {
       const selection = createSelection(
         `<p><strong><em>01</em></strong></p>
         <ol>
-          <li data-list="bullet"><em><u>34</u></em></li>
+          <li class="ql-list-item ql-list-item-bullet"><em><u>34</u></em></li>
         </ol>`,
       );
       selection.setNativeRange(
@@ -168,7 +168,7 @@ describe('Selection', () => {
           <img src="/assets/favicon.png">
         </p>
         <ol>
-          <li data-list="bullet">
+          <li class="ql-list-item ql-list-item-bullet">
             <img src="/assets/favicon.png">
             <img src="/assets/favicon.png">
           </li>
@@ -204,8 +204,8 @@ describe('Selection', () => {
         <p>01</p>
         <p><br></p>
         <ol>
-          <li data-list="bullet">45</li>
-          <li data-list="bullet">78</li>
+          <li class="ql-list-item ql-list-item-bullet">45</li>
+          <li class="ql-list-item ql-list-item-bullet">78</li>
         </ol>`,
       );
       selection.setNativeRange(selection.root, 1, selection.root.lastChild, 1);
@@ -243,7 +243,7 @@ describe('Selection', () => {
         `
         <p><br></p>
         <ol>
-          <li data-list="bullet"><br></li>
+          <li class="ql-list-item ql-list-item-bullet"><br></li>
         </ol>`,
       );
       const expected = new Range(0, 1);
@@ -258,7 +258,7 @@ describe('Selection', () => {
         `
         <p><strong><em>01</em></strong></p>
         <ol>
-          <li data-list="bullet"><em><u>34</u></em></li>
+          <li class="ql-list-item ql-list-item-bullet"><em><u>34</u></em></li>
         </ol>`,
       );
       const expected = new Range(1, 3);
@@ -296,7 +296,7 @@ describe('Selection', () => {
           <img src="/assets/favicon.png">
         </p>
         <ol>
-          <li data-list="bullet">
+          <li class="ql-list-item ql-list-item-bullet">
             <img src="/assets/favicon.png">
             <img src="/assets/favicon.png">
           </li>
