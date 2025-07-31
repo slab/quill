@@ -170,9 +170,9 @@ class Clipboard extends Module<ClipboardOptions> {
 
   onCaptureCopy(e: ClipboardEvent, isCut = false) {
     if (e.defaultPrevented) return;
-    e.preventDefault();
     const [range] = this.quill.selection.getRange();
     if (range == null) return;
+    e.preventDefault();
     const { html, text } = this.onCopy(range, isCut);
     e.clipboardData?.setData('text/plain', text);
     e.clipboardData?.setData('text/html', html);
