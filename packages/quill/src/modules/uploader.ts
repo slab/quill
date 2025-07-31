@@ -53,7 +53,7 @@ class Uploader extends Module<UploaderOptions> {
 }
 
 Uploader.DEFAULTS = {
-  mimetypes: ['image/png', 'image/jpeg'],
+  mimetypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml'],
   handler(range: Range, files: File[]) {
     if (!this.quill.scroll.query('image')) {
       return;
