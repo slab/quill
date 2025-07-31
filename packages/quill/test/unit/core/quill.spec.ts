@@ -44,7 +44,7 @@ describe('Quill', () => {
     });
 
     test('register(path, target)', () => {
-      class Counter {}
+      class Counter { }
       Quill.register('modules/counter', Counter);
 
       expect(Quill.imports).toHaveProperty('modules/counter', Counter);
@@ -67,7 +67,7 @@ describe('Quill', () => {
         static blotName = 'a-blot';
         static className = 'ql-a-blot';
       }
-      class AModule {}
+      class AModule { }
       Quill.register({
         'formats/a-blot': ABlot,
         'modules/a-module': AModule,
@@ -841,7 +841,7 @@ describe('Quill', () => {
     });
 
     test('toolbar custom handler, default container', () => {
-      const handler = () => {}; // eslint-disable-line func-style
+      const handler = () => { }; // eslint-disable-line func-style
       const config = expandConfig(`#${testContainerId}`, {
         modules: {
           toolbar: {
@@ -1209,7 +1209,7 @@ describe('Quill', () => {
         observer.observe(element);
         // Firefox doesn't call IntersectionObserver callback unless
         // there are rafs.
-        requestAnimationFrame(() => {});
+        requestAnimationFrame(() => { });
       });
     };
 
@@ -1429,6 +1429,56 @@ describe('Quill', () => {
             editorContainer.querySelector('p:nth-child(101)') as HTMLElement,
           ),
         ).toEqual(0);
+      });
+    });
+  });
+
+  describe('accessibility', () => {
+    describe('toolbar', () => {
+      test('tabbing - no roving tabindex', () => {
+        const container = createContainer('<div></div>');
+        new Quill(container, {
+          modules: {
+            toolbar: [['bold', 'italic'], ['link', 'image']],
+          },
+        });
+        const toolbar = container?.parentElement?.querySelector('.ql-toolbar');
+        const buttons = toolbar?.querySelectorAll('button');
+        if (!buttons) {
+          throw new Error('No buttons found');
+        }
+        expect(buttons.length).toBe(4);
+
+        buttons.forEach((button) => {
+          expect(button.getAttribute('tabindex')).toBe(null);
+        });
+      });
+
+      test('tabbing - roving tabindex', () => {
+        const container = createContainer('<div></div>');
+        if (!container.parentElement) {
+          throw new Error('No parent element found');
+        }
+        container.parentElement.classList.add('roving-tabindex');
+        new Quill(container, {
+          modules: {
+            toolbar: [['bold', 'italic'], ['link', 'image']],
+          },
+        });
+        const toolbar = container?.parentElement?.querySelector('.ql-toolbar');
+        const buttons = toolbar?.querySelectorAll('button');
+        if (!buttons) {
+          throw new Error('No buttons found');
+        }
+        expect(buttons.length).toBe(4);
+
+        buttons.forEach((button, key) => {
+          if (key === 0) {
+            expect(button.getAttribute('tabindex')).toBe('0');
+          } else {
+            expect(button.getAttribute('tabindex')).toBe('-1');
+          }
+        });
       });
     });
   });

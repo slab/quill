@@ -27,6 +27,8 @@ class Toolbar extends Module<ToolbarProps> {
   controls: [string, HTMLElement][];
   handlers: Record<string, Handler>;
 
+  hasRovingTabindex: boolean = false;
+
   constructor(quill: Quill, options: Partial<ToolbarProps>) {
     super(quill, options);
     if (Array.isArray(this.options.container)) {
@@ -45,6 +47,15 @@ class Toolbar extends Module<ToolbarProps> {
       return;
     }
     this.container.classList.add('ql-toolbar');
+
+    // Check if the parent element has the custom "roving-tabindex" class in order to enable or disable roving tabindex
+    this.hasRovingTabindex = this.container.closest('.roving-tabindex') !== null;
+    if (this.hasRovingTabindex) {
+      this.container.addEventListener('keydown', (e) => {
+        this.handleKeyboardEvent(e);
+      });
+    }
+
     this.controls = [];
     this.handlers = {};
     if (this.options.handlers) {
@@ -133,7 +144,66 @@ class Toolbar extends Module<ToolbarProps> {
       }
       this.update(range);
     });
+
     this.controls.push([format, input]);
+    if (this.hasRovingTabindex) {
+      this.setTabIndexes();
+    }
+  }
+
+  setTabIndexes() {
+    this.controls.forEach((control, index) => {
+      const [, input] = control;
+      if (input.tagName === 'BUTTON') {
+        input.tabIndex = index === 0 ? 0 : -1;
+      }
+    });
+  };
+
+  handleKeyboardEvent(e: KeyboardEvent) {
+    var target = e.currentTarget;
+    if (!target) return;
+
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      this.updateTabIndexes(target, e.key);
+    }
+  }
+
+  updateTabIndexes(target: EventTarget, key: string) {
+    const elements = Array.from(this.container?.querySelectorAll('button, .ql-picker-label') || []) as HTMLElement[];
+
+    const currentIndex = elements.findIndex((el) => el.tabIndex === 0);
+    if (currentIndex === -1) return;
+
+    const currentItem = this.controls[currentIndex][1];
+    if (currentItem.tagName === 'SELECT') {
+      const qlPickerLabel = currentItem.previousElementSibling?.querySelectorAll('.ql-picker-label')[0];
+      if (qlPickerLabel && qlPickerLabel.tagName === 'SPAN') {
+        (qlPickerLabel as HTMLElement).tabIndex = -1;
+      }
+    } else {
+      currentItem.tabIndex = -1;
+    }
+
+    let nextIndex: number | null = null;
+    if (key === 'ArrowLeft') {
+      nextIndex = currentIndex === 0 ? this.controls.length - 1 : currentIndex - 1;
+    } else if (key === 'ArrowRight') {
+      nextIndex = currentIndex === this.controls.length - 1 ? 0 : currentIndex + 1;
+    }
+
+    if (nextIndex === null) return;
+    const nextItem = this.controls[nextIndex][1];
+    if (nextItem.tagName === 'SELECT') {
+      const qlPickerLabel = nextItem.previousElementSibling?.querySelectorAll('.ql-picker-label')[0];
+      if (qlPickerLabel && qlPickerLabel.tagName === 'SPAN') {
+        (qlPickerLabel as HTMLElement).tabIndex = 0;
+        (qlPickerLabel as HTMLElement).focus();
+      }
+    } else {
+      nextItem.tabIndex = 0;
+      nextItem.focus();
+    }
   }
 
   update(range: Range | null) {

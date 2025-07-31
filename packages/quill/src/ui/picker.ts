@@ -14,6 +14,8 @@ class Picker {
   container: HTMLElement;
   label: HTMLElement;
 
+  hasRovingTabindex: boolean = false;
+
   constructor(select: HTMLSelectElement) {
     this.select = select;
     this.container = document.createElement('span');
@@ -21,6 +23,11 @@ class Picker {
     this.select.style.display = 'none';
     // @ts-expect-error Fix me later
     this.select.parentNode.insertBefore(this.container, this.select);
+
+    // Set tabIndex for the first item in the toolbar
+    this.hasRovingTabindex = this.container.closest('.roving-tabindex') !== null;
+    this.setTabIndexes();
+
 
     this.label.addEventListener('mousedown', () => {
       this.togglePicker();
@@ -85,12 +92,33 @@ class Picker {
     const label = document.createElement('span');
     label.classList.add('ql-picker-label');
     label.innerHTML = DropdownIcon;
+
+    // Set tabIndex to -1 by default to prevent focus
     // @ts-expect-error
-    label.tabIndex = '0';
+    label.tabIndex = '-1';
+
+
     label.setAttribute('role', 'button');
     label.setAttribute('aria-expanded', 'false');
     this.container.appendChild(label);
     return label;
+  }
+
+  setTabIndexes() {
+    const toolbar = this.select.closest('.ql-toolbar');
+    if (!toolbar) return;
+    const items = Array.from(toolbar.querySelectorAll('.ql-picker .ql-picker-label, .ql-toolbar button'));
+
+    if (this.hasRovingTabindex) {
+      if (items[0] === this.label) {
+        items[0].setAttribute('tabindex', '0')
+      }
+
+    } else {
+      items.forEach((item) => {
+        item.setAttribute('tabindex', '0');
+      });
+    }
   }
 
   buildOptions() {
@@ -180,7 +208,7 @@ class Picker {
       const item =
         // @ts-expect-error Fix me later
         this.container.querySelector('.ql-picker-options').children[
-          this.select.selectedIndex
+        this.select.selectedIndex
         ];
       option = this.select.options[this.select.selectedIndex];
       // @ts-expect-error
