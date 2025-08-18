@@ -25,11 +25,13 @@ import linkIcon from '../assets/icons/link.svg';
 import listBulletIcon from '../assets/icons/list-bullet.svg';
 import listCheckIcon from '../assets/icons/list-check.svg';
 import listOrderedIcon from '../assets/icons/list-ordered.svg';
+import redoIcon from '../assets/icons/redo.svg';
 import subscriptIcon from '../assets/icons/subscript.svg';
 import superscriptIcon from '../assets/icons/superscript.svg';
 import strikeIcon from '../assets/icons/strike.svg';
 import tableIcon from '../assets/icons/table.svg';
 import underlineIcon from '../assets/icons/underline.svg';
+import undoIcon from '../assets/icons/undo.svg';
 import videoIcon from '../assets/icons/video.svg';
 
 export default {
@@ -71,6 +73,7 @@ export default {
     check: listCheckIcon,
     ordered: listOrderedIcon,
   },
+  redo: redoIcon,
   script: {
     sub: subscriptIcon,
     super: superscriptIcon,
@@ -78,5 +81,6 @@ export default {
   strike: strikeIcon,
   table: tableIcon,
   underline: underlineIcon,
+  undo: undoIcon,
   video: videoIcon,
 };
