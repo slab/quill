@@ -1219,6 +1219,35 @@ describe('Editor', () => {
         align: ['right', 'center'],
       });
     });
+
+    test('Embed in range', () => {
+      const editor = createEditor(
+        `
+          <h1 class="ql-align-right"><em>01</em></h1>
+          <h1 class="ql-align-right"><em><img src="#" /></em></h1>
+          <h1 class="ql-align-center"><em>34</em></h1>
+        `,
+      );
+      expect(editor.getFormat(1, 3)).toEqual({
+        italic: true,
+        header: 1,
+        align: ['right', 'center'],
+      });
+    });
+    test('BlockEmbed in range', () => {
+      const editor = createEditor(
+        `
+          <h1 class="ql-align-right"><em>01</em></h1>
+          <iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>
+          <h1 class="ql-align-center"><em>34</em></h1>
+        `,
+      );
+      expect(editor.getFormat(1, 3)).toEqual({
+        italic: true,
+        header: 1,
+        align: ['right', 'center'],
+      });
+    });
   });
 
   describe('getHTML', () => {

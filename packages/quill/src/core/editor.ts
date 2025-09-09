@@ -8,6 +8,7 @@ import CursorBlot from '../blots/cursor.js';
 import type Scroll from '../blots/scroll.js';
 import TextBlot, { escapeText } from '../blots/text.js';
 import { Range } from './selection.js';
+import { Parchment } from './quill.js';
 
 const ASCII = /^[ -~]*$/;
 
@@ -173,13 +174,20 @@ class Editor {
         const [blot] = path;
         if (blot instanceof Block) {
           lines.push(blot);
-        } else if (blot instanceof LeafBlot) {
+        } else if (blot instanceof LeafBlot && !(blot instanceof BlockEmbed)) {
           leaves.push(blot);
         }
       });
     } else {
-      lines = this.scroll.lines(index, length);
-      leaves = this.scroll.descendants(LeafBlot, index, length);
+      lines = this.scroll
+        .lines(index, length)
+        .filter((line) => !(line instanceof BlockEmbed));
+      leaves = this.scroll.descendants(
+        (blot: Parchment.Blot) =>
+          blot instanceof Parchment.LeafBlot && !(blot instanceof BlockEmbed),
+        index,
+        length,
+      ) as Parchment.LeafBlot[];
     }
     const [lineFormats, leafFormats] = [lines, leaves].map((blots) => {
       const blot = blots.shift();
