@@ -28,7 +28,10 @@ class Editor {
   applyDelta(delta: Delta): Delta {
     this.scroll.update();
     let scrollLength = this.scroll.length();
-    this.scroll.batchStart();
+    const isAlreadyBatching = Boolean(this.scroll.batch);
+    if (!isAlreadyBatching) {
+      this.scroll.batchStart();
+    }
     const normalizedDelta = normalizeDelta(delta);
     const deleteDelta = new Delta();
     const normalizedOps = splitOpLines(normalizedDelta.ops.slice());
@@ -117,7 +120,9 @@ class Editor {
       }
       return index + Op.length(op);
     }, 0);
-    this.scroll.batchEnd();
+    if (!isAlreadyBatching) {
+      this.scroll.batchEnd();
+    }
     this.scroll.optimize();
     return this.update(normalizedDelta);
   }
