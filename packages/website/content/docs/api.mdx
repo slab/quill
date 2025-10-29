@@ -182,12 +182,23 @@ setContents(delta: Delta, source: string = 'api'): Delta
 **Examples**
 
 ```typescript
+quill.setContents({
+  ops:[
+    { insert: 'Hello ' },
+    { insert: 'World!', attributes: { bold: true } },
+    { insert: '\n' },
+    ]
+  });
+```
+or
+```typescript
 quill.setContents([
   { insert: 'Hello ' },
   { insert: 'World!', attributes: { bold: true } },
   { insert: '\n' },
 ]);
 ```
+
 
 ### setText
 
