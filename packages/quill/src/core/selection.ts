@@ -123,15 +123,26 @@ class Selection {
       this.composing = false;
       if (this.cursor.parent) {
         const range = this.cursor.restore();
-        if (!range) return;
         setTimeout(() => {
           this.setNativeRange(
-            range.startNode,
-            range.startOffset,
-            range.endNode,
-            range.endOffset,
+            range?.startNode,
+            range?.startOffset,
+            range?.endNode,
+            range?.endOffset,
           );
         }, 1);
+      } else {
+        // In the scenario where we don't have a cursor to restore, set the cursor to the end of the editor.
+        // This is the kind of situation like where you press cmd+a, compose some new text over the top of it, and press enter.
+        setTimeout(() => {
+          const nativeRange = this.getNativeRange();
+          if (nativeRange != null) {
+            const quillRange = this.normalizedToRange(nativeRange);
+            if (quillRange != null && quillRange.index === 0) {
+              this.setRange({ index: this.scroll.length(), length: 0 });
+            }
+          }
+        }, 10);
       }
     });
   }
@@ -367,7 +378,7 @@ class Selection {
   }
 
   setNativeRange(
-    startNode: Node | null,
+    startNode?: Node | null,
     startOffset?: number,
     endNode = startNode,
     endOffset = startOffset,
@@ -386,6 +397,41 @@ class Selection {
     const selection = document.getSelection();
     if (selection == null) return;
     if (startNode != null) {
+      // Validate offsets are defined and not -1 (invalid)
+      if (
+        startOffset === undefined ||
+        endOffset === undefined ||
+        startOffset === -1 ||
+        endOffset === -1
+      ) {
+        return;
+      }
+      // Validate endNode is not null (startNode is already validated by the outer if)
+      if (endNode == null) {
+        return;
+      }
+      // Validate offsets are within valid bounds for the node
+      if (startNode instanceof Text) {
+        if (startOffset < 0 || startOffset > startNode.data.length) {
+          return;
+        }
+      } else if (startNode instanceof Element) {
+        if (
+          startOffset < 0 ||
+          startOffset > (startNode.childNodes?.length ?? 0)
+        ) {
+          return;
+        }
+      }
+      if (endNode instanceof Text) {
+        if (endOffset < 0 || endOffset > endNode.data.length) {
+          return;
+        }
+      } else if (endNode instanceof Element) {
+        if (endOffset < 0 || endOffset > (endNode.childNodes?.length ?? 0)) {
+          return;
+        }
+      }
       if (!this.hasFocus()) this.root.focus({ preventScroll: true });
       const { native } = this.getNativeRange() || {};
       if (
@@ -397,23 +443,21 @@ class Selection {
         endOffset !== native.endOffset
       ) {
         if (startNode instanceof Element && startNode.tagName === 'BR') {
-          // @ts-expect-error Fix me later
-          startOffset = Array.from(startNode.parentNode.childNodes).indexOf(
-            startNode,
-          );
-          startNode = startNode.parentNode;
+          const parentNode = startNode.parentNode;
+          if (parentNode == null) return;
+          startOffset = Array.from(parentNode.childNodes).indexOf(startNode);
+          startNode = parentNode;
         }
         if (endNode instanceof Element && endNode.tagName === 'BR') {
-          // @ts-expect-error Fix me later
-          endOffset = Array.from(endNode.parentNode.childNodes).indexOf(
-            endNode,
-          );
-          endNode = endNode.parentNode;
+          const parentNode = endNode.parentNode;
+          if (parentNode == null) return;
+          endOffset = Array.from(parentNode.childNodes).indexOf(endNode);
+          endNode = parentNode;
         }
+        // Validate nodes are still valid after BR handling
+        if (startNode == null || endNode == null) return;
         const range = document.createRange();
-        // @ts-expect-error Fix me later
         range.setStart(startNode, startOffset);
-        // @ts-expect-error Fix me later
         range.setEnd(endNode, endOffset);
         selection.removeAllRanges();
         selection.addRange(range);
