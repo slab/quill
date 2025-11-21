@@ -72,10 +72,12 @@ class Keyboard extends Module<KeyboardOptions> {
   }
 
   bindings: Record<string, NormalizedBinding[]>;
+  isIOS: boolean;
 
   constructor(quill: Quill, options: Partial<KeyboardOptions>) {
     super(quill, options);
     this.bindings = {};
+    this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     // @ts-expect-error Fix me later
     Object.keys(this.options.bindings).forEach((name) => {
       // @ts-expect-error Fix me later
@@ -259,7 +261,8 @@ class Keyboard extends Module<KeyboardOptions> {
         // @ts-expect-error Fix me later
         return binding.handler.call(this, range, curContext, binding) !== true;
       });
-      if (prevented) {
+      const isIOSEnter = this.isIOS && evt.which === 13;
+      if (prevented && !isIOSEnter) {
         evt.preventDefault();
       }
     });
@@ -344,12 +347,22 @@ class Keyboard extends Module<KeyboardOptions> {
       },
       {},
     );
-    const delta = new Delta()
-      .retain(range.index)
-      .delete(range.length)
-      .insert('\n', lineFormats);
-    this.quill.updateContents(delta, Quill.sources.USER);
-    this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+    if (this.isIOS) {
+      const selection = document.getSelection();
+      if (selection == null) {
+        return;
+      }
+      selection.removeAllRanges();
+      this.quill.setSelection(range.index, 0, Quill.sources.SILENT);
+    } else {
+      const delta = new Delta()
+        .retain(range.index)
+        .delete(range.length)
+        .insert('\n', lineFormats);
+      this.quill.updateContents(delta, Quill.sources.USER);
+      this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+    }
+
     this.quill.focus();
   }
 }
@@ -664,7 +677,6 @@ function makeCodeBlockHandler(indent: boolean): BindingObject {
           } else {
             length += TAB.length;
           }
-          // @ts-expect-error Fix me later
         } else if (line.domNode.textContent.startsWith(TAB)) {
           line.deleteAt(0, TAB.length);
           if (i === 0) {
