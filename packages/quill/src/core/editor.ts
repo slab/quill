@@ -1,5 +1,11 @@
 import { cloneDeep, isEqual, merge } from 'lodash-es';
-import { LeafBlot, EmbedBlot, Scope, ParentBlot } from 'parchment';
+import {
+  ContainerBlot,
+  LeafBlot,
+  EmbedBlot,
+  Scope,
+  ParentBlot,
+} from 'parchment';
 import type { Blot } from 'parchment';
 import Delta, { AttributeMap, Op } from 'quill-delta';
 import Block, { BlockEmbed, bubbleFormats } from '../blots/block.js';
@@ -32,6 +38,14 @@ class Editor {
     const normalizedDelta = normalizeDelta(delta);
     const deleteDelta = new Delta();
     const normalizedOps = splitOpLines(normalizedDelta.ops.slice());
+
+    const containerAttributes: {
+      name: string;
+      value: unknown;
+      index: number;
+      length?: number;
+    }[] = [];
+
     normalizedOps.reduce((index, op) => {
       const length = Op.length(op);
       let attributes = op.attributes || {};
@@ -101,6 +115,19 @@ class Editor {
         }
       }
       Object.keys(attributes).forEach((name) => {
+        const format = this.scroll.query(name, Scope.BLOCK);
+        if (
+          format != null &&
+          (format as Function).prototype instanceof ContainerBlot
+        ) {
+          containerAttributes.push({
+            name,
+            value: attributes[name],
+            index,
+            length,
+          });
+          return;
+        }
         this.scroll.formatAt(index, length, name, attributes[name]);
       });
       const prependedLength = isImplicitNewlinePrepended ? 1 : 0;
@@ -119,6 +146,11 @@ class Editor {
     }, 0);
     this.scroll.batchEnd();
     this.scroll.optimize();
+
+    containerAttributes.forEach(({ name, value, index, length }) => {
+      this.scroll.formatAt(index, length != null ? length : 1, name, value);
+    });
+
     return this.update(normalizedDelta);
   }
 

@@ -143,6 +143,13 @@ class Scroll extends ScrollBlot {
     const last = renderBlocks.pop();
     if (last == null) return;
 
+    const containerAttributes: {
+      name: string;
+      value: unknown;
+      index: number;
+      length?: number;
+    }[] = [];
+
     this.batchStart();
 
     const first = renderBlocks.shift();
@@ -155,24 +162,42 @@ class Scroll extends ScrollBlot {
         first.type === 'block'
           ? first.delta
           : new Delta().insert({ [first.key]: first.value });
-      insertInlineContents(this, index, delta);
+      insertInlineContents(this, index, delta, containerAttributes);
       const newlineCharLength = first.type === 'block' ? 1 : 0;
       const lineEndIndex = index + delta.length() + newlineCharLength;
       if (shouldInsertNewlineChar) {
         this.insertAt(lineEndIndex - 1, '\n');
       }
 
-      const formats = bubbleFormats(this.line(index)[0]);
+      const firstLine = this.line(index)[0];
+      const formats = bubbleFormats(firstLine);
       const attributes = AttributeMap.diff(formats, first.attributes) || {};
+      const firstLineOffset =
+        firstLine?.offset(firstLine.parent || this) || index;
       Object.keys(attributes).forEach((name) => {
+        const format = this.scroll.query(name, Scope.BLOCK);
+        if (
+          format != null &&
+          (format as Function).prototype instanceof ContainerBlot
+        ) {
+          containerAttributes.push({
+            name,
+            value: attributes[name],
+            // index: lineEndIndex - 1,
+            index: firstLineOffset,
+            // length: delta.length(),
+            length: lineEndIndex - firstLineOffset,
+          });
+          return;
+        }
         this.formatAt(lineEndIndex - 1, 1, name, attributes[name]);
       });
-
       index = lineEndIndex;
     }
 
     let [refBlot, refBlotOffset] = this.children.find(index);
     if (renderBlocks.length) {
+      let blockOffset = index;
       if (refBlot) {
         refBlot = refBlot.split(refBlotOffset);
         refBlotOffset = 0;
@@ -180,11 +205,42 @@ class Scroll extends ScrollBlot {
 
       renderBlocks.forEach((renderBlock) => {
         if (renderBlock.type === 'block') {
+          const attrs = { ...renderBlock.attributes };
+          const cAttributes: {
+            name: string;
+            value: unknown;
+            index: number;
+            length?: number;
+          }[] = [];
+          Object.keys(attrs).forEach((name) => {
+            const format = this.scroll.query(name, Scope.BLOCK & Scope.BLOT);
+            if (format != null) {
+              if ((format as Function).prototype instanceof ContainerBlot) {
+                cAttributes.push({
+                  name,
+                  value: renderBlock.attributes[name],
+                  index: blockOffset,
+                });
+                renderBlock.delta.forEach((op) => {
+                  if (op.insert != null) {
+                    delete op.attributes?.[name];
+                  }
+                });
+                delete renderBlock.attributes[name];
+              }
+            }
+          });
           const block = this.createBlock(
             renderBlock.attributes,
             refBlot || undefined,
           );
           insertInlineContents(block, 0, renderBlock.delta);
+          const l = block.length();
+          for (let i = 0; i < cAttributes.length; i += 1) {
+            cAttributes[i].length = l;
+          }
+          containerAttributes.push(...cAttributes);
+          blockOffset += l; // === 0 ? 1 : l;
         } else {
           const blockEmbed = this.create(
             renderBlock.key,
@@ -194,6 +250,7 @@ class Scroll extends ScrollBlot {
           Object.keys(renderBlock.attributes).forEach((name) => {
             blockEmbed.format(name, renderBlock.attributes[name]);
           });
+          blockOffset += blockEmbed.length();
         }
       });
     }
@@ -202,11 +259,15 @@ class Scroll extends ScrollBlot {
       const offset = refBlot
         ? refBlot.offset(refBlot.scroll) + refBlotOffset
         : this.length();
-      insertInlineContents(this, offset, last.delta);
+      insertInlineContents(this, offset, last.delta, containerAttributes);
     }
 
     this.batchEnd();
     this.optimize();
+
+    containerAttributes.forEach(({ name, value, index, length }) => {
+      this.formatAt(index, length != null ? length : 1, name, value);
+    });
   }
 
   isEnabled() {
@@ -409,6 +470,12 @@ function insertInlineContents(
   parent: ParentBlot,
   index: number,
   inlineContents: Delta,
+  containerAttributes?: {
+    name: string;
+    value: unknown;
+    index: number;
+    length?: number;
+  }[],
 ) {
   inlineContents.reduce((index, op) => {
     const length = Op.length(op);
@@ -433,6 +500,21 @@ function insertInlineContents(
       }
     }
     Object.keys(attributes).forEach((key) => {
+      if (containerAttributes != null) {
+        const format = parent.scroll.query(key, Scope.BLOCK);
+        if (
+          format != null &&
+          (format as Function).prototype instanceof ContainerBlot
+        ) {
+          containerAttributes.push({
+            name: key,
+            value: attributes[key],
+            index,
+            length,
+          });
+          return;
+        }
+      }
       parent.formatAt(index, length, key, attributes[key]);
     });
     return index + length;
