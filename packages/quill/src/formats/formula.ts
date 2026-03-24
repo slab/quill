@@ -1,4 +1,5 @@
 import Embed from '../blots/embed.js';
+import { escapeHtml } from '../core/html_escape.js';
 
 class Formula extends Embed {
   static blotName = 'formula';
@@ -27,8 +28,12 @@ class Formula extends Embed {
   }
 
   html() {
-    const { formula } = this.value();
-    return `<span>${formula}</span>`;
+    const dom = this.domNode as Element;
+    const raw =
+      (typeof this.value() === 'string' ? this.value() : null) ??
+      dom.getAttribute('data-value') ??
+      '';
+    return `<span class="ql-formula">${escapeHtml(raw)}</span>`;
   }
 }
 

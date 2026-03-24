@@ -1,4 +1,5 @@
 import { BlockEmbed } from '../blots/block.js';
+import { escapeAttribute, escapeHtml } from '../core/html_escape.js';
 import Link from './link.js';
 
 const ATTRIBUTES = ['height', 'width'];
@@ -51,8 +52,9 @@ class Video extends BlockEmbed {
   }
 
   html() {
-    const { video } = this.value();
-    return `<a href="${video}">${video}</a>`;
+    const raw = this.domNode.getAttribute('src') ?? '';
+    const safe = Video.sanitize(raw);
+    return `<a href="${escapeAttribute(safe)}">${escapeHtml(safe)}</a>`;
   }
 }
 

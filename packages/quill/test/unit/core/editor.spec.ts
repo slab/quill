@@ -25,6 +25,7 @@ import { SizeClass } from '../../../src/formats/size.js';
 import Blockquote from '../../../src/formats/blockquote.js';
 import IndentClass from '../../../src/formats/indent.js';
 import { ColorClass } from '../../../src/formats/color.js';
+import Formula from '../../../src/formats/formula.js';
 import Quill from '../../../src/core.js';
 import { normalizeHTML } from '../__helpers__/utils.js';
 
@@ -1408,6 +1409,77 @@ describe('Editor', () => {
       expect(editor.getHTML(1, 7)).toEqual('<pre>\n0123\n\n\n\n</pre>');
       expect(editor.getHTML(2, 7)).toEqual('<pre>\n123\n\n\n4\n</pre>');
       expect(editor.getHTML(5, 7)).toEqual('<pre>\n\n\n\n4567\n</pre>');
+    });
+
+    test('video html export escapes href and text for XSS payloads (CVE-2025-15056)', () => {
+      const editor = createEditor(
+        new Delta().insert({ video: 'https://example.test/' }).insert('\n'),
+      );
+      const iframe = editor.scroll.domNode.querySelector(
+        'iframe.ql-video',
+      ) as HTMLIFrameElement;
+      iframe.setAttribute(
+        'src',
+        'https://example.test/path?x=" onmouseover="alert(1)',
+      );
+      const html = editor.getHTML(0, editor.scroll.length() - 1);
+      expect(html).not.toMatch(/onmouseover/i);
+      expect(html).toContain('&quot;');
+    });
+
+    test('formula html export escapes injected markup (CVE-2025-15056)', () => {
+      const prevKatex = (window as unknown as { katex?: unknown }).katex;
+      (window as unknown as { katex: { render: () => void } }).katex = {
+        render: () => {},
+      };
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+      const quill = new Quill(container, {
+        registry: createRegistry([
+          ListContainer,
+          List,
+          IndentClass,
+          Bold,
+          Image,
+          ColorClass,
+          Link,
+          FontClass,
+          Header,
+          Italic,
+          AlignClass,
+          Video,
+          Strike,
+          Underline,
+          CodeBlock,
+          CodeBlockContainer,
+          Blockquote,
+          SizeClass,
+          Formula,
+        ]),
+      });
+      quill.setContents(
+        new Delta()
+          .insert({ formula: '</span><img src=x onerror=alert(1)>' })
+          .insert('\n'),
+      );
+      const html = quill.editor.getHTML(0, quill.getLength() - 1);
+      expect(html).not.toMatch(/<img/i);
+      expect(html).toContain('&lt;/span&gt;');
+      if (prevKatex !== undefined) {
+        (window as unknown as { katex: unknown }).katex = prevKatex;
+      } else {
+        delete (window as unknown as { katex?: unknown }).katex;
+      }
+      quill.container.remove();
+    });
+
+    test('getHTML strips event attributes from blockquote wrapper', () => {
+      const editor = createEditor(
+        '<blockquote onmouseover="alert(1)">Quill</blockquote>',
+      );
+      const html = editor.getHTML(0, 6);
+      expect(html).not.toMatch(/onmouseover/i);
+      expect(html).toContain('Quill');
     });
   });
 });

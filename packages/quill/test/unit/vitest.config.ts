@@ -6,10 +6,10 @@ export default defineConfig({
     extensions: ['.ts', '.js'],
   },
   test: {
-    include: [resolve(__dirname, '**/*.spec.ts')],
+    include: ['test/unit/**/*.spec.ts'],
     typecheck: {
       enabled: true,
-      include: [resolve(__dirname, '**/*.test-d.ts')],
+      include: ['test/unit/**/*.test-d.ts'],
     },
     setupFiles: [
       resolve(__dirname, '__helpers__/expect.ts'),
