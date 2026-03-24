@@ -7,6 +7,10 @@ import Break from '../blots/break.js';
 import CursorBlot from '../blots/cursor.js';
 import type Scroll from '../blots/scroll.js';
 import TextBlot, { escapeText } from '../blots/text.js';
+import {
+  cloneWithSafeAttributes,
+  getSafeWrapperMarkup,
+} from './html_escape.js';
 import { Range } from './selection.js';
 
 const ASCII = /^[ -~]*$/;
@@ -399,15 +403,20 @@ function convertHTML(
     if (isRoot || blot.statics.blotName === 'list') {
       return parts.join('');
     }
-    const { outerHTML, innerHTML } = blot.domNode as Element;
-    const [start, end] = outerHTML.split(`>${innerHTML}<`);
-    // TODO cleanup
-    if (start === '<table') {
-      return `<table style="border: 1px solid #000;">${parts.join('')}<${end}`;
+    const domNode = blot.domNode as Element;
+    const [start, end] = getSafeWrapperMarkup(domNode);
+    if (domNode.tagName === 'TABLE') {
+      return `<table style="border: 1px solid #000;">${parts.join('')}${end}`;
     }
-    return `${start}>${parts.join('')}<${end}`;
+    if (end === '') {
+      return `${start}${parts.join('')}`;
+    }
+    return `${start}${parts.join('')}${end}`;
   }
-  return blot.domNode instanceof Element ? blot.domNode.outerHTML : '';
+  if (blot.domNode instanceof Element) {
+    return cloneWithSafeAttributes(blot.domNode).outerHTML;
+  }
+  return '';
 }
 
 function combineFormats(

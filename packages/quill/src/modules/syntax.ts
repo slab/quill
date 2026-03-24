@@ -3,6 +3,7 @@ import { ClassAttributor, Scope } from 'parchment';
 import type { Blot, ScrollBlot } from 'parchment';
 import Inline from '../blots/inline.js';
 import Quill from '../core/quill.js';
+import { escapeAttribute } from '../core/html_escape.js';
 import Module from '../core/module.js';
 import { blockDelta } from '../blots/block.js';
 import BreakBlot from '../blots/break.js';
@@ -159,7 +160,7 @@ class SyntaxCodeBlockContainer extends CodeBlockContainer {
       ? SyntaxCodeBlock.formats(codeBlock.domNode)
       : 'plain';
 
-    return `<pre data-language="${language}">\n${escapeText(
+    return `<pre data-language="${escapeAttribute(language)}">\n${escapeText(
       this.code(index, length),
     )}\n</pre>`;
   }
