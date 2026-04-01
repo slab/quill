@@ -292,4 +292,152 @@ describe('Syntax', () => {
       expect(quill.getSemanticHTML()).toContain('data-language="javascript"');
     });
   });
+
+  describe('XSS Prevention', () => {
+    test('escapes quotes in data-language attribute', () => {
+      const container = document.body.appendChild(
+        document.createElement('div'),
+      );
+      container.innerHTML = normalizeHTML(
+        `<pre data-language="test&quot; onclick=&quot;alert(1)"><br></pre>`,
+      );
+      const quill = new Quill(container, {
+        modules: {
+          syntax: {
+            hljs,
+            interval: HIGHLIGHT_INTERVAL,
+          },
+        },
+        registry: createRegistry([
+          CodeToken,
+          CodeBlock,
+          Quill.import('formats/code-block-container'),
+        ]),
+      });
+      const html = quill.getSemanticHTML();
+
+      // Should escape quotes
+      expect(html).toContain('&quot;');
+      // Should NOT allow attribute injection
+      expect(html).not.toContain('" onclick="');
+    });
+
+    test('escapes malicious language closing tag', () => {
+      const container = document.body.appendChild(
+        document.createElement('div'),
+      );
+      container.innerHTML = normalizeHTML(
+        `<pre data-language="&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;pre x=&quot;"><br></pre>`,
+      );
+      const quill = new Quill(container, {
+        modules: {
+          syntax: {
+            hljs,
+            interval: HIGHLIGHT_INTERVAL,
+          },
+        },
+        registry: createRegistry([
+          CodeToken,
+          CodeBlock,
+          Quill.import('formats/code-block-container'),
+        ]),
+      });
+      const html = quill.getSemanticHTML();
+
+      // Should NOT contain unescaped script tags
+      expect(html).not.toContain('<script>');
+      // Should contain escaped version
+      expect(html).toContain('&lt;script&gt;');
+    });
+
+    test('escapes ampersands in language attribute', () => {
+      const container = document.body.appendChild(
+        document.createElement('div'),
+      );
+      container.innerHTML = normalizeHTML(
+        `<pre data-language="cpp&amp;test"><br></pre>`,
+      );
+      const quill = new Quill(container, {
+        modules: {
+          syntax: {
+            hljs,
+            interval: HIGHLIGHT_INTERVAL,
+          },
+        },
+        registry: createRegistry([
+          CodeToken,
+          CodeBlock,
+          Quill.import('formats/code-block-container'),
+        ]),
+      });
+      const html = quill.getSemanticHTML();
+
+      // Should preserve escaped ampersand
+      expect(html).toContain('&amp;');
+    });
+
+    test('escapes less than and greater than in language', () => {
+      const container = document.body.appendChild(
+        document.createElement('div'),
+      );
+      container.innerHTML = normalizeHTML(
+        `<pre data-language="&lt;test&gt;"><br></pre>`,
+      );
+      const quill = new Quill(container, {
+        modules: {
+          syntax: {
+            hljs,
+            interval: HIGHLIGHT_INTERVAL,
+          },
+        },
+        registry: createRegistry([
+          CodeToken,
+          CodeBlock,
+          Quill.import('formats/code-block-container'),
+        ]),
+      });
+      const html = quill.getSemanticHTML();
+
+      // Should escape < and >
+      expect(html).toContain('&lt;test&gt;');
+    });
+
+    test('prevents attribute injection via language field', () => {
+      const container = document.body.appendChild(
+        document.createElement('div'),
+      );
+      // Try to inject onload attribute
+      container.innerHTML = normalizeHTML(
+        `<pre data-language="javascript&quot; onload=&quot;alert(1)"><br></pre>`,
+      );
+      const quill = new Quill(container, {
+        modules: {
+          syntax: {
+            hljs,
+            interval: HIGHLIGHT_INTERVAL,
+          },
+        },
+        registry: createRegistry([
+          CodeToken,
+          CodeBlock,
+          Quill.import('formats/code-block-container'),
+        ]),
+      });
+      const html = quill.getSemanticHTML();
+
+      // Should escape and not create executable code
+      expect(html).not.toContain('" onload="');
+      expect(html).toContain('&quot;');
+    });
+
+    test('handles normal language attributes safely', () => {
+      const quill = createQuill();
+      const html = quill.getSemanticHTML();
+
+      // Should contain properly formatted language attribute
+      expect(html).toContain('data-language="javascript"');
+      expect(html).toContain('<pre');
+      expect(html).toContain('</pre>');
+    });
+  });
 });

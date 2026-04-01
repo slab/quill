@@ -399,13 +399,25 @@ function convertHTML(
     if (isRoot || blot.statics.blotName === 'list') {
       return parts.join('');
     }
-    const { outerHTML, innerHTML } = blot.domNode as Element;
-    const [start, end] = outerHTML.split(`>${innerHTML}<`);
+
+    // Safe HTML reconstruction - build tag with escaped attributes
+    const element = blot.domNode as Element;
+    const tagName = element.tagName.toLowerCase();
+    const attributes = Array.from(element.attributes)
+      .map((attr) => {
+        // Sanitize attribute name to only allow valid characters
+        const safeName = attr.name.replace(/[^a-zA-Z0-9-_]/g, '');
+        return `${safeName}="${escapeText(attr.value)}"`;
+      })
+      .join(' ');
+
     // TODO cleanup
-    if (start === '<table') {
-      return `<table style="border: 1px solid #000;">${parts.join('')}<${end}`;
+    if (tagName === 'table') {
+      return `<table style="border: 1px solid #000;">${parts.join('')}</table>`;
     }
-    return `${start}>${parts.join('')}<${end}`;
+
+    const openTag = attributes ? `<${tagName} ${attributes}>` : `<${tagName}>`;
+    return `${openTag}${parts.join('')}</${tagName}>`;
   }
   return blot.domNode instanceof Element ? blot.domNode.outerHTML : '';
 }

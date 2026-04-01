@@ -66,10 +66,12 @@ class SnowTooltip extends BaseTooltip {
           if (link != null) {
             this.linkRange = new Range(range.index - offset, link.length());
             const preview = LinkBlot.formats(link.domNode);
+            // Re-sanitize the link before displaying in preview
+            const sanitizedPreview = preview ? LinkBlot.sanitize(preview) : '';
             // @ts-expect-error Fix me later
-            this.preview.textContent = preview;
+            this.preview.textContent = sanitizedPreview;
             // @ts-expect-error Fix me later
-            this.preview.setAttribute('href', preview);
+            this.preview.setAttribute('href', sanitizedPreview);
             this.show();
             const bounds = this.quill.getBounds(this.linkRange);
             if (bounds != null) {

@@ -1,4 +1,5 @@
 import Embed from '../blots/embed.js';
+import { escapeText } from '../blots/text.js';
 
 class Formula extends Embed {
   static blotName = 'formula';
@@ -26,9 +27,11 @@ class Formula extends Embed {
     return domNode.getAttribute('data-value');
   }
 
+  domNode: HTMLElement;
+
   html() {
-    const { formula } = this.value();
-    return `<span>${formula}</span>`;
+    const formula = Formula.value(this.domNode) || '';
+    return `<span>${escapeText(formula)}</span>`;
   }
 }
 

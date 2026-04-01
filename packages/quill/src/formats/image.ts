@@ -1,5 +1,6 @@
 import { EmbedBlot } from 'parchment';
 import { sanitize } from './link.js';
+import { escapeText } from '../blots/text.js';
 
 const ATTRIBUTES = ['alt', 'height', 'width'];
 
@@ -51,6 +52,25 @@ class Image extends EmbedBlot {
     } else {
       super.format(name, value);
     }
+  }
+
+  html() {
+    const { src, alt, width, height } = this.domNode;
+    const sanitizedSrc = Image.sanitize(src);
+    const sanitizedAlt = alt ? escapeText(alt) : '';
+
+    let attributes = `src="${escapeText(sanitizedSrc)}"`;
+    if (sanitizedAlt) {
+      attributes += ` alt="${sanitizedAlt}"`;
+    }
+    if (width) {
+      attributes += ` width="${escapeText(String(width))}"`;
+    }
+    if (height) {
+      attributes += ` height="${escapeText(String(height))}"`;
+    }
+
+    return `<img ${attributes}>`;
   }
 }
 

@@ -1,3 +1,21 @@
+# v2.0.4 (TBD)
+
+## Security Fixes 🔒
+
+- **CRITICAL**: Fixed XSS vulnerability in HTML export feature
+  - Formula embeds now properly escape user-controlled values in `html()` output
+  - Video embeds now properly escape URLs in `html()` output  
+  - Prevents script injection when using `getSemanticHTML()` or editor's HTML output
+  - Applications using "export HTML → store → render" workflows are now protected
+  - **Impact**: Malicious formulas or video URLs could execute JavaScript when exported HTML is rendered
+  - **Fix**: All special HTML characters (`<`, `>`, `&`, `"`, `'`) are now escaped in formula and video embed output
+  - **CVE**: Pending assignment
+
+## Additional Improvements
+
+- Improved HTML validity by properly escaping special characters in formulas and video URLs
+- Added comprehensive XSS prevention test coverage for formula and video embeds
+
 # v2.0.2 (2024-05-13)
 
 <!-- Release notes generated using configuration in .github/release.yml at v2.0.2 -->
