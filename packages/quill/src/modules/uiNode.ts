@@ -2,7 +2,8 @@ import { ParentBlot } from 'parchment';
 import Module from '../core/module.js';
 import Quill from '../core/quill.js';
 
-const isMac = /Mac/i.test(navigator.platform);
+const isMac =
+  typeof navigator !== 'undefined' && /Mac/i.test(navigator.platform);
 
 // Export for testing
 export const TTL_FOR_VALID_SELECTION_CHANGE = 100;

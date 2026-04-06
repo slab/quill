@@ -334,7 +334,7 @@ class Syntax extends Module<SyntaxOptions> {
 }
 Syntax.DEFAULTS = {
   hljs: (() => {
-    return window.hljs;
+    return typeof window !== 'undefined' ? window.hljs : null;
   })(),
   interval: 1000,
   languages: [

@@ -29,14 +29,21 @@ const debug = logger('quill:clipboard');
 type Selector = string | Node['TEXT_NODE'] | Node['ELEMENT_NODE'];
 type Matcher = (node: Node, delta: Delta, scroll: ScrollBlot) => Delta;
 
+// Constants from the browser's global "Node" object.
+// Strong types ensure the constants are accurate,
+// while avoiding an import time dependency on browser provided global.
+// Avoiding this dependency allows this code to be imported more easily in non-browser environments such as tests and SSR.
+const TEXT_NODE: typeof Node.TEXT_NODE = 3;
+const ELEMENT_NODE: typeof Node.ELEMENT_NODE = 1;
+
 const CLIPBOARD_CONFIG: [Selector, Matcher][] = [
-  [Node.TEXT_NODE, matchText],
-  [Node.TEXT_NODE, matchNewline],
+  [TEXT_NODE, matchText],
+  [TEXT_NODE, matchNewline],
   ['br', matchBreak],
-  [Node.ELEMENT_NODE, matchNewline],
-  [Node.ELEMENT_NODE, matchBlot],
-  [Node.ELEMENT_NODE, matchAttributor],
-  [Node.ELEMENT_NODE, matchStyles],
+  [ELEMENT_NODE, matchNewline],
+  [ELEMENT_NODE, matchBlot],
+  [ELEMENT_NODE, matchAttributor],
+  [ELEMENT_NODE, matchStyles],
   ['li', matchIndent],
   ['ol, ul', matchList],
   ['pre', matchCodeBlock],

@@ -10,7 +10,7 @@ import type History from '../modules/history.js';
 import type Keyboard from '../modules/keyboard.js';
 import type Uploader from '../modules/uploader.js';
 import Editor from './editor.js';
-import Emitter from './emitter.js';
+import Emitter, { ensureDocumentListeners } from './emitter.js';
 import type { EmitterSource } from './emitter.js';
 import instances from './instances.js';
 import logger from './logger.js';
@@ -209,6 +209,7 @@ class Quill {
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
     instances.set(this.container, this);
+    ensureDocumentListeners(this.container.ownerDocument);
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
     this.emitter = new Emitter();
