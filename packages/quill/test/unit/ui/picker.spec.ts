@@ -20,12 +20,12 @@ describe('Picker', () => {
     expect(
       container.querySelector('.ql-picker-item.ql-selected')?.outerHTML,
     ).toEqualHTML(
-      '<span tabindex="0" role="button" class="ql-picker-item ql-selected" data-label="0"></span>',
+      '<span tabindex="0" role="option" aria-selected="true" class="ql-picker-item ql-selected" data-label="0" aria-label="0"></span>',
     );
     expect(
       container.querySelector('.ql-picker-item:not(.ql-selected)')?.outerHTML,
     ).toEqualHTML(
-      '<span tabindex="0" role="button" class="ql-picker-item" data-value="1" data-label="1"></span>',
+      '<span tabindex="0" role="option" aria-selected="false" class="ql-picker-item" data-value="1" data-label="1" aria-label="1"></span>',
     );
   });
 
@@ -39,6 +39,80 @@ describe('Picker', () => {
     option.value = value;
     value = value.replace(/"/g, '\\"');
     expect(select.querySelector(`option[value="${value}"]`)).toEqual(option);
+  });
+
+  test('label has aria-haspopup="listbox"', () => {
+    const { pickerSelector } = setup();
+    expect(
+      pickerSelector
+        .querySelector('.ql-picker-label')
+        ?.getAttribute('aria-haspopup'),
+    ).toEqual('listbox');
+  });
+
+  test('options container has role="listbox"', () => {
+    const { pickerSelector } = setup();
+    expect(
+      pickerSelector
+        .querySelector('.ql-picker-options')
+        ?.getAttribute('role'),
+    ).toEqual('listbox');
+  });
+
+  test('items have role="option" and aria-selected', () => {
+    const { pickerSelector } = setup();
+    const items = pickerSelector.querySelectorAll('.ql-picker-item');
+    items.forEach((item) => {
+      expect(item.getAttribute('role')).toEqual('option');
+      expect(item.getAttribute('aria-selected')).toBeDefined();
+    });
+  });
+
+  test('aria-selected updates when item is selected', () => {
+    const { pickerSelector } = setup();
+    const [firstItem, secondItem] = Array.from(
+      pickerSelector.querySelectorAll('.ql-picker-item'),
+    );
+    expect(firstItem.getAttribute('aria-selected')).toEqual('true');
+    expect(secondItem.getAttribute('aria-selected')).toEqual('false');
+    secondItem.dispatchEvent(new MouseEvent('click'));
+    expect(firstItem.getAttribute('aria-selected')).toEqual('false');
+    expect(secondItem.getAttribute('aria-selected')).toEqual('true');
+  });
+
+  test('ArrowDown on label opens picker and focuses first item', () => {
+    const { pickerSelector } = setup();
+    const pickerLabel = pickerSelector.querySelector(
+      '.ql-picker-label',
+    ) as HTMLElement;
+    pickerLabel.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }),
+    );
+    expect(pickerSelector.classList.contains('ql-expanded')).toBe(true);
+  });
+
+  test('ArrowDown on item moves focus to next item', () => {
+    const { pickerSelector } = setup();
+    const [firstItem, secondItem] = Array.from(
+      pickerSelector.querySelectorAll<HTMLElement>('.ql-picker-item'),
+    );
+    firstItem.focus();
+    firstItem.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }),
+    );
+    expect(document.activeElement).toEqual(secondItem);
+  });
+
+  test('ArrowUp on item moves focus to previous item', () => {
+    const { pickerSelector } = setup();
+    const [firstItem, secondItem] = Array.from(
+      pickerSelector.querySelectorAll<HTMLElement>('.ql-picker-item'),
+    );
+    secondItem.focus();
+    secondItem.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }),
+    );
+    expect(document.activeElement).toEqual(firstItem);
   });
 
   test('label is initialized with the correct aria attributes', () => {

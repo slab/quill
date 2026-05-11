@@ -34,10 +34,41 @@ class Picker {
           this.escape();
           event.preventDefault();
           break;
+        case 'ArrowDown':
+          event.preventDefault();
+          if (!this.container.classList.contains('ql-expanded')) {
+            this.togglePicker();
+          }
+          this.navigateOptions(1);
+          break;
+        case 'ArrowUp':
+          event.preventDefault();
+          if (!this.container.classList.contains('ql-expanded')) {
+            this.togglePicker();
+          }
+          this.navigateOptions(-1);
+          break;
         default:
       }
     });
     this.select.addEventListener('change', this.update.bind(this));
+  }
+
+  navigateOptions(direction: number) {
+    const items = Array.from(
+      this.container.querySelectorAll<HTMLElement>('.ql-picker-item'),
+    );
+    if (items.length === 0) return;
+    const currentIndex = items.findIndex(
+      (item) => item === document.activeElement,
+    );
+    const nextIndex =
+      currentIndex === -1
+        ? direction > 0
+          ? 0
+          : items.length - 1
+        : Math.max(0, Math.min(items.length - 1, currentIndex + direction));
+    items[nextIndex]?.focus();
   }
 
   togglePicker() {
@@ -52,7 +83,8 @@ class Picker {
     const item = document.createElement('span');
     // @ts-expect-error
     item.tabIndex = '0';
-    item.setAttribute('role', 'button');
+    item.setAttribute('role', 'option');
+    item.setAttribute('aria-selected', 'false');
     item.classList.add('ql-picker-item');
     const value = option.getAttribute('value');
     if (value) {
@@ -60,6 +92,7 @@ class Picker {
     }
     if (option.textContent) {
       item.setAttribute('data-label', option.textContent);
+      item.setAttribute('aria-label', option.textContent);
     }
     item.addEventListener('click', () => {
       this.selectItem(item, true);
@@ -73,6 +106,14 @@ class Picker {
         case 'Escape':
           this.escape();
           event.preventDefault();
+          break;
+        case 'ArrowDown':
+          event.preventDefault();
+          this.navigateOptions(1);
+          break;
+        case 'ArrowUp':
+          event.preventDefault();
+          this.navigateOptions(-1);
           break;
         default:
       }
@@ -89,6 +130,14 @@ class Picker {
     label.tabIndex = '0';
     label.setAttribute('role', 'button');
     label.setAttribute('aria-expanded', 'false');
+    label.setAttribute('aria-haspopup', 'listbox');
+    const pickerClass = Array.from(this.select.classList).find((c) =>
+      c.startsWith('ql-'),
+    );
+    if (pickerClass) {
+      const name = pickerClass.slice('ql-'.length);
+      label.setAttribute('aria-label', name.charAt(0).toUpperCase() + name.slice(1));
+    }
     this.container.appendChild(label);
     return label;
   }
@@ -96,6 +145,7 @@ class Picker {
   buildOptions() {
     const options = document.createElement('span');
     options.classList.add('ql-picker-options');
+    options.setAttribute('role', 'listbox');
 
     // Don't want screen readers to read this until options are visible
     options.setAttribute('aria-hidden', 'true');
@@ -149,9 +199,11 @@ class Picker {
     if (item === selected) return;
     if (selected != null) {
       selected.classList.remove('ql-selected');
+      selected.setAttribute('aria-selected', 'false');
     }
     if (item == null) return;
     item.classList.add('ql-selected');
+    item.setAttribute('aria-selected', 'true');
     // @ts-expect-error Fix me later
     this.select.selectedIndex = Array.from(item.parentNode.children).indexOf(
       item,
