@@ -540,7 +540,8 @@ function matchIndent(node: Node, delta: Delta, scroll: ScrollBlot) {
 
 function matchList(node: Node, delta: Delta, scroll: ScrollBlot) {
   const element = node as Element;
-  let list = element.tagName === 'OL' ? 'ordered' : 'bullet';
+  const listAttr = element.getAttribute('data-list');
+  let list = listAttr || (element.tagName === 'OL' ? 'ordered' : 'bullet');
 
   const checkedAttr = element.getAttribute('data-checked');
   if (checkedAttr) {
