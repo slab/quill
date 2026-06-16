@@ -1,0 +1,1 @@
+{"version":3,"file":"container.js","names":["ContainerBlot","Container"],"sources":["../../src/blots/container.ts"],"sourcesContent":["import { ContainerBlot } from 'parchment';\n\nclass Container extends ContainerBlot {}\n\nexport default Container;\n"],"mappings":"AAAA,SAASA,aAAa,QAAQ,WAAW;AAEzC,MAAMC,SAAS,SAASD,aAAa,CAAC;AAEtC,eAAeC,SAAS","ignoreList":[]}

@@ -1,0 +1,28 @@
+<svg viewbox="0 0 18 18">
+  <g class="ql-fill ql-transparent">
+    <rect height="2" transform="translate(18 -12) rotate(90)" width="2" x="14" y="2"></rect>
+    <rect height="2" transform="translate(21 -9) rotate(90)" width="2" x="14" y="5"></rect>
+    <rect height="2" transform="translate(24 -6) rotate(90)" width="2" x="14" y="8"></rect>
+    <rect height="2" transform="translate(30 0) rotate(90)" width="2" x="14" y="14"></rect>
+    <rect height="2" transform="translate(27 -3) rotate(90)" width="2" x="14" y="11"></rect>
+    <rect height="2" transform="translate(6 0) rotate(90)" width="2" x="2" y="2"></rect>
+    <rect height="2" transform="translate(9 3) rotate(90)" width="2" x="2" y="5"></rect>
+    <rect height="2" transform="translate(12 6) rotate(90)" width="2" x="2" y="8"></rect>
+    <rect height="2" transform="translate(18 12) rotate(90)" width="2" x="2" y="14"></rect>
+    <rect height="2" transform="translate(15 9) rotate(90)" width="2" x="2" y="11"></rect>
+  </g>
+  <line class="ql-stroke-miter" x1="2" x2="16" y1="15" y2="15"></line>
+  <g class="ql-fill ql-transparent">
+    <rect height="2" width="2" x="5" y="2"></rect>
+    <rect height="2" width="2" x="8" y="2"></rect>
+    <rect height="2" width="2" x="11" y="2"></rect>
+    <rect height="2" width="2" x="5" y="14"></rect>
+    <rect height="2" width="2" x="8" y="14"></rect>
+    <rect height="2" width="2" x="8" y="11"></rect>
+    <rect height="2" width="2" x="8" y="8"></rect>
+    <rect height="2" width="2" x="8" y="5"></rect>
+    <rect height="2" transform="translate(15 3) rotate(90)" width="2" x="5" y="8"></rect>
+    <rect height="2" transform="translate(21 -3) rotate(90)" width="2" x="11" y="8"></rect>
+    <rect height="2" width="2" x="11" y="14"></rect>
+  </g>
+</svg>

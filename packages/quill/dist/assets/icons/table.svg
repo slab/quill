@@ -1,0 +1,11 @@
+<svg viewbox="0 0 18 18">
+  <rect class="ql-stroke" height="12" width="12" x="3" y="3"></rect>
+  <rect class="ql-fill" height="2" width="3" x="5" y="5"></rect>
+  <rect class="ql-fill" height="2" width="4" x="9" y="5"></rect>
+  <g class="ql-fill ql-transparent">
+    <rect height="2" width="3" x="5" y="8"></rect>
+    <rect height="2" width="4" x="9" y="8"></rect>
+    <rect height="2" width="3" x="5" y="11"></rect>
+    <rect height="2" width="4" x="9" y="11"></rect>
+  </g>
+</svg>

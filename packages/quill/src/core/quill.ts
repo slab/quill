@@ -29,7 +29,7 @@ import type {
 import createRegistryWithFormats from './utils/createRegistryWithFormats.js';
 
 const debug = logger('quill');
-
+console.log("#4565 LOADED) latest....");
 const globalRegistry = new Parchment.Registry();
 Parchment.ParentBlot.uiClass = 'ql-ui';
 

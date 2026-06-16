@@ -4,8 +4,9 @@
   "description": "Your powerful, rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "https://quilljs.com",
-  "main": "quill.js",
-  "type": "module",
+  "main": "dist/dist/quill.js",
+  "files": ["dist"],
+  "type": "commonjs",
   "dependencies": {
     "eventemitter3": "^5.0.1",
     "lodash-es": "^4.17.21",
@@ -76,6 +77,7 @@
   ],
   "scripts": {
     "build": "./scripts/build production",
+    "prepare": "npm run build",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint .",
     "lint:tsc": "tsc --noEmit --skipLibCheck",

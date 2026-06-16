@@ -1,0 +1,9 @@
+<svg viewbox="0 0 18 18">
+  <g class="ql-fill ql-stroke ql-thin ql-transparent">
+    <rect height="3" rx="0.5" ry="0.5" width="7" x="4.5" y="2.5"></rect>
+    <rect height="3" rx="0.5" ry="0.5" width="7" x="4.5" y="12.5"></rect>
+  </g>
+  <rect class="ql-fill ql-stroke ql-thin" height="3" rx="0.5" ry="0.5" width="7" x="8.5" y="7.5"></rect>
+  <line class="ql-stroke ql-thin" x1="6.5" x2="3.5" y1="7.5" y2="10.5"></line>
+  <line class="ql-stroke ql-thin" x1="3.5" x2="6.5" y1="7.5" y2="10.5"></line>
+</svg>

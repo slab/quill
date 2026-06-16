@@ -1,0 +1,7 @@
+<svg viewbox="0 0 18 18">
+  <rect class="ql-stroke" height="4" width="12" x="3" y="7"></rect>
+  <path class="ql-fill ql-transparent" d="M2,2V16H16V2H2ZM14,14H10V11H8v3H4V4H8V7h2V4h4V14Z"></path>
+  <line class="ql-stroke" x1="12" x2="12" y1="11" y2="7"></line>
+  <line class="ql-stroke" x1="9" x2="9" y1="11" y2="7"></line>
+  <line class="ql-stroke" x1="6" x2="6" y1="11" y2="7"></line>
+</svg>

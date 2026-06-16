@@ -219,6 +219,7 @@ class Editor {
     const normalizedDelta = normalizeDelta(contents);
     const change = new Delta().retain(index).concat(normalizedDelta);
     this.scroll.insertContents(index, normalizedDelta);
+    this.scroll.optimize();
     return this.update(change);
   }
 

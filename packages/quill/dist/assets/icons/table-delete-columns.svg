@@ -1,0 +1,8 @@
+<svg viewbox="0 0 18 18">
+  <g class="ql-fill ql-transparent">
+    <rect height="10" rx="1" ry="1" width="4" x="2" y="6"></rect>
+    <rect height="10" rx="1" ry="1" width="4" x="12" y="6"></rect>
+  </g>
+  <rect class="ql-fill" height="8" rx="1" ry="1" width="4" x="7" y="2"></rect>
+  <path class="ql-fill" d="M9.707,13l1.146-1.146a0.5,0.5,0,0,0-.707-0.707L9,12.293,7.854,11.146a0.5,0.5,0,0,0-.707.707L8.293,13,7.146,14.146a0.5,0.5,0,1,0,.707.707L9,13.707l1.146,1.146a0.5,0.5,0,0,0,.707-0.707Z"></path>
+</svg>

@@ -1,0 +1,1 @@
+{"version":3,"file":"instances.js","names":["WeakMap"],"sources":["../../src/core/instances.ts"],"sourcesContent":["import type Quill from '../core.js';\n\nexport default new WeakMap<Node, Quill>();\n"],"mappings":"AAEA,eAAe,IAAIA,OAAO,CAAc,CAAC","ignoreList":[]}

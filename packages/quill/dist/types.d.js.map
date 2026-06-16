@@ -1,0 +1,1 @@
+{"version":3,"file":"types.d.js","names":[],"sources":["../src/types.d.ts"],"sourcesContent":["declare module '*.svg' {\n  const content: string;\n  export default content;\n}\n\ndeclare const QUILL_VERSION: string | undefined;\n"],"mappings":"","ignoreList":[]}

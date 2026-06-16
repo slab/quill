@@ -1,0 +1,5 @@
+<svg viewbox="0 0 18 18">
+  <rect class="ql-stroke-miter" height="12" width="12" x="3" y="3"></rect>
+  <line class="ql-stroke-miter" x1="9" x2="9" y1="3" y2="15"></line>
+  <line class="ql-stroke-miter" x1="15" x2="3" y1="9" y2="9"></line>
+</svg>

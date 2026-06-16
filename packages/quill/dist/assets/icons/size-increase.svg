@@ -1,0 +1,6 @@
+<svg viewbox="0 0 18 18">
+  <polyline class="ql-stroke" points="3.5 14 7 4 10.5 14"></polyline>
+  <line class="ql-stroke" x1="9.45" x2="4.55" y1="11" y2="11"></line>
+  <rect class="ql-fill" height="5" rx="0.5" ry="0.5" width="1" x="13" y="4"></rect>
+  <rect class="ql-fill" height="5" rx="0.5" ry="0.5" transform="translate(20 -7) rotate(90)" width="1" x="13" y="4"></rect>
+</svg>

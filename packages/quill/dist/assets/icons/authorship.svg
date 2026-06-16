@@ -1,0 +1,5 @@
+<svg viewbox="0 0 18 18">
+  <line class="ql-stroke" x1="3" x2="15" y1="15" y2="15"></line>
+  <path class="ql-fill ql-stroke" d="M9,8H9a3,3,0,0,1,3,3v0a0,0,0,0,1,0,0H6a0,0,0,0,1,0,0v0A3,3,0,0,1,9,8Z"></path>
+  <path class="ql-even ql-fill" d="M11,5.01C11,6.021,10,9,9,9S7,6.021,7,5.01c0-1.651.292-2.99,2-2.99S11,3.359,11,5.01Z"></path>
+</svg>

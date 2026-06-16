@@ -1,12 +1,13 @@
 import { cloneDeep, isEqual } from 'lodash-es';
 import Delta, { AttributeMap } from 'quill-delta';
-import { EmbedBlot, Scope, TextBlot } from 'parchment';
+import { EmbedBlot, TextBlot } from 'parchment';
 import type { Blot, BlockBlot } from 'parchment';
 import Quill from '../core/quill.js';
 import logger from '../core/logger.js';
 import Module from '../core/module.js';
 import type { BlockEmbed } from '../blots/block.js';
 import type { Range } from '../core/selection.js';
+import { SOFT_BREAK_CHARACTER } from '../blots/soft-break.js';
 
 const debug = logger('quill:keyboard');
 
@@ -84,6 +85,13 @@ class Keyboard extends Module<KeyboardOptions> {
         this.addBinding(this.options.bindings[name]);
       }
     });
+    this.addBinding(
+      {
+        key: 'Enter',
+        shiftKey: true,
+      },
+      this.handleShiftEnter,
+    );
     this.addBinding({ key: 'Enter', shiftKey: null }, this.handleEnter);
     this.addBinding(
       { key: 'Enter', metaKey: null, ctrlKey: null, altKey: null },
@@ -332,25 +340,45 @@ class Keyboard extends Module<KeyboardOptions> {
   }
 
   handleEnter(range: Range, context: Context) {
-    const lineFormats = Object.keys(context.format).reduce(
-      (formats: Record<string, unknown>, format) => {
-        if (
-          this.quill.scroll.query(format, Scope.BLOCK) &&
-          !Array.isArray(context.format[format])
-        ) {
-          formats[format] = context.format[format];
-        }
-        return formats;
-      },
-      {},
-    );
+    const lineFormats = { ...context.format };
     const delta = new Delta()
       .retain(range.index)
       .delete(range.length)
       .insert('\n', lineFormats);
     this.quill.updateContents(delta, Quill.sources.USER);
+
+    requestAnimationFrame(() => {
+      const range = this.quill.getSelection();
+      if (!range) return;
+
+      const format = this.quill.getFormat(range.index - 1);
+
+      if (format.size) {
+        this.quill.format('size', format.size, Quill.sources.SILENT);
+      }
+    });
     this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
     this.quill.focus();
+  }
+
+  handleShiftEnter(range: Range) {
+    const format = this.quill.getFormat(range.index, range.length);
+    this.quill.insertText(
+      range.index,
+      SOFT_BREAK_CHARACTER,
+      Quill.sources.USER
+    );
+
+    this.quill.insertText(range.index + 1, '\u200B', 'user');
+
+    this.quill.setSelection(
+      range.index + 1,
+      Quill.sources.SILENT
+    );
+
+    if (format.size) {
+      this.quill.format('size', format.size, Quill.sources.SILENT);
+    }
   }
 }
 
