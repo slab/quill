@@ -1,5 +1,6 @@
 import { EmbedBlot } from 'parchment';
 import { sanitize } from './link.js';
+import { setElementAttribute } from 'safevalues/dom';
 
 const ATTRIBUTES = ['alt', 'height', 'width'];
 
@@ -8,9 +9,9 @@ class Image extends EmbedBlot {
   static tagName = 'IMG';
 
   static create(value: string) {
-    const node = super.create(value) as Element;
+    const node = super.create(value) as HTMLElement;
     if (typeof value === 'string') {
-      node.setAttribute('src', this.sanitize(value));
+      setElementAttribute(node, 'src', this.sanitize(value));
     }
     return node;
   }

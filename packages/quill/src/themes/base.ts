@@ -2,6 +2,8 @@ import { merge } from 'lodash-es';
 import type Quill from '../core/quill.js';
 import Emitter from '../core/emitter.js';
 import Theme from '../core/theme.js';
+import { setElementInnerHtml } from 'safevalues/dom';
+import { htmlSafeByReview } from 'safevalues/restricted/reviewed';
 import type { ThemeOptions } from '../core/theme.js';
 import ColorPicker from '../ui/color-picker.js';
 import IconPicker from '../ui/icon-picker.js';
@@ -59,6 +61,8 @@ const FONTS = [false, 'serif', 'monospace'];
 const HEADERS = ['1', '2', '3', false];
 
 const SIZES = ['small', false, 'large', 'huge'];
+
+
 
 class BaseTheme extends Theme {
   pickers: Picker[];
@@ -120,17 +124,17 @@ class BaseTheme extends Theme {
         if (icons[name] == null) return;
         if (name === 'direction') {
           // @ts-expect-error
-          button.innerHTML = icons[name][''] + icons[name].rtl;
+          setElementInnerHtml(button, htmlSafeByReview(icons[name][''] + icons[name].rtl, { justification: 'Bundled SVG icon' }));
         } else if (typeof icons[name] === 'string') {
           // @ts-expect-error
-          button.innerHTML = icons[name];
+          setElementInnerHtml(button, htmlSafeByReview(icons[name], { justification: 'Bundled SVG icon' }));
         } else {
           // @ts-expect-error
           const value = button.value || '';
           // @ts-expect-error
           if (value != null && icons[name][value]) {
             // @ts-expect-error
-            button.innerHTML = icons[name][value];
+            setElementInnerHtml(button, htmlSafeByReview(icons[name][value], { justification: 'Bundled SVG icon' }));
           }
         }
       });

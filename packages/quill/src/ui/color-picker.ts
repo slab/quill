@@ -1,9 +1,13 @@
 import Picker from './picker.js';
+import { setElementInnerHtml } from 'safevalues/dom';
+import { htmlSafeByReview } from 'safevalues/restricted/reviewed';
+
+
 
 class ColorPicker extends Picker {
   constructor(select: HTMLSelectElement, label: string) {
     super(select);
-    this.label.innerHTML = label;
+    setElementInnerHtml(this.label, htmlSafeByReview(label, { justification: 'Bundled SVG icon or plain text' }));
     this.container.classList.add('ql-color-picker');
     Array.from(this.container.querySelectorAll('.ql-picker-item'))
       .slice(0, 7)

@@ -1,4 +1,8 @@
 import Picker from './picker.js';
+import { setElementInnerHtml } from 'safevalues/dom';
+import { htmlSafeByReview } from 'safevalues/restricted/reviewed';
+
+
 
 class IconPicker extends Picker {
   defaultItem: HTMLElement | null;
@@ -8,7 +12,10 @@ class IconPicker extends Picker {
     this.container.classList.add('ql-icon-picker');
     Array.from(this.container.querySelectorAll('.ql-picker-item')).forEach(
       (item) => {
-        item.innerHTML = icons[item.getAttribute('data-value') || ''];
+        setElementInnerHtml(
+          item as HTMLElement,
+          htmlSafeByReview(icons[item.getAttribute('data-value') || ''], { justification: 'Bundled SVG icon' }),
+        );
       },
     );
     this.defaultItem = this.container.querySelector('.ql-selected');
@@ -20,7 +27,7 @@ class IconPicker extends Picker {
     const item = target || this.defaultItem;
     if (item != null) {
       if (this.label.innerHTML === item.innerHTML) return;
-      this.label.innerHTML = item.innerHTML;
+      setElementInnerHtml(this.label, htmlSafeByReview(item.innerHTML, { justification: 'Copied from trusted icon item' }));
     }
   }
 }

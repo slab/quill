@@ -1,4 +1,5 @@
 import Inline from '../blots/inline.js';
+import { setAnchorHref } from 'safevalues/dom';
 
 class Link extends Inline {
   static blotName = 'link';
@@ -7,8 +8,8 @@ class Link extends Inline {
   static PROTOCOL_WHITELIST = ['http', 'https', 'mailto', 'tel', 'sms'];
 
   static create(value: string) {
-    const node = super.create(value) as HTMLElement;
-    node.setAttribute('href', this.sanitize(value));
+    const node = super.create(value) as HTMLAnchorElement;
+    setAnchorHref(node, this.sanitize(value));
     node.setAttribute('rel', 'noopener noreferrer');
     node.setAttribute('target', '_blank');
     return node;
@@ -27,7 +28,7 @@ class Link extends Inline {
       super.format(name, value);
     } else {
       // @ts-expect-error
-      this.domNode.setAttribute('href', this.constructor.sanitize(value));
+      setAnchorHref(this.domNode as HTMLAnchorElement, this.constructor.sanitize(value));
     }
   }
 }

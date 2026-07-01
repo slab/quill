@@ -23,6 +23,7 @@ import { FontStyle } from '../formats/font.js';
 import { SizeStyle } from '../formats/size.js';
 import { deleteRange } from './keyboard.js';
 import normalizeExternalHTML from './normalizeExternalHTML/index.js';
+import { parseHTML } from '../core/utils/html.js';
 
 const debug = logger('quill:clipboard');
 
@@ -125,7 +126,7 @@ class Clipboard extends Module<ClipboardOptions> {
   }
 
   protected convertHTML(html: string) {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const doc = parseHTML(html);
     this.normalizeHTML(doc);
     const container = doc.body;
     const nodeMatches = new WeakMap();
@@ -213,7 +214,7 @@ class Clipboard extends Module<ClipboardOptions> {
       return;
     }
     if (html && files.length > 0) {
-      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const doc = parseHTML(html);
       if (
         doc.body.childElementCount === 1 &&
         doc.body.firstElementChild?.tagName === 'IMG'

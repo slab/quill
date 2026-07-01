@@ -1,4 +1,6 @@
 import DropdownIcon from '../assets/icons/dropdown.svg';
+import { setElementInnerHtml } from 'safevalues/dom';
+import { htmlSafeByReview } from 'safevalues/restricted/reviewed';
 
 let optionsCounter = 0;
 
@@ -8,6 +10,8 @@ function toggleAriaAttribute(element: HTMLElement, attribute: string) {
     `${!(element.getAttribute(attribute) === 'true')}`,
   );
 }
+
+
 
 class Picker {
   select: HTMLSelectElement;
@@ -84,7 +88,7 @@ class Picker {
   buildLabel() {
     const label = document.createElement('span');
     label.classList.add('ql-picker-label');
-    label.innerHTML = DropdownIcon;
+    setElementInnerHtml(label, htmlSafeByReview(DropdownIcon, { justification: 'Bundled SVG icon' }));
     // @ts-expect-error
     label.tabIndex = '0';
     label.setAttribute('role', 'button');
