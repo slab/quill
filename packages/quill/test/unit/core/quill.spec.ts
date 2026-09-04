@@ -616,6 +616,22 @@ describe('Quill', () => {
         '"el"',
       );
     });
+
+    test('keeps a single space between words as a plain space', () => {
+      const quill = new Quill(
+        createContainer('<p>a text with multiple spaces</p>'),
+      );
+      expect(quill.getSemanticHTML()).toMatchInlineSnapshot(
+        `"<p>a text with multiple spaces</p>"`,
+      );
+    });
+
+    test('preserves a run of consecutive spaces with non-breaking spaces', () => {
+      const quill = new Quill(createContainer('<p>a&nbsp;&nbsp; b</p>'));
+      expect(quill.getSemanticHTML()).toMatchInlineSnapshot(
+        `"<p>a&nbsp;&nbsp; b</p>"`,
+      );
+    });
   });
 
   describe('setText()', () => {

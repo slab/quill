@@ -371,7 +371,13 @@ function convertHTML(
   }
   if (blot instanceof TextBlot) {
     const escapedText = escapeText(blot.value().slice(index, index + length));
-    return escapedText.replaceAll(' ', '&nbsp;');
+    // A single space between words renders fine as-is; only a run of two or
+    // more needs non-breaking spaces, since HTML would otherwise collapse
+    // the run down to one space and change the text's meaning.
+    return escapedText.replace(
+      / {2,}/g,
+      (spaces) => '&nbsp;'.repeat(spaces.length - 1) + ' ',
+    );
   }
   if (blot instanceof ParentBlot) {
     // TODO fix API
