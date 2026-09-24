@@ -107,8 +107,13 @@ class Block extends BlockBlot {
   }
 
   insertBefore(blot: Blot, ref?: Blot | null) {
+    const { head } = this.children;
     super.insertBefore(blot, ref);
-    this.optimizeChildren();
+    // Unwrap moves children in front of the trailing placeholder. Optimizing
+    // every Break here deletes that ref while moveChildren still needs it.
+    if (head instanceof Break) {
+      head.remove();
+    }
     this.cache = {};
   }
 
@@ -126,6 +131,7 @@ class Block extends BlockBlot {
 
   optimize(context: { [key: string]: any }) {
     super.optimize(context);
+    this.optimizeChildren();
     const lastLeafInBlock = this.descendants(LeafBlot).at(-1);
 
     // in order for an end-of-block soft break to be rendered properly by the browser, we need a trailing break

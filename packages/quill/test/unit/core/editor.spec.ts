@@ -101,6 +101,13 @@ describe('Editor', () => {
       expect(editor.scroll.domNode).toEqualHTML('<p>0</p><p>!</p><p>3</p>');
     });
 
+    test('into an empty paragraph removes the placeholder break', () => {
+      const editor = createEditor('<p><br></p>');
+      editor.insertText(0, 'hello');
+      expect(editor.getDelta()).toEqual(new Delta().insert('hello\n'));
+      expect(editor.scroll.domNode).toEqualHTML('<p>hello</p>');
+    });
+
     test('end of document', () => {
       const editor = createEditor('<p>Hello</p>');
       editor.insertText(6, 'World!');
@@ -413,6 +420,65 @@ describe('Editor', () => {
       );
       expect(editor.scroll.domNode).toEqualHTML(
         '<h1>01<br class="soft-break" />23</h1>',
+      );
+    });
+
+    test('bold on then off with one terminal soft break', () => {
+      const editor = createEditor(
+        '<p>hello<br class="soft-break" /><br /></p>',
+      );
+      const length = editor.scroll.length() - 1;
+      editor.formatText(0, length, { bold: true });
+      editor.formatText(0, length, { bold: false });
+      expect(editor.getDelta()).toEqual(
+        new Delta().insert(`hello${SOFT_BREAK_CHARACTER}`).insert('\n'),
+      );
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p>hello<br class="soft-break" /><br /></p>',
+      );
+    });
+
+    test('bold on then off with two terminal soft breaks', () => {
+      const editor = createEditor(
+        '<p>hello<br class="soft-break" /><br class="soft-break" /><br /></p>',
+      );
+      const length = editor.scroll.length() - 1;
+      editor.formatText(0, length, { bold: true });
+      editor.formatText(0, length, { bold: false });
+      expect(editor.getDelta()).toEqual(
+        new Delta()
+          .insert(`hello${SOFT_BREAK_CHARACTER}${SOFT_BREAK_CHARACTER}`)
+          .insert('\n'),
+      );
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p>hello<br class="soft-break" /><br class="soft-break" /><br /></p>',
+      );
+    });
+
+    test('bold on then off with a mid-line soft break', () => {
+      const editor = createEditor('<p>hel<br class="soft-break" />lo</p>');
+      const length = editor.scroll.length() - 1;
+      editor.formatText(0, length, { bold: true });
+      editor.formatText(0, length, { bold: false });
+      expect(editor.getDelta()).toEqual(
+        new Delta().insert(`hel${SOFT_BREAK_CHARACTER}lo`).insert('\n'),
+      );
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p>hel<br class="soft-break" />lo</p>',
+      );
+    });
+
+    test('italic removal across a terminal soft break', () => {
+      const editor = createEditor(
+        '<p><em>hello<br class="soft-break" /></em><br /></p>',
+      );
+      const length = editor.scroll.length() - 1;
+      editor.formatText(0, length, { italic: false });
+      expect(editor.getDelta()).toEqual(
+        new Delta().insert(`hello${SOFT_BREAK_CHARACTER}`).insert('\n'),
+      );
+      expect(editor.scroll.domNode).toEqualHTML(
+        '<p>hello<br class="soft-break" /><br /></p>',
       );
     });
   });
