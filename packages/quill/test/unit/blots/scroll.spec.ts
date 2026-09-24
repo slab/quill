@@ -3,7 +3,7 @@ import Emitter from '../../../src/core/emitter.js';
 import Selection, { Range } from '../../../src/core/selection.js';
 import Cursor from '../../../src/blots/cursor.js';
 import Scroll from '../../../src/blots/scroll.js';
-import Delta from 'quill-delta';
+import Delta from '@mirohq/rich-text-delta';
 import { createRegistry } from '../__helpers__/factory.js';
 import { normalizeHTML, sleep } from '../__helpers__/utils.js';
 import Underline from '../../../src/formats/underline.js';

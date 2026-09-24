@@ -1,5 +1,5 @@
-import Delta, { OpIterator } from 'quill-delta';
-import type { Op, AttributeMap } from 'quill-delta';
+import Delta, { OpIterator } from '@mirohq/rich-text-delta';
+import type { Op, AttributeMap } from '@mirohq/rich-text-delta';
 import Module from '../core/module.js';
 
 export type CellData = {

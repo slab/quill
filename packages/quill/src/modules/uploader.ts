@@ -1,4 +1,4 @@
-import Delta from 'quill-delta';
+import Delta from '@mirohq/rich-text-delta';
 import type Quill from '../core/quill.js';
 import Emitter from '../core/emitter.js';
 import Module from '../core/module.js';

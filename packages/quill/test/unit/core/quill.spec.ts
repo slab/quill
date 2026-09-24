@@ -1,5 +1,5 @@
 import '../../../src/quill.js';
-import Delta from 'quill-delta';
+import Delta from '@mirohq/rich-text-delta';
 import { LeafBlot, Registry } from 'parchment';
 import { afterEach, beforeEach, describe, expect, test, vitest } from 'vitest';
 import type { MockedFunction } from 'vitest';

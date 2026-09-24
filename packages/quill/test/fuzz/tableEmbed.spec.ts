@@ -1,5 +1,5 @@
-import type { AttributeMap } from 'quill-delta';
-import Delta from 'quill-delta';
+import type { AttributeMap } from '@mirohq/rich-text-delta';
+import Delta from '@mirohq/rich-text-delta';
 import TableEmbed from '../../src/modules/tableEmbed.js';
 import type {
   CellData,

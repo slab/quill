@@ -1,5 +1,5 @@
-import type { Op } from 'quill-delta';
-import Delta, { AttributeMap } from 'quill-delta';
+import type { Op } from '@mirohq/rich-text-delta';
+import Delta, { AttributeMap } from '@mirohq/rich-text-delta';
 import { choose, randomInt, runFuzz } from './__helpers__/utils.js';
 import { AlignClass } from '../../src/formats/align.js';
 import { FontClass } from '../../src/formats/font.js';

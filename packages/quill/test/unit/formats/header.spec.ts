@@ -1,4 +1,4 @@
-import Delta from 'quill-delta';
+import Delta from '@mirohq/rich-text-delta';
 import {
   createScroll as baseCreateScroll,
   createRegistry,

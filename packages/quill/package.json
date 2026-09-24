@@ -7,10 +7,10 @@
   "main": "quill.js",
   "type": "module",
   "dependencies": {
+    "@mirohq/rich-text-delta": "^0.1.0",
     "eventemitter3": "^5.0.1",
     "lodash-es": "^4.17.21",
-    "parchment": "^3.0.0",
-    "quill-delta": "^5.1.0"
+    "parchment": "^3.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.9",

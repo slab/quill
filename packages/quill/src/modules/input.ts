@@ -1,4 +1,4 @@
-import Delta from 'quill-delta';
+import Delta from '@mirohq/rich-text-delta';
 import Module from '../core/module.js';
 import Quill from '../core/quill.js';
 import type { Range } from '../core/selection.js';

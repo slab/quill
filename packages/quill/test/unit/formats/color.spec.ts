@@ -1,4 +1,4 @@
-import Delta from 'quill-delta';
+import Delta from '@mirohq/rich-text-delta';
 import Editor from '../../../src/core/editor.js';
 import {
   createScroll as baseCreateScroll,

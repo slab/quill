@@ -7,7 +7,7 @@ import {
   Scope,
   StyleAttributor,
 } from 'parchment';
-import Delta from 'quill-delta';
+import Delta from '@mirohq/rich-text-delta';
 import { BlockEmbed } from '../blots/block.js';
 import type { EmitterSource } from '../core/emitter.js';
 import logger from '../core/logger.js';

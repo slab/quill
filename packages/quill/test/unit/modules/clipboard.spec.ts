@@ -1,4 +1,4 @@
-import Delta from 'quill-delta';
+import Delta from '@mirohq/rich-text-delta';
 import { describe, expect, test, vitest } from 'vitest';
 import Quill from '../../../src/core.js';
 import { Range } from '../../../src/core/selection.js';

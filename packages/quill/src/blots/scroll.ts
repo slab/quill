@@ -1,6 +1,6 @@
 import { ContainerBlot, LeafBlot, Scope, ScrollBlot } from 'parchment';
 import type { Blot, Parent, EmbedBlot, ParentBlot, Registry } from 'parchment';
-import Delta, { AttributeMap, Op } from 'quill-delta';
+import Delta, { AttributeMap, Op } from '@mirohq/rich-text-delta';
 import Emitter from '../core/emitter.js';
 import type { EmitterSource } from '../core/emitter.js';
 import Block, { BlockEmbed, bubbleFormats } from './block.js';

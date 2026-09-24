@@ -1,4 +1,4 @@
-import Delta from 'quill-delta';
+import Delta from '@mirohq/rich-text-delta';
 import { EmbedBlot, Scope } from 'parchment';
 import Quill from '../core/quill.js';
 import logger from '../core/logger.js';
