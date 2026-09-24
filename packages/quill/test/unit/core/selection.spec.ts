@@ -495,7 +495,6 @@ describe('Selection', () => {
       container.style.fontFamily = 'monospace';
       container.style.lineHeight = '18px';
       const div = container.appendChild(document.createElement('div'));
-      div.style.border = '1px solid #777';
       div.innerHTML = '<p><span>0</span></p>';
       const span = div.firstChild?.firstChild as HTMLSpanElement;
       const bounds = span.getBoundingClientRect();
