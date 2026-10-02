@@ -87,6 +87,12 @@ class Toolbar extends Module<ToolbarProps> {
       debug.warn('ignoring attaching to nonexistent format', format, input);
       return;
     }
+    if (input.tagName === 'BUTTON') {
+      input.addEventListener('mousedown', (event) => {
+        // Keep the editor selection when a button is clicked inside a modal dialog.
+        if (event.button === 0) event.preventDefault();
+      });
+    }
     const eventName = input.tagName === 'SELECT' ? 'change' : 'click';
     input.addEventListener(eventName, (e) => {
       let value;
