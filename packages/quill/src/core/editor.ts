@@ -360,6 +360,72 @@ function convertListHTML(
   return `</li></${endTag}>${convertListHTML(items, lastIndent - 1, types)}`;
 }
 
+/*
+  Security: sanitize HTML returned from editor to avoid injecting scripts or unsafe attributes.
+  We avoid returning unsanitized outerHTML from DOM nodes. Instead we reconstruct elements
+  with a safe subset of attributes and validate URLs to prevent javascript: URIs.
+*/
+
+function isSafeUrl(url: string | null | undefined) {
+  if (!url) return false;
+  const trimmed = url.trim().toLowerCase();
+  // Disallow javascript: and data: URIs that could run scripts. Allow http(s) and mailto and relative URLs
+  return (
+    trimmed.startsWith('http://') ||
+    trimmed.startsWith('https://') ||
+    trimmed.startsWith('/') ||
+    trimmed.startsWith('#') ||
+    trimmed.startsWith('mailto:') ||
+    // Allow protocol-relative
+    trimmed.startsWith('//')
+  );
+}
+
+function sanitizeAttributes(el: Element) {
+  const allowedAttrs = new Set([
+    'href',
+    'src',
+    'alt',
+    'title',
+    'width',
+    'height',
+    'colspan',
+    'rowspan',
+    'data-list',
+    'data-id',
+  ]);
+  const attrs: string[] = [];
+  for (let i = 0; i < el.attributes.length; i++) {
+    const a = el.attributes[i];
+    const name = a.name.toLowerCase();
+    const value = a.value;
+    // Drop event handlers and styles
+    if (name.startsWith('on') || name === 'style') continue;
+    // Only allow whitelisted attributes
+    if (!allowedAttrs.has(name) && !name.startsWith('data-')) continue;
+    // Validate URLs
+    if ((name === 'href' || name === 'src') && !isSafeUrl(value)) continue;
+    // Escape attribute value
+    const escaped = String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/\"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    attrs.push(`${name}="${escaped}"`);
+  }
+  return attrs.length ? ' ' + attrs.join(' ') : '';
+}
+
+function serializeElementSafely(el: Element, innerHtml: string) {
+  const tag = el.tagName.toLowerCase();
+  const attrs = sanitizeAttributes(el);
+  // For tables, preserve a simple visible border without allowing arbitrary style attributes
+  if (tag === 'table') {
+    return `<table${attrs} style=\"border: 1px solid #000;\">${innerHtml}</table>`;
+  }
+  return `<${tag}${attrs}>${innerHtml}</${tag}>`;
+}
+
 function convertHTML(
   blot: Blot,
   index: number,
@@ -367,7 +433,48 @@ function convertHTML(
   isRoot = false,
 ): string {
   if ('html' in blot && typeof blot.html === 'function') {
-    return blot.html(index, length);
+    // If blot provides its own html, sanitize the returned string
+    try {
+      const raw = blot.html(index, length);
+      // Simple sanitize: parse into a template and reconstruct allowed parts
+      const container = document.createElement('template');
+      container.innerHTML = raw || '';
+      // Walk and remove disallowed elements (script, iframe, object, embed)
+      const forbidden = ['script', 'iframe', 'object', 'embed', 'style'];
+      forbidden.forEach((tag) => {
+        container.content.querySelectorAll(tag).forEach((node) => node.remove());
+      });
+      // For remaining elements, strip unsafe attributes
+      container.content.querySelectorAll('*').forEach((node) => {
+        if (node instanceof Element) {
+          const attrs = sanitizeAttributes(node);
+          // Rebuild node with allowed attributes only
+          // Create new node to avoid keeping original attributes
+          const newNode = document.createElement(node.tagName.toLowerCase());
+          if (attrs) {
+            // attrs string is like ' name=\"value\" ...' — set via innerHTML trick
+            const dummy = document.createElement('div');
+            dummy.innerHTML = `<${node.tagName.toLowerCase()}${attrs}></${node.tagName.toLowerCase()}>`;
+            const newEl = dummy.firstChild as Element;
+            if (newEl && newEl.attributes) {
+              for (let i = 0; i < newEl.attributes.length; i++) {
+                const a = newEl.attributes[i];
+                newNode.setAttribute(a.name, a.value);
+              }
+            }
+          }
+          // Move children
+          while (node.firstChild) {
+            newNode.appendChild(node.firstChild);
+          }
+          node.replaceWith(newNode);
+        }
+      });
+      return (container.innerHTML || '').replaceAll(' ', '&nbsp;');
+    } catch (e) {
+      // If blot.html throws or DOM not available, fall back to safe empty string
+      return '';
+    }
   }
   if (blot instanceof TextBlot) {
     const escapedText = escapeText(blot.value().slice(index, index + length));
@@ -399,15 +506,21 @@ function convertHTML(
     if (isRoot || blot.statics.blotName === 'list') {
       return parts.join('');
     }
-    const { outerHTML, innerHTML } = blot.domNode as Element;
-    const [start, end] = outerHTML.split(`>${innerHTML}<`);
-    // TODO cleanup
-    if (start === '<table') {
-      return `<table style="border: 1px solid #000;">${parts.join('')}<${end}`;
-    }
-    return `${start}>${parts.join('')}<${end}`;
+    // Reconstruct element safely instead of using outerHTML/innerHTML which may contain unsafe attributes
+    const dom = blot.domNode as Element;
+    const inner = parts.join('');
+    return serializeElementSafely(dom, inner);
   }
-  return blot.domNode instanceof Element ? blot.domNode.outerHTML : '';
+  if (blot.domNode instanceof Element) {
+    // Non-Parent blots: return a safe serialization of the element
+    try {
+      const dom = blot.domNode as Element;
+      return serializeElementSafely(dom, dom.textContent ? escapeText(dom.textContent) : '');
+    } catch (e) {
+      return '';
+    }
+  }
+  return '';
 }
 
 function combineFormats(
