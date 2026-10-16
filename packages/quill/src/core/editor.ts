@@ -337,10 +337,17 @@ function convertListHTML(
   }
   const [{ child, offset, length, indent, type }, ...rest] = items;
   const [tag, attribute] = getListType(type);
+  const classes =
+    child.domNode instanceof Element
+      ? Array.from(child.domNode.classList)
+          .filter((className) => !className.startsWith('ql-indent-'))
+          .join(' ')
+      : '';
+  const classAttribute = classes ? ` class="${escapeText(classes)}"` : '';
   if (indent > lastIndent) {
     types.push(type);
     if (indent === lastIndent + 1) {
-      return `<${tag}><li${attribute}>${convertHTML(
+      return `<${tag}><li${attribute}${classAttribute}>${convertHTML(
         child,
         offset,
         length,
@@ -350,7 +357,7 @@ function convertListHTML(
   }
   const previousType = types[types.length - 1];
   if (indent === lastIndent && type === previousType) {
-    return `</li><li${attribute}>${convertHTML(
+    return `</li><li${attribute}${classAttribute}>${convertHTML(
       child,
       offset,
       length,

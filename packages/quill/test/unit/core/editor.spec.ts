@@ -17,6 +17,7 @@ import { FontClass } from '../../../src/formats/font.js';
 import Header from '../../../src/formats/header.js';
 import Italic from '../../../src/formats/italic.js';
 import { AlignClass } from '../../../src/formats/align.js';
+import { DirectionClass } from '../../../src/formats/direction.js';
 import Video from '../../../src/formats/video.js';
 import Strike from '../../../src/formats/strike.js';
 import Underline from '../../../src/formats/underline.js';
@@ -47,6 +48,7 @@ const createEditor = (htmlOrContents: string | Delta) => {
       Header,
       Italic,
       AlignClass,
+      DirectionClass,
       Video,
       Strike,
       Underline,
@@ -1240,6 +1242,122 @@ describe('Editor', () => {
     test('entire list item', () => {
       const editor = createEditor('<ul><li>Test</li></ul>');
       expect(editor.getHTML(0, 5)).toEqual('<ul><li>Test</li></ul>');
+    });
+
+    test('aligned bullet list', () => {
+      const editor = createEditor(
+        `
+          <ol>
+            <li data-list="bullet" class="ql-align-center">One</li>
+            <li data-list="bullet" class="ql-align-right">Two</li>
+            <li data-list="bullet">Three</li>
+          </ol>
+        `,
+      );
+      expect(editor.getHTML(0, 14)).toEqualHTML(`
+        <ul>
+          <li class="ql-align-center">One</li>
+          <li class="ql-align-right">Two</li>
+          <li>Three</li>
+        </ul>
+      `);
+    });
+
+    test('aligned ordered list', () => {
+      const editor = createEditor(
+        `
+          <ol>
+            <li data-list="ordered" class="ql-align-right">One</li>
+            <li data-list="ordered" class="ql-align-right">Two</li>
+          </ol>
+        `,
+      );
+      expect(editor.getHTML(0, 8)).toEqualHTML(`
+        <ol>
+          <li class="ql-align-right">One</li>
+          <li class="ql-align-right">Two</li>
+        </ol>
+      `);
+    });
+
+    test('aligned checklist', () => {
+      const editor = createEditor(
+        `
+          <ol>
+            <li data-list="checked" class="ql-align-center">One</li>
+            <li data-list="unchecked" class="ql-align-right">Two</li>
+          </ol>
+        `,
+      );
+      expect(editor.getHTML(0, 8)).toEqualHTML(`
+        <ul>
+          <li data-list="checked" class="ql-align-center">One</li>
+        </ul>
+        <ul>
+          <li data-list="unchecked" class="ql-align-right">Two</li>
+        </ul>
+      `);
+    });
+
+    test('aligned nested list with skipped indent', () => {
+      const editor = createEditor(
+        `
+          <ol>
+            <li data-list="bullet">One</li>
+            <li data-list="bullet" class="ql-indent-2 ql-align-center">Two</li>
+          </ol>
+        `,
+      );
+      expect(editor.getHTML(0, 8)).toEqualHTML(`
+        <ul>
+          <li>One
+            <ul>
+              <li>
+                <ul>
+                  <li class="ql-align-center">Two</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      `);
+    });
+
+    test('indent-only list item', () => {
+      const editor = createEditor(
+        `
+          <ol>
+            <li data-list="bullet" class="ql-indent-1">One</li>
+          </ol>
+        `,
+      );
+      expect(editor.getHTML(0, 4)).toEqualHTML(`
+        <ul>
+          <li>
+            <ul>
+              <li>One</li>
+            </ul>
+          </li>
+        </ul>
+      `);
+    });
+
+    test('list item direction and custom classes', () => {
+      const editor = createEditor(
+        '<ol><li data-list="bullet" class="ql-direction-rtl">One</li></ol>',
+      );
+      editor.scroll.domNode.querySelector('li')!.classList.add('custom');
+      expect(editor.getHTML(0, 4)).toEqualHTML(`
+        <ul><li class="ql-direction-rtl custom">One</li></ul>
+      `);
+    });
+
+    test('escape list item class attribute', () => {
+      const editor = createEditor('<ol><li data-list="bullet">One</li></ol>');
+      editor.scroll.domNode.querySelector('li')!.classList.add('custom"&<>');
+      expect(editor.getHTML(0, 4)).toEqual(
+        '<ul><li class="custom&quot;&amp;&lt;&gt;">One</li></ul>',
+      );
     });
 
     test('across lines', () => {
