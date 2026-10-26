@@ -5,6 +5,8 @@ import type { EmitterSource } from './emitter.js';
 import logger from './logger.js';
 import type Cursor from '../blots/cursor.js';
 import type Scroll from '../blots/scroll.js';
+import { createDOMRoot } from './dom-root.js';
+import type DOMRoot from './dom-root.js';
 
 const debug = logger('quill:selection');
 
@@ -38,6 +40,7 @@ export class Range {
 class Selection {
   scroll: Scroll;
   emitter: Emitter;
+  domRoot: DOMRoot;
   composing: boolean;
   mouseDown: boolean;
 
@@ -53,6 +56,7 @@ class Selection {
     this.composing = false;
     this.mouseDown = false;
     this.root = this.scroll.domNode;
+    this.domRoot = createDOMRoot(this.root);
     // @ts-expect-error
     this.cursor = this.scroll.create('cursor', this);
     // savedRange is last non-null range
@@ -239,9 +243,7 @@ class Selection {
   }
 
   getNativeRange(): NormalizedRange | null {
-    const selection = document.getSelection();
-    if (selection == null || selection.rangeCount <= 0) return null;
-    const nativeRange = selection.getRangeAt(0);
+    const nativeRange = this.domRoot.getNativeRange();
     if (nativeRange == null) return null;
     const range = this.normalizeNative(nativeRange);
     debug.info('getNativeRange', range);
@@ -262,10 +264,10 @@ class Selection {
   }
 
   hasFocus(): boolean {
+    const activeElement = this.domRoot.getActiveElement();
     return (
-      document.activeElement === this.root ||
-      (document.activeElement != null &&
-        contains(this.root, document.activeElement))
+      activeElement === this.root ||
+      (activeElement != null && contains(this.root, activeElement))
     );
   }
 
@@ -372,7 +374,7 @@ class Selection {
     ) {
       return;
     }
-    const selection = document.getSelection();
+    const selection = this.domRoot.getSelection();
     if (selection == null) return;
     if (startNode != null) {
       if (!this.hasFocus()) this.root.focus({ preventScroll: true });
@@ -399,13 +401,14 @@ class Selection {
           );
           endNode = endNode.parentNode;
         }
-        const range = document.createRange();
-        // @ts-expect-error Fix me later
-        range.setStart(startNode, startOffset);
-        // @ts-expect-error Fix me later
-        range.setEnd(endNode, endOffset);
-        selection.removeAllRanges();
-        selection.addRange(range);
+        if (startNode != null && endNode != null) {
+          this.domRoot.setNativeRange(
+            startNode,
+            startOffset as number,
+            endNode,
+            endOffset as number,
+          );
+        }
       }
     } else {
       selection.removeAllRanges();

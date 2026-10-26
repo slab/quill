@@ -100,19 +100,15 @@ class UINode extends Module {
   }
 
   private handleSelectionChange() {
-    const selection = document.getSelection();
-    if (!selection) return;
-    const range = selection.getRangeAt(0);
+    const range = this.quill.domRoot.getNativeRange();
+    if (!range) return;
     if (range.collapsed !== true || range.startOffset !== 0) return;
 
     const line = this.quill.scroll.find(range.startContainer);
     if (!(line instanceof ParentBlot) || !line.uiNode) return;
 
-    const newRange = document.createRange();
-    newRange.setStartAfter(line.uiNode);
-    newRange.setEndAfter(line.uiNode);
-    selection.removeAllRanges();
-    selection.addRange(newRange);
+    const offset = Array.from(line.domNode.childNodes).indexOf(line.uiNode);
+    this.quill.domRoot.setNativeRange(line.domNode, offset + 1);
   }
 }
 

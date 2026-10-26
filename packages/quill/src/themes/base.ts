@@ -67,7 +67,7 @@ class BaseTheme extends Theme {
   constructor(quill: Quill, options: ThemeOptions) {
     super(quill, options);
     const listener = (e: MouseEvent) => {
-      if (!document.body.contains(quill.root)) {
+      if (!quill.root.isConnected) {
         document.body.removeEventListener('click', listener);
         return;
       }
@@ -76,7 +76,7 @@ class BaseTheme extends Theme {
         // @ts-expect-error
         !this.tooltip.root.contains(e.target) &&
         // @ts-expect-error
-        document.activeElement !== this.tooltip.textbox &&
+        quill.domRoot.getActiveElement() !== this.tooltip.textbox &&
         !this.quill.hasFocus()
       ) {
         this.tooltip.hide();

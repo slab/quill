@@ -1,5 +1,6 @@
 import type Quill from '../core.js';
 import type { Bounds } from '../core/selection.js';
+import { isShadowRoot } from '../core/dom-root.js';
 
 const isScrollable = (el: Element) => {
   const { overflowY } = getComputedStyle(el, null);
@@ -13,7 +14,10 @@ class Tooltip {
 
   constructor(quill: Quill, boundsContainer?: HTMLElement) {
     this.quill = quill;
-    this.boundsContainer = boundsContainer || document.body;
+    const root = quill.domRoot.getRoot();
+    this.boundsContainer =
+      boundsContainer ||
+      (isShadowRoot(root) ? (root.host as HTMLElement) : document.body);
     this.root = quill.addContainer('ql-tooltip');
     // @ts-expect-error
     this.root.innerHTML = this.constructor.TEMPLATE;

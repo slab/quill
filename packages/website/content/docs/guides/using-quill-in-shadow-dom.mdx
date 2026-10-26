@@ -1,0 +1,52 @@
+---
+title: Using Quill in Shadow DOM
+---
+
+Quill can run inside a [shadow root](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM), for example as part of a web component. Selection, focus, keyboard shortcuts, the toolbar, tooltips and pickers work the same as in the main document, in both open and closed shadow roots.
+
+### Mounting the Editor
+
+Create the editor from an element inside the shadow root:
+
+```js
+class RichTextEditor extends HTMLElement {
+  connectedCallback() {
+    const shadowRoot = this.attachShadow({ mode: 'open' });
+    shadowRoot.innerHTML = `
+      <link href="{{site.cdn}}/quill.snow.css" rel="stylesheet">
+      <div class="editor"></div>
+    `;
+    this.quill = new Quill(shadowRoot.querySelector('.editor'), {
+      theme: 'snow',
+    });
+  }
+}
+
+customElements.define('rich-text-editor', RichTextEditor);
+```
+
+### Styles
+
+Stylesheets in the main document do not apply inside a shadow root. Load the theme stylesheet inside the shadow root, either with a `<link>` element as above or by adding it to [`adoptedStyleSheets`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot/adoptedStyleSheets).
+
+### Elements Instead of Selectors
+
+Selectors passed as the editor container or as the [`bounds`](/docs/configuration#bounds) option are resolved with `document.querySelector()`, which cannot find elements inside a shadow root. Pass the element itself instead.
+
+A selector for the [toolbar](/docs/modules/toolbar) `container` is resolved within the shadow root that contains the editor, so a toolbar inside the same shadow root can be referenced by selector:
+
+```js
+const quill = new Quill(shadowRoot.querySelector('.editor'), {
+  modules: { toolbar: '#toolbar' }, // #toolbar is inside shadowRoot
+});
+```
+
+### Tooltips
+
+Inside a shadow root, tooltips are confined to the shadow host by default instead of `document.body`. Use the [`bounds`](/docs/configuration#bounds) option to confine them to another element.
+
+### Browser Support
+
+Quill reads the selection with [`Selection.getComposedRanges()`](https://developer.mozilla.org/en-US/docs/Web/API/Selection/getComposedRanges) where available and falls back to the browser-specific behavior of older engines.
+
+Dropping an image into the editor needs [`document.caretPositionFromPoint()`](https://developer.mozilla.org/en-US/docs/Web/API/Document/caretPositionFromPoint) with support for shadow roots to find the drop position. In browsers without it, images dropped into an editor inside a shadow root are not inserted.

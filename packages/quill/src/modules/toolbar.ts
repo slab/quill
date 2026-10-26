@@ -36,7 +36,7 @@ class Toolbar extends Module<ToolbarProps> {
       quill.container?.parentNode?.insertBefore(container, quill.container);
       this.container = container;
     } else if (typeof this.options.container === 'string') {
-      this.container = document.querySelector(this.options.container);
+      this.container = quill.domRoot.querySelector(this.options.container);
     } else {
       this.container = this.options.container;
     }

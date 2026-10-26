@@ -117,6 +117,10 @@ const items = [
         title: 'Cloning Medium with Parchment',
         url: '/docs/guides/cloning-medium-with-parchment',
       },
+      {
+        title: 'Using Quill in Shadow DOM',
+        url: '/docs/guides/using-quill-in-shadow-dom',
+      },
     ],
   },
 ];

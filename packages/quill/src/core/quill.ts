@@ -27,6 +27,8 @@ import type {
   ScrollRectIntoViewOptions,
 } from './utils/scrollRectIntoView.js';
 import createRegistryWithFormats from './utils/createRegistryWithFormats.js';
+import { createDOMRoot, isShadowRoot } from './dom-root.js';
+import type DOMRoot from './dom-root.js';
 
 const debug = logger('quill');
 
@@ -182,6 +184,7 @@ class Quill {
   root: HTMLDivElement;
   scroll: Scroll;
   emitter: Emitter;
+  domRoot: DOMRoot;
   protected allowReadOnlyEdits: boolean;
   editor: Editor;
   composition: Composition;
@@ -205,6 +208,7 @@ class Quill {
     if (this.options.debug) {
       Quill.debug(this.options.debug);
     }
+    this.domRoot = createDOMRoot(this.container);
     const html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
@@ -212,6 +216,10 @@ class Quill {
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
     this.emitter = new Emitter();
+    const rootNode = this.domRoot.getRoot();
+    if (isShadowRoot(rootNode)) {
+      Emitter.listenShadowRoot(rootNode);
+    }
     const scrollBlotName = Parchment.ScrollBlot.blotName;
     const ScrollBlot = this.options.registry.query(scrollBlotName);
     if (!ScrollBlot || !('blotName' in ScrollBlot)) {

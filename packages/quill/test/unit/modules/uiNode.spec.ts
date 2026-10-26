@@ -39,3 +39,32 @@ describe('uiNode', () => {
     expect(selection?.getRangeAt(0).startOffset).toEqual(1);
   });
 });
+
+describe('uiNode in shadow DOM', () => {
+  test('moves the caret after the ui node', async () => {
+    const host = document.createElement('div');
+    document.body.appendChild(host);
+    const container = document.createElement('div');
+    host.attachShadow({ mode: 'open' }).appendChild(container);
+    const quill = new Quill(container);
+    quill.setContents(
+      new Delta().insert('item 1').insert('\n', { list: 'bullet' }),
+    );
+    new UINode(quill, {});
+
+    quill.root.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowLeft', metaKey: true }),
+    );
+    const li = quill.root.querySelector('li')!;
+    quill.domRoot.setNativeRange(li, 0);
+    // Browsers canonicalize the caret before firing selectionchange
+    // asynchronously, so dispatch it while the caret is still before the UI node.
+    document.dispatchEvent(new Event('selectionchange'));
+
+    // The caret is no longer before the UI node. Engines may canonicalize
+    // <li>[CARET]item into <li>item[CARET], so compare positions.
+    const range = quill.domRoot.getNativeRange();
+    expect(range?.comparePoint(li, 1)).toBeLessThanOrEqual(0);
+    host.remove();
+  });
+});
