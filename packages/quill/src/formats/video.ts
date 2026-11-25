@@ -1,4 +1,5 @@
 import { BlockEmbed } from '../blots/block.js';
+import { escapeText } from '../blots/text.js';
 import Link from './link.js';
 
 const ATTRIBUTES = ['height', 'width'];
@@ -52,7 +53,8 @@ class Video extends BlockEmbed {
 
   html() {
     const { video } = this.value();
-    return `<a href="${video}">${video}</a>`;
+    const escaped = escapeText(video);
+    return `<a href="${escaped}">${escaped}</a>`;
   }
 }
 

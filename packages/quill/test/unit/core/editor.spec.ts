@@ -18,6 +18,7 @@ import Header from '../../../src/formats/header.js';
 import Italic from '../../../src/formats/italic.js';
 import { AlignClass } from '../../../src/formats/align.js';
 import Video from '../../../src/formats/video.js';
+import Formula from '../../../src/formats/formula.js';
 import Strike from '../../../src/formats/strike.js';
 import Underline from '../../../src/formats/underline.js';
 import CodeBlock, { CodeBlockContainer } from '../../../src/formats/code.js';
@@ -48,6 +49,7 @@ const createEditor = (htmlOrContents: string | Delta) => {
       Italic,
       AlignClass,
       Video,
+      Formula,
       Strike,
       Underline,
       CodeBlock,
@@ -1222,6 +1224,35 @@ describe('Editor', () => {
   });
 
   describe('getHTML', () => {
+    test('escapes video url', () => {
+      const editor = createEditor(
+        new Delta().insert({
+          video: 'https://example.com/"><img src=x onerror=alert(1)>',
+        }),
+      );
+      const html = editor.getHTML(0, 1);
+      expect(html).not.toContain('<img');
+      expect(html).toEqual(
+        '<a href="https://example.com/&quot;&gt;&lt;img src=x onerror=alert(1)&gt;">https://example.com/&quot;&gt;&lt;img src=x onerror=alert(1)&gt;</a>',
+      );
+    });
+
+    test('escapes formula', () => {
+      // @ts-expect-error
+      window.katex = { render: () => {} };
+      try {
+        const editor = createEditor(
+          new Delta().insert({ formula: '<img src=x onerror=alert(1)>' }),
+        );
+        expect(editor.getHTML(0, 1)).toEqual(
+          '<span>&lt;img src=x onerror=alert(1)&gt;</span>',
+        );
+      } finally {
+        // @ts-expect-error
+        delete window.katex;
+      }
+    });
+
     test('inline', () => {
       expect(
         createEditor('<blockquote>Test</blockquote>').getHTML(1, 2),
